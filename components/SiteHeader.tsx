@@ -96,7 +96,7 @@ export default function SiteHeader() {
 
         <div className="menu-overlay-foot">
           <span>RUNNING / COMMUNITY / CULTURE</span>
-          <Link href="/membership" onClick={() => setOpen(false)}>JOIN USS ↗</Link>
+          <Link href="/membership" onClick={() => setOpen(false)}>JOIN USS — FREE ↗</Link>
         </div>
       </div>
     </>
