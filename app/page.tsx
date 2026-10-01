@@ -35,7 +35,12 @@ export default function HomePage() {
       </section>
 
       <section className="ticker" aria-label="Community message">
-        <div>RUNNING / COMMUNITY / CULTURE / RUNNING / COMMUNITY / CULTURE /</div>
+        <div className="ticker-track">
+          <span>RUNNING / COMMUNITY / CULTURE /</span>
+          <span>RUNNING / COMMUNITY / CULTURE /</span>
+          <span>RUNNING / COMMUNITY / CULTURE /</span>
+          <span>RUNNING / COMMUNITY / CULTURE /</span>
+        </div>
       </section>
 
       <section className="section next-section">
