@@ -49,7 +49,10 @@ h1,h2,h3,p{margin-top:0}
 .circle-link{justify-self:end;width:64px;height:64px;border:1px solid var(--white);border-radius:50%;display:grid;place-items:center;font-size:26px;transition:.2s}
 .circle-link:hover{background:var(--white);color:var(--black)}
 .ticker{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--red);color:var(--black);padding:12px 0}
-.ticker div{white-space:nowrap;font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;font-size:20px;letter-spacing:.03em;transform:translateX(-1%)}
+.ticker-track{display:flex;width:max-content;will-change:transform;animation:ticker-scroll 18s linear infinite}
+.ticker-track span{display:block;white-space:nowrap;padding-right:18px;font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;font-size:20px;letter-spacing:.03em}
+@keyframes ticker-scroll{from{transform:translateX(0)}to{transform:translateX(-25%)}}
+@media (prefers-reduced-motion:reduce){.ticker-track{animation:none}}
 .section{padding:110px 42px}
 .next-section{background:var(--black)}
 .section-heading{display:flex;justify-content:space-between;align-items:end;margin-bottom:55px}
