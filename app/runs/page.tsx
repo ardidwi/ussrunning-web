@@ -7,19 +7,49 @@ export default function RunsPage() {
   return (
     <main className="page-black">
       <SiteHeader />
-      <section className="page-hero">
-        <span className="kicker">RUNS / EVENTS / ACTIVATIONS</span>
-        <h1>FIND YOUR<br />NEXT START.</h1>
-        <p>Community runs, training sessions and special collaborations. One place to find what&apos;s next.</p>
+
+      <section className="page-hero crew-page-hero">
+        <div className="content-frame">
+          <span className="kicker">RUNS / TRAINING / RACE WEEK / COLLABORATIONS</span>
+          <h1>RUN WITH<br />USS.</h1>
+          <p>
+            Community runs, training sessions, shakeouts, race-week moments and
+            special collaborations. Find what&apos;s next and show up.
+          </p>
+          <div className="run-page-note">
+            <span>USS MEMBERSHIP IS FREE</span>
+            <span>RSVP WITH ONE USS ID</span>
+          </div>
+        </div>
       </section>
+
       <section className="section event-list-section">
-        <div className="filter-row">
-          <button className="filter-active">ALL</button><button>COMMUNITY RUN</button><button>SPECIAL SESSION</button><button>MEMBER ONLY</button>
-        </div>
-        <div className="event-grid event-grid-three">
-          {runs.map((run) => <EventCard run={run} key={run.slug} />)}
+        <div className="content-frame">
+          <div className="filter-row">
+            <button className="filter-active">ALL</button>
+            <button>COMMUNITY RUN</button>
+            <button>TRAINING</button>
+            <button>RACE WEEK</button>
+            <button>COLLAB</button>
+          </div>
+
+          <div className="event-grid event-grid-three">
+            {runs.map((run) => <EventCard run={run} key={run.slug} />)}
+          </div>
         </div>
       </section>
+
+      <section className="run-philosophy">
+        <div className="content-frame">
+          <span className="kicker">THE POINT</span>
+          <h2>PACE MATTERS SOMETIMES.<br />PEOPLE MATTER EVERY TIME.</h2>
+          <p>
+            USS was built to connect runners through movement, lifestyle and
+            culture. Come ready to run. Stay ready to support the people around you.
+          </p>
+        </div>
+      </section>
+
       <SiteFooter />
     </main>
   );
