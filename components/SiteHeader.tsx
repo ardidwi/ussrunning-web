@@ -14,6 +14,7 @@ const menuItems = [
 export default function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [distance, setDistance] = useState(0);
+  const [hasScrolled, setHasScrolled] = useState(false);
   const ticking = useRef(false);
 
   useEffect(() => {
@@ -24,8 +25,15 @@ export default function SiteHeader() {
     window.addEventListener("keydown", onKeyDown);
 
     const updateDistance = () => {
-      // A playful scroll-distance counter: ~1 km per 1000 px scrolled.
-      setDistance(Math.max(0, window.scrollY / 1000));
+      const maxScroll = Math.max(
+        1,
+        document.documentElement.scrollHeight - window.innerHeight
+      );
+      const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+
+      // Scroll the full page = 3.100 miles, a playful 5K-inspired website route.
+      setDistance(progress * 3.1);
+      setHasScrolled(window.scrollY > 72);
       ticking.current = false;
     };
 
@@ -38,8 +46,11 @@ export default function SiteHeader() {
 
     updateDistance();
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", updateDistance);
+
     return () => {
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", updateDistance);
       window.removeEventListener("keydown", onKeyDown);
     };
   }, []);
@@ -60,9 +71,9 @@ export default function SiteHeader() {
           <div className="header-actions">
             <Link className="header-login" href="/login">LOG IN</Link>
 
-            <div className="scroll-distance" aria-label="Distance scrolled">
+            <div className="scroll-distance" aria-label="Miles scrolled through the site">
               <span>{distance.toFixed(3)}</span>
-              <b>KM</b>
+              <b>MI</b>
               <i>↓</i>
             </div>
 
@@ -78,6 +89,15 @@ export default function SiteHeader() {
           </div>
         </div>
       </header>
+
+      <div
+        className={hasScrolled ? "scroll-distance-float is-visible" : "scroll-distance-float"}
+        aria-label="Miles scrolled through the site"
+      >
+        <span>{distance.toFixed(3)}</span>
+        <b>MI</b>
+        <i>↓</i>
+      </div>
 
       <aside className={open ? "menu-panel is-open" : "menu-panel"} id="uss-menu" aria-hidden={!open}>
         <div className="menu-panel-head">
