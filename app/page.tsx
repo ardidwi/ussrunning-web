@@ -5,6 +5,28 @@ import EventCard from "@/components/EventCard";
 import { runs, stats } from "@/data/site";
 
 const tickerText = "RUNNING / COMMUNITY / CULTURE /";
+const collaborations = [
+  "ASICS",
+  "NIKE",
+  "PUMA",
+  "NEW BALANCE",
+  "ON",
+  "ADIDAS",
+  "MIZUNO",
+  "ATMOS",
+  "THULE",
+  "COMPASS",
+  "ZODIAC",
+  "SUN & SAND SPORTS",
+  "BLUE DOORS",
+  "RUNNING DEPT",
+  "ORTUSEIGHT",
+  "DEUS",
+  "SKINTIFIC",
+  "AQUA",
+  "POCARI SWEAT",
+  "COMMON GROUNDS",
+];
 
 export default function HomePage() {
   return (
@@ -35,7 +57,10 @@ export default function HomePage() {
               USS Running is a community-driven movement where running meets
               lifestyle, culture and the city.
             </p>
-            <Link href="/runs" className="circle-link" aria-label="Explore runs">↘</Link>
+            <div className="hero-actions">
+              <Link href="/runs" className="hero-action hero-action-primary">JOIN A RUN</Link>
+              <Link href="/partners" className="hero-action">CONNECT ↗</Link>
+            </div>
           </div>
         </div>
       </section>
@@ -56,29 +81,33 @@ export default function HomePage() {
       </section>
 
       <section className="section next-section">
-        <div className="section-heading">
-          <div>
-            <span className="kicker">01 / NEXT UP</span>
-            <h2>MEET US<br />ON THE ROAD.</h2>
+        <div className="content-frame">
+          <div className="section-heading">
+            <div>
+              <span className="kicker">01 / NEXT UP</span>
+              <h2>MEET US<br />ON THE ROAD.</h2>
+            </div>
+            <Link href="/runs" className="arrow-link">VIEW ALL RUNS ↗</Link>
           </div>
-          <Link href="/runs" className="arrow-link">VIEW ALL RUNS ↗</Link>
-        </div>
 
-        <div className="event-grid">
-          {runs.slice(0, 2).map((run) => <EventCard run={run} key={run.slug} />)}
+          <div className="event-grid">
+            {runs.slice(0, 2).map((run) => <EventCard run={run} key={run.slug} />)}
+          </div>
         </div>
       </section>
 
       <section className="manifesto section-invert">
-        <div className="manifesto-label">02 / OUR MOVEMENT</div>
-        <p className="manifesto-copy">
-          STARTED WITH <strong>18 FRIENDS.</strong><br />
-          ONE YEAR LATER, AROUND <strong>500 RUNNERS</strong> SHOWED UP.<br />
-          THIS IS NOT ABOUT PACE. IT&apos;S ABOUT <strong>SHOWING UP.</strong>
-        </p>
-        <div className="manifesto-foot">
-          <span>NO FINISH LINE FOR COMMUNITY.</span>
-          <Link href="/membership">BECOME A MEMBER ↗</Link>
+        <div className="content-frame">
+          <div className="manifesto-label">02 / OUR MOVEMENT</div>
+          <p className="manifesto-copy">
+            STARTED WITH <strong>18 FRIENDS.</strong><br />
+            ONE YEAR LATER, AROUND <strong>500 RUNNERS</strong> SHOWED UP.<br />
+            THIS IS NOT ABOUT PACE. IT&apos;S ABOUT <strong>SHOWING UP.</strong>
+          </p>
+          <div className="manifesto-foot">
+            <span>NO FINISH LINE FOR COMMUNITY.</span>
+            <Link href="/membership">BECOME A MEMBER ↗</Link>
+          </div>
         </div>
       </section>
 
@@ -91,6 +120,32 @@ export default function HomePage() {
         ))}
       </section>
 
+      <section className="collaborations-section">
+        <div className="content-frame">
+          <div className="collaborations-head">
+            <span className="kicker">03 / SELECTED COLLABORATIONS</span>
+            <h2>BRANDS WE&apos;VE<br />RUN WITH.</h2>
+            <p>
+              A selection of brands, spaces and communities that have moved
+              with USS Running across events, campaigns and race-week moments.
+            </p>
+          </div>
+
+          <div className="collaboration-grid" aria-label="Selected collaborators">
+            {collaborations.map((brand) => (
+              <div className="collaboration-brand" key={brand}>
+                <span>{brand}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="collaborations-foot">
+            <span>SELECTED WORK / MORE TO COME</span>
+            <Link href="/partners">EXPLORE PARTNERSHIPS ↗</Link>
+          </div>
+        </div>
+      </section>
+
       <section className="editorial-split section">
         <div className="editorial-photo">
           <img
@@ -100,7 +155,7 @@ export default function HomePage() {
         </div>
 
         <div className="editorial-copy">
-          <span className="kicker">03 / MEMBERSHIP</span>
+          <span className="kicker">04 / MEMBERSHIP</span>
           <h2>YOUR RUNS.<br />YOUR PEOPLE.<br />ONE ID.</h2>
           <p>
             Create your USS Running profile, RSVP to community sessions, keep
@@ -114,7 +169,7 @@ export default function HomePage() {
 
       <section className="story-band">
         <div className="story-band-title">
-          <span className="kicker">04 / STORIES</span>
+          <span className="kicker">05 / STORIES</span>
           <h2>MORE THAN<br />THE RUN.</h2>
         </div>
 
