@@ -12,11 +12,11 @@ export default function SiteFooter() {
         <Link href="/membership">MEMBERSHIP</Link>
         <Link href="/stories">STORIES</Link>
         <Link href="/partners">PARTNERS</Link>
-        <Link href="/admin">CMS PREVIEW</Link>
+        <Link href="/login">MY USS</Link>
       </div>
 
       <div className="footer-newsletter">
-        <span className="kicker">STAY IN THE LOOP</span>
+        <span className="kicker">STAY CLOSE / GET THE NEXT RUN</span>
         <div className="newsletter-row">
           <input aria-label="Email address" placeholder="EMAIL ADDRESS" />
           <button type="button">SIGN UP</button>
