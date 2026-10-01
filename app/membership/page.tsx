@@ -30,7 +30,7 @@ export default function MembershipPage() {
             what we build in Jakarta.
           </p>
           <div className="page-hero-actions">
-            <Link className="button button-light" href="/login">CREATE FREE USS ID</Link>
+            <Link className="button button-light" href="/join">CREATE FREE USS ID</Link>
             <Link className="text-cta" href="/runs">SEE THE NEXT RUN ↗</Link>
           </div>
         </div>
@@ -95,7 +95,7 @@ export default function MembershipPage() {
               <span className="kicker">READY WHEN YOU ARE</span>
               <h2>COME FOR THE RUN.<br />STAY FOR THE PEOPLE.</h2>
             </div>
-            <Link className="button button-light" href="/login">JOIN USS — FREE</Link>
+            <Link className="button button-light" href="/join">JOIN USS — FREE</Link>
           </div>
         </div>
       </section>
