@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const menuItems = [
   ["01", "RUNS", "/runs"],
@@ -13,6 +13,27 @@ const menuItems = [
 
 export default function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [distance, setDistance] = useState(0);
+  const ticking = useRef(false);
+
+  useEffect(() => {
+    const updateDistance = () => {
+      // A playful scroll-distance counter: ~1 km per 1000 px scrolled.
+      setDistance(Math.max(0, window.scrollY / 1000));
+      ticking.current = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking.current) {
+        ticking.current = true;
+        window.requestAnimationFrame(updateDistance);
+      }
+    };
+
+    updateDistance();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <>
@@ -29,6 +50,13 @@ export default function SiteHeader() {
 
           <div className="header-actions">
             <Link className="header-login" href="/login">LOG IN</Link>
+
+            <div className="scroll-distance" aria-label="Distance scrolled">
+              <span>{distance.toFixed(3)}</span>
+              <b>KM</b>
+              <i>↓</i>
+            </div>
+
             <button
               className="menu-trigger"
               type="button"
@@ -47,6 +75,7 @@ export default function SiteHeader() {
           <Link href="/" className="brand" onClick={() => setOpen(false)}>
             <img src="/uss-logo.png" alt="USS" className="brand-logo brand-logo-dark" />
           </Link>
+
           <button className="menu-close" type="button" onClick={() => setOpen(false)}>
             CLOSE <span>×</span>
           </button>
