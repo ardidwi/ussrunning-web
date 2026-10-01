@@ -23,6 +23,29 @@ export default function SiteFooter() {
   return (
     <footer className="uss-footer">
       <div className="uss-footer-inner">
+        <section className="uss-newsletter" aria-labelledby="newsletter-title">
+          <div>
+            <span className="kicker">USS DISPATCH</span>
+            <h2 id="newsletter-title">STAY IN THE LOOP.</h2>
+            <p>Runs, community stories, race-week moments and selected USS updates. No noise.</p>
+          </div>
+
+          <form className="uss-newsletter-form">
+            <div className="uss-newsletter-row">
+              <input type="email" placeholder="your@email.com" aria-label="Email address" required />
+              <button type="submit">SUBSCRIBE</button>
+            </div>
+
+            <label className="footer-consent-check">
+              <input type="checkbox" required />
+              <span>
+                I have read the <Link href="/privacy">Privacy Policy</Link> and consent to USS Running
+                using my email to send community updates. I can unsubscribe at any time.
+              </span>
+            </label>
+          </form>
+        </section>
+
         <div className="uss-footer-main">
           <div className="uss-footer-brand">
             <img src="/uss-logo.png" alt="USS" className="uss-footer-logo" />
@@ -63,20 +86,16 @@ export default function SiteFooter() {
           <div className="uss-footer-column">
             <span className="uss-footer-heading">CONNECT</span>
             <Link href="/partners">Partners</Link>
-            <a href="https://www.instagram.com/ussrunning?stkn=MTZyNnkybXhiN29wZQ==" target="_blank" rel="noreferrer">
-              Instagram
-            </a>
-            <a href="https://strava.app.link/fC4mwJNBS6b" target="_blank" rel="noreferrer">
-              Strava
-            </a>
+            <a href="https://www.instagram.com/ussrunning?stkn=MTZyNnkybXhiN29wZQ==" target="_blank" rel="noreferrer">Instagram</a>
+            <a href="https://strava.app.link/fC4mwJNBS6b" target="_blank" rel="noreferrer">Strava</a>
             <a href="mailto:hello@ussrunning.com">Contact</a>
           </div>
 
           <div className="uss-footer-column uss-footer-legal">
             <span className="uss-footer-heading">LEGAL</span>
-            <span>Privacy Policy</span>
-            <span>Terms of Use</span>
-            <span>Cookie Settings</span>
+            <Link href="/privacy">Privacy Policy</Link>
+            <Link href="/terms">Terms of Use</Link>
+            <Link href="/privacy#cookies">Cookie & Storage Notice</Link>
           </div>
         </div>
 
