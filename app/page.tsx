@@ -42,7 +42,7 @@ export default function HomePage() {
         </div>
         <div className="hero-scrim" />
 
-        <div className="hero-content">
+        <div className="hero-content content-frame hero-frame">
           <div className="hero-meta">
             <span>EST. 2024</span>
           </div>
@@ -57,10 +57,7 @@ export default function HomePage() {
               USS Running is a community-driven movement where running meets
               lifestyle, culture and the city.
             </p>
-            <div className="hero-actions">
-              <Link href="/runs" className="hero-action hero-action-primary">JOIN A RUN</Link>
-              <Link href="/partners" className="hero-action">CONNECT ↗</Link>
-            </div>
+            <Link href="/runs" className="circle-link" aria-label="Explore runs">↘</Link>
           </div>
         </div>
       </section>
