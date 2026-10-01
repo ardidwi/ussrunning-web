@@ -18,7 +18,15 @@ export default function HomePage() {
             <span>JAKARTA, INDONESIA</span>
             <span>EST. 2024</span>
           </div>
-          <h1>WE RUN.<br />WE CONNECT.<br />WE MOVE.</h1>
+
+          <div className="hero-title-block">
+            <div className="hero-brand-lockup" aria-label="USS Running">
+              <span className="brand-label hero-brand-label">RUNNING</span>
+              <img src="/uss-logo.png" alt="USS" className="hero-brand-logo" />
+            </div>
+            <h1>WE RUN.<br />WE CONNECT.<br />WE MOVE.</h1>
+          </div>
+
           <div className="hero-bottom">
             <p>USS Running is a community-driven movement where running meets lifestyle, culture and the city.</p>
             <Link href="/runs" className="circle-link" aria-label="Explore runs">↘</Link>
