@@ -13,8 +13,7 @@ const menuItems = [
 
 export default function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const [distance, setDistance] = useState(0);
-  const [hasScrolled, setHasScrolled] = useState(false);
+  const [meters, setMeters] = useState(0);
   const ticking = useRef(false);
 
   useEffect(() => {
@@ -31,13 +30,14 @@ export default function SiteHeader() {
       );
       const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
 
-      // Scroll the full page = 3.100 miles, a playful 5K-inspired website route.
-      setDistance(progress * 3.1);
-      setHasScrolled(window.scrollY > 72);
+      // Treat the full website as a playful 5K route.
+      setMeters(Math.round(progress * 5000));
       ticking.current = false;
     };
 
     const onScroll = () => {
+      setOpen(false);
+
       if (!ticking.current) {
         ticking.current = true;
         window.requestAnimationFrame(updateDistance);
@@ -71,9 +71,9 @@ export default function SiteHeader() {
           <div className="header-actions">
             <Link className="header-login" href="/login">LOG IN</Link>
 
-            <div className="scroll-distance" aria-label="Miles scrolled through the site">
-              <span>{distance.toFixed(3)}</span>
-              <b>MI</b>
+            <div className="scroll-distance" aria-label="Website route distance">
+              <span>{String(meters).padStart(4, "0")}</span>
+              <b>M</b>
               <i>↓</i>
             </div>
 
@@ -90,14 +90,12 @@ export default function SiteHeader() {
         </div>
       </header>
 
-      <div
-        className={hasScrolled ? "scroll-distance-float is-visible" : "scroll-distance-float"}
-        aria-label="Miles scrolled through the site"
-      >
-        <span>{distance.toFixed(3)}</span>
-        <b>MI</b>
-        <i>↓</i>
-      </div>
+      <button
+        className={open ? "menu-dismiss is-open" : "menu-dismiss"}
+        type="button"
+        aria-label="Close menu"
+        onClick={() => setOpen(false)}
+      />
 
       <aside className={open ? "menu-panel is-open" : "menu-panel"} id="uss-menu" aria-hidden={!open}>
         <div className="menu-panel-head">
@@ -105,9 +103,7 @@ export default function SiteHeader() {
             <span className="menu-eyebrow">USS RUNNING / JAKARTA</span>
             <b>MENU</b>
           </div>
-          <button className="menu-close" type="button" onClick={() => setOpen(false)}>
-            CLOSE <span>×</span>
-          </button>
+          <span className="menu-auto-note">CLICK OUTSIDE OR SCROLL TO CLOSE</span>
         </div>
 
         <nav className="menu-panel-list" aria-label="Full navigation">
