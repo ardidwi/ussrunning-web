@@ -88,7 +88,47 @@ export default function AdminPage() {
           </div>
         )}
 
-        {!["Overview","Events","Content"].includes(active) && (
+        {active === "Membership" && (
+          <div className="admin-panel admin-wide">
+            <div className="panel-head">
+              <div><span className="admin-eyebrow">MEMBERSHIP MODEL</span><h2>Free community access</h2></div>
+              <span className="admin-free-badge">IDR 0 / ALWAYS</span>
+            </div>
+
+            <div className="membership-admin-summary">
+              <div>
+                <span>PAID TIERS</span>
+                <strong>OFF</strong>
+                <em>USS has one free membership model.</em>
+              </div>
+              <div>
+                <span>USS ID</span>
+                <strong>ON</strong>
+                <em>Used for RSVP, run pass and history.</em>
+              </div>
+              <div>
+                <span>PUBLIC JOIN</span>
+                <strong>ON</strong>
+                <em>No subscription or checkout flow.</em>
+              </div>
+            </div>
+
+            <div className="admin-form-grid">
+              <label>MEMBERSHIP NAME<input defaultValue="USS MEMBER" /></label>
+              <label>MEMBERSHIP FEE<input defaultValue="IDR 0" readOnly /></label>
+              <label className="admin-span-2">MEMBERSHIP MESSAGE
+                <textarea defaultValue="Join the crew. It's free. One USS ID for community runs, run passes and your history." />
+              </label>
+            </div>
+
+            <div className="admin-actions">
+              <button>SAVE DRAFT</button>
+              <button className="admin-primary">PUBLISH MEMBERSHIP COPY</button>
+            </div>
+          </div>
+        )}
+
+        {!["Overview","Events","Content","Membership"].includes(active) && (
           <div className="admin-panel admin-wide placeholder-panel">
             <span className="admin-eyebrow">{active.toUpperCase()} MODULE</span>
             <h2>READY FOR THE NEXT MVP PASS.</h2>
