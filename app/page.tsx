@@ -26,7 +26,7 @@ export default function HomePage() {
           </div>
 
           <div className="hero-title-block">
-            <img src="/uss-logo.png" alt="USS" className="hero-brand-logo" />
+            <span className="hero-location">JAKARTA, INDONESIA</span>
             <h1>WE RUN.<br />WE CONNECT.<br />WE MOVE.</h1>
           </div>
 
