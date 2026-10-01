@@ -5,11 +5,15 @@ Presentation-ready MVP for the USS Running community platform.
 ## MVP routes
 
 - `/` Editorial homepage
+- `/about` USS Running story and mission
 - `/runs` Events and community runs
 - `/runs/[slug]` Event detail
-- `/membership` Membership concept
+- `/membership` Free membership concept
+- `/join` Free USS ID registration
 - `/stories` Editorial / journal
 - `/partners` Partnership landing page
+- `/privacy` Privacy Policy
+- `/terms` Terms of Use
 - `/login` Login prototype
 - `/dashboard` Member dashboard prototype
 - `/admin` CMS / control center prototype
@@ -19,3 +23,5 @@ Presentation-ready MVP for the USS Running community platform.
 Next.js + React + TypeScript + custom CSS.
 
 The current build is deliberately frontend-first for internal presentation. Authentication, database persistence, real QR generation/check-in, email and production CMS persistence are planned after the product direction is approved.
+
+> Deployment trigger refreshed after reconnecting the Vercel Git integration on 1 October 2026.
