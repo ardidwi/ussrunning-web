@@ -54,6 +54,7 @@ export default function SiteFooter() {
           <div className="uss-footer-column">
             <span className="uss-footer-heading">EXPLORE</span>
             <Link href="/runs">Runs</Link>
+            <Link href="/about">About</Link>
             <Link href="/membership">Membership</Link>
             <Link href="/stories">Stories</Link>
             <Link href="/login">My USS</Link>
