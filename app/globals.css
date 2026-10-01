@@ -2035,3 +2035,458 @@ h1,h2,h3,p{margin-top:0}
     height:44px;
   }
 }
+
+
+/* ---- Privacy-aware footer newsletter ---- */
+.uss-newsletter{
+  display:grid;
+  grid-template-columns:.82fr 1.18fr;
+  gap:70px;
+  align-items:end;
+  padding:68px 0 56px;
+  border-bottom:1px solid #303030;
+}
+.uss-newsletter h2{
+  font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;
+  font-size:clamp(44px,4.8vw,72px);
+  line-height:.92;
+  font-weight:400;
+  letter-spacing:-.02em;
+  margin:14px 0 14px;
+}
+.uss-newsletter>div>p{
+  display:block;
+  max-width:460px;
+  margin:0;
+  font-size:13px;
+  line-height:1.65;
+  color:#9b9b97;
+}
+.uss-newsletter-form{
+  max-width:650px;
+  width:100%;
+  justify-self:end;
+}
+.uss-newsletter-row{
+  display:grid;
+  grid-template-columns:1fr auto;
+}
+.uss-newsletter-row input{
+  min-width:0;
+  height:50px;
+  border:1px solid #4a4a4a;
+  border-right:0;
+  background:transparent;
+  color:#fff;
+  padding:0 16px;
+  outline:none;
+}
+.uss-newsletter-row input:focus{
+  border-color:#8a8a8a;
+}
+.uss-newsletter-row button{
+  border:0;
+  background:var(--red);
+  color:#070707;
+  padding:0 22px;
+  min-width:122px;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+.footer-consent-check{
+  display:grid;
+  grid-template-columns:16px 1fr;
+  gap:10px;
+  align-items:start;
+  margin-top:14px;
+  color:#888;
+  font-size:10px;
+  line-height:1.55;
+}
+.footer-consent-check input{
+  width:14px;
+  height:14px;
+  margin:2px 0 0;
+  accent-color:var(--red);
+}
+.footer-consent-check a{
+  color:#d6d6d2;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+
+/* ---- Legal pages ---- */
+.legal-page{
+  background:#080808;
+}
+.legal-hero{
+  padding:112px 0 88px;
+  border-bottom:1px solid var(--line);
+}
+.legal-hero h1{
+  font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;
+  font-size:clamp(72px,9vw,138px);
+  line-height:.84;
+  font-weight:400;
+  letter-spacing:-.03em;
+  margin:28px 0 30px;
+}
+.legal-hero>div>p{
+  max-width:720px;
+  color:#a7a7a3;
+  font-size:14px;
+  line-height:1.75;
+  margin:30px 0 0;
+}
+.legal-hero-meta{
+  display:flex;
+  gap:24px;
+  flex-wrap:wrap;
+  padding-top:18px;
+  border-top:1px solid var(--line);
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.1em;
+  color:#777;
+}
+.legal-content{
+  padding:92px 0 110px;
+}
+.legal-layout{
+  display:grid;
+  grid-template-columns:260px minmax(0,1fr);
+  gap:70px;
+  align-items:start;
+}
+.legal-index{
+  position:sticky;
+  top:110px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.legal-index .kicker{
+  margin-bottom:10px;
+  color:#666;
+}
+.legal-index a{
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.06em;
+  color:#777;
+  line-height:1.35;
+}
+.legal-index a:hover{
+  color:#fff;
+}
+.legal-sections{
+  border-top:1px solid var(--line);
+}
+.legal-section{
+  scroll-margin-top:110px;
+  display:grid;
+  grid-template-columns:68px 1fr;
+  gap:24px;
+  padding:28px 0 34px;
+  border-bottom:1px solid var(--line);
+}
+.legal-section>span{
+  font-size:9px;
+  font-weight:900;
+  color:#666;
+  letter-spacing:.12em;
+}
+.legal-section h2{
+  font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;
+  font-size:36px;
+  line-height:1;
+  font-weight:400;
+  letter-spacing:.01em;
+  margin:0 0 14px;
+}
+.legal-section p{
+  max-width:820px;
+  margin:0;
+  color:#aaa;
+  font-size:13px;
+  line-height:1.8;
+}
+.legal-section a,
+.legal-contact a{
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+.legal-contact{
+  padding:72px 0 12px;
+}
+.legal-contact h2{
+  font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;
+  font-size:clamp(54px,6vw,88px);
+  line-height:.9;
+  font-weight:400;
+  margin:18px 0 24px;
+}
+.legal-contact p{
+  max-width:650px;
+  color:#999;
+  font-size:13px;
+  line-height:1.75;
+  margin-bottom:28px;
+}
+
+/* ---- Free membership signup ---- */
+.join-shell{
+  min-height:100svh;
+  display:grid;
+  grid-template-columns:.8fr 1.2fr;
+  background:#090909;
+}
+.join-brand{
+  position:absolute;
+  z-index:2;
+  top:32px;
+  left:38px;
+  width:104px;
+}
+.join-intro{
+  padding:150px 56px 60px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  border-right:1px solid #282828;
+  background:
+    linear-gradient(0deg,rgba(0,0,0,.8),rgba(0,0,0,.24)),
+    #111;
+}
+.join-intro h1{
+  font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;
+  font-size:clamp(78px,8vw,126px);
+  line-height:.84;
+  font-weight:400;
+  margin:24px 0 32px;
+}
+.join-intro>p{
+  max-width:460px;
+  color:#aaa;
+  font-size:14px;
+  line-height:1.7;
+}
+.join-price{
+  margin-top:54px;
+  padding-top:18px;
+  border-top:1px solid #3c3c3c;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:20px;
+}
+.join-price strong{
+  font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;
+  font-size:58px;
+  font-weight:400;
+}
+.join-price span{
+  padding-bottom:8px;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.11em;
+  color:#777;
+  text-align:right;
+}
+.join-form-panel{
+  background:var(--off);
+  color:#080808;
+  padding:80px clamp(28px,6vw,90px) 60px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.join-form-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding-bottom:22px;
+  border-bottom:1px solid #aaa;
+  margin-bottom:28px;
+}
+.join-form-head>span:last-child{
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.1em;
+  color:#777;
+}
+.join-form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px 20px;
+}
+.join-form-grid label{
+  display:block;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.11em;
+  color:#555;
+}
+.join-form-grid label>span{
+  font-weight:700;
+  color:#999;
+}
+.join-form-grid input{
+  width:100%;
+  height:44px;
+  margin-top:7px;
+  border:0;
+  border-bottom:1px solid #999;
+  background:transparent;
+  outline:none;
+  color:#080808;
+  padding:0;
+}
+.join-form-grid input:focus{
+  border-color:#080808;
+}
+.consent-stack{
+  margin:30px 0 24px;
+  padding:20px 0;
+  border-top:1px solid #aaa;
+  border-bottom:1px solid #aaa;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.consent-check{
+  display:grid;
+  grid-template-columns:18px 1fr;
+  gap:10px;
+  align-items:start;
+  font-size:10px;
+  line-height:1.6;
+  color:#424242;
+}
+.consent-check input{
+  width:15px;
+  height:15px;
+  margin:2px 0 0;
+  accent-color:#080808;
+}
+.consent-check a{
+  text-decoration:underline;
+  text-underline-offset:3px;
+  font-weight:700;
+}
+.consent-optional{
+  color:#6b6b6b;
+}
+.join-submit{
+  min-height:48px;
+}
+.join-form>small{
+  display:block;
+  margin-top:18px;
+  font-size:8px;
+  letter-spacing:.08em;
+}
+.join-form>small a{
+  font-weight:900;
+}
+
+/* ---- Responsive legal/privacy/join/footer consent ---- */
+@media(max-width:1000px){
+  .uss-newsletter{
+    grid-template-columns:1fr;
+    gap:30px;
+  }
+  .uss-newsletter-form{
+    justify-self:start;
+  }
+  .legal-layout{
+    grid-template-columns:200px 1fr;
+    gap:42px;
+  }
+  .join-shell{
+    grid-template-columns:1fr;
+  }
+  .join-intro{
+    min-height:520px;
+    border-right:0;
+    border-bottom:1px solid #282828;
+  }
+}
+
+@media(max-width:760px){
+  .uss-newsletter{
+    padding:46px 0 40px;
+  }
+  .uss-newsletter h2{
+    font-size:46px;
+  }
+  .uss-newsletter-row{
+    grid-template-columns:1fr;
+    gap:8px;
+  }
+  .uss-newsletter-row input{
+    border-right:1px solid #4a4a4a;
+  }
+  .uss-newsletter-row button{
+    min-height:46px;
+  }
+
+  .legal-hero{
+    padding:74px 0 60px;
+  }
+  .legal-content{
+    padding:62px 0 78px;
+  }
+  .legal-layout{
+    grid-template-columns:1fr;
+    gap:38px;
+  }
+  .legal-index{
+    position:static;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 16px;
+    padding-bottom:24px;
+    border-bottom:1px solid var(--line);
+  }
+  .legal-index .kicker{
+    grid-column:1 / -1;
+  }
+  .legal-section{
+    grid-template-columns:42px 1fr;
+    gap:14px;
+  }
+  .legal-section h2{
+    font-size:30px;
+  }
+
+  .join-brand{
+    top:22px;
+    left:18px;
+    width:82px;
+  }
+  .join-intro{
+    padding:110px 18px 54px;
+    min-height:480px;
+  }
+  .join-intro h1{
+    font-size:72px;
+  }
+  .join-form-panel{
+    padding:48px 18px 54px;
+  }
+  .join-form-grid{
+    grid-template-columns:1fr;
+    gap:16px;
+  }
+}
+
+@media(max-width:480px){
+  .legal-index{
+    grid-template-columns:1fr;
+  }
+  .legal-section{
+    grid-template-columns:1fr;
+  }
+}
