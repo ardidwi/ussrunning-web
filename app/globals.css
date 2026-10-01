@@ -1355,3 +1355,130 @@ h1,h2,h3,p{margin-top:0}
     align-items:flex-start;
   }
 }
+
+
+/* ---- Header v4: all navigation visible, no menu drawer ---- */
+.site-header{
+  height:82px !important;
+}
+.site-header-inner.site-header-all-nav{
+  width:min(100% - 72px,1440px);
+  height:100%;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:120px 1fr auto;
+  align-items:center;
+  gap:28px;
+}
+.header-main-nav{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(18px,2.2vw,34px);
+  min-width:0;
+  white-space:nowrap;
+}
+.header-main-nav a{
+  position:relative;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.105em;
+  transition:opacity .16s ease;
+}
+.header-main-nav a:hover{
+  opacity:.55;
+}
+.header-main-nav a:last-child{
+  border:1px solid rgba(255,255,255,.45);
+  padding:9px 12px;
+}
+.header-actions-meter-only{
+  justify-self:end;
+}
+.menu-trigger,
+.menu-panel,
+.menu-dismiss,
+.menu-overlay{
+  display:none !important;
+}
+.hero{
+  padding-top:82px !important;
+}
+.page-black{
+  padding-top:82px !important;
+}
+
+@media(max-width:1180px){
+  .site-header{
+    height:76px !important;
+  }
+  .site-header-inner.site-header-all-nav{
+    width:calc(100% - 40px);
+    grid-template-columns:90px 1fr auto;
+    gap:16px;
+  }
+  .brand-logo{
+    width:76px;
+  }
+  .header-main-nav{
+    gap:14px;
+    justify-content:flex-start;
+    overflow-x:auto;
+    scrollbar-width:none;
+    -ms-overflow-style:none;
+  }
+  .header-main-nav::-webkit-scrollbar{
+    display:none;
+  }
+  .header-main-nav a{
+    font-size:9px;
+    flex:0 0 auto;
+  }
+  .hero{
+    padding-top:76px !important;
+  }
+  .page-black{
+    padding-top:76px !important;
+  }
+}
+
+@media(max-width:760px){
+  .site-header{
+    height:108px !important;
+  }
+  .site-header-inner.site-header-all-nav{
+    width:calc(100% - 28px);
+    grid-template-columns:1fr auto;
+    grid-template-rows:54px 54px;
+    gap:0 12px;
+  }
+  .brand{
+    grid-column:1;
+    grid-row:1;
+  }
+  .header-actions-meter-only{
+    grid-column:2;
+    grid-row:1;
+  }
+  .header-main-nav{
+    grid-column:1 / -1;
+    grid-row:2;
+    width:100%;
+    justify-content:flex-start;
+    gap:18px;
+    border-top:1px solid rgba(255,255,255,.12);
+  }
+  .header-main-nav a{
+    font-size:9px;
+  }
+  .header-main-nav a:last-child{
+    border:0;
+    padding:0;
+  }
+  .hero{
+    padding-top:108px !important;
+  }
+  .page-black{
+    padding-top:108px !important;
+  }
+}
