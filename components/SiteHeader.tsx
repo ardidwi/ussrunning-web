@@ -3,9 +3,9 @@ import Link from "next/link";
 export default function SiteHeader() {
   return (
     <header className="site-header">
-      <Link href="/" className="brand" aria-label="USS Running home">
-        <span className="brand-mark">USS</span>
-        <span className="brand-sub">RUNNING</span>
+      <Link href="/" className="brand brand-stack" aria-label="USS Running home">
+        <span className="brand-label">RUNNING</span>
+        <img src="/uss-logo.png" alt="USS" className="brand-logo" />
       </Link>
 
       <nav className="desktop-nav" aria-label="Main navigation">
