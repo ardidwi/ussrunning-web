@@ -23,7 +23,7 @@ export default function LoginPage() {
 
         <div className="auth-separator"><span>OR</span></div>
         <Link className="button auth-preview-button full-button" href="/dashboard">PREVIEW MY USS</Link>
-        <small>NO USS ID YET? <Link href="/membership">JOIN FREE ↗</Link></small>
+        <small>NO USS ID YET? <Link href="/join">JOIN FREE ↗</Link></small>
       </div>
     </main>
   );
