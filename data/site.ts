@@ -47,8 +47,8 @@ export const runs: Run[] = [
 ];
 
 export const stats = [
-  { value: "18", label: "RUNNERS ON DAY ONE" },
-  { value: "500+", label: "RUNNERS AT YEAR ONE" },
-  { value: "10M+", label: "SOCIAL VIEWS" },
-  { value: "JKT", label: "BUILT IN THE CITY" },
+  { value: "18", label: "RUNNERS / DAY ONE" },
+  { value: "500+", label: "RUNNERS / DAY 365" },
+  { value: "100+", label: "PEOPLE / CHEERING" },
+  { value: "JKT", label: "HOME / JAKARTA" },
 ];
