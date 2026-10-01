@@ -95,7 +95,7 @@ export default function SiteFooter() {
             <span className="uss-footer-heading">LEGAL</span>
             <Link href="/privacy">Privacy Policy</Link>
             <Link href="/terms">Terms of Use</Link>
-            <Link href="/cookies">Cookie Settings</Link>
+            <Link href="/privacy#cookies">Cookie Settings</Link>
           </div>
         </div>
 
