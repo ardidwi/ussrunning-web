@@ -21,60 +21,67 @@ function StravaIcon() {
 
 export default function SiteFooter() {
   return (
-    <footer className="site-footer">
-      <div className="footer-brand">
-        <img src="/uss-logo.png" alt="USS" className="footer-logo-image" />
-      </div>
+    <footer className="uss-footer">
+      <div className="uss-footer-inner">
+        <div className="uss-footer-main">
+          <div className="uss-footer-brand">
+            <img src="/uss-logo.png" alt="USS" className="uss-footer-logo" />
+            <p>Built in Jakarta. Made to move together.</p>
 
-      <div className="footer-links">
-        <Link href="/runs">RUNS</Link>
-        <Link href="/membership">MEMBERSHIP</Link>
-        <Link href="/stories">STORIES</Link>
-        <Link href="/partners">PARTNERS</Link>
-        <Link href="/login">MY USS</Link>
-      </div>
+            <div className="uss-footer-socials" aria-label="USS Running social links">
+              <a
+                href="https://www.instagram.com/ussrunning?stkn=MTZyNnkybXhiN29wZQ=="
+                target="_blank"
+                rel="noreferrer"
+                aria-label="USS Running on Instagram"
+                title="Instagram"
+              >
+                <InstagramIcon />
+              </a>
 
-      <div className="footer-newsletter">
-        <span className="kicker">STAY CLOSE / GET THE NEXT RUN</span>
-        <div className="newsletter-row">
-          <input aria-label="Email address" placeholder="EMAIL ADDRESS" />
-          <button type="button">SIGN UP</button>
+              <a
+                href="https://strava.app.link/fC4mwJNBS6b"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="USS Running on Strava"
+                title="Strava"
+              >
+                <StravaIcon />
+              </a>
+            </div>
+          </div>
+
+          <div className="uss-footer-column">
+            <span className="uss-footer-heading">EXPLORE</span>
+            <Link href="/runs">Runs</Link>
+            <Link href="/membership">Membership</Link>
+            <Link href="/stories">Stories</Link>
+            <Link href="/login">My USS</Link>
+          </div>
+
+          <div className="uss-footer-column">
+            <span className="uss-footer-heading">CONNECT</span>
+            <Link href="/partners">Partners</Link>
+            <a href="https://www.instagram.com/ussrunning?stkn=MTZyNnkybXhiN29wZQ==" target="_blank" rel="noreferrer">
+              Instagram
+            </a>
+            <a href="https://strava.app.link/fC4mwJNBS6b" target="_blank" rel="noreferrer">
+              Strava
+            </a>
+            <a href="mailto:hello@ussrunning.com">Contact</a>
+          </div>
+
+          <div className="uss-footer-column uss-footer-legal">
+            <span className="uss-footer-heading">LEGAL</span>
+            <span>Privacy Policy</span>
+            <span>Terms of Use</span>
+            <span>Cookie Settings</span>
+          </div>
         </div>
-      </div>
 
-      <div className="footer-socials">
-        <span className="footer-socials-label">FOLLOW THE RUN</span>
-
-        <div className="footer-social-links">
-          <a
-            className="footer-social-link"
-            href="https://strava.app.link/fC4mwJNBS6b"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="USS Running on Strava"
-          >
-            <span className="footer-social-icon"><StravaIcon /></span>
-            <span className="footer-social-copy">
-              <small>STRAVA</small>
-              <strong>USS RUNNING</strong>
-            </span>
-            <i>↗</i>
-          </a>
-
-          <a
-            className="footer-social-link"
-            href="https://www.instagram.com/ussrunning?stkn=MTZyNnkybXhiN29wZQ=="
-            target="_blank"
-            rel="noreferrer"
-            aria-label="USS Running on Instagram"
-          >
-            <span className="footer-social-icon"><InstagramIcon /></span>
-            <span className="footer-social-copy">
-              <small>INSTAGRAM</small>
-              <strong>@USSRUNNING</strong>
-            </span>
-            <i>↗</i>
-          </a>
+        <div className="uss-footer-bottom">
+          <span>© 2026 USS Running. All rights reserved.</span>
+          <span>RUNNING / COMMUNITY / CULTURE</span>
         </div>
       </div>
     </footer>
