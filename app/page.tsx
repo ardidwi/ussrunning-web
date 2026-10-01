@@ -179,11 +179,13 @@ export default function HomePage() {
       </section>
 
       <section className="partner-strip">
-        <span>RUNNING IS THE ENTRY POINT</span>
-        <div className="partner-wordmarks">
-          <b>RUN</b><b>CHEER</b><b>EAT</b><b>CREATE</b><b>CONNECT</b>
+        <div className="partner-strip-inner">
+          <span className="partner-strip-label">RUNNING IS THE ENTRY POINT</span>
+          <div className="partner-wordmarks" aria-label="USS community pillars">
+            <b>RUN</b><i>/</i><b>CHEER</b><i>/</i><b>EAT</b><i>/</i><b>CREATE</b><i>/</i><b>CONNECT</b>
+          </div>
+          <Link href="/partners">BUILD WITH USS ↗</Link>
         </div>
-        <Link href="/partners">BUILD WITH USS ↗</Link>
       </section>
 
       <SiteFooter />
