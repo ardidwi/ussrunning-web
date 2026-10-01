@@ -652,3 +652,69 @@ h1,h2,h3,p{margin-top:0}
   }
   .menu-panel-foot a{text-align:left}
 }
+
+
+/* ---- Scroll miles gimmick ---- */
+.scroll-distance,
+.scroll-distance-float{
+  font-variant-numeric:tabular-nums;
+}
+.scroll-distance-float{
+  position:fixed;
+  z-index:95;
+  top:18px;
+  right:max(24px,calc((100vw - 1440px)/2));
+  height:31px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  border:1px solid rgba(255,255,255,.72);
+  background:rgba(7,7,7,.82);
+  backdrop-filter:blur(8px);
+  padding:0 9px;
+  color:#fff;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.05em;
+  white-space:nowrap;
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(-7px);
+  transition:opacity .16s ease,transform .16s ease,visibility .16s;
+  pointer-events:none;
+}
+.scroll-distance-float.is-visible{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0);
+}
+.scroll-distance-float span{
+  min-width:39px;
+  text-align:right;
+}
+.scroll-distance-float b{
+  font-size:8px;
+}
+.scroll-distance-float i{
+  font-style:normal;
+  font-size:11px;
+}
+
+@media(max-width:1440px){
+  .scroll-distance-float{right:24px}
+}
+@media(max-width:1180px){
+  .scroll-distance-float{
+    top:14px;
+    right:18px;
+  }
+}
+@media(max-width:620px){
+  .scroll-distance-float{
+    top:12px;
+    right:14px;
+    height:28px;
+    padding:0 7px;
+  }
+  .scroll-distance-float b{display:inline}
+}
