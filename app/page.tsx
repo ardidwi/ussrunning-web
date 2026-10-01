@@ -54,8 +54,9 @@ export default function HomePage() {
 
           <div className="hero-bottom">
             <p>
-              USS Running is a community-driven movement where running meets
-              lifestyle, culture and the city.
+              Built in Jakarta. USS Running brings people together through
+              movement, then keeps the story going through culture, friendship
+              and shared experiences.
             </p>
             <Link href="/runs" className="circle-link" aria-label="Explore runs">↘</Link>
           </div>
@@ -97,13 +98,13 @@ export default function HomePage() {
         <div className="content-frame">
           <div className="manifesto-label">02 / OUR MOVEMENT</div>
           <p className="manifesto-copy">
-            STARTED WITH <strong>18 FRIENDS.</strong><br />
-            ONE YEAR LATER, AROUND <strong>500 RUNNERS</strong> SHOWED UP.<br />
-            THIS IS NOT ABOUT PACE. IT&apos;S ABOUT <strong>SHOWING UP.</strong>
+            RUNNING BROUGHT US TOGETHER.<br />
+            <strong>18 RUNNERS</strong> ON DAY ONE. AROUND <strong>500</strong> ON DAY 365.<br />
+            WE RUN, CHEER, EAT, CREATE AND <strong>SHOW UP FOR EACH OTHER.</strong>
           </p>
           <div className="manifesto-foot">
-            <span>NO FINISH LINE FOR COMMUNITY.</span>
-            <Link href="/membership">BECOME A MEMBER ↗</Link>
+            <span>PEOPLE OVER PACE / JAKARTA SINCE 2024</span>
+            <Link href="/membership">JOIN USS — FREE ↗</Link>
           </div>
         </div>
       </section>
@@ -152,14 +153,14 @@ export default function HomePage() {
         </div>
 
         <div className="editorial-copy">
-          <span className="kicker">04 / MEMBERSHIP</span>
-          <h2>YOUR RUNS.<br />YOUR PEOPLE.<br />ONE ID.</h2>
+          <span className="kicker">04 / MEMBERSHIP / FREE</span>
+          <h2>ONE COMMUNITY.<br />NO PAID TIER.<br />ONE ID.</h2>
           <p>
-            Create your USS Running profile, RSVP to community sessions, keep
-            your QR pass and see every run you&apos;ve joined in one place.
+            USS membership is free. Create one community ID to RSVP to runs,
+            keep your run pass and build your USS history as you keep showing up.
           </p>
-          <Link className="button button-dark" href="/membership">
-            EXPLORE MEMBERSHIP
+          <Link className="button button-light" href="/membership">
+            JOIN USS — FREE
           </Link>
         </div>
       </section>
@@ -167,7 +168,7 @@ export default function HomePage() {
       <section className="story-band">
         <div className="story-band-title">
           <span className="kicker">05 / STORIES</span>
-          <h2>MORE THAN<br />THE RUN.</h2>
+          <h2>THE PEOPLE.<br />THE CITY.<br />THE MILES.</h2>
         </div>
 
         <Link className="story-feature" href="/stories">
@@ -176,19 +177,19 @@ export default function HomePage() {
             alt=""
           />
           <div className="story-overlay">
-            <span>FIELD NOTES / 001</span>
-            <h3>WHY WE KEEP COMING BACK TO THE ROAD.</h3>
-            <span>READ STORY ↗</span>
+            <span>ORIGIN / 001</span>
+            <h3>18 RUNNERS. DAY ONE. THE START OF USS.</h3>
+            <span>READ THE STORY ↗</span>
           </div>
         </Link>
       </section>
 
       <section className="partner-strip">
-        <span>BUILT WITH THE COMMUNITY</span>
+        <span>RUNNING IS THE ENTRY POINT</span>
         <div className="partner-wordmarks">
-          <b>RUN CLUBS</b><b>BRANDS</b><b>CREATORS</b><b>THE CITY</b>
+          <b>RUN</b><b>CHEER</b><b>EAT</b><b>CREATE</b><b>CONNECT</b>
         </div>
-        <Link href="/partners">PARTNER WITH USS ↗</Link>
+        <Link href="/partners">BUILD WITH USS ↗</Link>
       </section>
 
       <SiteFooter />
