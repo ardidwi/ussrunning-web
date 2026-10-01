@@ -24,4 +24,4 @@ Next.js + React + TypeScript + custom CSS.
 
 The current build is deliberately frontend-first for internal presentation. Authentication, database persistence, real QR generation/check-in, email and production CMS persistence are planned after the product direction is approved.
 
-> Deployment trigger refreshed after reconnecting the Vercel Git integration on 1 October 2026.
+> Deployment trigger refreshed on 2 October 2026 to publish the latest main branch.
