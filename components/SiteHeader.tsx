@@ -5,10 +5,11 @@ import { useEffect, useRef, useState } from "react";
 
 const menuItems = [
   ["01", "RUNS", "/runs"],
-  ["02", "MEMBERSHIP", "/membership"],
-  ["03", "STORIES", "/stories"],
-  ["04", "PARTNERS", "/partners"],
-  ["05", "MY USS", "/login"],
+  ["02", "ABOUT", "/about"],
+  ["03", "MEMBERSHIP", "/membership"],
+  ["04", "STORIES", "/stories"],
+  ["05", "PARTNERS", "/partners"],
+  ["06", "MY USS", "/login"],
 ];
 
 export default function SiteHeader() {
@@ -21,8 +22,6 @@ export default function SiteHeader() {
       if (event.key === "Escape") setOpen(false);
     };
 
-    window.addEventListener("keydown", onKeyDown);
-
     const updateDistance = () => {
       const maxScroll = Math.max(
         1,
@@ -30,7 +29,6 @@ export default function SiteHeader() {
       );
       const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
 
-      // Treat the full website as a playful 5K route.
       setMeters(Math.round(progress * 5000));
       ticking.current = false;
     };
@@ -44,9 +42,10 @@ export default function SiteHeader() {
       }
     };
 
-    updateDistance();
+    window.addEventListener("keydown", onKeyDown);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", updateDistance);
+    updateDistance();
 
     return () => {
       window.removeEventListener("scroll", onScroll);
@@ -65,7 +64,7 @@ export default function SiteHeader() {
 
           <nav className="header-quick-nav" aria-label="Quick navigation">
             <Link href="/runs">RUNS</Link>
-            <Link href="/stories">STORIES</Link>
+            <Link href="/about">ABOUT</Link>
           </nav>
 
           <div className="header-actions">
@@ -101,9 +100,8 @@ export default function SiteHeader() {
         <div className="menu-panel-head">
           <div>
             <span className="menu-eyebrow">USS RUNNING / JAKARTA</span>
-            <b>MENU</b>
+            <b>EXPLORE</b>
           </div>
-          <span className="menu-auto-note">CLICK OUTSIDE OR SCROLL TO CLOSE</span>
         </div>
 
         <nav className="menu-panel-list" aria-label="Full navigation">
@@ -118,7 +116,7 @@ export default function SiteHeader() {
 
         <div className="menu-panel-foot">
           <span>RUNNING / COMMUNITY / CULTURE</span>
-          <Link href="/membership" onClick={() => setOpen(false)}>JOIN USS — FREE ↗</Link>
+          <Link href="/membership" onClick={() => setOpen(false)}>JOIN FREE ↗</Link>
         </div>
       </aside>
     </>
