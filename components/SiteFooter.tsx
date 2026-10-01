@@ -4,7 +4,10 @@ export default function SiteFooter() {
   return (
     <footer className="site-footer">
       <div>
-        <div className="footer-logo">USS® RUNNING</div>
+        <div className="footer-brand">
+          <span className="brand-label footer-brand-label">RUNNING</span>
+          <img src="/uss-logo.png" alt="USS" className="footer-logo-image" />
+        </div>
         <p>RUNNING / COMMUNITY / CULTURE<br />JAKARTA, INDONESIA</p>
       </div>
       <div className="footer-links">
