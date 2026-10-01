@@ -2,7 +2,8 @@ import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import EventCard from "@/components/EventCard";
-import { runs, stats } from "@/data/site";
+import { runs } from "@/data/site";
+import CommunityStats from "@/components/CommunityStats";
 
 const tickerText = "RUNNING / COMMUNITY / CULTURE /";
 const collaborations = [
@@ -104,19 +105,12 @@ export default function HomePage() {
           </p>
           <div className="manifesto-foot">
             <span>PEOPLE OVER PACE / JAKARTA SINCE 2024</span>
-            <Link href="/membership">JOIN USS — FREE ↗</Link>
+            <Link href="/about">OUR STORY ↗</Link>
           </div>
         </div>
       </section>
 
-      <section className="stats-grid">
-        {stats.map((stat) => (
-          <div className="stat" key={stat.label}>
-            <strong>{stat.value}</strong>
-            <span>{stat.label}</span>
-          </div>
-        ))}
-      </section>
+      <CommunityStats />
 
       <section className="collaborations-section">
         <div className="content-frame">
