@@ -3762,3 +3762,509 @@ h1,h2,h3,p{margin-top:0}
     padding-right:8px;
   }
 }
+
+
+/* =========================================================
+   Join + Login v4
+   Keep the editorial USS language, but make auth feel current.
+   ========================================================= */
+
+/* Desktop join: only the form column scrolls. The brand stays with the left panel. */
+.join-shell-v4{
+  height:100svh;
+  min-height:100svh;
+  overflow:hidden;
+  grid-template-columns:minmax(390px,.78fr) minmax(660px,1.22fr);
+}
+.join-intro-v4{
+  position:sticky;
+  top:0;
+  height:100svh;
+  min-height:100svh;
+  overflow:hidden;
+  padding:142px clamp(38px,4.4vw,68px) 38px;
+  background:
+    radial-gradient(circle at 90% 4%,rgba(255,59,33,.18),transparent 34%),
+    linear-gradient(145deg,#121212 0%,#070707 66%);
+}
+.join-brand-v4{
+  position:absolute;
+  top:34px;
+  left:clamp(38px,4.4vw,68px);
+  width:104px;
+  z-index:3;
+  line-height:0;
+}
+.join-intro-v4 .join-intro-copy{
+  margin:auto 0 54px;
+}
+.join-intro-v4 .join-intro-copy>p{
+  max-width:430px;
+  color:#aaa9a4;
+}
+.join-intro-v4 .join-intro-meta{
+  margin-top:auto;
+}
+.join-form-panel-v4{
+  height:100svh;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  background:#efede6;
+  color:#090909;
+  padding:52px clamp(30px,4.2vw,66px) 58px;
+  align-items:flex-start;
+}
+.join-form-stage{
+  width:min(100%,840px);
+  margin:0 auto;
+}
+.join-form-head-v4{
+  min-height:76px;
+  align-items:flex-start;
+  padding-bottom:20px;
+  margin-bottom:18px;
+  border-bottom:1px solid #bcb8af;
+}
+.join-form-head-v4>div{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+.join-form-head-v4>div>p{
+  margin:0;
+  font-size:11px;
+  color:#77736b;
+}
+.join-form-head-v4>span:last-child{
+  padding-top:2px;
+  color:#77736b;
+}
+
+/* Join form now reads as a product-quality account flow, not a spreadsheet. */
+.join-form-v3{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.join-form-v3 .join-form-section{
+  margin:0;
+  padding:22px;
+  border:1px solid #d2cec5;
+  background:#f8f6f0;
+}
+.join-form-v3 .join-form-section:first-child{
+  padding-top:22px;
+}
+.join-form-v3 .join-safety-section{
+  margin:0;
+  padding:22px;
+  background:#ebe8e0;
+  border-color:#cbc7bd;
+}
+.join-form-v3 .join-form-section-head{
+  grid-template-columns:28px 1fr;
+  margin-bottom:20px;
+  padding-bottom:16px;
+  border-bottom:1px solid #ddd9d0;
+}
+.join-form-v3 .join-form-section-head>span{
+  width:24px;
+  height:24px;
+  display:grid;
+  place-items:center;
+  border:1px solid #c7c3ba;
+  color:#79756d;
+}
+.join-form-v3 .join-form-section-head strong{
+  font-size:11px;
+  color:#111;
+}
+.join-form-v3 .join-form-section-head small{
+  font-size:10px;
+  color:#77736b;
+}
+.join-form-v3 .join-form-grid{
+  gap:16px;
+}
+.join-form-v3 .join-form-grid label{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.105em;
+  color:#5f5b54;
+}
+.join-form-v3 .join-form-grid input{
+  width:100%;
+  height:54px;
+  margin:0;
+  padding:0 14px;
+  border:1px solid #c9c5bb;
+  background:#fff;
+  color:#090909;
+  font-size:13px;
+  font-weight:500;
+  outline:none;
+  transition:border-color .16s ease,box-shadow .16s ease,background .16s ease;
+}
+.join-form-v3 .join-form-grid input::placeholder{
+  color:#aaa69d;
+}
+.join-form-v3 .join-form-grid input:hover{
+  border-color:#9e9a91;
+}
+.join-form-v3 .join-form-grid input:focus{
+  border-color:#111;
+  background:#fff;
+  box-shadow:0 0 0 3px rgba(0,0,0,.055);
+}
+.join-form-v3 .join-required-note{
+  margin:2px 0 0;
+  padding:0 2px;
+}
+.join-form-v3 .consent-stack{
+  margin:0;
+  padding:18px 20px;
+  border:1px solid #d2cec5;
+  background:#f8f6f0;
+}
+.join-form-v3 .consent-check{
+  align-items:flex-start;
+}
+.join-form-v3 .consent-check input{
+  margin-top:2px;
+}
+.join-submit-v3{
+  margin:0;
+  min-height:58px;
+  border:1px solid #080808;
+  background:#080808;
+}
+.join-login-link{
+  margin:0;
+  padding:14px 2px 2px;
+}
+.join-required{
+  margin-left:2px;
+}
+
+/* Login v3 */
+.login-page-v3{
+  height:100svh;
+  min-height:100svh;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:minmax(0,1.08fr) minmax(480px,.92fr);
+  background:#080808;
+}
+.login-visual-v3{
+  height:100svh;
+  min-height:100svh;
+  padding:32px 38px 28px;
+}
+.login-visual-v3 .login-visual-image{
+  filter:grayscale(1) contrast(1.08);
+}
+.login-visual-v3 .login-visual-scrim{
+  background:
+    linear-gradient(90deg,rgba(0,0,0,.74) 0%,rgba(0,0,0,.24) 64%,rgba(0,0,0,.36) 100%),
+    linear-gradient(0deg,rgba(0,0,0,.86) 0%,transparent 54%,rgba(0,0,0,.16) 100%);
+}
+.login-visual-copy-v3{
+  max-width:680px;
+  padding:58px 0 42px;
+}
+.login-visual-copy-v3 h1{
+  font-size:clamp(64px,6.6vw,104px);
+}
+.login-next-run-v3{
+  padding:16px 0 2px;
+}
+.login-panel-v3{
+  height:100svh;
+  min-height:100svh;
+  overflow-y:auto;
+  align-items:flex-start;
+  background:#efede6;
+}
+.login-panel-inner-v3{
+  width:min(calc(100% - 72px),590px);
+  min-height:100%;
+  margin:0 auto;
+  padding:42px 0 38px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.login-access-strip{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-bottom:34px;
+  padding-bottom:13px;
+  border-bottom:1px solid #c5c1b8;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.11em;
+  color:#77736b;
+}
+.login-access-strip i{
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:var(--red);
+}
+.login-panel-head-v3 h2{
+  font-size:clamp(56px,5vw,78px);
+  margin:14px 0 16px;
+}
+.login-panel-head-v3>p{
+  max-width:440px;
+  font-size:12px;
+  color:#66625b;
+}
+.login-auth-card{
+  margin-top:28px;
+  padding:22px;
+  border:1px solid #d0ccc3;
+  background:#f8f6f0;
+}
+.login-form-v3{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.login-field-v3{
+  display:block;
+}
+.login-field-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  margin-bottom:8px;
+}
+.login-field-head b,
+.login-field-head small{
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.105em;
+}
+.login-field-head b{
+  color:#555149;
+}
+.login-field-head small{
+  color:#aaa69d;
+}
+.login-field-v3 input{
+  width:100%;
+  height:56px;
+  border:1px solid #c9c5bb;
+  background:#fff;
+  color:#080808;
+  padding:0 14px;
+  outline:none;
+  font-size:13px;
+  transition:border-color .16s ease,box-shadow .16s ease;
+}
+.login-field-v3 input::placeholder{
+  color:#aaa69d;
+}
+.login-field-v3 input:focus{
+  border-color:#080808;
+  box-shadow:0 0 0 3px rgba(0,0,0,.055);
+}
+.login-form-meta-v3{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  padding-top:2px;
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.1em;
+  color:#8a867e;
+}
+.login-form-meta-v3 a{
+  color:#33312d;
+  border-bottom:1px solid #aaa69d;
+  padding-bottom:2px;
+}
+.login-primary-v3{
+  width:100%;
+  min-height:58px;
+  margin-top:2px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border:1px solid #080808;
+  background:#080808;
+  color:#fff;
+  padding:0 16px;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.11em;
+  cursor:pointer;
+  transition:background .16s ease,color .16s ease;
+}
+.login-primary-v3:hover:not(:disabled){
+  background:var(--red);
+  color:#080808;
+}
+.login-primary-v3 b{
+  font-size:18px;
+  font-weight:400;
+}
+.login-member-row{
+  margin-top:14px;
+  padding:17px 18px;
+  border:1px solid #bcb8af;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:22px;
+  background:transparent;
+}
+.login-member-row>div{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+.login-member-row span{
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.105em;
+  color:#8b877f;
+}
+.login-member-row strong{
+  font-size:10px;
+  letter-spacing:.07em;
+}
+.login-member-row>a{
+  flex:0 0 auto;
+  min-height:38px;
+  display:flex;
+  align-items:center;
+  padding:0 12px;
+  border:1px solid #080808;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.09em;
+}
+.login-panel-inner-v3 .login-legal{
+  margin-top:14px;
+  padding-top:12px;
+  border-top:1px solid #d1cdc4;
+}
+
+@media(max-width:1000px){
+  .join-shell-v4{
+    height:auto;
+    min-height:100svh;
+    overflow:visible;
+    grid-template-columns:1fr;
+  }
+  .join-intro-v4{
+    position:relative;
+    height:auto;
+    min-height:540px;
+  }
+  .join-form-panel-v4{
+    height:auto;
+    overflow:visible;
+  }
+  .login-page-v3{
+    height:auto;
+    min-height:100svh;
+    overflow:visible;
+    grid-template-columns:1fr;
+  }
+  .login-visual-v3{
+    height:auto;
+    min-height:58svh;
+  }
+  .login-panel-v3{
+    height:auto;
+    min-height:auto;
+    overflow:visible;
+  }
+  .login-panel-inner-v3{
+    min-height:auto;
+    padding:48px 0 52px;
+  }
+}
+
+@media(max-width:760px){
+  .join-intro-v4{
+    min-height:470px;
+    padding:96px 18px 18px;
+  }
+  .join-brand-v4{
+    top:22px;
+    left:18px;
+    width:82px;
+  }
+  .join-form-panel-v4{
+    padding:30px 14px 42px;
+  }
+  .join-form-stage{
+    width:100%;
+  }
+  .join-form-head-v4{
+    min-height:66px;
+    margin-bottom:12px;
+  }
+  .join-form-head-v4>div>p{
+    font-size:10px;
+  }
+  .join-form-v3{
+    gap:10px;
+  }
+  .join-form-v3 .join-form-section,
+  .join-form-v3 .join-safety-section{
+    padding:16px;
+  }
+  .join-form-v3 .join-form-grid{
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+  .join-form-v3 .join-form-grid input{
+    height:52px;
+  }
+  .join-form-v3 .consent-stack{
+    padding:16px;
+  }
+
+  .login-visual-v3{
+    min-height:52svh;
+    padding:20px 18px 20px;
+  }
+  .login-visual-copy-v3{
+    padding:72px 0 28px;
+  }
+  .login-visual-copy-v3 h1{
+    font-size:clamp(50px,15vw,70px);
+  }
+  .login-next-run-v3{
+    grid-template-columns:1fr auto;
+  }
+  .login-panel-inner-v3{
+    width:calc(100% - 28px);
+    padding:34px 0 42px;
+  }
+  .login-access-strip{
+    margin-bottom:24px;
+  }
+  .login-panel-head-v3 h2{
+    font-size:54px;
+  }
+  .login-auth-card{
+    margin-top:22px;
+    padding:16px;
+  }
+  .login-member-row{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+}
