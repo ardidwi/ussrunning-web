@@ -178,6 +178,8 @@ export default async function DashboardPage() {
               mobile: profile?.mobile || "",
               city: profile?.city || "",
               instagram: profile?.instagram || "",
+              emergency_contact_name: profile?.emergency_contact_name || "",
+              emergency_contact_mobile: profile?.emergency_contact_mobile || "",
             }}
           />
         </article>
