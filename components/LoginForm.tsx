@@ -12,9 +12,12 @@ export default function LoginForm() {
   );
 
   return (
-    <form action={formAction} className="login-form-v2">
-      <label>
-        <span>EMAIL</span>
+    <form action={formAction} className="login-form-v3">
+      <label className="login-field-v3">
+        <span className="login-field-head">
+          <b>EMAIL</b>
+          <small>01</small>
+        </span>
         <input
           type="email"
           name="email"
@@ -24,8 +27,11 @@ export default function LoginForm() {
         />
       </label>
 
-      <label>
-        <span>PASSWORD</span>
+      <label className="login-field-v3">
+        <span className="login-field-head">
+          <b>PASSWORD</b>
+          <small>02</small>
+        </span>
         <input
           type="password"
           name="password"
@@ -35,20 +41,18 @@ export default function LoginForm() {
         />
       </label>
 
-      <div className="login-form-options">
-        <label className="login-remember">
-          <input type="checkbox" name="remember" />
-          <span>KEEP ME SIGNED IN</span>
-        </label>
-        <span className="login-help">NEED HELP? CONTACT USS</span>
+      <div className="login-form-meta-v3">
+        <span>SECURE MEMBER ACCESS</span>
+        <a href="mailto:hello@ussrunning.com">NEED HELP? ↗</a>
       </div>
 
       {state.error ? (
         <p className="auth-form-error" role="alert">{state.error}</p>
       ) : null}
 
-      <button className="login-primary" type="submit" disabled={pending}>
-        {pending ? "SIGNING IN..." : "LOG IN"} <span>↗</span>
+      <button className="login-primary login-primary-v3" type="submit" disabled={pending}>
+        <span>{pending ? "SIGNING IN..." : "LOG IN"}</span>
+        <b>↗</b>
       </button>
     </form>
   );
