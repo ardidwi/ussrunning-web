@@ -408,9 +408,9 @@ h1,h2,h3,p{margin-top:0}
 .partner-philosophy p{font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;font-weight:400;letter-spacing:-.02em}
 .membership-free-inner h2{font-size:clamp(58px,7vw,104px);line-height:.87;margin:18px 0 0}
 .membership-free-copy>p{font-size:14px;line-height:1.8;color:#474747;max-width:520px}
-.membership-free-price{display:flex;align-items:flex-end;justify-content:space-between;border-top:1px solid #999;padding-top:22px;margin-top:42px}
-.membership-free-price strong{font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;font-size:64px;font-weight:400}
-.membership-free-price span{font-size:9px;font-weight:900;letter-spacing:.12em;padding-bottom:8px}
+.membership-free-note{display:flex;flex-direction:column;gap:8px;border-top:1px solid #999;padding-top:22px;margin-top:42px}
+.membership-free-note span{font-size:9px;font-weight:900;letter-spacing:.12em;color:#777}
+.membership-free-note strong{font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;font-size:34px;line-height:1;font-weight:400}
 .membership-benefits{padding:100px 0;background:var(--black)}
 .compact-heading{margin-bottom:42px}
 .membership-benefit-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
