@@ -6,6 +6,7 @@ import ActionFormStatus from "@/components/admin/ActionFormStatus";
 import {
   createMediaAsset,
   saveEvent,
+  setHomeGalleryAsset,
   setMemberRole,
   setStoryStatus,
   updateCmsHero,
@@ -103,6 +104,7 @@ export default function AdminWorkspace({
   media,
   members,
   activity,
+  homeGalleryIds,
   settings,
 }: {
   user: { name: string; email: string; role: "admin" | "super_admin" };
@@ -114,6 +116,7 @@ export default function AdminWorkspace({
   media: AdminMedia[];
   members: AdminMember[];
   activity: AdminActivity[];
+  homeGalleryIds: string[];
   settings: { instagram?: string; strava?: string; contactEmail?: string };
 }) {
   const [tab, setTab] = useState<Tab>("overview");
@@ -403,6 +406,18 @@ export default function AdminWorkspace({
                   <span>{asset.kind} / {asset.status}</span>
                   <strong>{asset.title}</strong>
                   <small>{asset.object_key}</small>
+                  <form action={setHomeGalleryAsset} className="admin-media-toggle">
+                    <input type="hidden" name="mediaId" value={asset.id} />
+                    <label>
+                      <input
+                        type="checkbox"
+                        name="enabled"
+                        defaultChecked={homeGalleryIds.includes(asset.id)}
+                      />
+                      <span>HOME GALLERY</span>
+                    </label>
+                    <button type="submit">UPDATE</button>
+                  </form>
                 </article>
               ))}
             </div>
