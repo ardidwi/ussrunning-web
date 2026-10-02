@@ -17,6 +17,8 @@ export default function MemberProfileForm({
     mobile: string | null;
     city: string | null;
     instagram: string | null;
+    emergency_contact_name: string | null;
+    emergency_contact_mobile: string | null;
   };
 }) {
   const [state, formAction, pending] = useActionState(
@@ -37,15 +39,29 @@ export default function MemberProfileForm({
         </label>
         <label>
           <span>MOBILE</span>
-          <input name="mobile" defaultValue={profile.mobile || ""} />
+          <input name="mobile" type="tel" defaultValue={profile.mobile || ""} required />
         </label>
         <label>
           <span>CITY</span>
-          <input name="city" defaultValue={profile.city || ""} />
+          <input name="city" defaultValue={profile.city || ""} required />
         </label>
         <label className="member-form-wide">
           <span>INSTAGRAM</span>
-          <input name="instagram" defaultValue={profile.instagram || ""} placeholder="@username" />
+          <input name="instagram" defaultValue={profile.instagram || ""} placeholder="@username" required />
+        </label>
+
+        <div className="member-form-divider member-form-wide">
+          <span>EMERGENCY CONTACT</span>
+        </div>
+
+        <label>
+          <span>CONTACT NAME</span>
+          <input name="emergencyContactName" defaultValue={profile.emergency_contact_name || ""} required />
+        </label>
+
+        <label>
+          <span>CONTACT NUMBER</span>
+          <input name="emergencyContactMobile" type="tel" defaultValue={profile.emergency_contact_mobile || ""} required />
         </label>
       </div>
 
