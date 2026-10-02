@@ -3,12 +3,12 @@ import JoinForm from "@/components/JoinForm";
 
 export default function JoinPage() {
   return (
-    <main className="join-shell join-shell-v3">
-      <Link href="/" className="join-brand" aria-label="Back to USS Running">
-        <img src="/uss-logo.png" alt="USS" />
-      </Link>
+    <main className="join-shell join-shell-v4">
+      <section className="join-intro join-intro-v4">
+        <Link href="/" className="join-brand join-brand-v4" aria-label="Back to USS Running">
+          <img src="/uss-logo.png" alt="USS" />
+        </Link>
 
-      <section className="join-intro join-intro-v3">
         <div className="join-intro-copy">
           <span className="kicker">USS MEMBERSHIP / JAKARTA</span>
           <h1>JOIN THE<br />CREW.</h1>
@@ -25,12 +25,17 @@ export default function JoinPage() {
         </div>
       </section>
 
-      <section className="join-form-panel join-form-panel-v3">
-        <div className="join-form-head">
-          <span className="kicker">CREATE YOUR USS ID</span>
-          <span>MEMBERSHIP / ACCOUNT</span>
+      <section className="join-form-panel join-form-panel-v4">
+        <div className="join-form-stage">
+          <div className="join-form-head join-form-head-v4">
+            <div>
+              <span className="kicker">CREATE YOUR USS ID</span>
+              <p>One account for the USS community.</p>
+            </div>
+            <span>MEMBERSHIP / ACCOUNT</span>
+          </div>
+          <JoinForm />
         </div>
-        <JoinForm />
       </section>
     </main>
   );
