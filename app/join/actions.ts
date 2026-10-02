@@ -6,7 +6,7 @@ import { query } from "@/lib/db";
 
 export type JoinState = { error?: string };
 
-export async function joinWithEmail(
+export async function createMember(
   _state: JoinState,
   formData: FormData
 ): Promise<JoinState> {
