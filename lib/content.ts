@@ -285,3 +285,37 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     return fallback;
   }
 }
+
+
+export type PublicMediaItem = {
+  id: string;
+  title: string;
+  url: string;
+  alt: string;
+  caption: string;
+};
+
+export async function getMediaCollection(
+  slug: string
+): Promise<PublicMediaItem[]> {
+  try {
+    return await query<PublicMediaItem>(
+      `SELECT
+         m.id::text AS id,
+         m.title,
+         COALESCE(m.public_url,'') AS url,
+         COALESCE(m.alt_text,'') AS alt,
+         COALESCE(i.caption,m.alt_text,'') AS caption
+       FROM public.media_collection_items i
+       JOIN public.media_collections c ON c.id=i.collection_id
+       JOIN public.media_assets m ON m.id=i.media_id
+       WHERE c.slug=$1
+         AND m.status='active'
+         AND m.public_url IS NOT NULL
+       ORDER BY i.sort_order,m.created_at`,
+      [slug]
+    );
+  } catch {
+    return [];
+  }
+}
