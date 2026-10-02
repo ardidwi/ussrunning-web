@@ -231,3 +231,62 @@ export async function updateSiteSettings(
   revalidatePath("/admin");
   return { ok: "Site settings saved." };
 }
+
+
+export async function setHomeGalleryAsset(formData: FormData) {
+  const user = await requireAdmin();
+  const mediaId = value(formData, "mediaId");
+  const enabled = formData.get("enabled") === "on";
+
+  if (!mediaId) return;
+
+  const collections = await query<{ id: string }>(
+    `INSERT INTO public.media_collections(slug,title,description)
+     VALUES('home-gallery','Homepage Gallery','Selected USS Running community imagery shown on the homepage.')
+     ON CONFLICT(slug) DO UPDATE SET updated_at=now()
+     RETURNING id::text`
+  );
+
+  let collectionId = collections[0]?.id;
+
+  if (!collectionId) {
+    const existing = await query<{ id: string }>(
+      `SELECT id::text FROM public.media_collections WHERE slug='home-gallery' LIMIT 1`
+    );
+    collectionId = existing[0]?.id;
+  }
+
+  if (!collectionId) return;
+
+  if (enabled) {
+    const orderRows = await query<{ next_order: number }>(
+      `SELECT COALESCE(max(sort_order),0)+10 AS next_order
+       FROM public.media_collection_items
+       WHERE collection_id=$1::uuid`,
+      [collectionId]
+    );
+
+    await query(
+      `INSERT INTO public.media_collection_items(collection_id,media_id,sort_order)
+       VALUES($1::uuid,$2::uuid,$3)
+       ON CONFLICT(collection_id,media_id) DO NOTHING`,
+      [collectionId, mediaId, orderRows[0]?.next_order ?? 10]
+    );
+  } else {
+    await query(
+      `DELETE FROM public.media_collection_items
+       WHERE collection_id=$1::uuid AND media_id=$2::uuid`,
+      [collectionId, mediaId]
+    );
+  }
+
+  await writeAudit(
+    user.id,
+    enabled ? "Added media to homepage gallery" : "Removed media from homepage gallery",
+    "media_asset",
+    mediaId
+  );
+
+  revalidatePath("/");
+  revalidatePath("/admin");
+}
