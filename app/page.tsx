@@ -6,6 +6,7 @@ import CommunityStats from "@/components/CommunityStats";
 import {
   getCmsSection,
   getHomeHero,
+  getMediaCollection,
   getPartners,
   getRuns,
   getStories,
@@ -30,7 +31,7 @@ function textValue(
 }
 
 export default async function HomePage() {
-  const [hero, runs, stories, partners, membershipRaw, storyRaw] =
+  const [hero, runs, stories, partners, membershipRaw, storyRaw, gallery] =
     await Promise.all([
       getHomeHero(),
       getRuns(),
@@ -38,6 +39,7 @@ export default async function HomePage() {
       getPartners(),
       getCmsSection("home", "membership"),
       getCmsSection("home", "story_feature"),
+      getMediaCollection("home-gallery"),
     ]);
 
   const membership = objectContent(membershipRaw);
@@ -255,6 +257,33 @@ export default async function HomePage() {
           </div>
         </Link>
       </section>
+
+      {gallery.length ? (
+        <section className="home-gallery-section">
+          <div className="content-frame">
+            <div className="home-gallery-head">
+              <div>
+                <span className="kicker">06 / COMMUNITY GALLERY</span>
+                <h2>SEEN ON<br />THE ROAD.</h2>
+              </div>
+              <p>
+                Selected USS moments. The CMS controls which images appear here,
+                so official photography can replace presentation placeholders
+                without another code deploy.
+              </p>
+            </div>
+
+            <div className="home-gallery-grid">
+              {gallery.slice(0, 6).map((item, index) => (
+                <figure key={item.id} className={index === 0 ? "is-featured" : ""}>
+                  <img src={item.url} alt={item.alt} />
+                  {item.caption ? <figcaption>{item.caption}</figcaption> : null}
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="partner-strip">
         <div className="partner-strip-inner">
