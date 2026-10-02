@@ -5,7 +5,7 @@ import { getAuth } from "@/lib/auth/server";
 
 export type LoginState = { error?: string };
 
-export async function loginWithEmail(
+export async function signInWithEmail(
   _state: LoginState,
   formData: FormData
 ): Promise<LoginState> {
