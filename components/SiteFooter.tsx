@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { subscribeNewsletter } from "@/app/newsletter-actions";
 
 function InstagramIcon() {
   return (
@@ -30,14 +31,14 @@ export default function SiteFooter() {
             <p>Runs, community stories, race-week moments and selected USS updates. No noise.</p>
           </div>
 
-          <form className="uss-newsletter-form">
+          <form className="uss-newsletter-form" action={subscribeNewsletter}>
             <div className="uss-newsletter-row">
-              <input type="email" placeholder="your@email.com" aria-label="Email address" required />
+              <input name="email" type="email" placeholder="your@email.com" aria-label="Email address" required />
               <button type="submit">SUBSCRIBE</button>
             </div>
 
             <label className="footer-consent-check">
-              <input type="checkbox" required />
+              <input name="consent" type="checkbox" required />
               <span>
                 I have read the <Link href="/privacy">Privacy Policy</Link> and consent to USS Running
                 using my email to send community updates. I can unsubscribe at any time.
