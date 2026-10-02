@@ -52,6 +52,21 @@ function fmtDate(value: string | null) {
   }).format(new Date(value));
 }
 
+function toJakartaDateTimeLocal(value: string | null) {
+  if (!value) return "";
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Jakarta",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(new Date(value));
+  const get = (type: string) => parts.find((part) => part.type === type)?.value || "";
+  return `${get("year")}-${get("month")}-${get("day")}T${get("hour")}:${get("minute")}`;
+}
+
 function FormField({
   label,
   name,
@@ -300,7 +315,7 @@ export default function AdminWorkspace({
                   </div>
                   <div className="admin-form-grid">
                     <FormField label="TITLE" name="title" defaultValue={event.title} />
-                    <FormField label="START AT" name="startAt" type="datetime-local" defaultValue={event.start_at ? new Date(event.start_at).toISOString().slice(0,16) : ""} />
+                    <FormField label="START AT" name="startAt" type="datetime-local" defaultValue={toJakartaDateTimeLocal(event.start_at)} />
                     <FormField label="LOCATION" name="location" defaultValue={event.location_name} />
                     <FormField label="DISTANCE" name="distance" defaultValue={event.distance_label} />
                     <FormField label="CAPACITY" name="capacity" type="number" defaultValue={event.capacity} />
