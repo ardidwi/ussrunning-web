@@ -9,8 +9,8 @@ export default async function LoginPage() {
   const nextRun = runs[0];
 
   return (
-    <main className="login-page-v2">
-      <section className="login-visual">
+    <main className="login-page-v3">
+      <section className="login-visual login-visual-v3">
         <img src={hero.imageUrl} alt="" className="login-visual-image" />
         <div className="login-visual-scrim" />
 
@@ -21,14 +21,14 @@ export default async function LoginPage() {
           <Link href="/" className="login-back">BACK TO SITE ↗</Link>
         </div>
 
-        <div className="login-visual-copy">
+        <div className="login-visual-copy login-visual-copy-v3">
           <span className="kicker">{hero.kicker || "MY USS / COMMUNITY ACCESS"}</span>
           <h1 style={{ whiteSpace: "pre-line" }}>{hero.headline}</h1>
           <p>{hero.description}</p>
         </div>
 
         {nextRun ? (
-          <div className="login-next-run">
+          <div className="login-next-run login-next-run-v3">
             <div>
               <span className="login-next-label">NEXT UP</span>
               <strong>{nextRun.title}</strong>
@@ -43,25 +43,33 @@ export default async function LoginPage() {
         ) : null}
       </section>
 
-      <section className="login-panel">
-        <div className="login-panel-inner">
-          <div className="login-panel-head">
+      <section className="login-panel login-panel-v3">
+        <div className="login-panel-inner login-panel-inner-v3">
+          <div className="login-access-strip">
+            <span>MY USS</span>
+            <i />
+            <span>MEMBER ACCESS</span>
+          </div>
+
+          <div className="login-panel-head login-panel-head-v3">
             <span className="kicker">WELCOME BACK</span>
             <h2>LOG IN TO<br />MY USS.</h2>
             <p>
-              Your upcoming runs, run passes and USS history stay connected to
-              one free community ID.
+              Access your runs, passes and USS participation history with one
+              community ID.
             </p>
           </div>
 
-          <LoginForm />
+          <div className="login-auth-card">
+            <LoginForm />
+          </div>
 
-          <div className="login-join-card">
+          <div className="login-member-row">
             <div>
-              <span className="kicker">NEW HERE?</span>
-              <h3>JOIN THE CREW.<br />IT&apos;S FREE.</h3>
+              <span>NEW TO USS?</span>
+              <strong>CREATE YOUR COMMUNITY ID.</strong>
             </div>
-            <Link href="/join">CREATE USS ID ↗</Link>
+            <Link href="/join">JOIN USS ↗</Link>
           </div>
 
           <div className="login-legal">
