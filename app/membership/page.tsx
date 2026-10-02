@@ -48,9 +48,9 @@ export default function MembershipPage() {
               through movement. Recreational runners, serious runners, first
               timers and familiar faces all share the same community access.
             </p>
-            <div className="membership-free-price">
-              <strong>IDR 0</strong>
-              <span>MEMBERSHIP FEE</span>
+            <div className="membership-free-note">
+              <span>OPEN COMMUNITY ACCESS</span>
+              <strong>ONE USS ID. JUST SHOW UP.</strong>
             </div>
           </div>
         </div>
