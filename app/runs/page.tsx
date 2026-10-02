@@ -1,9 +1,13 @@
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import EventCard from "@/components/EventCard";
-import { runs } from "@/data/site";
+import { getRuns } from "@/lib/content";
 
-export default function RunsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function RunsPage() {
+  const runs = await getRuns();
+
   return (
     <main className="page-black">
       <SiteHeader />
