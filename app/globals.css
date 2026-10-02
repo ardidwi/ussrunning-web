@@ -4366,3 +4366,86 @@ html,body{
     grid-template-columns:1fr;
   }
 }
+
+
+/* ---- Join v4.2 desktop split-scroll ----
+   Desktop: left panel is locked to viewport, only the form column scrolls.
+   Mobile/tablet returns to normal document flow. */
+@media(min-width:1001px){
+  html,
+  body{
+    height:100%;
+    overflow:hidden;
+  }
+
+  .join-shell-v4{
+    width:100vw;
+    height:100svh !important;
+    min-height:100svh !important;
+    overflow:hidden !important;
+    display:grid;
+    grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr) !important;
+    align-items:stretch;
+  }
+
+  .join-intro-v4{
+    position:relative !important;
+    top:auto !important;
+    align-self:stretch;
+    width:100%;
+    min-width:0;
+    height:100svh !important;
+    min-height:100svh !important;
+    overflow:hidden !important;
+  }
+
+  .join-form-panel-v4{
+    position:relative;
+    width:100%;
+    min-width:0;
+    height:100svh !important;
+    min-height:100svh !important;
+    overflow-x:hidden !important;
+    overflow-y:auto !important;
+    overscroll-behavior-y:contain;
+    scrollbar-gutter:stable;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  .join-form-stage{
+    width:min(100%,840px);
+    min-width:0;
+    margin:0 auto;
+  }
+}
+
+@media(max-width:1000px){
+  html,
+  body{
+    height:auto;
+    overflow-x:hidden;
+    overflow-y:auto;
+  }
+
+  .join-shell-v4{
+    width:100%;
+    height:auto !important;
+    min-height:100svh !important;
+    overflow:visible !important;
+    grid-template-columns:1fr !important;
+  }
+
+  .join-intro-v4{
+    position:relative !important;
+    height:auto !important;
+    min-height:520px !important;
+    overflow:hidden !important;
+  }
+
+  .join-form-panel-v4{
+    width:100%;
+    height:auto !important;
+    min-height:auto !important;
+    overflow:visible !important;
+  }
+}
