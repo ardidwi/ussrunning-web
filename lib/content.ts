@@ -244,3 +244,44 @@ export async function getPartners(): Promise<string[]> {
     return [];
   }
 }
+
+
+export type SiteSettings = {
+  instagram: string;
+  strava: string;
+  contactEmail: string;
+};
+
+export async function getSiteSettings(): Promise<SiteSettings> {
+  const fallback: SiteSettings = {
+    instagram: "https://www.instagram.com/ussrunning?stkn=MTZyNnkybXhiN29wZQ==",
+    strava: "https://strava.app.link/fC4mwJNBS6b",
+    contactEmail: "hello@ussrunning.com",
+  };
+
+  try {
+    const rows = await query<{ value: unknown }>(
+      `SELECT value FROM public.site_settings WHERE key = 'socials' LIMIT 1`
+    );
+    const value = rows[0]?.value;
+    if (!value || typeof value !== "object") return fallback;
+    const data = value as Record<string, unknown>;
+
+    return {
+      instagram:
+        typeof data.instagram === "string" && data.instagram
+          ? data.instagram
+          : fallback.instagram,
+      strava:
+        typeof data.strava === "string" && data.strava
+          ? data.strava
+          : fallback.strava,
+      contactEmail:
+        typeof data.contactEmail === "string" && data.contactEmail
+          ? data.contactEmail
+          : fallback.contactEmail,
+    };
+  } catch {
+    return fallback;
+  }
+}
