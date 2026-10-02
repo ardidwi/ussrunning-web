@@ -4268,3 +4268,101 @@ h1,h2,h3,p{margin-top:0}
     flex-direction:column;
   }
 }
+
+
+/* ---- Join v4.1 scroll/overflow hotfix ----
+   Use one document scrollbar. Keep the left panel sticky without trapping the form. */
+html,body{
+  max-width:100%;
+  overflow-x:hidden;
+}
+.join-shell-v4{
+  width:100%;
+  max-width:100%;
+  height:auto !important;
+  min-height:100svh;
+  overflow:visible !important;
+  align-items:start;
+  grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr) !important;
+}
+.join-intro-v4{
+  position:sticky !important;
+  top:0;
+  align-self:start;
+  width:100%;
+  min-width:0;
+  height:100svh;
+  min-height:100svh;
+  overflow:hidden;
+}
+.join-brand-v4{
+  position:absolute;
+}
+.join-intro-v4 .join-intro-copy{
+  min-width:0;
+  max-width:100%;
+}
+.join-intro-v4 h1{
+  max-width:100%;
+  font-size:clamp(64px,6vw,96px);
+  line-height:.86;
+}
+.join-form-panel-v4{
+  width:100%;
+  min-width:0;
+  height:auto !important;
+  min-height:100svh;
+  overflow:visible !important;
+  overscroll-behavior:auto;
+}
+.join-form-stage,
+.join-form-v3,
+.join-form-v3 .join-form-section,
+.join-form-v3 .join-form-grid,
+.join-form-v3 .join-form-grid label,
+.join-form-v3 .join-form-grid input{
+  min-width:0;
+}
+.join-form-v3 .join-form-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+@media(max-width:1180px){
+  .join-shell-v4{
+    grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr) !important;
+  }
+  .join-intro-v4{
+    padding-left:32px;
+    padding-right:32px;
+  }
+  .join-brand-v4{
+    left:32px;
+  }
+  .join-intro-v4 h1{
+    font-size:clamp(58px,5.8vw,80px);
+  }
+  .join-form-panel-v4{
+    padding-left:28px;
+    padding-right:28px;
+  }
+}
+@media(max-width:1000px){
+  .join-shell-v4{
+    grid-template-columns:1fr !important;
+  }
+  .join-intro-v4{
+    position:relative !important;
+    height:auto;
+    min-height:520px;
+  }
+  .join-form-panel-v4{
+    min-height:auto;
+  }
+}
+@media(max-width:760px){
+  .join-intro-v4 h1{
+    font-size:clamp(58px,18vw,78px);
+  }
+  .join-form-v3 .join-form-grid{
+    grid-template-columns:1fr;
+  }
+}
