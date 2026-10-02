@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { getAuth } from "@/lib/auth/server";
+import { query } from "@/lib/db";
 
 export type JoinState = { error?: string };
 
@@ -27,7 +28,7 @@ export async function joinWithEmail(
   }
 
   try {
-    const { error } = await getAuth().signUp.email({
+    const { data, error } = await getAuth().signUp.email({
       name,
       email,
       password,
@@ -35,6 +36,28 @@ export async function joinWithEmail(
 
     if (error) {
       return { error: error.message || "Unable to create your USS ID." };
+    }
+
+    const userId = data?.user?.id;
+    if (userId) {
+      await query(
+        `INSERT INTO public.user_profiles(auth_user_id,first_name)
+         VALUES($1,$2)
+         ON CONFLICT(auth_user_id) DO NOTHING`,
+        [userId, name]
+      );
+
+      await query(
+        `INSERT INTO public.legal_consents(
+           auth_user_id,consent_type,version,accepted,accepted_at,source
+         )
+         VALUES
+           ($1,'privacy','2026-10-01',true,now(),'join'),
+           ($1,'terms','2026-10-01',true,now(),'join')
+         ON CONFLICT(auth_user_id,consent_type,version)
+         DO UPDATE SET accepted=true,accepted_at=now(),source='join'`,
+        [userId]
+      );
     }
   } catch (error) {
     return {
