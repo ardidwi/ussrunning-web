@@ -20,13 +20,25 @@ export async function updateMemberProfile(
   const lastName = String(formData.get("lastName") || "").trim();
   const mobile = String(formData.get("mobile") || "").trim();
   const city = String(formData.get("city") || "").trim();
-  const instagram = String(formData.get("instagram") || "").trim();
+  const instagramRaw = String(formData.get("instagram") || "").trim();
+  const instagram = instagramRaw
+    ? instagramRaw.startsWith("@")
+      ? instagramRaw
+      : `@${instagramRaw}`
+    : "";
+  const emergencyContactName = String(formData.get("emergencyContactName") || "").trim();
+  const emergencyContactMobile = String(formData.get("emergencyContactMobile") || "").trim();
 
-  if (!firstName) return { error: "First name is required." };
+  if (!firstName || !mobile || !city || !instagram || !emergencyContactName || !emergencyContactMobile) {
+    return { error: "First name, mobile, city, Instagram and emergency contact are required." };
+  }
 
   await query(
-    `INSERT INTO public.user_profiles(auth_user_id,first_name,last_name,mobile,city,instagram)
-     VALUES($1,$2,$3,$4,$5,$6)
+    `INSERT INTO public.user_profiles(
+       auth_user_id,first_name,last_name,mobile,city,instagram,
+       emergency_contact_name,emergency_contact_mobile
+     )
+     VALUES($1,$2,$3,$4,$5,$6,$7,$8)
      ON CONFLICT(auth_user_id)
      DO UPDATE SET
        first_name=EXCLUDED.first_name,
@@ -34,8 +46,10 @@ export async function updateMemberProfile(
        mobile=EXCLUDED.mobile,
        city=EXCLUDED.city,
        instagram=EXCLUDED.instagram,
+       emergency_contact_name=EXCLUDED.emergency_contact_name,
+       emergency_contact_mobile=EXCLUDED.emergency_contact_mobile,
        updated_at=now()`,
-    [user.id, firstName, lastName || null, mobile || null, city || null, instagram || null]
+    [user.id, firstName, lastName || null, mobile, city, instagram, emergencyContactName, emergencyContactMobile]
   );
 
   revalidatePath("/dashboard");
