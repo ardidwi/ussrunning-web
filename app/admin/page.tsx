@@ -4,6 +4,7 @@ import {
   getAdminEvents,
   getAdminMedia,
   getAdminMembers,
+  getMediaCollectionIds,
   getAdminOverview,
   getAdminStories,
 } from "@/lib/admin";
@@ -25,6 +26,7 @@ export default async function AdminPage() {
     media,
     members,
     activity,
+    homeGalleryIds,
     settingsRows,
   ] = await Promise.all([
     getAdminOverview(),
@@ -35,6 +37,7 @@ export default async function AdminPage() {
     getAdminMedia(),
     getAdminMembers(),
     getAdminActivity(),
+    getMediaCollectionIds("home-gallery"),
     query<{ value: unknown }>(
       `SELECT value FROM public.site_settings WHERE key='socials' LIMIT 1`
     ),
@@ -65,6 +68,7 @@ export default async function AdminPage() {
       media={media}
       members={members}
       activity={activity}
+      homeGalleryIds={homeGalleryIds}
       settings={settings}
     />
   );
