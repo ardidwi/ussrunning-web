@@ -131,6 +131,7 @@ export async function saveEvent(
 
   const capacity =
     capacityRaw === "" ? null : Math.max(0, Math.floor(Number(capacityRaw)));
+  const startAtJakarta = startAt ? `${startAt}:00+07:00` : "";
 
   await query(
     `UPDATE public.events
@@ -146,7 +147,7 @@ export async function saveEvent(
     [
       id,
       title,
-      startAt,
+      startAtJakarta,
       location || null,
       distance || null,
       capacity,
