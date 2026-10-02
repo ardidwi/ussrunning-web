@@ -1,0 +1,21 @@
+{
+  "profile": "product-admin",
+  "sourceRoots": [
+    "components/cms",
+    "app/admin",
+    "app/dashboard",
+    "app/login",
+    "app/join",
+    "app/stories"
+  ],
+  "locale": "id-ID",
+  "canonicalMap": "UX-CONTRACT.md",
+  "requiredCapabilities": [
+    "Form",
+    "Select/Listbox",
+    "Scrollbar",
+    "Toast",
+    "CRUD"
+  ],
+  "ownership": { "Select/Listbox": "native" }
+}
