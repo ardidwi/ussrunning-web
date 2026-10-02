@@ -62,13 +62,15 @@ export async function ensureProfile(user: CurrentUser) {
     mobile: string | null;
     city: string | null;
     instagram: string | null;
+    emergency_contact_name: string | null;
+    emergency_contact_mobile: string | null;
     avatar_url: string | null;
     joined_at: string;
   }>(
     `INSERT INTO public.user_profiles(auth_user_id, first_name, last_name)
      VALUES($1, $2, NULL)
      ON CONFLICT (auth_user_id) DO NOTHING
-     RETURNING auth_user_id, member_code, first_name, last_name, mobile, city, instagram, avatar_url, joined_at`,
+     RETURNING auth_user_id, member_code, first_name, last_name, mobile, city, instagram, emergency_contact_name, emergency_contact_mobile, avatar_url, joined_at`,
     [user.id, user.name]
   );
 
@@ -82,10 +84,12 @@ export async function ensureProfile(user: CurrentUser) {
     mobile: string | null;
     city: string | null;
     instagram: string | null;
+    emergency_contact_name: string | null;
+    emergency_contact_mobile: string | null;
     avatar_url: string | null;
     joined_at: string;
   }>(
-    `SELECT auth_user_id, member_code, first_name, last_name, mobile, city, instagram, avatar_url, joined_at
+    `SELECT auth_user_id, member_code, first_name, last_name, mobile, city, instagram, emergency_contact_name, emergency_contact_mobile, avatar_url, joined_at
      FROM public.user_profiles
      WHERE auth_user_id = $1
      LIMIT 1`,
