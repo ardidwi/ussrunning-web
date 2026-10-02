@@ -137,3 +137,17 @@ export async function getAdminActivity() {
      LIMIT 50`
   );
 }
+
+
+export async function getMediaCollectionIds(slug: string) {
+  const rows = await query<{ id: string }>(
+    `SELECT m.id::text AS id
+     FROM public.media_collection_items i
+     JOIN public.media_collections c ON c.id=i.collection_id
+     JOIN public.media_assets m ON m.id=i.media_id
+     WHERE c.slug=$1
+     ORDER BY i.sort_order`,
+    [slug]
+  );
+  return rows.map((row) => row.id);
+}
