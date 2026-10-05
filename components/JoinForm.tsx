@@ -25,7 +25,7 @@ export default function JoinForm() {
 
   return (
     <>
-      <form action={formAction} className="join-form join-form-v3">
+      <form action={formAction} className="join-form join-form-v3" noValidate>
         <section className="join-form-section">
           <div className="join-form-section-head">
             <span>01</span>
