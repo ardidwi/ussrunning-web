@@ -7,6 +7,10 @@ export type LoginState = {
   message?: string;
 };
 
+function isValidEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
 export async function signInWithEmail(
   _state: LoginState,
   formData: FormData
@@ -21,27 +25,32 @@ export async function signInWithEmail(
     };
   }
 
+  if (!isValidEmail(email)) {
+    return {
+      status: "error",
+      message: "Please enter a valid email address.",
+    };
+  }
+
   try {
     const { error } = await getAuth().signIn.email({ email, password });
 
     if (error) {
       return {
         status: "error",
-        message: error.message || "Email or password is invalid.",
+        message: "We couldn't confirm that email and password. Please check them and try again.",
       };
     }
 
     return {
       status: "success",
-      message: "You are signed in. Continue to My USS to view your member profile and runs.",
+      message:
+        "You are signed in. Continue to My USS to view your member profile and runs.",
     };
-  } catch (cause) {
+  } catch {
     return {
       status: "error",
-      message:
-        cause instanceof Error && cause.message
-          ? cause.message
-          : "Unable to sign in right now. Please try again.",
+      message: "Unable to sign in right now. Please try again in a moment.",
     };
   }
 }
