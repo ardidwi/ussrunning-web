@@ -23,7 +23,7 @@ export default function LoginForm() {
 
   return (
     <>
-      <form action={formAction} className="login-form-v3">
+      <form action={formAction} className="login-form-v3" noValidate>
         <label className="login-field-v3">
           <span className="login-field-head">
             <b>EMAIL</b>
