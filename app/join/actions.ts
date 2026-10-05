@@ -17,6 +17,23 @@ function error(message: string): JoinState {
   return { status: "error", message };
 }
 
+function isValidEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function friendlySignupError(message?: string) {
+  const normalized = (message || "").toLowerCase();
+  if (
+    normalized.includes("already") ||
+    normalized.includes("exist") ||
+    normalized.includes("registered")
+  ) {
+    return "An account with this email already exists. Please log in instead.";
+  }
+
+  return "We couldn't create your USS account right now. Please try again.";
+}
+
 export async function createMember(
   _state: JoinState,
   formData: FormData
@@ -58,6 +75,10 @@ export async function createMember(
     );
   }
 
+  if (!isValidEmail(email)) {
+    return error("Please enter a valid email address.");
+  }
+
   if (mobile.replace(/\D/g, "").length < 8) {
     return error("Please enter a valid mobile number.");
   }
@@ -88,13 +109,13 @@ export async function createMember(
     });
 
     if (authError) {
-      return error(authError.message || "Unable to create your USS ID.");
+      return error(friendlySignupError(authError.message));
     }
 
     const userId = data?.user?.id;
     if (!userId) {
       return error(
-        "Your account was created, but we could not finish the USS member profile. Please log in and try again."
+        "Your account was created, but we could not finish the USS member profile. Please log in and complete your profile."
       );
     }
 
@@ -179,14 +200,13 @@ export async function createMember(
 
     return {
       status: "success",
-      message: "Your USS account is ready. Continue to My USS to see your member ID and upcoming runs.",
+      message:
+        "Your USS account is ready. Continue to My USS to see your member ID and upcoming runs.",
       memberCode: profiles[0]?.member_code,
     };
-  } catch (cause) {
+  } catch {
     return error(
-      cause instanceof Error && cause.message
-        ? cause.message
-        : "Unable to create your USS ID right now. Please try again."
+      "We couldn't finish creating your USS account. Please try again in a moment."
     );
   }
 }
