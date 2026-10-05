@@ -1,0 +1,139 @@
+.uss-notice-layer{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:grid;
+  place-items:center;
+  padding:22px;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(8px);
+}
+.uss-notice{
+  width:min(100%,560px);
+  border:1px solid rgba(255,255,255,.16);
+  background:#0b0b0b;
+  color:#f3f0e8;
+  box-shadow:0 30px 90px rgba(0,0,0,.45);
+}
+.uss-notice-index{
+  min-height:54px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  padding:0 18px;
+  border-bottom:1px solid rgba(255,255,255,.14);
+}
+.uss-notice-index span,
+.uss-notice-index b{
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.12em;
+}
+.uss-notice-index b{
+  min-width:28px;
+  height:28px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.2);
+}
+.uss-notice-success .uss-notice-index b{
+  background:#f3f0e8;
+  color:#080808;
+}
+.uss-notice-error .uss-notice-index b{
+  background:#ff3b21;
+  color:#080808;
+  border-color:#ff3b21;
+}
+.uss-notice-copy{
+  padding:30px 24px 28px;
+}
+.uss-notice-copy .kicker{
+  color:#8c8c86;
+}
+.uss-notice-copy h2{
+  margin:14px 0 16px;
+  font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;
+  font-size:clamp(48px,6vw,72px);
+  line-height:.88;
+  font-weight:400;
+  letter-spacing:-.015em;
+}
+.uss-notice-copy p{
+  max-width:450px;
+  margin:0;
+  font-size:12px;
+  line-height:1.7;
+  color:#aaa9a4;
+}
+.uss-notice-detail{
+  display:inline-flex;
+  margin-top:22px;
+  padding:10px 12px;
+  border:1px solid rgba(255,255,255,.18);
+  font-family:monospace;
+  font-size:13px;
+  letter-spacing:.08em;
+}
+.uss-notice-actions{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  border-top:1px solid rgba(255,255,255,.14);
+}
+.uss-notice-actions button{
+  min-height:54px;
+  border:0;
+  border-radius:0;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:.11em;
+}
+.uss-notice-secondary{
+  padding:0 18px;
+  background:#0b0b0b;
+  color:#777771;
+  border-right:1px solid rgba(255,255,255,.14)!important;
+}
+.uss-notice-primary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:0 18px;
+  background:#f3f0e8;
+  color:#080808;
+}
+.uss-notice-error .uss-notice-primary{
+  background:#ff3b21;
+}
+.uss-notice-primary b{
+  font-size:17px;
+  font-weight:400;
+}
+.uss-notice-actions button:hover{
+  filter:brightness(.94);
+}
+@media(max-width:620px){
+  .uss-notice-layer{
+    align-items:end;
+    padding:12px;
+  }
+  .uss-notice{
+    width:100%;
+  }
+  .uss-notice-copy{
+    padding:24px 18px 22px;
+  }
+  .uss-notice-copy h2{
+    font-size:50px;
+  }
+  .uss-notice-actions{
+    grid-template-columns:1fr;
+  }
+  .uss-notice-secondary{
+    order:2;
+    border-right:0!important;
+    border-top:1px solid rgba(255,255,255,.14)!important;
+  }
+}
