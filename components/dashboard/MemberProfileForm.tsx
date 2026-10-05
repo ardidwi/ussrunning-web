@@ -36,7 +36,7 @@ export default function MemberProfileForm({
 
   return (
     <>
-      <form action={formAction} className="member-profile-form">
+      <form action={formAction} className="member-profile-form" noValidate>
         <div className="member-form-grid">
           <label>
             <span>FIRST NAME</span>
