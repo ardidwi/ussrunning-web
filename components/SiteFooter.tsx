@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { subscribeNewsletter } from "@/app/newsletter-actions";
+import { getSiteSettings } from "@/lib/content";
 
 function InstagramIcon() {
   return (
@@ -19,7 +21,9 @@ function StravaIcon() {
   );
 }
 
-export default function SiteFooter() {
+export default async function SiteFooter() {
+  const settings = await getSiteSettings();
+
   return (
     <footer className="uss-footer">
       <div className="uss-footer-inner">
@@ -30,14 +34,14 @@ export default function SiteFooter() {
             <p>Runs, community stories, race-week moments and selected USS updates. No noise.</p>
           </div>
 
-          <form className="uss-newsletter-form">
+          <form className="uss-newsletter-form" action={subscribeNewsletter}>
             <div className="uss-newsletter-row">
-              <input type="email" placeholder="your@email.com" aria-label="Email address" required />
+              <input name="email" type="email" placeholder="your@email.com" aria-label="Email address" required />
               <button type="submit">SUBSCRIBE</button>
             </div>
 
             <label className="footer-consent-check">
-              <input type="checkbox" required />
+              <input name="consent" type="checkbox" required />
               <span>
                 I have read the <Link href="/privacy">Privacy Policy</Link> and consent to USS Running
                 using my email to send community updates. I can unsubscribe at any time.
@@ -53,7 +57,7 @@ export default function SiteFooter() {
 
             <div className="uss-footer-socials" aria-label="USS Running social links">
               <a
-                href="https://www.instagram.com/ussrunning?stkn=MTZyNnkybXhiN29wZQ=="
+                href={settings.instagram}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="USS Running on Instagram"
@@ -63,7 +67,7 @@ export default function SiteFooter() {
               </a>
 
               <a
-                href="https://strava.app.link/fC4mwJNBS6b"
+                href={settings.strava}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="USS Running on Strava"
@@ -86,9 +90,9 @@ export default function SiteFooter() {
           <div className="uss-footer-column">
             <span className="uss-footer-heading">CONNECT</span>
             <Link href="/partners">Partners</Link>
-            <a href="https://www.instagram.com/ussrunning?stkn=MTZyNnkybXhiN29wZQ==" target="_blank" rel="noreferrer">Instagram</a>
-            <a href="https://strava.app.link/fC4mwJNBS6b" target="_blank" rel="noreferrer">Strava</a>
-            <a href="mailto:hello@ussrunning.com">Contact</a>
+            <a href={settings.instagram} target="_blank" rel="noreferrer">Instagram</a>
+            <a href={settings.strava} target="_blank" rel="noreferrer">Strava</a>
+            <a href={`mailto:${settings.contactEmail}`}>Contact</a>
           </div>
 
           <div className="uss-footer-column uss-footer-legal">

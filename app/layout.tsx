@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./cms.css";
-import { DemoProvider } from "@/components/cms/DemoProvider";
+import "./auth-notice.css";
+import "./qr.css";
 
 export const metadata: Metadata = {
   title: "USS Running — Community in Motion",
-  description: "USS Running community platform MVP",
+  description: "USS Running community platform",
 };
 
 export default function RootLayout({
@@ -13,9 +14,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>
-        <DemoProvider>{children}</DemoProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

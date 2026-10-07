@@ -1,6 +1,9 @@
 "use client";
-import { useId, useState } from "react";
-import { barcodeGeometry, barcodeSvg, validImage } from "@/lib/cms";
+
+import QRCode from "qrcode";
+import { useEffect, useId, useState } from "react";
+import { validImage } from "@/lib/cms";
+
 export function Field({
   label,
   value,
@@ -38,6 +41,7 @@ export function Field({
     </div>
   );
 }
+
 export function ImageField({
   label,
   value,
@@ -105,45 +109,129 @@ export function ImageField({
     </div>
   );
 }
+
+async function qrDataUrl(value: string, width = 720) {
+  return QRCode.toDataURL(value, {
+    errorCorrectionLevel: "H",
+    margin: 2,
+    width,
+    color: {
+      dark: "#000000",
+      light: "#ffffff",
+    },
+  });
+}
+
+function loadImage(src: string) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error("Image could not be loaded."));
+    image.src = src;
+  });
+}
+
+async function brandedQrPng(value: string) {
+  const size = 1024;
+  const qr = await loadImage(await qrDataUrl(value, size));
+  const logo = await loadImage("/uss-logo.png");
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas is unavailable.");
+
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, size, size);
+  ctx.drawImage(qr, 0, 0, size, size);
+
+  // Keep the protected center compact. QR error correction is set to H.
+  const outer = Math.round(size * 0.19);
+  const inner = Math.round(size * 0.15);
+  const outerX = Math.round((size - outer) / 2);
+  const innerX = Math.round((size - inner) / 2);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(outerX, outerX, outer, outer);
+  ctx.fillStyle = "#090909";
+  ctx.fillRect(innerX, innerX, inner, inner);
+
+  const maxLogoWidth = inner * 0.76;
+  const maxLogoHeight = inner * 0.42;
+  const ratio = Math.min(maxLogoWidth / logo.width, maxLogoHeight / logo.height);
+  const logoWidth = logo.width * ratio;
+  const logoHeight = logo.height * ratio;
+  ctx.drawImage(
+    logo,
+    (size - logoWidth) / 2,
+    (size - logoHeight) / 2,
+    logoWidth,
+    logoHeight,
+  );
+
+  return canvas.toDataURL("image/png");
+}
+
 export function Barcode({ value }: { value: string }) {
-  const { bars, width } = barcodeGeometry(value);
+  const [src, setSrc] = useState("");
+
+  useEffect(() => {
+    let cancelled = false;
+    qrDataUrl(value)
+      .then((url) => {
+        if (!cancelled) setSrc(url);
+      })
+      .catch(() => {
+        if (!cancelled) setSrc("");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [value]);
+
   return (
-    <svg
-      className="cms-barcode"
+    <div
+      className="uss-qr-pass"
       role="img"
-      aria-label={"Barcode akun " + value}
-      viewBox={`0 0 ${width} 100`}
+      aria-label={"USS QR member ID " + value}
     >
-      <rect width={width} height={100} fill="white" />
-      {bars.map((b) => (
-        <rect
-          key={b.x}
-          x={b.x}
-          y={10}
-          width={b.width}
-          height={80}
-          fill="black"
-        />
-      ))}
-    </svg>
+      <div className="uss-qr-code">
+        {src ? <img src={src} alt="" /> : <div className="uss-qr-loading" />}
+        <span className="uss-qr-logo" aria-hidden="true">
+          <img src="/uss-logo.png" alt="" />
+        </span>
+      </div>
+      <div className="uss-qr-meta">
+        <span>USS MEMBER QR</span>
+        <strong>{value}</strong>
+      </div>
+    </div>
   );
 }
+
 export function DownloadBarcode({ value }: { value: string }) {
+  const [busy, setBusy] = useState(false);
+
   return (
     <button
       type="button"
-      onClick={() => {
-        const url = URL.createObjectURL(
-          new Blob([barcodeSvg(value)], { type: "image/svg+xml" }),
-        );
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = value + ".svg";
-        a.click();
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      disabled={busy}
+      onClick={async () => {
+        try {
+          setBusy(true);
+          const url = await brandedQrPng(value);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = value + "-uss-qr.png";
+          a.click();
+        } finally {
+          setBusy(false);
+        }
       }}
     >
-      Unduh barcode
+      {busy ? "Preparing QR…" : "Download QR"}
     </button>
   );
 }

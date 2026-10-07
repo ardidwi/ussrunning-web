@@ -1,64 +1,92 @@
-import {
-  HomeMedia,
-  HomeHeadline,
-  HomeDescription,
-  ExtraContent,
-} from "@/components/cms/PublicContent";
 import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import EventCard from "@/components/EventCard";
-import { runs } from "@/data/site";
 import CommunityStats from "@/components/CommunityStats";
+import {
+  getCmsSection,
+  getHomeHero,
+  getMediaCollection,
+  getPartners,
+  getRuns,
+  getStories,
+} from "@/lib/content";
+
+export const dynamic = "force-dynamic";
 
 const tickerText = "RUNNING / COMMUNITY / CULTURE /";
-const collaborations = [
-  "ASICS",
-  "NIKE",
-  "PUMA",
-  "NEW BALANCE",
-  "ON",
-  "ADIDAS",
-  "MIZUNO",
-  "ATMOS",
-  "THULE",
-  "COMPASS",
-  "ZODIAC",
-  "SUN & SAND SPORTS",
-  "BLUE DOORS",
-  "RUNNING DEPT",
-  "ORTUSEIGHT",
-  "DEUS",
-  "SKINTIFIC",
-  "AQUA",
-  "POCARI SWEAT",
-  "COMMON GROUNDS",
-];
 
-export default function HomePage() {
+function objectContent(value: unknown) {
+  return value && typeof value === "object"
+    ? (value as Record<string, unknown>)
+    : {};
+}
+
+function textValue(
+  value: Record<string, unknown>,
+  key: string,
+  fallback: string
+) {
+  return typeof value[key] === "string" ? String(value[key]) : fallback;
+}
+
+export default async function HomePage() {
+  const [hero, runs, stories, partners, membershipRaw, storyRaw, gallery] =
+    await Promise.all([
+      getHomeHero(),
+      getRuns(),
+      getStories(),
+      getPartners(),
+      getCmsSection("home", "membership"),
+      getCmsSection("home", "story_feature"),
+      getMediaCollection("home-gallery"),
+    ]);
+
+  const membership = objectContent(membershipRaw);
+  const storyFeature = objectContent(storyRaw);
+  const featuredStory = stories[0];
+
+  const collaborations = partners.length
+    ? partners
+    : [
+        "ASICS",
+        "NIKE",
+        "PUMA",
+        "NEW BALANCE",
+        "ON",
+        "ADIDAS",
+        "MIZUNO",
+        "ATMOS",
+      ];
+
   return (
     <main>
       <section className="hero">
         <SiteHeader />
 
-        <HomeMedia />
+        <div className="hero-media" aria-hidden="true">
+          <img src={hero.imageUrl} alt="" />
+        </div>
+        <div className="hero-scrim" />
 
         <div className="hero-content content-frame hero-frame">
           <div className="hero-meta">
-            <span>EST. 2024</span>
+            <span>{hero.established || "EST. 2024"}</span>
           </div>
 
           <div className="hero-title-block">
-            <span className="hero-location">JAKARTA, INDONESIA</span>
-            <HomeHeadline />
+            <span className="hero-location">
+              {hero.eyebrow || "JAKARTA, INDONESIA"}
+            </span>
+            <h1 style={{ whiteSpace: "pre-line" }}>{hero.headline}</h1>
           </div>
 
           <div className="hero-bottom">
-            <HomeDescription />
+            <p>{hero.description}</p>
             <Link
-              href="/runs"
+              href={hero.ctaHref || "/runs"}
               className="circle-link"
-              aria-label="Explore runs"
+              aria-label={hero.ctaLabel || "Explore runs"}
             >
               ↘
             </Link>
@@ -86,11 +114,7 @@ export default function HomePage() {
           <div className="section-heading">
             <div>
               <span className="kicker">01 / NEXT UP</span>
-              <h2>
-                MEET US
-                <br />
-                ON THE ROAD.
-              </h2>
+              <h2>MEET US<br />ON THE ROAD.</h2>
             </div>
             <Link href="/runs" className="arrow-link">
               VIEW ALL RUNS ↗
@@ -130,21 +154,14 @@ export default function HomePage() {
         <div className="content-frame">
           <div className="collaborations-head">
             <span className="kicker">03 / SELECTED COLLABORATIONS</span>
-            <h2>
-              BRANDS WE&apos;VE
-              <br />
-              RUN WITH.
-            </h2>
+            <h2>BRANDS WE&apos;VE<br />RUN WITH.</h2>
             <p>
               A selection of brands, spaces and communities that have moved with
               USS Running across events, campaigns and race-week moments.
             </p>
           </div>
 
-          <div
-            className="collaboration-grid"
-            aria-label="Selected collaborators"
-          >
+          <div className="collaboration-grid" aria-label="Selected collaborators">
             {collaborations.map((brand) => (
               <div className="collaboration-brand" key={brand}>
                 <span>{brand}</span>
@@ -162,27 +179,38 @@ export default function HomePage() {
       <section className="editorial-split section">
         <div className="editorial-photo">
           <img
-            src="https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=1500&q=85"
-            alt="Runner on the road"
+            src={textValue(
+              membership,
+              "imageUrl",
+              "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=1500&q=85"
+            )}
+            alt="USS membership"
           />
         </div>
 
         <div className="editorial-copy">
-          <span className="kicker">04 / MEMBERSHIP / FREE</span>
-          <h2>
-            ONE COMMUNITY.
-            <br />
-            NO PAID TIER.
-            <br />
-            ONE ID.
+          <span className="kicker">
+            {textValue(membership, "kicker", "04 / MEMBERSHIP / FREE")}
+          </span>
+          <h2 style={{ whiteSpace: "pre-line" }}>
+            {textValue(
+              membership,
+              "headline",
+              "ONE COMMUNITY.\nNO PAID TIER.\nONE ID."
+            )}
           </h2>
           <p>
-            USS membership is free. Create one community ID to RSVP to runs,
-            keep your run pass and build your USS history as you keep showing
-            up.
+            {textValue(
+              membership,
+              "description",
+              "USS membership is free. Create one community ID to RSVP to runs, keep your run pass and build your USS history as you keep showing up."
+            )}
           </p>
-          <Link className="button button-light" href="/membership">
-            JOIN USS — FREE
+          <Link
+            className="button button-light"
+            href={textValue(membership, "ctaHref", "/membership")}
+          >
+            {textValue(membership, "ctaLabel", "JOIN USS — FREE")}
           </Link>
         </div>
       </section>
@@ -190,49 +218,84 @@ export default function HomePage() {
       <section className="story-band">
         <div className="story-band-title">
           <span className="kicker">05 / STORIES</span>
-          <h2>
-            THE PEOPLE.
-            <br />
-            THE CITY.
-            <br />
-            THE MILES.
-          </h2>
+          <h2>THE PEOPLE.<br />THE CITY.<br />THE MILES.</h2>
         </div>
 
-        <Link className="story-feature" href="/stories">
+        <Link
+          className="story-feature"
+          href={
+            featuredStory
+              ? "/stories"
+              : textValue(storyFeature, "ctaHref", "/stories")
+          }
+        >
           <img
-            src="https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=1600&q=85"
+            src={
+              featuredStory?.image ||
+              textValue(
+                storyFeature,
+                "imageUrl",
+                "https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=1600&q=85"
+              )
+            }
             alt=""
           />
           <div className="story-overlay">
-            <span>ORIGIN / 001</span>
-            <h3>18 RUNNERS. DAY ONE. THE START OF USS.</h3>
+            <span>
+              {featuredStory?.eyebrow ||
+                textValue(storyFeature, "eyebrow", "ORIGIN / 001")}
+            </span>
+            <h3>
+              {featuredStory?.title ||
+                textValue(
+                  storyFeature,
+                  "headline",
+                  "18 RUNNERS. DAY ONE. THE START OF USS."
+                )}
+            </h3>
             <span>READ THE STORY ↗</span>
           </div>
         </Link>
       </section>
 
+      {gallery.length ? (
+        <section className="home-gallery-section">
+          <div className="content-frame">
+            <div className="home-gallery-head">
+              <div>
+                <span className="kicker">06 / COMMUNITY GALLERY</span>
+                <h2>SEEN ON<br />THE ROAD.</h2>
+              </div>
+              <p>
+                Selected USS moments. The CMS controls which images appear here,
+                so official photography can replace presentation placeholders
+                without another code deploy.
+              </p>
+            </div>
+
+            <div className="home-gallery-grid">
+              {gallery.slice(0, 6).map((item, index) => (
+                <figure key={item.id} className={index === 0 ? "is-featured" : ""}>
+                  <img src={item.url} alt={item.alt} />
+                  {item.caption ? <figcaption>{item.caption}</figcaption> : null}
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       <section className="partner-strip">
         <div className="partner-strip-inner">
-          <span className="partner-strip-label">
-            RUNNING IS THE ENTRY POINT
-          </span>
+          <span className="partner-strip-label">RUNNING IS THE ENTRY POINT</span>
           <div className="partner-wordmarks" aria-label="USS community pillars">
-            <b>RUN</b>
-            <i>/</i>
-            <b>CHEER</b>
-            <i>/</i>
-            <b>EAT</b>
-            <i>/</i>
-            <b>CREATE</b>
-            <i>/</i>
-            <b>CONNECT</b>
+            <b>RUN</b><i>/</i><b>CHEER</b><i>/</i><b>EAT</b><i>/</i>
+            <b>CREATE</b><i>/</i><b>CONNECT</b>
           </div>
           <Link href="/partners">BUILD WITH USS ↗</Link>
         </div>
       </section>
 
-      <ExtraContent />
       <SiteFooter />
     </main>
   );
