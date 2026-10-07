@@ -40,22 +40,36 @@ function cloudTargets(width: number, height: number, count: number): Point[] {
   });
 }
 
-function routeTargets(width: number, height: number, count: number): Point[] {
-  const left = width * (width < 760 ? 0.14 : 0.54);
-  const span = width * (width < 760 ? 0.72 : 0.37);
-  const centerY = height * 0.5;
+function runningTrackPoint(
+  width: number,
+  height: number,
+  index: number,
+  count: number,
+  time = 0
+): Point {
+  const mobile = width < 760;
+  const cx = width * (mobile ? 0.52 : 0.73);
+  const cy = height * 0.51;
+  const rx = Math.min(width * (mobile ? 0.34 : 0.19), 330);
+  const ry = Math.min(height * (mobile ? 0.19 : 0.23), 195);
+  const lane = index % 4;
+  const laneX = lane * (mobile ? 8 : 13);
+  const laneY = lane * (mobile ? 5 : 9);
+  const baseAngle = ((index / Math.max(1, count)) * Math.PI * 2 * 5.5) % (Math.PI * 2);
+  const speed = time * (0.0002 + (lane % 2) * 0.000035);
+  const angle = baseAngle + speed;
+  const jitter = (seeded(index + 2100) - 0.5) * (mobile ? 5 : 8);
 
-  return Array.from({ length: count }, (_, index) => {
-    const t = index / Math.max(1, count - 1);
-    const wave =
-      Math.sin(t * Math.PI * 2.25) * height * 0.17 +
-      Math.sin(t * Math.PI * 5.2) * height * 0.045;
-    const jitter = (seeded(index + 2100) - 0.5) * 34;
-    return {
-      x: left + span * t + jitter,
-      y: centerY + wave + (seeded(index + 2600) - 0.5) * 28,
-    };
-  });
+  return {
+    x: cx + Math.cos(angle) * (rx - laneX) + jitter,
+    y: cy + Math.sin(angle) * (ry - laneY) + jitter * 0.55,
+  };
+}
+
+function runningTrackTargets(width: number, height: number, count: number): Point[] {
+  return Array.from({ length: count }, (_, index) =>
+    runningTrackPoint(width, height, index, count, 0)
+  );
 }
 
 function cityTargets(width: number, height: number, count: number): Point[] {
@@ -136,6 +150,7 @@ export default function HomeMotionExperience({
 }: Props) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const reticleRef = useRef<HTMLDivElement | null>(null);
   const [progress, setProgress] = useState(0);
   const [activeChapter, setActiveChapter] = useState(0);
   const [storyActive, setStoryActive] = useState(true);
@@ -189,6 +204,9 @@ export default function HomeMotionExperience({
     let shapes: Point[][] = [];
     let frame = 0;
     let latestProgress = 0;
+    let particleCount = 0;
+    const pointer = { x: 0, y: 0, active: false };
+    const clickPulse = { x: 0, y: 0, startedAt: -10000 };
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -199,12 +217,12 @@ export default function HomeMotionExperience({
       canvas.height = Math.floor(height * dpr);
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      const count = width < 760 ? 260 : 640;
+      particleCount = width < 760 ? 320 : 820;
       shapes = [
-        cloudTargets(width, height, count),
-        routeTargets(width, height, count),
-        cityTargets(width, height, count),
-        textTargets(width, height, count),
+        cloudTargets(width, height, particleCount),
+        runningTrackTargets(width, height, particleCount),
+        cityTargets(width, height, particleCount),
+        textTargets(width, height, particleCount),
       ];
     };
 
@@ -226,22 +244,64 @@ export default function HomeMotionExperience({
       const fromIndex = Math.min(shapes.length - 2, Math.floor(step));
       const toIndex = fromIndex + 1;
       const mix = clamp(step - fromIndex);
-      const from = shapes[fromIndex];
-      const to = shapes[toIndex];
-
       const red = "255,59,33";
       const white = "243,240,232";
-      const drift = reduceMotion ? 0 : time * 0.00045;
+      const idleTime = reduceMotion ? 0 : time;
+      const pulseAge = (time - clickPulse.startedAt) / 1000;
 
-      for (let index = 0; index < from.length; index += 1) {
-        const a = from[index];
-        const b = to[index];
-        const pulse = Math.sin(drift * 7 + index * 0.21) * 1.2;
-        const x = a.x + (b.x - a.x) * mix + pulse;
-        const y = a.y + (b.y - a.y) * mix + Math.cos(drift * 6 + index) * 0.9;
-        const highlight = index % 17 === 0 && latestProgress > 0.08;
-        const alpha = highlight ? 0.95 : 0.42 + seeded(index + 5000) * 0.42;
-        const radius = highlight ? 1.8 : 0.75 + seeded(index + 5100) * 1.15;
+      for (let index = 0; index < particleCount; index += 1) {
+        const staticFrom = shapes[fromIndex][index];
+        const staticTo = shapes[toIndex][index];
+        const a = fromIndex === 1
+          ? runningTrackPoint(width, height, index, particleCount, idleTime)
+          : staticFrom;
+        const b = toIndex === 1
+          ? runningTrackPoint(width, height, index, particleCount, idleTime)
+          : staticTo;
+
+        let x = a.x + (b.x - a.x) * mix;
+        let y = a.y + (b.y - a.y) * mix;
+
+        // Always-on micro motion so the field never freezes when scrolling stops.
+        if (!reduceMotion) {
+          x += Math.sin(time * 0.00125 + index * 0.37) * (0.8 + seeded(index + 6000) * 1.9);
+          y += Math.cos(time * 0.00105 + index * 0.29) * (0.7 + seeded(index + 6100) * 1.6);
+        }
+
+        // Cursor interaction: nearby particles orbit/repel around the pointer.
+        if (pointer.active && !reduceMotion) {
+          const dx = x - pointer.x;
+          const dy = y - pointer.y;
+          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+          const radius = width < 760 ? 90 : 165;
+          if (dist < radius) {
+            const force = 1 - dist / radius;
+            const nx = dx / dist;
+            const ny = dy / dist;
+            const repel = force * force * 30;
+            const swirl = force * 13;
+            x += nx * repel - ny * swirl;
+            y += ny * repel + nx * swirl;
+          }
+        }
+
+        // Click creates a temporary ripple, then particles automatically reform.
+        if (pulseAge >= 0 && pulseAge < 1.05 && !reduceMotion) {
+          const dx = x - clickPulse.x;
+          const dy = y - clickPulse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+          const wave = pulseAge * Math.max(width, height) * 0.78;
+          const delta = Math.abs(dist - wave);
+          if (delta < 85) {
+            const strength = (1 - delta / 85) * (1 - pulseAge / 1.05) * 36;
+            x += (dx / dist) * strength;
+            y += (dy / dist) * strength;
+          }
+        }
+
+        const highlight = index % 19 === 0;
+        const alpha = highlight ? 0.96 : 0.4 + seeded(index + 5000) * 0.46;
+        const radius = highlight ? 1.95 : 0.75 + seeded(index + 5100) * 1.22;
 
         context.beginPath();
         context.arc(x, y, radius, 0, Math.PI * 2);
@@ -250,6 +310,50 @@ export default function HomeMotionExperience({
       }
 
       frame = window.requestAnimationFrame(draw);
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (event.pointerType === "touch") return;
+      const rect = canvas.getBoundingClientRect();
+      const inside =
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom;
+
+      pointer.active = inside;
+      if (!inside) return;
+      pointer.x = event.clientX - rect.left;
+      pointer.y = event.clientY - rect.top;
+
+      if (reticleRef.current) {
+        reticleRef.current.style.left = `${pointer.x}px`;
+        reticleRef.current.style.top = `${pointer.y}px`;
+      }
+    };
+
+    const onPointerLeave = () => {
+      pointer.active = false;
+      if (reticleRef.current) {
+        reticleRef.current.style.removeProperty("left");
+        reticleRef.current.style.removeProperty("top");
+      }
+    };
+
+    const onClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.closest("a,button,input,label")) return;
+      const rect = canvas.getBoundingClientRect();
+      const inside =
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom;
+      if (!inside) return;
+
+      clickPulse.x = event.clientX - rect.left;
+      clickPulse.y = event.clientY - rect.top;
+      clickPulse.startedAt = performance.now();
     };
 
     const onScroll = () => updateProgress();
@@ -263,15 +367,21 @@ export default function HomeMotionExperience({
     frame = window.requestAnimationFrame(draw);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("pointerleave", onPointerLeave);
+    window.addEventListener("click", onClick);
 
     return () => {
       window.cancelAnimationFrame(frame);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerleave", onPointerLeave);
+      window.removeEventListener("click", onClick);
     };
   }, []);
 
-  const meters = Math.round(progress * 1200);
+  const meters = Math.round(progress * 5000);
 
   return (
     <section ref={sectionRef} className="uss-motion-story" aria-label="USS Running introduction">
@@ -281,9 +391,9 @@ export default function HomeMotionExperience({
         </div>
         <div className="uss-motion-scrim" aria-hidden="true" />
         <canvas ref={canvasRef} className="uss-motion-canvas" aria-hidden="true" />
-        <div className="uss-motion-reticle" aria-hidden="true">
+        <div ref={reticleRef} className="uss-motion-reticle" aria-hidden="true">
           <i /><i /><i /><i />
-          <span>GPS / USS</span>
+          <span>MOVE / CLICK</span>
         </div>
         <div className="uss-motion-est">{established || "EST. 2024"}</div>
         <SiteHeader />
