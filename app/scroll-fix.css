@@ -1,115 +1,132 @@
-/* Global public-site scroll safety.
- * Keep document scrolling on the browser viewport and prevent page wrappers,
- * fixed navigation, or modal/menu styles from accidentally locking the site.
- */
-html {
-  min-height: 100%;
-  height: auto;
-  overflow-x: hidden;
-  overflow-y: auto !important;
-  overscroll-behavior-y: auto;
+/* Global public-site scroll safety. */
+html{
+  min-height:100%;
+  height:auto;
+  overflow-x:hidden;
+  overflow-y:auto!important;
+  overscroll-behavior-y:auto;
 }
 
-body {
-  min-height: 100%;
-  height: auto;
-  max-height: none;
-  overflow-x: hidden;
-  overflow-y: auto !important;
-  position: relative;
-  touch-action: pan-y;
+body{
+  min-height:100%;
+  height:auto;
+  max-height:none;
+  overflow-x:hidden;
+  overflow-y:auto!important;
+  position:relative;
+  touch-action:pan-y;
 }
 
-body > main,
-.page-black {
-  min-height: 100svh;
-  height: auto !important;
-  max-height: none !important;
-  overflow-y: visible !important;
+body>main,
+.page-black{
+  min-height:100svh;
+  height:auto!important;
+  max-height:none!important;
+  overflow-y:visible!important;
 }
 
-/* Fixed header stays fixed while the document below remains the scroll owner. */
-.site-header {
-  position: fixed;
+.site-header{
+  position:fixed;
 }
 
-/* Mobile menu overlays must never become the page scroll container. */
 .mobile-menu-dismiss,
-.mobile-menu-panel {
-  overscroll-behavior: contain;
+.mobile-menu-panel{
+  overscroll-behavior:contain;
 }
 
-/* Auth scroll safety.
- * Keep one document scrollbar so the wheel/touch gesture works anywhere,
- * while the visual side remains sticky on desktop.
- */
-@media (min-width: 1001px) {
-  .join-shell-v4 {
-    width: 100%;
-    height: auto !important;
-    min-height: 100svh !important;
-    overflow: visible !important;
-    align-items: start;
+/* Desktop auth layout: left visual is truly fixed; only right content travels. */
+@media(min-width:1001px){
+  .join-shell-v4{
+    display:block!important;
+    position:relative;
+    width:100%;
+    min-height:100svh!important;
+    height:auto!important;
+    padding-left:39%;
+    overflow:visible!important;
   }
 
-  .join-intro-v4 {
-    position: sticky !important;
-    top: 0 !important;
-    align-self: start;
-    height: 100svh !important;
-    min-height: 100svh !important;
-    overflow: hidden !important;
+  .join-intro-v4{
+    position:fixed!important;
+    top:0!important;
+    left:0!important;
+    width:39%!important;
+    height:100svh!important;
+    min-height:100svh!important;
+    overflow:hidden!important;
+    z-index:2;
   }
 
-  .join-form-panel-v4 {
-    height: auto !important;
-    min-height: 100svh !important;
-    overflow: visible !important;
-    overscroll-behavior: auto !important;
-    scrollbar-gutter: auto !important;
+  .join-form-panel-v4{
+    position:relative;
+    width:100%!important;
+    min-width:0;
+    min-height:100svh!important;
+    height:auto!important;
+    overflow:visible!important;
+    z-index:1;
   }
 
-  .login-page-v3 {
-    width: 100%;
-    height: auto !important;
-    min-height: 100svh !important;
-    overflow: visible !important;
-    align-items: start;
+  .login-page-v3{
+    display:block!important;
+    position:relative;
+    width:100%;
+    min-height:100svh!important;
+    height:auto!important;
+    padding-left:54%;
+    overflow:visible!important;
   }
 
-  .login-visual-v3 {
-    position: sticky;
-    top: 0;
-    height: 100svh !important;
-    min-height: 100svh !important;
-    overflow: hidden;
+  .login-visual-v3{
+    position:fixed!important;
+    top:0!important;
+    left:0!important;
+    width:54%!important;
+    height:100svh!important;
+    min-height:100svh!important;
+    overflow:hidden!important;
+    z-index:2;
   }
 
-  .login-panel-v3 {
-    height: auto !important;
-    min-height: 100svh !important;
-    overflow: visible !important;
+  .login-panel-v3{
+    position:relative;
+    width:100%!important;
+    min-width:0;
+    min-height:100svh!important;
+    height:auto!important;
+    overflow:visible!important;
+    z-index:1;
   }
 }
 
-@media (max-width: 1000px) {
+@media(max-width:1000px){
   .join-shell-v4,
-  .login-page-v3 {
-    height: auto !important;
-    min-height: 100svh !important;
-    overflow: visible !important;
+  .login-page-v3{
+    display:grid!important;
+    width:100%;
+    height:auto!important;
+    min-height:100svh!important;
+    padding-left:0!important;
+    overflow:visible!important;
+    grid-template-columns:1fr!important;
   }
 
   .join-intro-v4,
-  .login-visual-v3 {
-    position: relative !important;
-    top: auto !important;
-    height: auto !important;
+  .login-visual-v3{
+    position:relative!important;
+    top:auto!important;
+    left:auto!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:500px!important;
+    overflow:hidden!important;
   }
 
   .join-form-panel-v4,
-  .login-panel-v3 {
-    height: auto !important;
-    overflow: visible !important;
+  .login-panel-v3{
+    width:100%!important;
+    height:auto!important;
+    min-height:auto!important;
+    overflow:visible!important;
   }
 }
