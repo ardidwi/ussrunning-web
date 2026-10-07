@@ -1,6 +1,7 @@
 export const membershipConfig = {
   privacyVersion: process.env.USS_PRIVACY_VERSION || "2026-10-01",
   termsVersion: process.env.USS_TERMS_VERSION || "2026-10-01",
+  marketingVersion: process.env.USS_MARKETING_VERSION || "2026-10-01",
   minimumPasswordLength: Number(process.env.USS_MIN_PASSWORD_LENGTH || 8),
   maximumPasswordLength: Number(process.env.USS_MAX_PASSWORD_LENGTH || 128),
   maximumNameLength: Number(process.env.USS_MAX_NAME_LENGTH || 80),
