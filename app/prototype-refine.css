@@ -1,0 +1,147 @@
+/* Prototype refinement layer.
+ * Loaded last so it can safely override the earlier prototype experiments.
+ */
+
+/* ---------------------------------------------------------
+   HOME MOTION
+   Keep the sticky visual stage alive for every chapter.
+   The previous overflow: clip on the story wrapper could stop
+   sticky painting in Chromium once the first viewport passed.
+   --------------------------------------------------------- */
+.uss-motion-story {
+  overflow: visible !important;
+  isolation: isolate;
+}
+
+.uss-motion-stage {
+  z-index: 1;
+  isolation: isolate;
+}
+
+.uss-motion-background {
+  z-index: 0 !important;
+}
+
+.uss-motion-scrim {
+  z-index: 1 !important;
+}
+
+.uss-motion-canvas {
+  z-index: 3 !important;
+  opacity: 1 !important;
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,.06));
+}
+
+.uss-motion-reticle,
+.uss-motion-est {
+  z-index: 5 !important;
+}
+
+.uss-motion-chapters {
+  z-index: 4 !important;
+  background: transparent !important;
+}
+
+.uss-motion-chapter {
+  position: relative;
+  background: transparent !important;
+}
+
+.uss-motion-copy {
+  position: relative;
+  z-index: 6;
+}
+
+/* Give the particle field enough contrast behind later chapters. */
+.uss-motion-stage::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0 0 0 47%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 55% 50%, rgba(255,255,255,.035), transparent 42%),
+    radial-gradient(circle at 58% 50%, rgba(255,59,33,.045), transparent 28%);
+}
+
+/* The homepage motion scrubber is the only distance UI during the intro. */
+.uss-motion-story .scroll-distance {
+  display: none !important;
+}
+
+/* ---------------------------------------------------------
+   AUTH / JOIN DESKTOP
+   Left visual panel is truly stationary. The right content is
+   what changes while the browser remains the single scroll owner.
+   No nested scroll container = no trapped wheel/touch input.
+   --------------------------------------------------------- */
+@media (min-width: 1001px) {
+  .join-shell-v4 {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100svh !important;
+    overflow: visible !important;
+  }
+
+  .join-intro-v4 {
+    position: fixed !important;
+    inset: 0 auto 0 0 !important;
+    width: 38vw !important;
+    height: 100svh !important;
+    min-height: 100svh !important;
+    z-index: 2;
+  }
+
+  .join-form-panel-v4 {
+    width: 62vw !important;
+    min-height: 100svh !important;
+    margin-left: 38vw !important;
+    overflow: visible !important;
+  }
+
+  .login-page-v3 {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100svh !important;
+    overflow: visible !important;
+  }
+
+  .login-visual-v3 {
+    position: fixed !important;
+    inset: 0 auto 0 0 !important;
+    width: 56vw !important;
+    height: 100svh !important;
+    min-height: 100svh !important;
+    z-index: 2;
+  }
+
+  .login-panel-v3 {
+    width: 44vw !important;
+    min-height: 100svh !important;
+    margin-left: 56vw !important;
+    overflow: visible !important;
+  }
+}
+
+@media (max-width: 1000px) {
+  .join-shell-v4,
+  .login-page-v3 {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .join-intro-v4,
+  .login-visual-v3 {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .join-form-panel-v4,
+  .login-panel-v3 {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+}
