@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./cms.css";
 import "./auth-notice.css";
+import "./qr.css";
 
 export const metadata: Metadata = {
   title: "USS Running — Community in Motion",
