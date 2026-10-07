@@ -1,0 +1,84 @@
+/* USS branded member QR */
+.uss-qr-pass{
+  width:min(100%,240px);
+  margin:22px 0 14px;
+}
+.uss-qr-code{
+  position:relative;
+  width:100%;
+  aspect-ratio:1;
+  padding:10px;
+  background:#fff;
+  border:1px solid #b8b3a9;
+  overflow:hidden;
+}
+.uss-qr-code>img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  image-rendering:pixelated;
+}
+.uss-qr-loading{
+  width:100%;
+  height:100%;
+  background:linear-gradient(90deg,#f0f0ed,#fafaf8,#f0f0ed);
+  background-size:200% 100%;
+  animation:uss-qr-loading 1.2s linear infinite;
+}
+.uss-qr-logo{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:19%;
+  aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  display:grid;
+  place-items:center;
+  background:#090909;
+  border:7px solid #fff;
+  box-sizing:border-box;
+}
+.uss-qr-logo img{
+  display:block;
+  width:78%;
+  height:auto;
+  object-fit:contain;
+}
+.uss-qr-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding-top:9px;
+  border-top:1px solid #b8b3a9;
+  margin-top:9px;
+}
+.uss-qr-meta span{
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.11em;
+  color:#77736b;
+}
+.uss-qr-meta strong{
+  font-family:monospace;
+  font-size:10px;
+  color:#111;
+}
+.member-id-card .uss-qr-pass{
+  margin-top:auto;
+}
+.member-id-card .uss-qr-code{
+  border-color:#a8a39a;
+}
+@keyframes uss-qr-loading{
+  to{background-position:-200% 0}
+}
+@media(max-width:620px){
+  .uss-qr-pass{
+    width:min(72vw,220px);
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .uss-qr-loading{animation:none}
+}
