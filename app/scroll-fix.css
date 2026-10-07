@@ -38,3 +38,78 @@ body > main,
 .mobile-menu-panel {
   overscroll-behavior: contain;
 }
+
+/* Auth scroll safety.
+ * Keep one document scrollbar so the wheel/touch gesture works anywhere,
+ * while the visual side remains sticky on desktop.
+ */
+@media (min-width: 1001px) {
+  .join-shell-v4 {
+    width: 100%;
+    height: auto !important;
+    min-height: 100svh !important;
+    overflow: visible !important;
+    align-items: start;
+  }
+
+  .join-intro-v4 {
+    position: sticky !important;
+    top: 0 !important;
+    align-self: start;
+    height: 100svh !important;
+    min-height: 100svh !important;
+    overflow: hidden !important;
+  }
+
+  .join-form-panel-v4 {
+    height: auto !important;
+    min-height: 100svh !important;
+    overflow: visible !important;
+    overscroll-behavior: auto !important;
+    scrollbar-gutter: auto !important;
+  }
+
+  .login-page-v3 {
+    width: 100%;
+    height: auto !important;
+    min-height: 100svh !important;
+    overflow: visible !important;
+    align-items: start;
+  }
+
+  .login-visual-v3 {
+    position: sticky;
+    top: 0;
+    height: 100svh !important;
+    min-height: 100svh !important;
+    overflow: hidden;
+  }
+
+  .login-panel-v3 {
+    height: auto !important;
+    min-height: 100svh !important;
+    overflow: visible !important;
+  }
+}
+
+@media (max-width: 1000px) {
+  .join-shell-v4,
+  .login-page-v3 {
+    height: auto !important;
+    min-height: 100svh !important;
+    overflow: visible !important;
+  }
+
+  .join-intro-v4,
+  .login-visual-v3 {
+    position: relative !important;
+    top: auto !important;
+    height: auto !important;
+  }
+
+  .join-form-panel-v4,
+  .login-panel-v3 {
+    height: auto !important;
+    overflow: visible !important;
+  }
+}
