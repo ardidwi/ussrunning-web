@@ -1,40 +1,35 @@
-/* Global public-site scroll safety.
- * Keep document scrolling on the browser viewport and prevent page wrappers,
- * fixed navigation, or modal/menu styles from accidentally locking the site.
- */
-html {
-  min-height: 100%;
-  height: auto;
-  overflow-x: hidden;
-  overflow-y: auto !important;
-  overscroll-behavior-y: auto;
+/* Global public-site scroll safety. Keep this file global-only. */
+html{
+  min-height:100%;
+  height:auto;
+  overflow-x:hidden;
+  overflow-y:auto!important;
+  overscroll-behavior-y:auto;
 }
 
-body {
-  min-height: 100%;
-  height: auto;
-  max-height: none;
-  overflow-x: hidden;
-  overflow-y: auto !important;
-  position: relative;
-  touch-action: pan-y;
+body{
+  min-height:100%;
+  height:auto;
+  max-height:none;
+  overflow-x:hidden;
+  overflow-y:auto!important;
+  position:relative;
+  touch-action:pan-y;
 }
 
-body > main,
-.page-black {
-  min-height: 100svh;
-  height: auto !important;
-  max-height: none !important;
-  overflow-y: visible !important;
+body>main,
+.page-black{
+  min-height:100svh;
+  height:auto!important;
+  max-height:none!important;
+  overflow-y:visible!important;
 }
 
-/* Fixed header stays fixed while the document below remains the scroll owner. */
-.site-header {
-  position: fixed;
+.site-header{
+  position:fixed;
 }
 
-/* Mobile menu overlays must never become the page scroll container. */
 .mobile-menu-dismiss,
-.mobile-menu-panel {
-  overscroll-behavior: contain;
+.mobile-menu-panel{
+  overscroll-behavior:contain;
 }

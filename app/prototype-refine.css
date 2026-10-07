@@ -1,0 +1,276 @@
+/* Final prototype refinement layer. Loaded last. */
+
+/* ---------------------------------------------------------
+   HOME MOTION
+   Fixed visual stage while the 4 chapters own document flow.
+   This removes the Chromium sticky-paint failure seen in preview.
+   --------------------------------------------------------- */
+.uss-motion-story{
+  position:relative;
+  min-height:400svh;
+  overflow:visible!important;
+  background:#050505;
+  isolation:auto!important;
+}
+
+.uss-motion-story>.site-header{
+  z-index:90!important;
+  pointer-events:auto!important;
+}
+
+.uss-motion-story .scroll-distance{
+  display:none!important;
+}
+
+.uss-motion-stage{
+  position:fixed!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100svh!important;
+  min-height:100svh!important;
+  z-index:0!important;
+  overflow:hidden!important;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  background:#050505;
+  transition:opacity .18s ease,visibility .18s ease;
+  isolation:isolate;
+}
+
+.uss-motion-story:has(.uss-motion-scrubber.is-on) .uss-motion-stage{
+  opacity:1;
+  visibility:visible;
+}
+
+.uss-motion-background{
+  z-index:0!important;
+}
+.uss-motion-background img{
+  opacity:.18!important;
+  filter:grayscale(1) contrast(1.15)!important;
+}
+.uss-motion-scrim{
+  z-index:1!important;
+  background:
+    linear-gradient(90deg,rgba(5,5,5,.98) 0%,rgba(5,5,5,.88) 39%,rgba(5,5,5,.2) 64%,rgba(5,5,5,.48) 100%),
+    radial-gradient(circle at 74% 50%,rgba(255,59,33,.07),transparent 28%)!important;
+}
+.uss-motion-canvas{
+  z-index:3!important;
+  opacity:1!important;
+  mix-blend-mode:normal!important;
+  filter:brightness(1.3) contrast(1.12) drop-shadow(0 0 10px rgba(255,255,255,.08));
+}
+.uss-motion-reticle,
+.uss-motion-est{
+  z-index:5!important;
+}
+
+.uss-motion-stage::after{
+  content:"";
+  position:absolute;
+  z-index:2;
+  inset:0 0 0 48%;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 54% 50%,rgba(255,255,255,.045),transparent 44%),
+    radial-gradient(circle at 60% 48%,rgba(255,59,33,.06),transparent 26%);
+}
+
+.uss-motion-chapters{
+  position:relative!important;
+  z-index:4!important;
+  margin-top:0!important;
+  background:transparent!important;
+}
+.uss-motion-chapter{
+  position:relative;
+  min-height:100svh;
+  background:transparent!important;
+  pointer-events:none;
+}
+.uss-motion-copy{
+  position:relative;
+  z-index:6;
+  pointer-events:auto;
+}
+
+.uss-motion-scrubber{
+  z-index:80!important;
+  grid-template-columns:auto minmax(0,1fr) auto!important;
+}
+
+/* ---------------------------------------------------------
+   AUTH / JOIN
+   The document owns vertical scrolling. On desktop, the left
+   membership story is sticky while the right form remains in
+   normal document flow. This avoids nested-scroll dead zones.
+   --------------------------------------------------------- */
+@media (min-width:1001px){
+  .join-shell-v4{
+    position:relative!important;
+    inset:auto!important;
+    display:grid!important;
+    grid-template-columns:minmax(420px,38vw) minmax(0,1fr)!important;
+    align-items:start!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:100svh!important;
+    padding:0!important;
+    margin:0!important;
+    overflow:visible!important;
+    background:#080808!important;
+  }
+
+  .join-intro-v4{
+    position:sticky!important;
+    top:0!important;
+    inset:auto!important;
+    width:auto!important;
+    height:100svh!important;
+    min-height:100svh!important;
+    margin:0!important;
+    overflow:hidden!important;
+    z-index:1;
+    align-self:start!important;
+  }
+
+  .join-form-panel-v4{
+    position:relative!important;
+    width:auto!important;
+    min-width:0!important;
+    height:auto!important;
+    min-height:100svh!important;
+    margin:0!important;
+    padding:52px clamp(30px,4vw,66px) 84px!important;
+    overflow:visible!important;
+    overscroll-behavior:auto!important;
+    scrollbar-gutter:auto!important;
+    background:#efede6!important;
+    z-index:2;
+  }
+
+  .join-form-stage{
+    width:min(100%,920px)!important;
+    margin:0 auto!important;
+  }
+
+  .login-page-v3{
+    position:fixed!important;
+    inset:0!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,54vw) minmax(460px,1fr)!important;
+    width:100vw!important;
+    height:100svh!important;
+    min-height:100svh!important;
+    padding:0!important;
+    margin:0!important;
+    overflow:hidden!important;
+    background:#080808!important;
+  }
+
+  .login-visual-v3{
+    position:relative!important;
+    inset:auto!important;
+    width:auto!important;
+    height:100%!important;
+    min-height:100%!important;
+    margin:0!important;
+    overflow:hidden!important;
+    z-index:1;
+  }
+
+  .login-panel-v3{
+    position:relative!important;
+    width:auto!important;
+    min-width:0!important;
+    height:100%!important;
+    min-height:100%!important;
+    margin:0!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior-y:contain;
+    background:#efede6!important;
+    z-index:2;
+  }
+}
+
+/* Registration form validation: reserve message space so rows never jump. */
+.join-form-grid>label{
+  display:flex!important;
+  flex-direction:column!important;
+  min-width:0;
+}
+
+.join-field-label{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  min-height:18px;
+}
+
+.join-field-message,
+.join-consent-message{
+  display:block;
+  min-height:17px;
+  margin-top:6px;
+  font-size:9px;
+  line-height:1.35;
+  letter-spacing:.03em;
+  color:transparent;
+}
+
+.join-field-message.is-error,
+.join-consent-message.is-error{
+  color:#c52f1b;
+}
+
+.join-form-grid input[aria-invalid="true"]{
+  border-color:#c52f1b!important;
+  box-shadow:inset 0 -1px 0 #c52f1b;
+}
+
+.consent-check.is-error{
+  outline:1px solid rgba(197,47,27,.34);
+  outline-offset:8px;
+}
+
+.join-submit[aria-busy="true"]{
+  cursor:wait;
+  opacity:.66;
+}
+
+@media (max-width:1000px){
+  .join-shell-v4,
+  .login-page-v3{
+    position:relative!important;
+    inset:auto!important;
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:100svh!important;
+    padding:0!important;
+    overflow:visible!important;
+  }
+
+  .join-intro-v4,
+  .login-visual-v3{
+    position:relative!important;
+    inset:auto!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:500px!important;
+    overflow:hidden!important;
+  }
+
+  .join-form-panel-v4,
+  .login-panel-v3{
+    position:relative!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:auto!important;
+    margin:0!important;
+    overflow:visible!important;
+  }
+}

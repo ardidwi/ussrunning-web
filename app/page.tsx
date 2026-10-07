@@ -1,8 +1,8 @@
 import Link from "next/link";
-import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import EventCard from "@/components/EventCard";
 import CommunityStats from "@/components/CommunityStats";
+import HomeMotionExperience from "@/components/HomeMotionExperience";
 import {
   getCmsSection,
   getHomeHero,
@@ -61,38 +61,15 @@ export default async function HomePage() {
 
   return (
     <main>
-      <section className="hero">
-        <SiteHeader />
-
-        <div className="hero-media" aria-hidden="true">
-          <img src={hero.imageUrl} alt="" />
-        </div>
-        <div className="hero-scrim" />
-
-        <div className="hero-content content-frame hero-frame">
-          <div className="hero-meta">
-            <span>{hero.established || "EST. 2024"}</span>
-          </div>
-
-          <div className="hero-title-block">
-            <span className="hero-location">
-              {hero.eyebrow || "JAKARTA, INDONESIA"}
-            </span>
-            <h1 style={{ whiteSpace: "pre-line" }}>{hero.headline}</h1>
-          </div>
-
-          <div className="hero-bottom">
-            <p>{hero.description}</p>
-            <Link
-              href={hero.ctaHref || "/runs"}
-              className="circle-link"
-              aria-label={hero.ctaLabel || "Explore runs"}
-            >
-              ↘
-            </Link>
-          </div>
-        </div>
-      </section>
+      <HomeMotionExperience
+        imageUrl={hero.imageUrl}
+        established={hero.established}
+        eyebrow={hero.eyebrow}
+        headline={hero.headline}
+        description={hero.description}
+        ctaHref={hero.ctaHref}
+        ctaLabel={hero.ctaLabel}
+      />
 
       <section className="ticker" aria-label="Community message">
         <div className="ticker-marquee">
@@ -109,7 +86,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="section next-section">
+      <section className="section next-section" id="uss-next-runs">
         <div className="content-frame">
           <div className="section-heading">
             <div>

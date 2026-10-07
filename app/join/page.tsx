@@ -1,5 +1,6 @@
 import Link from "next/link";
 import JoinForm from "@/components/JoinForm";
+import { membershipConfig } from "@/lib/membership-config";
 
 export default function JoinPage() {
   return (
@@ -34,7 +35,18 @@ export default function JoinPage() {
             </div>
             <span>MEMBERSHIP / ACCOUNT</span>
           </div>
-          <JoinForm />
+
+          <JoinForm
+            validation={{
+              minimumPasswordLength: membershipConfig.minimumPasswordLength,
+              maximumPasswordLength: membershipConfig.maximumPasswordLength,
+              maximumNameLength: membershipConfig.maximumNameLength,
+              maximumCityLength: membershipConfig.maximumCityLength,
+              maximumInstagramLength: membershipConfig.maximumInstagramLength,
+              minimumPhoneDigits: membershipConfig.minimumPhoneDigits,
+              maximumPhoneDigits: membershipConfig.maximumPhoneDigits,
+            }}
+          />
         </div>
       </section>
     </main>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900" role="img" aria-label="Monas silhouette">
+  <g fill="#fff">
+    <path d="M300 36c-31 39-48 83-39 123 8 36 27 59 39 78 12-19 31-42 39-78 9-40-8-84-39-123z"/>
+    <path d="M234 205h132l35 48-27 40H226l-27-40 35-48z"/>
+    <path d="M222 286h156l14 26H208l14-26z"/>
+    <path d="M254 312h92l34 360H220l34-360z"/>
+    <path d="M205 651h190l48 45-28 29H185l-28-29 48-45z"/>
+    <path d="M113 696h374l-54 84H167l-54-84z"/>
+    <path d="M149 780h302l-24 34H173l-24-34z"/>
+    <path d="M132 814h336l54 34H78l54-34z"/>
+    <path d="M83 848h434l28 24H55l28-24z"/>
+  </g>
+</svg>
