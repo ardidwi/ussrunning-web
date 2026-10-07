@@ -8,4 +8,7 @@ export const membershipConfig = {
   maximumInstagramLength: Number(process.env.USS_MAX_INSTAGRAM_LENGTH || 30),
   minimumPhoneDigits: Number(process.env.USS_MIN_PHONE_DIGITS || 8),
   maximumPhoneDigits: Number(process.env.USS_MAX_PHONE_DIGITS || 15),
+  joinSource: process.env.USS_JOIN_SOURCE || "join",
+  newsletterSubscribedStatus:
+    process.env.USS_NEWSLETTER_SUBSCRIBED_STATUS || "subscribed",
 };
