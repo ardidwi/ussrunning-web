@@ -1,23 +1,63 @@
-/* USS cinematic home motion v3. Document owns scroll, the motion stage stays pinned. */
+/* USS cinematic motion system.
+   Visual target: editorial, high-contrast, Monas + USS particle scenes.
+   The document owns scroll. The viewport stage stays pinned behind the chapters. */
+
 .uss-motion-story{
   position:relative;
   min-height:400svh;
-  background:#050505;
+  background:#030303;
   overflow:visible;
   isolation:isolate;
+  --motion-red:#ff2a16;
+  --motion-white:#f8f7f2;
+  --motion-muted:#b8b8b3;
 }
 
+/* Header matches the reference: logo left, nav centered, pill CTA right. */
 .uss-motion-story>.site-header{
   position:sticky;
   top:0;
-  z-index:100;
+  z-index:120;
+  height:96px !important;
+  background:linear-gradient(180deg,rgba(3,3,3,.88),rgba(3,3,3,.5) 64%,rgba(3,3,3,0)) !important;
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  border-bottom:0 !important;
   pointer-events:auto;
-  background:rgba(5,5,5,.72) !important;
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-  border-bottom:1px solid rgba(255,255,255,.12);
 }
-.uss-motion-story .scroll-distance{display:none}
+.uss-motion-story .site-header-inner.site-header-all-nav{
+  width:min(calc(100% - 96px),1600px);
+  height:100%;
+  grid-template-columns:160px 1fr 180px;
+  gap:28px;
+}
+.uss-motion-story .brand-logo{
+  width:112px;
+}
+.uss-motion-story .header-main-nav{
+  gap:clamp(28px,4vw,68px);
+}
+.uss-motion-story .header-main-nav a{
+  font-family:"Courier New",monospace;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.16em;
+  color:#deded9;
+}
+.uss-motion-story .header-main-nav a:last-child{
+  border:1px solid rgba(255,255,255,.82);
+  border-radius:999px;
+  padding:14px 20px 13px 22px;
+  min-width:160px;
+  justify-content:space-between;
+  gap:22px;
+}
+.uss-motion-story .header-main-nav a:last-child:after{
+  content:"↗";
+  font-size:18px;
+  line-height:.7;
+}
+.uss-motion-story .scroll-distance{display:none!important}
 
 .uss-motion-stage{
   position:sticky;
@@ -26,103 +66,202 @@
   height:100svh;
   min-height:100svh;
   overflow:hidden;
-  background:#050505;
+  background:#020202;
 }
 
-.uss-motion-background,.uss-motion-scrim,.uss-motion-canvas{position:absolute;inset:0}
-.uss-motion-background{z-index:0;overflow:hidden}
+/* Background runner footage/photo. */
+.uss-motion-background,
+.uss-motion-scrim,
+.uss-motion-canvas,
+.uss-motion-monas-photo{
+  position:absolute;
+  inset:0;
+}
+.uss-motion-background{
+  z-index:0;
+  overflow:hidden;
+}
 .uss-motion-background img{
   width:100%;
   height:100%;
   object-fit:cover;
   object-position:center;
-  filter:grayscale(1) contrast(1.16) brightness(.66);
-  opacity:.28;
-  transform:scale(1.035);
+  filter:grayscale(1) contrast(1.08) brightness(.52) blur(.15px);
+  opacity:.62;
+  transform:scale(1.025);
+  transition:opacity .55s ease,filter .55s ease;
 }
 .uss-motion-background:after{
   content:"";
   position:absolute;
   inset:0;
-  background-image:
-    radial-gradient(circle at 70% 50%,rgba(255,59,33,.06),transparent 23%),
-    repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0,rgba(255,255,255,.012) 1px,transparent 1px,transparent 3px);
+  background:
+    radial-gradient(circle at 64% 46%,rgba(255,255,255,.06),transparent 20%),
+    radial-gradient(circle at 76% 52%,rgba(255,42,22,.055),transparent 24%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,.012) 0,
+      rgba(255,255,255,.012) 1px,
+      transparent 1px,
+      transparent 3px
+    );
   mix-blend-mode:screen;
   pointer-events:none;
 }
 
-.uss-motion-scrim{
+/* Real Monas silhouette under the particle field. Hidden until Jakarta scene. */
+.uss-motion-monas-photo{
   z-index:1;
+  pointer-events:none;
+  opacity:0;
+  transition:
+    opacity .55s ease,
+    transform .75s cubic-bezier(.2,.8,.2,1),
+    filter .55s ease;
+}
+.uss-motion-monas-photo img{
+  position:absolute;
+  width:auto;
+  height:72vh;
+  max-height:760px;
+  right:18%;
+  bottom:7vh;
+  object-fit:contain;
+  filter:
+    grayscale(1)
+    brightness(.9)
+    contrast(1.1)
+    drop-shadow(0 0 34px rgba(255,255,255,.08));
+  opacity:.72;
+}
+.uss-motion-story.is-chapter-3 .uss-motion-monas-photo{
+  opacity:.82;
+}
+.uss-motion-story.is-chapter-4 .uss-motion-monas-photo{
+  opacity:.34;
+  transform:translateX(-16vw) scale(.96);
+}
+.uss-motion-story.is-chapter-4 .uss-motion-monas-photo img{
+  opacity:.78;
+  filter:
+    grayscale(1)
+    brightness(.68)
+    contrast(1.06)
+    blur(.25px);
+}
+
+.uss-motion-scrim{
+  z-index:2;
+  pointer-events:none;
   background:
-    linear-gradient(90deg,rgba(4,4,4,.99) 0%,rgba(4,4,4,.91) 31%,rgba(4,4,4,.26) 59%,rgba(4,4,4,.55) 100%),
-    linear-gradient(0deg,rgba(0,0,0,.88) 0%,transparent 52%,rgba(0,0,0,.18) 100%);
+    linear-gradient(90deg,rgba(2,2,2,.94) 0%,rgba(2,2,2,.86) 28%,rgba(2,2,2,.26) 55%,rgba(2,2,2,.26) 72%,rgba(2,2,2,.6) 100%),
+    linear-gradient(0deg,rgba(0,0,0,.83) 0%,rgba(0,0,0,.04) 48%,rgba(0,0,0,.22) 100%);
+}
+.uss-motion-story.is-chapter-3 .uss-motion-scrim{
+  background:
+    linear-gradient(90deg,rgba(2,2,2,.94) 0%,rgba(2,2,2,.82) 30%,rgba(2,2,2,.12) 58%,rgba(2,2,2,.22) 100%),
+    linear-gradient(0deg,rgba(0,0,0,.74),transparent 50%,rgba(0,0,0,.16));
+}
+.uss-motion-story.is-chapter-4 .uss-motion-scrim{
+  background:
+    linear-gradient(90deg,rgba(2,2,2,.92) 0%,rgba(2,2,2,.74) 30%,rgba(2,2,2,.08) 58%,rgba(2,2,2,.2) 100%),
+    linear-gradient(0deg,rgba(0,0,0,.78),transparent 56%,rgba(0,0,0,.17));
 }
 
 .uss-motion-canvas{
-  z-index:2;
+  z-index:3;
   width:100%;
   height:100%;
   pointer-events:none;
-  filter:drop-shadow(0 0 8px rgba(255,59,33,.08));
+  filter:
+    drop-shadow(0 0 8px rgba(255,255,255,.12))
+    drop-shadow(0 0 12px rgba(255,42,22,.08));
+}
+
+/* Small HUD text like the reference. */
+.uss-motion-hud{
+  position:absolute;
+  z-index:6;
+  top:28%;
+  right:5.2vw;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  min-width:145px;
+  padding:16px 0 16px 24px;
+  border-left:1px solid rgba(255,255,255,.2);
+  color:#c0c0bb;
+  font-family:"Courier New",monospace;
+  font-size:9px;
+  line-height:1.15;
+  letter-spacing:.18em;
+  pointer-events:none;
+  opacity:.56;
+  transition:opacity .3s ease;
+}
+.uss-motion-hud:before,
+.uss-motion-hud:after{
+  content:"";
+  position:absolute;
+  width:14px;
+  height:1px;
+  left:-1px;
+}
+.uss-motion-hud:before{
+  top:7px;
+  background:var(--motion-red);
+}
+.uss-motion-hud:after{
+  bottom:7px;
+  background:rgba(255,255,255,.32);
+}
+.uss-motion-story.is-chapter-3 .uss-motion-hud,
+.uss-motion-story.is-chapter-4 .uss-motion-hud{
+  opacity:.9;
+}
+.uss-motion-story.is-chapter-4 .uss-motion-hud{
+  top:47%;
+  right:4.8vw;
 }
 
 .uss-motion-est{
   position:absolute;
-  z-index:4;
-  top:118px;
-  right:46px;
+  z-index:5;
+  top:132px;
+  right:4.6vw;
+  font-family:"Courier New",monospace;
   font-size:8px;
-  font-weight:900;
+  font-weight:700;
   letter-spacing:.18em;
-  color:#8a8a86;
+  color:#8c8c88;
   pointer-events:none;
 }
-
-.uss-motion-hud{
-  position:absolute;
-  z-index:4;
-  top:32%;
-  right:4vw;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  padding:10px 0 10px 20px;
-  border-left:1px solid rgba(255,255,255,.16);
-  color:#9a9a95;
-  font-size:7px;
-  font-weight:900;
-  letter-spacing:.16em;
-  pointer-events:none;
-}
-.uss-motion-hud:before{
-  content:"";
-  position:absolute;
-  left:-1px;
-  top:0;
-  width:1px;
-  height:16px;
-  background:var(--red);
-  box-shadow:0 30px 0 rgba(255,255,255,.25),0 60px 0 rgba(255,255,255,.12);
+.uss-motion-story.is-chapter-3 .uss-motion-est,
+.uss-motion-story.is-chapter-4 .uss-motion-est{
+  opacity:0;
 }
 
+/* Chapters scroll in normal flow over the pinned scene. */
 .uss-motion-chapters{
   position:relative;
-  z-index:5;
+  z-index:8;
   margin-top:-100svh;
 }
 .uss-motion-chapter{
   min-height:100svh;
   display:flex;
   align-items:center;
-  padding:128px 3.4vw 104px;
+  padding:132px 3.7vw 112px;
   pointer-events:none;
 }
 .uss-motion-copy{
-  width:min(43vw,700px);
+  width:min(43vw,720px);
   pointer-events:auto;
-  opacity:.13;
-  transform:translateY(28px);
-  transition:opacity .38s ease,transform .38s ease;
+  opacity:.08;
+  transform:translateY(24px);
+  transition:
+    opacity .34s ease,
+    transform .34s ease;
 }
 .uss-motion-chapter.is-active .uss-motion-copy{
   opacity:1;
@@ -131,153 +270,312 @@
 .uss-motion-kicker{
   display:flex;
   align-items:center;
-  gap:12px;
-  margin-bottom:24px;
-  color:#c6c6c2;
-  font-size:9px;
-  font-weight:900;
-  letter-spacing:.18em;
+  gap:15px;
+  margin-bottom:25px;
+  color:#d0d0cb;
+  font-family:"Courier New",monospace;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.17em;
 }
 .uss-motion-kicker b{
-  color:var(--red);
-  font-size:8px;
-  min-width:26px;
+  color:var(--motion-white);
+  font-size:11px;
+  min-width:22px;
 }
 .uss-motion-kicker i{
-  display:block;
-  width:34px;
+  width:30px;
   height:1px;
-  background:rgba(255,255,255,.38);
+  background:rgba(255,255,255,.72);
+  display:block;
 }
+.uss-motion-story.is-chapter-3 .uss-motion-kicker b,
+.uss-motion-story.is-chapter-4 .uss-motion-kicker b{
+  color:var(--motion-white);
+}
+
 .uss-motion-copy h1{
   max-width:760px;
-  margin:0 0 26px;
+  margin:0 0 28px;
+  color:#fbfaf6;
   font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;
-  font-size:clamp(74px,8.2vw,136px);
+  font-size:clamp(78px,8.6vw,142px);
   line-height:.82;
   font-weight:400;
   letter-spacing:-.032em;
-  color:#f8f7f2;
   text-wrap:balance;
+  text-shadow:0 1px 0 rgba(255,255,255,.16);
+}
+.uss-motion-story.is-chapter-3 .uss-motion-copy h1,
+.uss-motion-story.is-chapter-4 .uss-motion-copy h1{
+  font-size:clamp(78px,8.25vw,136px);
+  line-height:.84;
+  max-width:700px;
 }
 .uss-motion-copy p{
   max-width:500px;
-  margin:0 0 26px;
-  color:#afafab;
-  font-size:12px;
-  line-height:1.78;
-  letter-spacing:.02em;
+  margin:0 0 25px;
+  color:#e0dfda;
+  font-family:"Courier New",monospace;
+  font-size:11px;
+  font-weight:600;
+  line-height:1.55;
+  letter-spacing:.12em;
+  text-transform:uppercase;
 }
 .uss-motion-copy>a{
   display:inline-flex;
   align-items:center;
   padding:8px 0 5px;
-  border-bottom:1px solid rgba(255,255,255,.5);
+  border-bottom:1px solid rgba(255,255,255,.54);
+  font-family:"Courier New",monospace;
   font-size:9px;
-  font-weight:900;
-  letter-spacing:.12em;
+  font-weight:700;
+  letter-spacing:.14em;
   pointer-events:auto;
 }
-.uss-motion-copy>a:hover{color:var(--red);border-color:var(--red)}
+.uss-motion-copy>a:hover{
+  color:var(--motion-red);
+  border-color:var(--motion-red);
+}
 
+/* Bottom rail: long timeline first, then meter + separator + skip. */
 .uss-motion-scrubber{
   position:fixed;
-  z-index:80;
+  z-index:90;
   left:0;
   right:0;
   bottom:0;
+  width:min(calc(100% - 96px),1600px);
+  margin:0 auto;
   display:grid;
-  grid-template-columns:auto minmax(0,1fr) auto;
-  gap:24px;
+  grid-template-columns:minmax(0,1fr) auto 1px auto;
+  gap:26px;
   align-items:center;
-  padding:13px 3.4vw 18px;
-  background:linear-gradient(0deg,rgba(5,5,5,.985),rgba(5,5,5,.84),transparent);
+  padding:14px 0 24px;
+  background:linear-gradient(0deg,rgba(2,2,2,.94),rgba(2,2,2,.62),transparent);
   transform:translateY(105%);
   opacity:0;
   pointer-events:none;
   transition:opacity .22s ease,transform .22s ease;
 }
-.uss-motion-scrubber.is-on{transform:none;opacity:1;pointer-events:auto}
-.uss-motion-distance,.uss-motion-scrubber>a{
-  font-size:8px;
-  font-weight:900;
-  letter-spacing:.14em;
-  white-space:nowrap;
+.uss-motion-scrubber.is-on{
+  transform:none;
+  opacity:1;
+  pointer-events:auto;
 }
-.uss-motion-distance{min-width:76px;color:#f4f2ed}
-.uss-motion-scrubber>a{color:#c8c8c4;border-bottom:1px solid #4a4a48;padding-bottom:4px}
-.uss-motion-scrubber>a:hover{color:var(--red);border-color:var(--red)}
-.uss-motion-track{position:relative;width:100%;min-width:0;height:24px}
+.uss-motion-track{
+  position:relative;
+  height:24px;
+  min-width:0;
+}
 .uss-motion-track:before{
   content:"";
   position:absolute;
-  left:0;right:0;top:50%;height:1px;
-  background:#454542;
+  left:0;
+  right:0;
+  top:50%;
+  height:1px;
+  background:rgba(255,255,255,.72);
 }
 .uss-motion-fill{
   position:absolute;
-  left:0;right:0;top:50%;height:1px;
-  background:var(--red);
+  left:0;
+  right:0;
+  top:50%;
+  height:2px;
+  background:var(--motion-red);
   transform-origin:left center;
-  box-shadow:0 0 8px rgba(255,59,33,.22);
 }
 .uss-motion-head{
   position:absolute;
   top:50%;
-  width:9px;height:9px;
-  margin:-4px 0 0 -4px;
+  width:10px;
+  height:10px;
+  margin:-5px 0 0 -5px;
   border-radius:50%;
-  background:var(--red);
-  box-shadow:0 0 18px rgba(255,59,33,.5);
+  background:#f8f7f2;
+  box-shadow:0 0 14px rgba(255,255,255,.38);
 }
 .uss-motion-track>i{
-  position:absolute;
-  top:50%;
-  width:1px;height:10px;
-  margin-top:-5px;
-  background:#8a8a86;
+  display:none;
+}
+.uss-motion-distance,
+.uss-motion-scrubber>a{
+  font-family:"Courier New",monospace;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:.14em;
+  color:#f3f1ed;
+  white-space:nowrap;
+}
+.uss-motion-divider{
+  width:1px;
+  height:18px;
+  background:rgba(255,255,255,.64);
+}
+.uss-motion-scrubber>a{
+  padding:0;
+  border:0;
+}
+.uss-motion-scrubber>a:hover{
+  color:var(--motion-red);
 }
 
-@media(max-width:1100px){
-  .uss-motion-copy{width:min(52vw,650px)}
-  .uss-motion-copy h1{font-size:clamp(66px,9vw,108px)}
-  .uss-motion-hud{right:24px}
+/* Make the visual composition almost identical to the supplied 03/04 references. */
+.uss-motion-story.is-chapter-3 .uss-motion-background img{
+  opacity:.54;
+  filter:grayscale(1) contrast(1.08) brightness(.46);
+}
+.uss-motion-story.is-chapter-4 .uss-motion-background img{
+  opacity:.62;
+  filter:grayscale(1) contrast(1.12) brightness(.48);
+}
+.uss-motion-story.is-chapter-4 .uss-motion-copy{
+  width:min(42vw,700px);
 }
 
-@media(max-width:760px){
-  .uss-motion-story{min-height:400dvh}
-  .uss-motion-story>.site-header{background:rgba(5,5,5,.9)!important}
-  .uss-motion-background img{opacity:.18;object-position:58% center}
-  .uss-motion-scrim{
-    background:
-      linear-gradient(0deg,rgba(5,5,5,.98) 0%,rgba(5,5,5,.88) 39%,rgba(5,5,5,.36) 74%,rgba(5,5,5,.22) 100%);
+/* Tablet */
+@media(max-width:1180px){
+  .uss-motion-story .site-header-inner.site-header-all-nav{
+    width:calc(100% - 48px);
+    grid-template-columns:120px 1fr 150px;
   }
-  .uss-motion-est{top:138px;right:16px;font-size:7px}
-  .uss-motion-hud{display:none}
+  .uss-motion-story .header-main-nav{
+    gap:24px;
+  }
+  .uss-motion-story .header-main-nav a{
+    font-size:9px;
+  }
+  .uss-motion-copy{
+    width:min(50vw,650px);
+  }
+  .uss-motion-copy h1{
+    font-size:clamp(68px,9vw,110px);
+  }
+  .uss-motion-monas-photo img{
+    right:13%;
+    height:64vh;
+  }
+  .uss-motion-scrubber{
+    width:calc(100% - 48px);
+  }
+}
+
+/* Mobile: same hierarchy but simplified visual field and single-column readability. */
+@media(max-width:760px){
+  .uss-motion-story{
+    min-height:400dvh;
+  }
+  .uss-motion-story>.site-header{
+    height:116px!important;
+    background:rgba(3,3,3,.92)!important;
+  }
+  .uss-motion-story .site-header-inner.site-header-all-nav{
+    width:calc(100% - 24px);
+    grid-template-columns:1fr auto;
+    grid-template-rows:52px 64px;
+  }
+  .uss-motion-story .brand-logo{
+    width:76px;
+  }
+  .uss-motion-story .header-main-nav{
+    grid-column:1/-1;
+    grid-row:2;
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:0;
+    border-top:1px solid rgba(255,255,255,.1);
+  }
+  .uss-motion-story .header-main-nav a{
+    min-width:0;
+    min-height:32px;
+    justify-content:center;
+    padding:0 4px;
+    border:0!important;
+    border-radius:0!important;
+    font-size:8px;
+  }
+  .uss-motion-story .header-main-nav a:last-child:after{
+    display:none;
+  }
+
+  .uss-motion-background img{
+    opacity:.38;
+    object-position:58% center;
+  }
+  .uss-motion-scrim,
+  .uss-motion-story.is-chapter-3 .uss-motion-scrim,
+  .uss-motion-story.is-chapter-4 .uss-motion-scrim{
+    background:
+      linear-gradient(0deg,rgba(3,3,3,.98) 0%,rgba(3,3,3,.9) 42%,rgba(3,3,3,.4) 74%,rgba(3,3,3,.22) 100%);
+  }
+  .uss-motion-monas-photo img{
+    right:50%;
+    transform:translateX(50%);
+    bottom:17vh;
+    height:48vh;
+    opacity:.44;
+  }
+  .uss-motion-story.is-chapter-4 .uss-motion-monas-photo{
+    transform:none;
+  }
+  .uss-motion-hud,
+  .uss-motion-est{
+    display:none;
+  }
+
   .uss-motion-chapter{
     align-items:flex-end;
-    padding:140px 16px 110px;
+    padding:132px 16px 112px;
   }
   .uss-motion-copy{
     width:100%;
-    padding-top:84px;
-    background:linear-gradient(0deg,rgba(5,5,5,.985) 0%,rgba(5,5,5,.86) 68%,transparent 100%);
+    padding-top:78px;
+    background:linear-gradient(0deg,rgba(3,3,3,.99) 0%,rgba(3,3,3,.88) 66%,transparent 100%);
   }
-  .uss-motion-copy h1{
+  .uss-motion-copy h1,
+  .uss-motion-story.is-chapter-3 .uss-motion-copy h1,
+  .uss-motion-story.is-chapter-4 .uss-motion-copy h1{
     max-width:100%;
     font-size:clamp(54px,16vw,78px);
+    line-height:.86;
     margin-bottom:18px;
   }
-  .uss-motion-copy p{max-width:330px;font-size:11px;line-height:1.62;margin-bottom:18px}
-  .uss-motion-kicker{font-size:8px;margin-bottom:17px}
-  .uss-motion-scrubber{
+  .uss-motion-kicker{
+    font-size:8px;
     gap:10px;
-    padding:11px 16px calc(14px + env(safe-area-inset-bottom,0px));
+    margin-bottom:18px;
   }
-  .uss-motion-distance{min-width:58px}
-  .uss-motion-scrubber>a{font-size:7px}
+  .uss-motion-kicker i{
+    width:18px;
+  }
+  .uss-motion-copy p{
+    max-width:330px;
+    font-size:9px;
+    line-height:1.55;
+    letter-spacing:.09em;
+    margin-bottom:18px;
+  }
+  .uss-motion-scrubber{
+    width:calc(100% - 28px);
+    grid-template-columns:minmax(0,1fr) auto auto;
+    gap:10px;
+    padding:10px 0 calc(14px + env(safe-area-inset-bottom,0px));
+  }
+  .uss-motion-divider{
+    display:none;
+  }
+  .uss-motion-distance,
+  .uss-motion-scrubber>a{
+    font-size:7px;
+  }
 }
 
 @media(prefers-reduced-motion:reduce){
-  .uss-motion-copy,.uss-motion-scrubber{transition:none}
+  .uss-motion-copy,
+  .uss-motion-scrubber,
+  .uss-motion-monas-photo{
+    transition:none;
+  }
 }
