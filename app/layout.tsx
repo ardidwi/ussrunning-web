@@ -3,6 +3,7 @@ import "./globals.css";
 import "./cms.css";
 import "./auth-notice.css";
 import "./qr.css";
+import "./scroll-fix.css";
 
 export const metadata: Metadata = {
   title: "USS Running — Community in Motion",
