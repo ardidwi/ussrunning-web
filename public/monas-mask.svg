@@ -1,25 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900" role="img" aria-label="Monas silhouette">
-  <defs>
-    <linearGradient id="stone" x1="0" x2="1" y1="0" y2="0">
-      <stop offset="0" stop-color="#8a8a8a"/>
-      <stop offset="0.5" stop-color="#f0f0f0"/>
-      <stop offset="1" stop-color="#8b8b8b"/>
-    </linearGradient>
-    <radialGradient id="flame" cx="50%" cy="55%" r="55%">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="1" stop-color="#bdbdbd"/>
-    </radialGradient>
-  </defs>
-  <g fill="url(#stone)">
-    <path d="M132 806h336l-34 36H166z"/>
-    <path d="M118 748h364l-22 66H140z"/>
-    <path d="M188 706h224l46 42H142z"/>
-    <path d="M241 216h118l-22 490h-74z"/>
-    <path d="M219 180h162l-14 44H233z"/>
-    <path d="M238 154h124l20 26H218z"/>
-  </g>
-  <g fill="url(#flame)">
-    <path d="M300 36c-18 38-6 56-28 82 18-4 27-15 28-31 7 16 17 25 31 31-10-24-7-39-31-82z"/>
-    <path d="M285 113h30l12 41h-54z"/>
+  <g fill="#fff">
+    <path d="M300 36c-31 39-48 83-39 123 8 36 27 59 39 78 12-19 31-42 39-78 9-40-8-84-39-123z"/>
+    <path d="M234 205h132l35 48-27 40H226l-27-40 35-48z"/>
+    <path d="M222 286h156l14 26H208l14-26z"/>
+    <path d="M254 312h92l34 360H220l34-360z"/>
+    <path d="M205 651h190l48 45-28 29H185l-28-29 48-45z"/>
+    <path d="M113 696h374l-54 84H167l-54-84z"/>
+    <path d="M149 780h302l-24 34H173l-24-34z"/>
+    <path d="M132 814h336l54 34H78l54-34z"/>
+    <path d="M83 848h434l28 24H55l28-24z"/>
   </g>
 </svg>
