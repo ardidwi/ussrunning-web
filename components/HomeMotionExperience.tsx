@@ -16,8 +16,7 @@ type Props = {
   ctaLabel?: string | null;
 };
 
-const clamp = (value: number, min = 0, max = 1) =>
-  Math.min(max, Math.max(min, value));
+const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value));
 
 function seeded(index: number) {
   const value = Math.sin(index * 12.9898 + 78.233) * 43758.5453;
@@ -25,122 +24,135 @@ function seeded(index: number) {
 }
 
 function trackPoint(index: number, count: number, time: number): Point3 {
-  const lane = index % 5;
-  const laneScale = 1 - lane * 0.055;
-  const speed = 0.00028 + (lane % 2) * 0.000035;
-  const angle = ((index / Math.max(1, count)) * Math.PI * 2 * 6 + time * speed) % (Math.PI * 2);
-  const wobble = (seeded(index + 90) - 0.5) * 0.08;
-
+  const lane = index % 6;
+  const laneScale = 1 - lane * 0.047;
+  const speed = 0.00028 + (lane % 3) * 0.000028;
+  const angle = ((index / Math.max(1, count)) * Math.PI * 2 * 7 + time * speed) % (Math.PI * 2);
   return {
     x: Math.cos(angle) * 3.15 * laneScale,
-    y: Math.sin(angle) * 1.42 * laneScale,
-    z: (lane - 2) * 0.16 + Math.sin(angle * 2) * 0.08 + wobble,
+    y: Math.sin(angle) * 1.34 * laneScale,
+    z: (lane - 2.5) * 0.13 + Math.sin(angle * 2) * 0.08,
   };
 }
 
-function trackTargets(count: number): Point3[] {
-  return Array.from({ length: count }, (_, index) => trackPoint(index, count, 0));
-}
-
-function jakartaTargets(count: number): Point3[] {
+function monasTargets(count: number): Point3[] {
   return Array.from({ length: count }, (_, index) => {
-    // Reserve a strong central cluster for a Monas-inspired vertical landmark.
-    if (index < Math.floor(count * 0.13)) {
-      const t = index / Math.max(1, Math.floor(count * 0.13) - 1);
-      const ring = (index % 7) / 7;
-      const angle = ring * Math.PI * 2;
-      const taper = 0.12 + Math.max(0, t - 0.78) * 0.8;
+    const t = index / Math.max(1, count - 1);
+    const rndA = seeded(index + 800);
+    const rndB = seeded(index + 1600);
+
+    if (t < 0.58) {
+      const local = t / 0.58;
+      const y = -1.72 + local * 3.25;
+      const shaft = 0.14 + (1 - local) * 0.09;
+      const angle = rndA * Math.PI * 2;
       return {
-        x: 0.7 + Math.cos(angle) * taper,
-        y: -1.45 + t * 3.8,
-        z: 0.35 + Math.sin(angle) * taper,
+        x: 0.95 + Math.cos(angle) * shaft * (0.55 + rndB * 0.65),
+        y,
+        z: Math.sin(angle) * shaft * 1.25,
       };
     }
 
-    const building = Math.floor(seeded(index + 1000) * 32);
-    const col = building % 8;
-    const row = Math.floor(building / 8);
-    const bx = -3.1 + col * 0.88 + (seeded(building + 20) - 0.5) * 0.28;
-    const bz = -1.9 + row * 1.18 + (seeded(building + 40) - 0.5) * 0.34;
-    const height = 0.85 + seeded(building + 60) * 2.15;
-    const width = 0.24 + seeded(building + 80) * 0.42;
-    const depth = 0.2 + seeded(building + 100) * 0.36;
-    const edge = index % 4;
-    const t = seeded(index + 1200);
-
-    if (edge === 0 || edge === 1) {
+    if (t < 0.74) {
+      const local = (t - 0.58) / 0.16;
+      const angle = rndA * Math.PI * 2;
+      const radius = 0.26 + Math.sin(local * Math.PI) * 0.38;
       return {
-        x: bx + (edge === 0 ? -width : width),
-        y: -1.42 + t * height,
-        z: bz + (seeded(index + 1300) - 0.5) * depth * 2,
+        x: 0.95 + Math.cos(angle) * radius,
+        y: 1.52 + (local - 0.5) * 0.22,
+        z: Math.sin(angle) * radius * 0.72,
       };
     }
 
+    if (t < 0.86) {
+      const local = (t - 0.74) / 0.12;
+      const angle = rndA * Math.PI * 2;
+      const radius = 0.12 + Math.sin(local * Math.PI) * 0.2;
+      return {
+        x: 0.95 + Math.cos(angle) * radius,
+        y: 1.68 + local * 0.54,
+        z: Math.sin(angle) * radius,
+      };
+    }
+
+    const local = (t - 0.86) / 0.14;
+    const side = index % 2 === 0 ? -1 : 1;
+    const spread = 0.45 + rndA * 0.85;
     return {
-      x: bx + (seeded(index + 1400) - 0.5) * width * 2,
-      y: -1.42 + t * height,
-      z: bz + (edge === 2 ? -depth : depth),
+      x: 0.95 + side * spread,
+      y: -1.58 + rndB * 0.22,
+      z: (rndA - 0.5) * 0.7,
     };
   });
 }
 
-function logoTargets(count: number): Point3[] {
+function fallbackLogoTargets(count: number): Point3[] {
   const offscreen = document.createElement("canvas");
-  offscreen.width = 1000;
-  offscreen.height = 380;
+  offscreen.width = 1200;
+  offscreen.height = 420;
   const ctx = offscreen.getContext("2d");
-  if (!ctx) return trackTargets(count);
-
-  ctx.clearRect(0, 0, offscreen.width, offscreen.height);
+  if (!ctx) return Array.from({ length: count }, (_, i) => trackPoint(i, count, 0));
   ctx.fillStyle = "#fff";
-  ctx.font = "900 270px Impact, Haettenschweiler, Arial Black, sans-serif";
+  ctx.font = "900 300px Arial Black, Impact, sans-serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText("USS", 500, 190);
+  ctx.fillText("USS", 600, 210);
+  return sampleCanvas(offscreen, count, 7);
+}
 
-  const image = ctx.getImageData(0, 0, offscreen.width, offscreen.height).data;
+function sampleCanvas(canvas: HTMLCanvasElement, count: number, step = 5): Point3[] {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return [];
+  const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
   const candidates: Array<{ x: number; y: number }> = [];
-
-  for (let y = 22; y < offscreen.height - 22; y += 6) {
-    for (let x = 22; x < offscreen.width - 22; x += 6) {
-      const alpha = image[(y * offscreen.width + x) * 4 + 3];
-      if (alpha > 80) candidates.push({ x, y });
+  for (let y = 0; y < canvas.height; y += step) {
+    for (let x = 0; x < canvas.width; x += step) {
+      if (data[(y * canvas.width + x) * 4 + 3] > 80) candidates.push({ x, y });
     }
   }
-
-  if (!candidates.length) return trackTargets(count);
-
+  if (!candidates.length) return [];
   return Array.from({ length: count }, (_, index) => {
-    const pick = candidates[Math.floor(seeded(index + 2200) * candidates.length)];
-    const depthLayer = (index % 7) / 6;
+    const point = candidates[Math.floor(seeded(index + 2200) * candidates.length)];
     return {
-      x: ((pick.x / offscreen.width) - 0.5) * 6.4,
-      y: (0.5 - pick.y / offscreen.height) * 2.55,
-      z: (depthLayer - 0.5) * 0.72 + (seeded(index + 2300) - 0.5) * 0.08,
+      x: ((point.x / canvas.width) - 0.5) * 6.5,
+      y: (0.5 - point.y / canvas.height) * 2.6,
+      z: ((index % 9) / 8 - 0.5) * 0.55 + (seeded(index + 2300) - 0.5) * 0.09,
     };
   });
 }
 
-function rotatePoint(point: Point3, yaw: number, pitch: number, roll: number): Point3 {
+function loadLogoTargets(count: number): Promise<Point3[]> {
+  return new Promise((resolve) => {
+    const image = new Image();
+    image.src = "/uss-logo.png";
+    image.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 1200;
+      canvas.height = 440;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return resolve(fallbackLogoTargets(count));
+      const ratio = Math.min(980 / image.width, 330 / image.height);
+      const width = image.width * ratio;
+      const height = image.height * ratio;
+      ctx.drawImage(image, (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
+      const sampled = sampleCanvas(canvas, count, 5);
+      resolve(sampled.length ? sampled : fallbackLogoTargets(count));
+    };
+    image.onerror = () => resolve(fallbackLogoTargets(count));
+  });
+}
+
+function rotatePoint(point: Point3, yaw: number, pitch: number): Point3 {
   const cy = Math.cos(yaw);
   const sy = Math.sin(yaw);
   const cp = Math.cos(pitch);
   const sp = Math.sin(pitch);
-  const cr = Math.cos(roll);
-  const sr = Math.sin(roll);
-
   const x1 = point.x * cy + point.z * sy;
   const z1 = -point.x * sy + point.z * cy;
-  const y1 = point.y;
-
-  const y2 = y1 * cp - z1 * sp;
-  const z2 = y1 * sp + z1 * cp;
-  const x2 = x1;
-
   return {
-    x: x2 * cr - y2 * sr,
-    y: x2 * sr + y2 * cr,
-    z: z2,
+    x: x1,
+    y: point.y * cp - z1 * sp,
+    z: point.y * sp + z1 * cp,
   };
 }
 
@@ -155,7 +167,6 @@ export default function HomeMotionExperience({
 }: Props) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const reticleRef = useRef<HTMLDivElement | null>(null);
   const [progress, setProgress] = useState(0);
   const [activeChapter, setActiveChapter] = useState(0);
   const [storyActive, setStoryActive] = useState(true);
@@ -171,24 +182,21 @@ export default function HomeMotionExperience({
     {
       kicker: "TRACK / PEOPLE / PACE",
       headline: "THE PEOPLE.\nTHE CITY.\nTHE MILES.",
-      description:
-        "The track stays alive even when you stop scrolling. Move your cursor, click the field and the pack reacts before finding its line again.",
+      description: "The track stays alive. The pack keeps moving, reacting and finding its line again.",
       action: "OUR STORY",
       href: "/about",
     },
     {
       kicker: "JAKARTA / CITY IN MOTION",
-      headline: "BUILT IN JAKARTA.\nMADE TO MOVE.",
-      description:
-        "The running track breaks into a three-dimensional Jakarta city field, with a Monas-inspired landmark at its core.",
+      headline: "BUILT IN\nJAKARTA.\nMADE TO\nMOVE.",
+      description: "The running track evolves into Jakarta with Monas at its core. The city breathes, moves and pushes forward together.",
       action: "SEE THE RUNS",
       href: "/runs",
     },
     {
       kicker: "USS / COMMUNITY IN MOTION",
       headline: "ONE CREW.\nONE MARK.\nKEEP MOVING.",
-      description:
-        "The city resolves into the USS mark. The particles keep breathing, orbiting and responding to you instead of becoming a static logo.",
+      description: "The city resolves into the USS mark. The particles keep breathing, orbiting and responding in motion.",
       action: "JOIN USS",
       href: "/membership",
     },
@@ -198,30 +206,21 @@ export default function HomeMotionExperience({
     const section = sectionRef.current;
     const canvas = canvasRef.current;
     if (!section || !canvas) return;
-
     const context = canvas.getContext("2d");
     if (!context) return;
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let width = 0;
-    let height = 0;
+    let width = 1;
+    let height = 1;
     let dpr = 1;
-    let particleCount = 0;
-    let city: Point3[] = [];
+    let particleCount = 1200;
+    let monas: Point3[] = [];
     let logo: Point3[] = [];
     let frame = 0;
     let latestProgress = 0;
+    let loadToken = 0;
 
-    const pointer = {
-      x: 0,
-      y: 0,
-      nx: 0,
-      ny: 0,
-      active: false,
-      smoothX: 0,
-      smoothY: 0,
-    };
-
+    const pointer = { x: 0, y: 0, nx: 0, ny: 0, active: false, smoothX: 0, smoothY: 0 };
     const clickPulse = { x: 0, y: 0, startedAt: -10000 };
 
     const resize = () => {
@@ -232,10 +231,13 @@ export default function HomeMotionExperience({
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      particleCount = width < 760 ? 520 : 1450;
-      city = jakartaTargets(particleCount);
-      logo = logoTargets(particleCount);
+      particleCount = width < 760 ? 620 : 1750;
+      monas = monasTargets(particleCount);
+      logo = fallbackLogoTargets(particleCount);
+      const token = ++loadToken;
+      loadLogoTargets(particleCount).then((points) => {
+        if (token === loadToken && points.length) logo = points;
+      });
     };
 
     const updateProgress = () => {
@@ -248,16 +250,35 @@ export default function HomeMotionExperience({
       setStoryActive(rect.top <= 4 && rect.bottom >= window.innerHeight * 0.5);
     };
 
-    const resolveShapePoint = (shapeIndex: number, index: number, time: number): Point3 => {
-      if (shapeIndex <= 1) return trackPoint(index, particleCount, reduceMotion ? 0 : time);
-      if (shapeIndex === 2) return city[index];
-      return logo[index];
+    const shapePoint = (shape: number, index: number, time: number) => {
+      if (shape <= 1) return trackPoint(index, particleCount, reduceMotion ? 0 : time);
+      if (shape === 2) return monas[index];
+      return logo[index] || fallbackLogoTargets(particleCount)[index];
+    };
+
+    const drawOrbit = (time: number, strength: number) => {
+      if (strength <= 0.02) return;
+      const centerX = width < 760 ? width * 0.53 : width * 0.73;
+      const centerY = height * 0.53;
+      const base = Math.min(width, height) * 0.24;
+      context.save();
+      context.lineWidth = 1;
+      for (let orbit = 0; orbit < 4; orbit += 1) {
+        const phase = time * (0.00007 + orbit * 0.000012);
+        context.beginPath();
+        context.ellipse(centerX, centerY, base * (1.4 + orbit * 0.18), base * (0.45 + orbit * 0.055), phase + orbit * 0.5, 0, Math.PI * 2);
+        context.strokeStyle = orbit % 2 === 0
+          ? `rgba(255,59,33,${0.18 * strength})`
+          : `rgba(243,240,232,${0.12 * strength})`;
+        context.stroke();
+      }
+      context.restore();
     };
 
     const draw = (time: number) => {
       context.clearRect(0, 0, width, height);
-      if (!particleCount || !city.length || !logo.length) {
-        frame = window.requestAnimationFrame(draw);
+      if (!monas.length || !logo.length) {
+        frame = requestAnimationFrame(draw);
         return;
       }
 
@@ -269,20 +290,20 @@ export default function HomeMotionExperience({
       const toIndex = Math.min(3, fromIndex + 1);
       const rawMix = clamp(step - fromIndex);
       const mix = rawMix * rawMix * (3 - 2 * rawMix);
+      const sceneStrength = clamp((latestProgress - 0.45) / 0.25);
+      drawOrbit(time, sceneStrength);
 
-      const yaw = (reduceMotion ? 0.04 : Math.sin(time * 0.00016) * 0.08) + pointer.smoothX * 0.32;
-      const pitch = -0.12 + pointer.smoothY * 0.2;
-      const roll = reduceMotion ? 0 : Math.sin(time * 0.00011) * 0.025;
-      const centerX = width < 760 ? width * 0.5 : width * 0.73;
-      const centerY = height * 0.51;
-      const baseScale = Math.min(width, height) * (width < 760 ? 0.135 : 0.155);
-      const camera = 7.2;
+      const yaw = (reduceMotion ? 0 : Math.sin(time * 0.00012) * 0.055) + pointer.smoothX * 0.2;
+      const pitch = -0.08 + pointer.smoothY * 0.14;
+      const centerX = width < 760 ? width * 0.52 : width * 0.73;
+      const centerY = height * 0.53;
+      const baseScale = Math.min(width, height) * (width < 760 ? 0.14 : 0.165);
+      const camera = 7.5;
       const pulseAge = (time - clickPulse.startedAt) / 1000;
 
       for (let index = 0; index < particleCount; index += 1) {
-        const a = resolveShapePoint(fromIndex, index, time);
-        const b = resolveShapePoint(toIndex, index, time);
-
+        const a = shapePoint(fromIndex, index, time);
+        const b = shapePoint(toIndex, index, time);
         let point: Point3 = {
           x: a.x + (b.x - a.x) * mix,
           y: a.y + (b.y - a.y) * mix,
@@ -290,12 +311,12 @@ export default function HomeMotionExperience({
         };
 
         if (!reduceMotion) {
-          point.z += Math.sin(time * 0.0011 + index * 0.17) * 0.035;
-          point.y += Math.cos(time * 0.00082 + index * 0.11) * 0.018;
+          point.z += Math.sin(time * 0.001 + index * 0.17) * 0.035;
+          point.y += Math.cos(time * 0.0008 + index * 0.11) * 0.017;
         }
 
-        point = rotatePoint(point, yaw, pitch, roll);
-        const perspective = camera / Math.max(2.1, camera - point.z);
+        point = rotatePoint(point, yaw, pitch);
+        const perspective = camera / Math.max(2.2, camera - point.z);
         let sx = centerX + point.x * baseScale * perspective;
         let sy = centerY - point.y * baseScale * perspective;
 
@@ -303,143 +324,104 @@ export default function HomeMotionExperience({
           const dx = sx - pointer.x;
           const dy = sy - pointer.y;
           const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-          const radius = width < 760 ? 85 : 155;
+          const radius = width < 760 ? 90 : 150;
           if (dist < radius) {
             const force = 1 - dist / radius;
-            sx += (dx / dist) * force * force * 34 - (dy / dist) * force * 8;
-            sy += (dy / dist) * force * force * 34 + (dx / dist) * force * 8;
+            sx += (dx / dist) * force * force * 38;
+            sy += (dy / dist) * force * force * 38;
           }
         }
 
-        if (pulseAge >= 0 && pulseAge < 1.15 && !reduceMotion) {
+        if (pulseAge >= 0 && pulseAge < 1.2 && !reduceMotion) {
           const dx = sx - clickPulse.x;
           const dy = sy - clickPulse.y;
           const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-          const wave = pulseAge * Math.max(width, height) * 0.72;
+          const wave = pulseAge * Math.max(width, height) * 0.7;
           const delta = Math.abs(dist - wave);
-          if (delta < 92) {
-            const strength = (1 - delta / 92) * (1 - pulseAge / 1.15) * 44;
+          if (delta < 88) {
+            const strength = (1 - delta / 88) * (1 - pulseAge / 1.2) * 46;
             sx += (dx / dist) * strength;
             sy += (dy / dist) * strength;
           }
         }
 
-        const depth = clamp((point.z + 2.6) / 5.2);
-        const accent = index % 31 === 0 || (fromIndex === 2 && index < particleCount * 0.13 && index % 5 === 0);
-        const alpha = accent ? 0.98 : 0.28 + depth * 0.58;
-        const radius = accent ? 2.2 : 0.65 + perspective * 0.92;
-
+        const accent = index % 29 === 0 || (fromIndex === 2 && index < particleCount * 0.86 && index % 7 === 0);
+        const alpha = accent ? 0.98 : 0.42 + clamp((point.z + 2.2) / 4.4) * 0.5;
+        const radius = accent ? 2.1 : 0.7 + perspective * 0.95;
         context.beginPath();
         context.arc(sx, sy, radius, 0, Math.PI * 2);
-        context.fillStyle = accent
-          ? `rgba(255,59,33,${alpha})`
-          : `rgba(243,240,232,${alpha})`;
+        context.fillStyle = accent ? `rgba(255,59,33,${alpha})` : `rgba(246,244,238,${alpha})`;
         context.fill();
       }
 
-      frame = window.requestAnimationFrame(draw);
+      frame = requestAnimationFrame(draw);
     };
 
     const onPointerMove = (event: PointerEvent) => {
       if (event.pointerType === "touch") return;
       const rect = canvas.getBoundingClientRect();
-      const inside =
-        event.clientX >= rect.left &&
-        event.clientX <= rect.right &&
-        event.clientY >= rect.top &&
-        event.clientY <= rect.bottom;
-
+      const inside = event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom;
       pointer.active = inside;
       if (!inside) return;
-
       pointer.x = event.clientX - rect.left;
       pointer.y = event.clientY - rect.top;
       pointer.nx = clamp((pointer.x / width - 0.5) * 2, -1, 1);
       pointer.ny = clamp((pointer.y / height - 0.5) * 2, -1, 1);
-
-      if (reticleRef.current) {
-        reticleRef.current.style.left = `${pointer.x}px`;
-        reticleRef.current.style.top = `${pointer.y}px`;
-      }
-    };
-
-    const onPointerLeave = () => {
-      pointer.active = false;
-      pointer.nx = 0;
-      pointer.ny = 0;
     };
 
     const onClick = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null;
       if (target?.closest("a,button,input,label")) return;
       const rect = canvas.getBoundingClientRect();
-      const inside =
-        event.clientX >= rect.left &&
-        event.clientX <= rect.right &&
-        event.clientY >= rect.top &&
-        event.clientY <= rect.bottom;
-      if (!inside) return;
-
+      if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) return;
       clickPulse.x = event.clientX - rect.left;
       clickPulse.y = event.clientY - rect.top;
       clickPulse.startedAt = performance.now();
     };
 
-    const onScroll = () => updateProgress();
-    const onResize = () => {
-      resize();
-      updateProgress();
-    };
-
     resize();
     updateProgress();
-    frame = window.requestAnimationFrame(draw);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onResize);
+    frame = requestAnimationFrame(draw);
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", resize);
     window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("pointerleave", onPointerLeave);
     window.addEventListener("click", onClick);
 
     return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onResize);
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", updateProgress);
+      window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerleave", onPointerLeave);
       window.removeEventListener("click", onClick);
     };
   }, []);
 
   const meters = Math.round(progress * 5000);
+  const hud = activeChapter === 2
+    ? ["JAKARTA", "6.1754° S", "106.8272° E"]
+    : activeChapter === 3
+      ? ["USS RUNNING", "ONE CREW", "JAKARTA"]
+      : ["PEOPLE", "ROUTES", "CULTURE"];
 
   return (
     <section ref={sectionRef} className="uss-motion-story" aria-label="USS Running introduction">
       <SiteHeader />
 
       <div className="uss-motion-stage">
-        <div className="uss-motion-background" aria-hidden="true">
-          <img src={imageUrl} alt="" />
-        </div>
+        <div className="uss-motion-background" aria-hidden="true"><img src={imageUrl} alt="" /></div>
         <div className="uss-motion-scrim" aria-hidden="true" />
         <canvas ref={canvasRef} className="uss-motion-canvas" aria-hidden="true" />
-        <div ref={reticleRef} className="uss-motion-reticle" aria-hidden="true">
-          <i /><i /><i /><i />
-          <span>3D / MOVE / CLICK</span>
+        <div className="uss-motion-hud" aria-hidden="true">
+          <span>{hud[0]}</span><span>{hud[1]}</span><span>{hud[2]}</span>
         </div>
         <div className="uss-motion-est">{established || "EST. 2024"}</div>
       </div>
 
       <div className="uss-motion-chapters">
         {chapters.map((chapter, index) => (
-          <article
-            className={`uss-motion-chapter ${activeChapter === index ? "is-active" : ""}`}
-            key={chapter.kicker}
-          >
+          <article className={`uss-motion-chapter ${activeChapter === index ? "is-active" : ""}`} key={chapter.kicker}>
             <div className="uss-motion-copy">
-              <span className="uss-motion-kicker">
-                <b>{String(index + 1).padStart(2, "0")}</b>
-                {chapter.kicker}
-              </span>
+              <span className="uss-motion-kicker"><b>{String(index + 1).padStart(2, "0")}</b><i />{chapter.kicker}</span>
               <h1 style={{ whiteSpace: "pre-line" }}>{chapter.headline}</h1>
               <p>{chapter.description}</p>
               <Link href={chapter.href}>{chapter.action} ↗</Link>
@@ -453,11 +435,9 @@ export default function HomeMotionExperience({
         <div className="uss-motion-track" aria-hidden="true">
           <span className="uss-motion-fill" style={{ transform: `scaleX(${progress})` }} />
           <span className="uss-motion-head" style={{ left: `${progress * 100}%` }} />
-          {[0, 1, 2, 3].map((item) => (
-            <i key={item} style={{ left: `${(item / 3) * 100}%` }} />
-          ))}
+          {[0, 1, 2, 3].map((item) => <i key={item} style={{ left: `${(item / 3) * 100}%` }} />)}
         </div>
-        <a href="#uss-next-runs">SKIP TO RUNS</a>
+        <a href="#uss-next-runs">SKIP TO RUNS →</a>
       </nav>
     </section>
   );
