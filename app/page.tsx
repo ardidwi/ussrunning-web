@@ -3,7 +3,6 @@ import SiteFooter from "@/components/SiteFooter";
 import EventCard from "@/components/EventCard";
 import CommunityStats from "@/components/CommunityStats";
 import HomeMotionExperience from "@/components/HomeMotionExperience";
-import ThirdChapterVideoOverlay from "@/components/ThirdChapterVideoOverlay";
 import {
   getCmsSection,
   getHomeHero,
@@ -71,7 +70,6 @@ export default async function HomePage() {
         ctaHref={hero.ctaHref}
         ctaLabel={hero.ctaLabel}
       />
-      <ThirdChapterVideoOverlay />
 
       <section className="ticker" aria-label="Community message">
         <div className="ticker-marquee">
