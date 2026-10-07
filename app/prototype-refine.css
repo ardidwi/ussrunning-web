@@ -38,7 +38,6 @@
   isolation:isolate;
 }
 
-/* storyActive already controls the scrubber; use the same live state for the stage */
 .uss-motion-story:has(.uss-motion-scrubber.is-on) .uss-motion-stage{
   opacity:1;
   visibility:visible;
@@ -100,6 +99,97 @@
 .uss-motion-scrubber{
   z-index:80!important;
   grid-template-columns:auto minmax(0,1fr) auto!important;
+}
+
+/* ---------------------------------------------------------
+   THIRD CHAPTER VIDEO
+   Cropped USS particle footage becomes the primary visual for
+   chapter 03. A spring/pressure particle canvas sits above it.
+   --------------------------------------------------------- */
+.uss-third-video{
+  --uss-video-tilt-x:0deg;
+  --uss-video-tilt-y:0deg;
+  position:fixed;
+  z-index:3;
+  top:112px;
+  right:0;
+  bottom:58px;
+  left:47%;
+  pointer-events:none;
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(14px) scale(.985);
+  transition:opacity .34s ease,visibility .34s ease,transform .34s ease;
+}
+.uss-third-video.is-active{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0) scale(1);
+}
+.uss-third-video-frame{
+  position:absolute;
+  inset:3% 4% 5% 1%;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);
+  background:#050607;
+  transform:perspective(1000px) rotateX(var(--uss-video-tilt-x)) rotateY(var(--uss-video-tilt-y));
+  transform-origin:55% 50%;
+  transition:transform .14s ease-out;
+  box-shadow:0 30px 90px rgba(0,0,0,.35);
+}
+.uss-third-video-frame::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(5,5,5,.2),transparent 18%,transparent 82%,rgba(5,5,5,.3)),
+    radial-gradient(circle at 54% 52%,rgba(255,255,255,.035),transparent 46%);
+}
+.uss-third-video video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  filter:brightness(1.08) contrast(1.24) saturate(.2);
+  transform:scale(1.035);
+}
+.uss-third-video canvas{
+  position:absolute;
+  z-index:3;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  mix-blend-mode:screen;
+}
+.uss-third-video-hud{
+  position:absolute;
+  z-index:4;
+  left:18px;
+  right:18px;
+  bottom:16px;
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  color:rgba(255,255,255,.62);
+  font-size:7px;
+  font-weight:900;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+.uss-third-video-hud b{
+  color:#ff3b21;
+  font-weight:900;
+}
+body:has(.uss-third-video.is-active) .uss-motion-canvas{
+  opacity:.1!important;
+}
+body:has(.uss-third-video.is-active) .uss-motion-reticle{
+  opacity:.22!important;
 }
 
 /* ---------------------------------------------------------
@@ -195,6 +285,15 @@
 }
 
 @media (max-width:1000px){
+  .uss-third-video{
+    left:38%;
+    top:96px;
+    bottom:72px;
+  }
+  .uss-third-video-frame{
+    inset:10% 2% 12% 0;
+  }
+
   .join-shell-v4,
   .login-page-v3{
     position:relative!important;
@@ -225,5 +324,23 @@
     min-height:auto!important;
     margin:0!important;
     overflow:visible!important;
+  }
+}
+
+@media (max-width:760px){
+  .uss-third-video{
+    left:0;
+    top:40%;
+    bottom:76px;
+    opacity:0;
+  }
+  .uss-third-video.is-active{
+    opacity:.88;
+  }
+  .uss-third-video-frame{
+    inset:0 12px 0 12px;
+  }
+  .uss-third-video-hud{
+    display:none;
   }
 }
