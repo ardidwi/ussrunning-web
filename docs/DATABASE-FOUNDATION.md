@@ -47,6 +47,8 @@ Production migrations are never run at startup/build. Use an isolated Neon stagi
 005_notifications_audit: neutral templates/deliveries and cross-domain audit history.
 006_reference_protection: only three system role seeds; timestamp/history triggers and public privilege revocation.
 007_event_identity_anchors: forward review fix preventing registration/pass/check-in/custom-field identity rebinding across events or members; mutable operational fields remain editable.
+008_profile_bootstrap: permits a missing full name during trusted account provisioning.
+009_email_verification: immutable email fingerprint on proofs, atomic invoker issue/consume functions, explicit runtime EXECUTE grants. See [BE-03 lifecycle](EMAIL-VERIFICATION.md).
 
 The runner tracks version/filename/SHA-256 checksum/applied_at in uss_migrations.schema_migrations. Line endings are normalized before hashing. Names are ordered three-digit prefixes. Already-applied source changes, missing files, renamed files or non-prefix histories fail closed. Never rewrite an applied migration; add a new numbered file. No CREATE TABLE IF NOT EXISTS masks a conflicting application schema.
 
