@@ -1,0 +1,41 @@
+{
+  "enableMotion": true,
+  "chapters": [
+    {
+      "kicker": "JAKARTA, INDONESIA",
+      "headline": "WE RUN.\nWE CONNECT.\nWE MOVE.",
+      "description": "Built in Jakarta. USS Running brings people together through movement, then keeps the story going through culture, friendship and shared experiences.",
+      "ctaLabel": "EXPLORE RUNS",
+      "ctaHref": "/runs",
+      "backgroundImage": "/motion/jakarta-night.webp",
+      "motionPreset": "running-track-uss"
+    },
+    {
+      "kicker": "TRACK / PEOPLE / PACE",
+      "headline": "THE PEOPLE.\nTHE CITY.\nTHE PACE.",
+      "description": "Every pace finds its people. The track opens up, and individual lines become one movement through the city.",
+      "ctaLabel": "OUR STORY",
+      "ctaHref": "/about",
+      "backgroundImage": "/motion/jakarta-night.webp",
+      "motionPreset": "people-pace"
+    },
+    {
+      "kicker": "JAKARTA / CITY IN MOTION",
+      "headline": "BUILT IN\nJAKARTA.\nMADE TO\nMOVE.",
+      "description": "The running track evolves into a Jakarta city field, with Monas at its core. The city breathes, moves, and pushes forward together.",
+      "ctaLabel": "SEE THE RUNS",
+      "ctaHref": "/runs",
+      "backgroundImage": "/motion/jakarta-night.webp",
+      "motionPreset": "jakarta-monas"
+    },
+    {
+      "kicker": "USS / COMMUNITY IN MOTION",
+      "headline": "ONE CREW.\nONE MARK.\nKEEP MOVING.",
+      "description": "The city resolves into the USS mark. The particles keep breathing, orbiting, and responding in motion.",
+      "ctaLabel": "JOIN USS",
+      "ctaHref": "/membership",
+      "backgroundImage": "/motion/jakarta-night.webp",
+      "motionPreset": "uss-final"
+    }
+  ]
+}
