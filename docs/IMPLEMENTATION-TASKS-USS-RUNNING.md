@@ -1,417 +1,462 @@
 # USS Running Implementation Plan — Frontend vs Backend
 
-Status: Execution backlog derived from PRD + ERD
+Status: Execution backlog v2 derived from PRD + ERD
 Branch policy: `main`, optional `develop`, and focused `feature/<specific-scope>` branches only.
 
 ## 1. Delivery principles
-- Do not redesign existing UX flow without explicit approval.
-- Keep PRs atomic and scoped to one feature/domain.
-- Do not mix database migration, major visual redesign and unrelated refactor in one PR.
-- Business-critical rules are enforced server-side.
-- Values expected to change are stored in DB/CMS; infrastructure secrets/config use environment variables.
-- Every production feature includes loading, success, empty and error states.
-- Every DB-changing feature includes migration, indexes/constraints, authorization impact and rollback/forward-fix notes.
+- Preserve the approved UX direction unless a flow change is explicitly approved.
+- Every form uses label, placeholder, helper text, reserved error area and loading/disabled state.
+- Password fields include Show/Hide password.
+- Admin-facing fields explain what to fill in and where/why the value is used.
+- Business rules are enforced server-side.
+- Editable business content belongs in DB/CMS, not hardcoded UI logic.
+- Every privileged mutation creates audit/change-history coverage.
+- PRs remain atomic and domain-focused.
 
 ## 2. Recommended execution order
-1. Identity/auth + schema foundation
-2. Member profile + member card
-3. CMS persistence + media
-4. Stories + site content
-5. Events
-6. Registration + capacity
-7. Event pass + check-in
-8. Partners/gallery
-9. Audit/admin controls
-10. analytics/notifications/growth enhancements
+1. Database + RBAC + audit foundation
+2. Auth + email verification
+3. Member profile + branded member card/barcode
+4. CMS core + media + revision framework
+5. Stories/media-partner platform
+6. Partners CRUD
+7. Events CRUD + dynamic fields
+8. Registration + event pass
+9. Transactional event email
+10. Check-in scanner
+11. Analytics/notification enrichment
 
 ---
 
 # FRONTEND TRACK
 
-## FE-01 — Design-system cleanup and application shell
+## FE-01 — Form system and design-system guardrails
 Scope:
-- Inventory existing reusable components.
-- Normalize spacing, typography hierarchy, controls, cards, modal/toast patterns.
-- Create reusable Button, Input, Select, Textarea, Field, FormError, Loading/Skeleton, EmptyState, Dialog and Toast patterns where not already present.
-- Preserve existing visual identity and motion direction.
-- Confirm mobile-first breakpoints and remove overflow-x regressions.
+- Reusable Field wrapper with label/helper/error reservation.
+- Input, Select, Textarea, Checkbox, Radio, FilePicker, DateTime and RichText wrappers.
+- PasswordInput with Show/Hide control.
+- Loading, disabled, success, warning and error states.
+- Toast/dialog pattern.
+- Responsive form sections and mobile overflow audit.
 
 Acceptance criteria:
-- No field error causes disruptive form layout jumping.
-- Interactive controls expose hover/focus/disabled/loading states.
-- Keyboard focus is visible.
-- Home/login/dashboard/admin shells remain responsive at small phone height and width.
+- Error messages do not cause layout jumping.
+- Helper text is visible before validation where useful.
+- Every password field can toggle visibility accessibly.
+- Forms remain usable on short-height mobile screens.
 
-Dependencies: none.
-
-## FE-02 — Production auth screens
+## FE-02 — Signup/Login/Forgot/Reset/Verification UI
 Scope:
-- Connect login/signup/forgot-password UI to authenticated backend contract.
-- Remove demo-role assumptions from production path.
-- Keep left visual panel static where designed and form area independently scrollable on short screens.
-- Add validation and server-error mapping.
+- Signup form.
+- Login form.
+- Forgot/reset password.
+- Email verification sent screen.
+- Link/code verification success/failure screen.
+- Resend verification with cooldown state.
+- Unverified-login state with resend CTA.
 
 Acceptance criteria:
-- Invalid credentials, duplicate signup, session expiry and network errors have clear states.
-- Submit cannot double-fire while loading.
-- Public signup has no role selector.
-
-Depends on: BE-02.
-
-## FE-03 — Member dashboard
-Scope:
-- Dashboard overview.
-- Profile edit form.
-- Member card/barcode view.
-- Event registrations list.
-- Event pass detail.
-- Account/privacy settings.
-
-Acceptance criteria:
-- Member sees only own records.
-- Barcode scales without clipping.
-- Profile save is optimistic only when safe; otherwise show controlled loading state.
+- Signup has no role selector.
+- Email field hint explains verification destination.
+- Password requirements are visible before submit.
+- Duplicate email, invalid credentials, expired verification and network errors map to stable user-facing messages.
+- Submit cannot double-fire.
 
 Depends on: BE-02, BE-03.
 
-## FE-04 — Public Stories
+## FE-03 — Member dashboard/profile
+Scope:
+- Dashboard overview.
+- Profile edit.
+- Registration history.
+- Account settings.
+- Verification/account status display where relevant.
+
+Depends on: BE-02, BE-04.
+
+## FE-04 — Member card / permanent barcode
+Scope:
+- USS Running branded card.
+- Member name, Member ID, active status.
+- Permanent barcode rendering.
+- USS Running logo centered in the card/barcode composition without damaging scan zones.
+- Download/export view if approved.
+
+Acceptance criteria:
+- Barcode scans reliably on supported devices.
+- Logo never covers required linear barcode bars or quiet zones.
+- Barcode value does not expose PII.
+
+Depends on: BE-04.
+
+## FE-05 — CMS shell + universal editor UX
+Scope:
+- Admin navigation.
+- Reusable CMS list/table pattern.
+- Search/filter/pagination.
+- Create/Edit forms.
+- Save Draft/Publish/Archive actions.
+- Unsaved-change warning.
+- `History` tab/drawer.
+- Reusable field-hint pattern explaining purpose and public placement.
+
+Depends on: BE-05, BE-06.
+
+## FE-06 — Stories public experience
 Scope:
 - Story listing.
-- Category/tag filters where approved.
-- Story detail.
-- Featured story blocks.
-- SEO metadata binding.
-- Empty/loading states.
-
-Depends on: BE-05.
-
-## FE-05 — Admin Stories CMS
-Scope:
-- Story table/list with filters.
-- Create/edit form.
-- Draft/scheduled/publish/archive actions.
-- Cover-media selection.
-- Preview.
-- SEO fields.
-
-Acceptance criteria:
-- Unsaved-change warning.
-- Slug conflicts rendered inline.
-- Publish action has confirmation feedback.
-
-Depends on: BE-05, BE-04.
-
-## FE-06 — Dynamic site-content CMS
-Scope:
-- Hero content editor.
-- Desktop/mobile background selection.
-- Focal point and overlay controls.
-- Login visual configuration.
-- Footer/social/navigation content modules according to approved IA.
-- Draft vs published preview.
-
-Acceptance criteria:
-- No raw code editing required for routine content.
-- Preview clearly distinguishes draft from published state.
-
-Depends on: BE-04.
-
-## FE-07 — Media library and Gallery CMS
-Scope:
-- Media uploader.
-- Progress/loading/errors.
-- Alt text/caption editor.
-- Media picker reusable by stories/events/partners/site content.
-- Gallery ordering/visibility UI.
-
-Acceptance criteria:
-- Client validates obvious file issues but server remains authoritative.
-- Upload failure can retry without losing unrelated form state.
-
-Depends on: BE-04.
-
-## FE-08 — Public Events
-Scope:
-- Event list/detail.
-- Registration status CTA.
-- Registration window/capacity messaging from server response.
-- Members-only/private event handling.
-
-Depends on: BE-06, BE-07.
-
-## FE-09 — Event registration flow
-Scope:
-- Dynamic registration fields from event schema.
-- Validation.
-- Confirm/submit states.
-- Confirmed/waitlisted/rejected/cancelled views.
-- Member registration history.
-
-Acceptance criteria:
-- UI never promises a slot before server confirmation.
-- Double click/retry does not create duplicate registration.
+- Editorial/media-partner article detail.
+- Category/tag filtering.
+- Featured Stories.
+- Partner disclosure block.
+- SEO/social metadata binding.
 
 Depends on: BE-07.
 
-## FE-10 — Admin Events CMS
+## FE-07 — Stories CMS
 Scope:
-- Event create/edit.
-- Registration timing.
-- Capacity/waitlist.
-- Custom fields builder.
-- Eligibility controls.
-- Check-in window.
-- Status/visibility.
-
-Depends on: BE-06.
-
-## FE-11 — Event-pass UI
-Scope:
-- Member event pass page.
-- QR/barcode visual.
-- Event metadata.
-- Status: active/revoked/expired.
-- Safe print/download presentation if needed.
-
-Depends on: BE-08.
-
-## FE-12 — Check-in scanner operations
-Scope:
-- Camera/manual-token entry according to browser capabilities.
-- Success, duplicate, invalid, wrong-event and revoked-pass responses.
-- Recent scans list.
-- Staff identity/permission-aware shell.
+- CRUD Stories.
+- Content type selector.
+- Rich article editor/content blocks.
+- Cover/social image picker.
+- Category/tags.
+- Partner relation.
+- Disclosure/sponsored metadata.
+- CTA metadata.
+- Schedule/publish/archive.
+- Preview.
+- History view.
 
 Acceptance criteria:
-- Duplicate scans are clearly non-destructive.
-- Scanner cannot access unrelated admin modules without permission.
+- Admin and super_admin can operate without code edits.
+- Slug conflict appears inline.
+- Published content is archived rather than casually hard-deleted.
 
-Depends on: BE-08.
+Depends on: BE-05, BE-06, BE-07.
 
-## FE-13 — Users and roles admin
+## FE-08 — Partners public + CMS
 Scope:
-- User list/filter.
-- Account status.
-- Role display and authorized role-change dialog.
-- Member detail summary.
+- Responsive public partner logo grid.
+- Partner detail metadata when enabled.
+- CRUD form: name/logo/links/description/type/dates/visibility/order/featured.
+- Event and Story relations.
+- Archive/restore.
+- Change history.
 
-Acceptance criteria:
-- Member cannot access this route.
-- Admin capability matches backend policy; UI does not imply permission it lacks.
+Depends on: BE-05, BE-08.
+
+## FE-09 — Dynamic site-content CMS
+Scope:
+- Homepage hero/content.
+- About content where approved.
+- Login background/visual.
+- Footer/social links.
+- Navigation content/settings where approved.
+- Featured Story/Event selection.
+- Draft vs published preview.
+- Change history.
+
+Depends on: BE-05, BE-06.
+
+## FE-10 — Media library
+Scope:
+- Upload progress.
+- Retry/failure state.
+- Alt text/caption editor.
+- Media picker reusable by Stories, Events, Partners and site content.
+- Gallery ordering/visibility.
+
+Depends on: BE-05.
+
+## FE-11 — Public Events
+Scope:
+- Event list.
+- Event detail.
+- Date/time/venue/meeting point.
+- Registration status CTA.
+- Partner display.
+- Dynamic eligibility/window messaging.
 
 Depends on: BE-09.
 
-## FE-14 — Partners / portfolio CMS
+## FE-12 — Events CMS
 Scope:
-- Partner CRUD UI.
-- Logo media picker.
-- Sort order/visibility/date window.
-- Event association if enabled.
-- Public responsive partner logo grid.
+- Create/edit/duplicate Event.
+- Date/time/timezone.
+- Venue/map/meeting point.
+- Registration open/close.
+- Capacity/waitlist.
+- Visibility/status.
+- Partner relation.
+- Dynamic registration-field builder with label/helper/validation/order.
+- Check-in window.
+- Confirmation-email override fields where enabled.
+- Change history.
+
+Critical acceptance criteria:
+- Duplicating an Event visually creates a new event identity and does not imply historical registration reuse.
+- All configurable fields have helper text.
+
+Depends on: BE-06, BE-09.
+
+## FE-13 — Event registration flow
+Scope:
+- Render server-defined custom fields.
+- Helper hints for each field.
+- Validation.
+- Submit confirmation/loading.
+- Confirmed/waitlisted/rejected/cancelled states.
+- Dashboard registration detail.
+
+Acceptance criteria:
+- UI never guarantees a slot before server confirmation.
+- Retry/double-click does not duplicate registration.
 
 Depends on: BE-10.
 
-## FE-15 — Audit log viewer
+## FE-14 — Event confirmation + pass
 Scope:
-- Search/filter by actor/action/entity/time.
-- Read-only event detail.
-- Safe JSON change-summary presentation.
+- Confirmation success page.
+- Event details.
+- Registration status.
+- Event-specific QR/barcode/pass.
+- Email-sent status message where available.
+- Pass in member dashboard.
 
-Depends on: BE-09.
+Depends on: BE-10, BE-11.
+
+## FE-15 — Check-in scanner
+Scope:
+- Camera/manual token input.
+- Success/duplicate/invalid/wrong-event/revoked states.
+- Recent scans.
+- Staff permission-aware shell.
+
+Depends on: BE-12.
+
+## FE-16 — Users/RBAC/Audit viewer
+Scope:
+- User list/filter.
+- Account status.
+- Role management UI where authorized.
+- Read-only audit/change-history explorer.
+
+Depends on: BE-06.
 
 ---
 
 # BACKEND TRACK
 
-## BE-01 — Database foundation and migrations
+## BE-01 — Database foundation
 Scope:
-- Configure Neon connection strictly server-side.
-- Create migration convention.
-- Implement base tables and reference data from ERD.
-- Add primary/foreign keys, unique constraints and indexes.
-- Add safe DB access layer/repository conventions.
+- Neon server-only connection.
+- Migration convention.
+- Base schema from ERD.
+- Constraints/indexes.
+- Repository/data-access conventions.
 
-Acceptance criteria:
-- Build does not expose DB credential to client.
-- Migrations are forward-only/versioned.
-- Production schema can be created from empty database deterministically.
-
-## BE-02 — Authentication + account provisioning
+## BE-02 — Authentication and account provisioning
 Scope:
 - Production auth provider integration.
-- Session helper/middleware/server guards.
-- Transactional account bootstrap.
-- Server-issued UUID/member ID/barcode.
-- Default `member` role.
-- Login/signup/logout/recovery contract.
+- Signup/login/logout/recovery contract.
+- Session guards.
+- Provision account/member profile/member role.
+- Generate immutable member ID and barcode server-side.
+- New account starts `pending_verification`.
 
 Security:
-- No role accepted from public signup payload.
-- No client session claim is trusted without provider/server verification.
+- Public signup cannot submit elevated role.
+- No client role authority.
 
 Depends on: BE-01.
 
-## BE-03 — Member profile service
+## BE-03 — Email verification service
+Scope:
+- Generate one-time verification token/link and optional code.
+- Hash token/code at rest.
+- Expiry/consume/invalidate logic.
+- Verification completion transaction.
+- Resend flow with cooldown/rate limit.
+- Mark `email_verified_at` and activate account.
+- Unverified-login response contract.
+
+Depends on: BE-02, BE-13 notification core.
+
+## BE-04 — Member profile + member identity service
 Scope:
 - Own-profile read/update.
-- Field-level validation.
-- Immutable member identity enforcement.
-- Account status enforcement.
-- Member-card data endpoint/server query.
+- Immutable Member ID/barcode enforcement.
+- Account-status enforcement.
+- Member-card data contract.
+- No PII in barcode payload.
 
 Depends on: BE-02.
 
-## BE-04 — Media + CMS core
+## BE-05 — Media + CMS core
 Scope:
-- Object storage abstraction/config.
-- Signed upload or server upload flow.
-- Media metadata persistence.
-- Site-content draft/revision/publish service.
-- Gallery persistence.
-- Authorization + audit hooks.
+- Object storage abstraction.
+- Authorized upload flow.
+- Media metadata.
+- Generic CMS repository/service patterns.
+- Draft/publish/archive primitives.
+- Reusable validation helpers.
 
 Depends on: BE-01, BE-02.
 
-## BE-05 — Stories service
-Scope:
-- Story CRUD.
-- Categories/tags.
-- Slug uniqueness.
-- Draft/scheduled/published/archive rules.
-- Public query only returns publishable content.
-- SEO fields.
-- Audit changes.
-
-Depends on: BE-01, BE-02, BE-04.
-
-## BE-06 — Events service
-Scope:
-- Event CRUD.
-- Status/visibility/timing validation.
-- Dynamic event custom fields.
-- Eligibility configuration.
-- Public/member/admin queries.
-- Audit changes.
-
-Depends on: BE-01, BE-02, BE-04.
-
-## BE-07 — Registration engine
-Scope:
-- Eligibility validation.
-- Registration-window validation.
-- Duplicate prevention.
-- Transactional capacity handling.
-- Confirmed/waitlisted/rejected flow.
-- Cancel flow.
-- Registration field-value validation.
-- Admin listing/export contract.
-
-Critical tests:
-- simultaneous final-slot attempts
-- repeated submits
-- registration after close
-- suspended account
-- duplicate member/event
-- capacity null/unlimited case if supported
-
-Depends on: BE-06, BE-03.
-
-## BE-08 — Event passes + check-in
-Scope:
-- Opaque pass-token issue/rotation/revoke.
-- Hash/token lookup design.
-- Check-in endpoint/action.
-- Validate pass/event/registration/check-in window/status.
-- Idempotent duplicate handling.
-- Check-in audit/operational data.
-
-Security:
-- Permanent account barcode is not accepted as proof of event registration unless an explicit secure lookup flow is later approved.
-- Rate-limit scan validation endpoint appropriately.
-
-Depends on: BE-07.
-
-## BE-09 — RBAC + account admin + audit log
+## BE-06 — RBAC + universal audit/revision foundation
 Scope:
 - Central authorization helper.
-- Super-admin role mutation.
-- Account suspend/reactivate.
 - Audit-log service.
-- Admin-readable paginated audit query.
-- Prevent self-escalation and forbidden role changes.
+- Reusable revision snapshot writer.
+- Read-only history queries.
+- Account suspend/reactivate.
+- Restricted role mutation.
+
+Rules:
+- No passwords/tokens/secrets in audit snapshots.
+- History is append-only.
 
 Depends on: BE-02.
 
-## BE-10 — Partners service
+## BE-07 — Stories/editorial service
 Scope:
-- Partner records.
+- Story CRUD.
+- Content types.
+- Categories/tags.
+- Slug uniqueness.
+- Rich body JSON validation.
+- Media partner relation.
+- Disclosure/CTA metadata.
+- Draft/scheduled/published/archive rules.
+- Story revisions/history.
+- Public query only returns publishable content.
+
+Depends on: BE-05, BE-06.
+
+## BE-08 — Partners service
+Scope:
+- Partner CRUD.
 - Logo/media relation.
-- visibility/date-window/order.
-- Optional event partnership relation.
-- Public query and admin CRUD.
+- Website/social/campaign links.
+- Visibility/date/order/featured.
+- Story/Event relations.
+- Archive/restore.
+- Revision history.
 
-Depends on: BE-04.
+Depends on: BE-05, BE-06.
 
-## BE-11 — Dynamic settings/configuration
+## BE-09 — Events service
 Scope:
-- Define which operational values belong in environment vs DB configuration.
-- Build validated settings service for admin-editable values.
-- Avoid direct arbitrary key/value use from client.
-- Add cache/invalidation strategy for public settings.
+- Event CRUD.
+- New UUID per Event.
+- Event duplicate/clone service that excludes registrations/passes/check-ins.
+- Timing/status/visibility rules.
+- Custom registration fields including helper_text/validation config.
+- Partner relation.
+- Event revisions/history.
+- Public/member/admin queries.
 
-Examples:
-- public social links: DB
-- homepage content: CMS DB
-- provider credentials: env
-- upload max limit: env or centrally validated deployment config
-- event capacity: event DB record
+Depends on: BE-05, BE-06, BE-08.
 
-Depends on: BE-01, BE-09.
-
-## BE-12 — Analytics event contract
+## BE-10 — Registration engine
 Scope:
-- Define safe event schema.
-- Instrument server-confirmed conversions separately from client click events.
-- Prevent sensitive fields from entering analytics payloads.
+- Verified/active-account requirement.
+- Eligibility validation.
+- Registration-window validation.
+- Dynamic field validation.
+- Duplicate prevention.
+- Transactional capacity handling.
+- Confirmed/waitlisted/rejected/cancel flow.
+- Idempotent repeated submit.
+- Event-pass issuance when confirmed.
+- Durable confirmation notification job/delivery creation.
 
-Depends on core features.
+Critical tests:
+- simultaneous final-slot requests
+- repeated submits
+- registration after close
+- unverified account
+- suspended account
+- duplicate member/event
+- event duplication isolation
 
-## BE-13 — Notification abstraction
+Depends on: BE-04, BE-09, BE-13.
+
+## BE-11 — Event pass service
 Scope:
-- Domain trigger interface.
-- Provider-neutral delivery record model when activated.
-- Email/provider credentials in env.
-- Registration confirmation/cancellation hooks.
+- Opaque event-specific token.
+- Hash lookup.
+- Rotation/revoke.
+- Pass data contract.
+- No PII in token.
 
-Do not activate a vendor implementation until required.
+Depends on: BE-10.
+
+## BE-12 — Check-in service
+Scope:
+- Resolve event pass.
+- Validate event, registration and check-in window/status.
+- Idempotent duplicate handling.
+- Audit operational action.
+- Scanner rate limiting.
+
+Depends on: BE-11.
+
+## BE-13 — Notification/email core
+Scope:
+- Provider-neutral notification service.
+- Resend adapter as initial implementation when credentials/domain are configured.
+- Notification template repository.
+- Delivery-log table/service.
+- Official no-reply sender from environment/config.
+- Retry transient failures.
+- Store provider message ID/status.
+- Webhook status update when enabled.
+
+Initial templates:
+- account verification
+- resend verification
+- password reset when product-managed
+- event registration confirmed
+- event waitlisted
+- event cancelled
+
+Critical rule:
+- A successful account/event DB transaction must not be rolled back just because the external email provider fails after commit.
+
+## BE-14 — Dynamic site-content service
+Scope:
+- Homepage/About/login/footer/navigation-backed CMS sections.
+- Draft/publish revisions.
+- Cache invalidation.
+- Audit/history.
+
+Depends on: BE-05, BE-06.
+
+## BE-15 — Analytics contract
+Scope:
+- Safe product-event schema.
+- Verification, Story, Partner, Event and registration metrics.
+- No sensitive member data in analytics payload.
 
 ---
 
-# FULL-STACK INTEGRATION TASKS
+# FULL-STACK CONTRACTS
 
-## FS-01 — Route protection matrix
-Deliverable:
-- Route/action matrix documenting Visitor vs Member vs Admin vs Super Admin access.
-- Automated authorization tests for protected backend actions.
+## FS-01 — Route/access matrix
+Document Visitor vs Member vs Admin vs Super Admin access for every protected route/action.
 
-## FS-02 — API/domain contract
-For each feature define:
-- request schema
-- response schema
-- validation errors
-- authorization errors
-- idempotency behavior
-- pagination/filter contract
-
-Prefer server actions for tightly coupled Next.js mutations where suitable; use explicit API routes where scanner/external integration or clearer HTTP contract is beneficial.
-
-## FS-03 — Error taxonomy
-Recommended stable error codes:
+## FS-02 — Stable error taxonomy
+Recommended error codes:
 - `UNAUTHENTICATED`
+- `EMAIL_NOT_VERIFIED`
 - `FORBIDDEN`
 - `VALIDATION_ERROR`
 - `NOT_FOUND`
 - `CONFLICT`
+- `VERIFICATION_EXPIRED`
+- `VERIFICATION_INVALID`
+- `VERIFICATION_RATE_LIMITED`
 - `REGISTRATION_CLOSED`
 - `EVENT_FULL`
 - `ALREADY_REGISTERED`
@@ -419,79 +464,58 @@ Recommended stable error codes:
 - `PASS_REVOKED`
 - `ALREADY_CHECKED_IN`
 
-UI maps stable error codes to human-readable copy. Do not parse backend exception strings in components.
+Frontend maps codes to human-readable text. Components must not parse backend exception strings.
+
+## FS-03 — Email template contract
+Every template defines:
+- stable key
+- required variables
+- optional variables
+- subject
+- HTML/text body strategy
+- preview/testing route for admins later if approved
+- fallback behavior for missing variables
 
 ## FS-04 — Testing baseline
-Minimum:
-- unit tests for domain validation/helpers
-- integration tests for registration capacity and role enforcement
-- component/form tests on critical forms
-- E2E smoke: signup/login, member profile, admin publish, event registration, pass/check-in
+Minimum automated coverage:
+- signup + verification
+- expired/reused verification token
+- login blocked when unverified
+- member identity immutability
+- CMS permission checks
+- revision/history creation
+- Story media-partner relation
+- Partner CRUD/archive
+- event clone identity isolation
+- final-slot concurrency
+- repeated registration submit
+- event email job creation
+- pass/check-in validation
 
 ## FS-05 — Observability
-- Structured server logs.
-- Request/correlation ID where useful.
-- No secret/token/PII logging.
-- Error monitoring configured through env.
+- structured logs
+- correlation/request ID
+- provider/email errors without leaking recipient content unnecessarily
+- no token/secret logging
+- production error monitoring through environment config
 
 ---
 
-# FEATURE BRANCH / PR PLAN
-
+# BRANCH / PR PLAN
 Suggested atomic branches:
 1. `feature/db-foundation`
 2. `feature/auth-accounts`
-3. `feature/member-profile-card`
-4. `feature/media-cms-core`
-5. `feature/stories-cms`
-6. `feature/events-core`
-7. `feature/event-registration`
-8. `feature/event-pass-checkin`
-9. `feature/admin-rbac-audit`
-10. `feature/partners-gallery`
+3. `feature/email-verification`
+4. `feature/member-profile-card`
+5. `feature/cms-revision-core`
+6. `feature/stories-media-platform`
+7. `feature/partners-crud`
+8. `feature/events-core`
+9. `feature/event-registration`
+10. `feature/transactional-email`
+11. `feature/event-pass-checkin`
 
-Avoid junk branches such as `feature/test`, `fix2`, `branch-new`.
-
-PR requirements:
-- one functional context per PR
-- migration notes when applicable
-- screenshots for visible UI change
-- validation/security notes for data mutation
-- regression impact notes
-- build/type/test result
-
----
-
-# RELEASE GATES / FIVE-STAGE AUDIT
-
-## 1. Edge-case & anti-hotfix audit
-- extreme/empty/duplicate inputs
-- repeat submit
-- stale state
-- network failure
-- concurrent final-slot registration
-- expired/revoked pass
-- duplicate scan
-
-## 2. UI/UX audit
-- mobile widths and short viewport heights
-- form error stability
-- no text clipping
-- no unintended horizontal scrolling
-- loading/empty/error/success states
-- reduced motion behavior
-
-## 3. Security & performance audit
-- server authorization
-- input validation/sanitization
-- parameterized DB access
-- secret exposure check
-- rate limits where needed
-- N+1 query check
-- indexes for operational queries
-
-## 4. Git & branch cleanup audit
-After a feature is merged:
+After merge:
 ```bash
 git checkout main
 git pull --ff-only origin main
@@ -500,32 +524,65 @@ git branch -d feature/<merged-feature>
 git push origin --delete feature/<merged-feature>
 git fetch --prune
 ```
-Do not delete a branch until its changes are merged and no follow-up work depends on it.
 
-## 5. Code-quality audit
-- remove console/debug statements
-- remove dead code
+---
+
+# FIVE-STAGE AUDIT
+## 1. Edge-case & anti-hotfix
+- duplicate/empty/extreme input
+- verification expiry/reuse/resend spam
+- provider email failure
+- duplicate CMS submit
+- concurrent final event slot
+- event clone isolation
+- duplicate scan
+
+## 2. UI/UX
+- helper/hint consistency
+- password Show/Hide
+- stable error layout
+- mobile width/height
+- no overflow-x
+- no clipped text
+- loading/success/error/empty states
+
+## 3. Security/performance
+- server RBAC
+- token hashing
+- rate limits
+- SQL parameterization
+- secret exposure audit
+- MIME/size checks
+- N+1/index review
+
+## 4. Git cleanup
+- focused branch/PR
+- merged-branch deletion
+- prune stale refs
+- no junk branches
+
+## 5. Code quality
+- no debug console output
+- no dead code
 - consistent naming
-- no duplicate business rules between UI/backend
-- docs/contracts updated
-- TypeScript/build/lint/tests passing according to configured scripts
+- no duplicated business rules
+- docs/contracts/migrations aligned
+- build/type/test checks pass
 
 ---
 
 # IMMEDIATE NEXT EXECUTION PACKAGE
-The first production implementation package should be:
-
-### Backend
+Backend:
 - BE-01 Database foundation
-- BE-02 Auth + account provisioning
-- BE-09 RBAC base/audit base
+- BE-02 Authentication/account provisioning
+- BE-06 RBAC + audit/revision base
+- BE-13 Notification core skeleton
+- BE-03 Email verification
 
-### Frontend
-- FE-01 Design-system/shell guardrails only, no redesign
-- FE-02 Production auth screens
-- FE-03 Member dashboard skeleton/profile/member card after backend contract is stable
+Frontend:
+- FE-01 Form system
+- FE-02 Signup/Login/Verification UI
+- FE-03 Member dashboard skeleton
+- FE-04 Member card after identity contract stabilizes
 
-Reason:
-This establishes trusted identity and authorization before enabling CMS/event writes, reducing future rework and privilege/security hotfix risk.
-
-Before starting this package, configure Neon/auth/storage production resources and environment variables without committing credentials.
+This order establishes trusted identity, verification and reusable audit/revision foundations before turning on admin CMS writes and event registrations.
