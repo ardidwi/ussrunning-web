@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:migrate": "node --env-file-if-exists=.env.local scripts/database/migrate.mjs",
+    "db:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/database-foundation.test.mjs"
   },
   "dependencies": {
     "@neondatabase/auth": "0.5.0-beta",
@@ -19,6 +21,10 @@
     "qrcode": "^1.5.4",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "server-only": "0.0.1"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.0"
   }
 }
