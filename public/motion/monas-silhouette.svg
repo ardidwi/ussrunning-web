@@ -1,16 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="600" height="1000" viewBox="0 0 600 1000">
-  <title>Monas — flame, observation crown, tapered shaft and cawan pedestal</title>
-  <desc>Silhouette traced from the approved Jakarta reference. Transparent margins preserve the monument's tall proportions.</desc>
+  <title>Monas — National Monument of Indonesia</title>
+  <desc>Authentic architectural silhouette of Monas in Jakarta featuring the 14m gold flame, observation deck, tapered obelisk shaft, concave cawan chalice, and stepped museum podium.</desc>
   <g fill="#f8f7f2">
-    <path fill="#e6c99a" d="M303 24c-4 22-22 38-19 58-12-7-12-20-10-29-20 22-30 45-21 65 5 14 24 23 45 23 27 0 46-13 46-33 0-17-11-30-15-43-1 15-5 20-11 24 4-25-7-43-15-65Z"/>
-    <path d="M281 137h38v12h-38zM275 149h50l5 16h-60z"/>
-    <path d="m270 165-30 21-33 11v12l27 8h132l27-8v-12l-33-11-30-21-8 18h-44z"/>
-    <path d="M234 218h132v12H234zM250 230h100v12H250z"/>
-    <path d="M278 242h44l5 178 9 209 12 173h-96l12-173 9-209z"/>
-    <path d="m251 798-10 18h118l-10-18z"/>
-    <path d="M122 816c47 4 106 4 178 4s131 0 178-4l-8 20c-35 15-77 25-120 31H250c-43-6-85-16-120-31z"/>
-    <path d="M139 843c45 13 91 21 111 24h100c20-3 66-11 111-24l-25 45-47 17H211l-47-17z"/>
-    <path d="M250 866h100l9 42H241zM215 903h170l28 23H187z"/>
-    <path d="m163 925 24-13h226l24 13 38 20H125zM108 945h384v13H108zM89 958h422l28 17H61z"/>
+    <!-- Iconic 14m Gold Flame of Independence (Lidah Api Kemerdekaan) -->
+    <path fill="#f5be42" d="M300 20 C294 38 276 54 278 72 C268 64 266 52 270 42 C248 64 238 88 248 110 C256 126 278 136 300 136 C322 136 344 126 352 110 C362 88 352 64 330 42 C334 52 332 64 322 72 C324 54 306 38 300 20 Z"/>
+    <path fill="#f5be42" d="M290 50 C285 70 295 90 300 105 C305 90 315 70 310 50 C306 62 294 62 290 50 Z"/>
+    
+    <!-- Flame base neck & Observation deck platform (Pelataran Puncak) -->
+    <path d="M280 136 h40 v12 h-40 z"/>
+    <path d="M272 148 h56 l6 16 h-68 z"/>
+    <path d="M266 164 l-34 22 -36 12 v14 l32 8 h144 l32 -8 v-14 l-36 -12 -34 -22 -6 18 h-56 z"/>
+    <path d="M228 220 h144 v12 h-144 z"/>
+    <path d="M246 232 h108 v12 h-108 z"/>
+
+    <!-- Tapered Obelisk Shaft (Tiang Tugu) with elegant architectural proportions -->
+    <path d="M276 244 h48 l6 182 10 214 14 156 h-108 l14 -156 10 -214 z"/>
+    <path d="M248 796 l-10 18 h124 l-10 -18 z"/>
+
+    <!-- The Chalice / Bowl Platform (Pelataran Cawan) with iconic concave flare -->
+    <path d="M116 814 c48 4 110 4 184 4 s136 0 184 -4 l-8 22 c-36 16 -80 26 -124 32 h-104 c-44 -6 -88 -16 -124 -32 z"/>
+    <path d="M134 842 c46 14 94 22 114 26 h104 c20 -4 68 -12 114 -26 l-26 46 -48 18 h-176 l-48 -18 z"/>
+
+    <!-- Stepped Foundation & Historical Museum Base (Dasar Museum Sejarah) -->
+    <path d="M246 868 h108 l10 42 h-128 z"/>
+    <path d="M210 904 h180 l30 24 h-240 z"/>
+    <path d="M158 928 l26 -14 h232 l26 14 40 20 h-364 z"/>
+    <path d="M102 948 h396 v14 h-396 z"/>
+    <path d="M82 962 h436 l30 18 h-496 z"/>
   </g>
 </svg>
