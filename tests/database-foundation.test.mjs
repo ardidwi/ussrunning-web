@@ -35,7 +35,7 @@ test('fresh migrations create all foundation tables and only three role seeds', 
   assert.equal(rows.length,29);
   assert.deepEqual((await query('SELECT code FROM uss.roles ORDER BY code')).map(r=>r.code),['admin','member','super_admin']);
   assert.equal((await query('SELECT * FROM public.legacy_sentinel'))[0].id,1);
-  assert.equal((await query('SELECT count(*)::int AS n FROM uss_migrations.schema_migrations'))[0].n,6);
+  assert.equal((await query('SELECT count(*)::int AS n FROM uss_migrations.schema_migrations'))[0].n,7);
 });
 test('migration rerun does not repeat DDL or seed data', async () => {
   assert.deepEqual((await migrate(adapter,migrations)).executed,[]);
@@ -47,10 +47,10 @@ test('applied migration drift and out-of-order history fail closed', async () =>
   assert.throws(()=>planMigrations(migrations,[applied[1]]),/ordered prefix/);
 });
 test('failed batch rolls back DDL and migration ledger atomically', async () => {
-  const bad = {version:'007',filename:'007_failure.sql',checksum:'a'.repeat(64),statements:['CREATE TABLE uss.rollback_probe(id integer)','SELECT * FROM uss.missing_table']};
+  const bad = {version:'008',filename:'008_failure.sql',checksum:'a'.repeat(64),statements:['CREATE TABLE uss.rollback_probe(id integer)','SELECT * FROM uss.missing_table']};
   await assert.rejects(migrate(adapter,[...migrations,bad]),e=>e.code==='42P01');
   assert.equal((await query("SELECT to_regclass('uss.rollback_probe') AS t"))[0].t,null);
-  assert.equal((await query("SELECT count(*)::int AS n FROM uss_migrations.schema_migrations WHERE version='007'"))[0].n,0);
+  assert.equal((await query("SELECT count(*)::int AS n FROM uss_migrations.schema_migrations WHERE version='008'"))[0].n,0);
 });
 test('duplicate email is case-insensitive; provider mapping is unique', async () => {
   await rejected('INSERT INTO uss.accounts(auth_provider_user_id,email) VALUES($1,$2)',[crypto.randomUUID(),'MEMBER@example.COM'],'23505');
@@ -155,6 +155,10 @@ test('server-only accessor caches client, binds query params and opt-in errors r
   await assert.rejects(exports.querySafe('SELECT 1'),e=>e.code==='DB_CONFLICT'&&!JSON.stringify(e).includes('private-secret'));
   await assert.rejects(exports.query('SELECT 1'),e=>e.code==='23505'&&e.constraint==='safe-test');
   delete env.DATABASE_URL; assert.throws(()=>exports.getSql(),/DATABASE_URL is missing/);
+  assert.equal(exports.isDatabaseConfigured(),false);
+  env.DATABASE_URL='   ';
+  assert.equal(exports.isDatabaseConfigured(),true);
+  assert.throws(()=>exports.getSql(),/DATABASE_URL is missing/);
 });
 test('least-privilege runtime role can use foundation but cannot mutate history or migration ledger', async () => {
   await pg.exec('CREATE ROLE uss_app_test NOLOGIN');
@@ -171,7 +175,7 @@ test('least-privilege runtime role can use foundation but cannot mutate history 
   } finally { await pg.exec('RESET ROLE'); }
 });
 test('post-lock ledger guard rejects a stale concurrent migration plan', async () => {
-  const next = {version:'007',filename:'007_concurrency.sql',checksum:'b'.repeat(64),statements:['CREATE TABLE uss.concurrent_probe(id integer)']};
+  const next = {version:'008',filename:'008_concurrency.sql',checksum:'b'.repeat(64),statements:['CREATE TABLE uss.concurrent_probe(id integer)']};
   const raced = {query,transaction:async statements => {
     await query('INSERT INTO uss_migrations.schema_migrations(version,filename,checksum) VALUES($1,$2,$3)',[next.version,next.filename,next.checksum]);
     return adapter.transaction(statements);
@@ -179,7 +183,7 @@ test('post-lock ledger guard rejects a stale concurrent migration plan', async (
   try {
     await assert.rejects(migrate(raced,[...migrations,next]),e=>e.code==='P0001'&&/concurrently/.test(e.message));
     assert.equal((await query("SELECT to_regclass('uss.concurrent_probe') AS t"))[0].t,null);
-  } finally { await query("DELETE FROM uss_migrations.schema_migrations WHERE version='007'"); }
+  } finally { await query("DELETE FROM uss_migrations.schema_migrations WHERE version='008'"); }
 });
 test('consumed/invalidated verification artifacts cannot be revived and event UUID cannot be replaced', async () => {
   await rejected('UPDATE uss.email_verification_tokens SET invalidated_at=NULL WHERE token_hash=$1',['1'.repeat(64)],'23514');
@@ -187,4 +191,29 @@ test('consumed/invalidated verification artifacts cannot be revived and event UU
   await rejected('UPDATE uss.email_verification_tokens SET consumed_at=NULL WHERE token_hash=$1',['2'.repeat(64)],'23514');
   await rejected("UPDATE uss.email_verification_tokens SET expires_at=now()+interval '1 day' WHERE token_hash=$1",['2'.repeat(64)],'23514');
   await rejected('UPDATE uss.events SET id=$1 WHERE id=$2',[crypto.randomUUID(),otherEvent.id],'23514');
+});
+test('registration/pass/check-in ownership cannot be rebound while operational fields remain mutable', async () => {
+  const a = await newAccount('anchors@example.com');
+  const b = await newAccount('anchors-other@example.com');
+  const e = (await query("INSERT INTO uss.events(slug,title,starts_at) VALUES('anchors-a','Anchor A',now()) RETURNING id"))[0];
+  const f = (await query("INSERT INTO uss.events(slug,title,starts_at) VALUES('anchors-b','Anchor B',now()) RETURNING id"))[0];
+  const r = (await query('INSERT INTO uss.event_registrations(event_id,account_id) VALUES($1,$2) RETURNING id',[e.id,a.id]))[0];
+  const other = (await query('INSERT INTO uss.event_registrations(event_id,account_id) VALUES($1,$2) RETURNING id',[f.id,b.id]))[0];
+  const pass = (await query('INSERT INTO uss.event_passes(registration_id,token_hash) VALUES($1,$2) RETURNING id',[r.id,'c'.repeat(64)]))[0];
+  await rejected('UPDATE uss.event_registrations SET event_id=$1 WHERE id=$2',[f.id,r.id],'23514');
+  await rejected('UPDATE uss.event_registrations SET account_id=$1 WHERE id=$2',[b.id,r.id],'23514');
+  await rejected('UPDATE uss.event_passes SET registration_id=$1 WHERE id=$2',[other.id,pass.id],'23514');
+  await query("UPDATE uss.event_registrations SET status='confirmed',admin_note='reviewed' WHERE id=$1",[r.id]);
+  await query("UPDATE uss.event_passes SET status='revoked',revoked_at=now() WHERE id=$1",[pass.id]);
+  const checkin = (await query('INSERT INTO uss.check_ins(registration_id,event_id) VALUES($1,$2) RETURNING id',[r.id,e.id]))[0];
+  await rejected('UPDATE uss.check_ins SET registration_id=$1,event_id=$2 WHERE id=$3',[other.id,f.id,checkin.id],'23514');
+  await query("UPDATE uss.check_ins SET checkpoint='finish',metadata='{}' WHERE id=$1",[checkin.id]);
+  const field = (await query("INSERT INTO uss.event_custom_fields(event_id,key,label,field_type) VALUES($1,'anchor','Label','text') RETURNING id",[e.id]))[0];
+  await rejected('UPDATE uss.event_custom_fields SET event_id=$1 WHERE id=$2',[f.id,field.id],'23514');
+  await query("UPDATE uss.event_custom_fields SET label='Updated',helper_text='Enter pace',active=false WHERE id=$1",[field.id]);
+  await query("UPDATE uss.accounts SET display_name='Mutable name',last_login_at=now() WHERE id=$1",[a.id]);
+  await query("INSERT INTO uss.member_profiles(account_id,full_name) VALUES($1,'Runner')",[a.id]);
+  await query("UPDATE uss.member_profiles SET full_name='Updated Runner',city='Jakarta',marketing_consent=true WHERE account_id=$1",[a.id]);
+  await query("UPDATE uss.events SET slug='anchors-a-edited',title='Updated',capacity=20,status='published' WHERE id=$1",[e.id]);
+  assert.equal((await query('SELECT count(*)::int AS n FROM uss.event_registrations WHERE event_id=$1',[f.id]))[0].n,1);
 });

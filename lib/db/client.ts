@@ -6,7 +6,8 @@ let cached: ReturnType<typeof neon> | undefined;
 let cachedUrl: string | undefined;
 
 export function isDatabaseConfigured() {
-  return Boolean(process.env.DATABASE_URL?.trim());
+  // Preserve legacy presence semantics: invalid whitespace config must not enable demo fallback.
+  return Boolean(process.env.DATABASE_URL);
 }
 
 export function getSql() {
