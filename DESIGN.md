@@ -93,3 +93,7 @@ and unique compositions. Existing light editorial contrast sections are preserve
 Footer uses the same dark surface, borders, type and gutters. Its newsletter uses canonical fields.
 SiteHeader owns no distance calculation; HomeMotionExperience alone owns canvas, chapters,
 HUD, timeline and 5000m progress. Its rendering engine is unchanged.
+
+## FE-02 authentication flows
+
+AuthShell preserves the existing login visual, typography and scroll composition; join keeps its crew panel. components/auth/auth-flows.css owns composition and uses FE-01 tokens without new colors, fonts or control variants. Critical errors remain inline; account outcomes use restrained bordered status blocks. Labels and policy text stay readable on phones.

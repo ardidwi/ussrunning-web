@@ -1,85 +1,64 @@
-import Link from "next/link";
 import LoginForm from "@/components/LoginForm";
-import { getLoginHero, getRuns } from "@/lib/content";
+import AuthFlow from "@/components/auth/AuthFlow";
+import type { AuthFlow as Flow } from "@/lib/auth/contract";
+import { getClientAuthPolicy } from "@/lib/auth/policy";
+import { safeReturnPath } from "@/lib/auth/return-path";
+import AuthShell from "@/components/auth/AuthShell";
 
 export const dynamic = "force-dynamic";
 
-export default async function LoginPage() {
-  const [hero, runs] = await Promise.all([getLoginHero(), getRuns()]);
-  const nextRun = runs[0];
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const params = await searchParams;
+  const requested = typeof params.flow === "string" ? params.flow : "login";
+  const flow: Flow =
+    requested === "forgot" || requested === "reset" || requested === "verify"
+      ? requested
+      : "login";
+  const copy = {
+    login: [
+      "WELCOME BACK",
+      "LOG IN TO\nMY USS.",
+      "Access your runs, passes and USS participation history with one community ID.",
+    ],
+    forgot: [
+      "ACCOUNT RECOVERY",
+      "BACK TO\nYOUR CREW.",
+      "Request instructions to reset your USS account password.",
+    ],
+    reset: [
+      "ACCOUNT RECOVERY",
+      "A FRESH\nSTART.",
+      "Choose a new password for your USS Running account.",
+    ],
+    verify: [
+      "EMAIL VERIFICATION",
+      "ONE STEP\nTO GO.",
+      "Verify your email before your USS account becomes active.",
+    ],
+  }[flow];
 
   return (
-    <main className="login-page-v3">
-      <section className="login-visual login-visual-v3">
-        <img src={hero.imageUrl} alt="" className="login-visual-image" />
-        <div className="login-visual-scrim" />
-
-        <div className="login-visual-top">
-          <Link href="/" className="login-logo" aria-label="Back to USS Running">
-            <img src="/uss-logo.png" alt="USS" />
-          </Link>
-          <Link href="/" className="login-back">BACK TO SITE ↗</Link>
-        </div>
-
-        <div className="login-visual-copy login-visual-copy-v3">
-          <span className="kicker">{hero.kicker || "MY USS / COMMUNITY ACCESS"}</span>
-          <h1 style={{ whiteSpace: "pre-line" }}>{hero.headline}</h1>
-          <p>{hero.description}</p>
-        </div>
-
-        {nextRun ? (
-          <div className="login-next-run login-next-run-v3">
-            <div>
-              <span className="login-next-label">NEXT UP</span>
-              <strong>{nextRun.title}</strong>
-            </div>
-            <div className="login-next-meta">
-              <span>{nextRun.date}</span>
-              <span>{nextRun.time}</span>
-              <span>{nextRun.location}</span>
-            </div>
-            <Link href={"/runs/" + nextRun.slug}>VIEW RUN ↗</Link>
-          </div>
-        ) : null}
-      </section>
-
-      <section className="login-panel login-panel-v3">
-        <div className="login-panel-inner login-panel-inner-v3">
-          <div className="login-access-strip">
-            <span>MY USS</span>
-            <i />
-            <span>MEMBER ACCESS</span>
-          </div>
-
-          <div className="login-panel-head login-panel-head-v3">
-            <span className="kicker">WELCOME BACK</span>
-            <h2>LOG IN TO<br />MY USS.</h2>
-            <p>
-              Access your runs, passes and USS participation history with one
-              community ID.
-            </p>
-          </div>
-
-          <div className="login-auth-card">
-            <LoginForm />
-          </div>
-
-          <div className="login-member-row">
-            <div>
-              <span>NEW TO USS?</span>
-              <strong>CREATE YOUR COMMUNITY ID.</strong>
-            </div>
-            <Link href="/join">JOIN USS ↗</Link>
-          </div>
-
-          <div className="login-legal">
-            <span>By continuing, you agree to the</span>
-            <Link href="/terms">Terms of Use</Link>
-            <span>and acknowledge the</span>
-            <Link href="/privacy">Privacy Policy</Link>.
-          </div>
-        </div>
-      </section>
-    </main>
+    <AuthShell eyebrow={copy[0]} heading={copy[1]} description={copy[2]}>
+      {flow === "login" ? (
+        <LoginForm
+          policy={getClientAuthPolicy()}
+          returnTo={safeReturnPath(params.returnTo)}
+          sessionExpired={params.reason === "session-expired"}
+        />
+      ) : (
+        <AuthFlow
+          key={flow}
+          flow={flow}
+          policy={getClientAuthPolicy()}
+          token={typeof params.token === "string" ? params.token : undefined}
+          returnTo={safeReturnPath(params.returnTo)}
+          sessionExpired={params.reason === "session-expired"}
+        />
+      )}
+    </AuthShell>
   );
 }

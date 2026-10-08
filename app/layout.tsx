@@ -8,6 +8,7 @@ import "./scroll-fix.css";
 import "./prototype-refine.css";
 import "@/components/ui/ui.css";
 import "@/components/layout/public-shell.css";
+import "@/components/auth/auth-flows.css";
 
 export const metadata: Metadata = {
   title: "USS Running — Community in Motion",

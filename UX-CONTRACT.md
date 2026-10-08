@@ -52,3 +52,11 @@ It does not close when its long menu scrolls; modal cleanup restores document sc
 Auth retains its simpler branded shell. PageHero owns intro presentation, not copy.
 Existing SiteFooter remains the sole public footer. Navigation never renders a distance meter.
 Motion-specific progress remains Home-only.
+
+## FE-02 authentication behavior
+
+Canonical auth owners: components/auth/AuthShell.tsx, AuthFlow.tsx, AuthStatus.tsx, ResendVerification.tsx and useAuthRequest.ts. lib/auth/contract.ts owns typed adapter results; auth-errors.ts owns code mapping/copy; validation.ts owns immediate field validation; policy.ts exposes only public existing membership rules; return-path.ts owns safe destinations. docs/FE-02-AUTH-FRONTEND.md records current backend integration limits.
+
+Requests run only on explicit submit, with a synchronous duplicate lock and idle/submitting/settled result phases. Recoverable failures preserve values. Register transitions only on a trusted verification_required result, never client activation. Verification/reset success returns to sign in. Forgot recovery copy does not disclose account existence. Resend countdowns originate from response timing; authorization and rate limits remain backend-owned.
+
+Existing /login query views provide verification/forgot/reset and session-expiry presentation without route restructuring. Safe return paths exclude external URLs and auth/API/reference loops. Account statuses come from adapter results, never roles/query/localStorage. Lifecycle operations without a maintained backend contract fail honestly with unavailable feedback; the development reference remains production-inaccessible.
