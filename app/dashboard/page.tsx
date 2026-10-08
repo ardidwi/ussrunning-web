@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { Barcode, DownloadBarcode } from "@/components/cms/Controls";
 import MemberProfileForm from "@/components/dashboard/MemberProfileForm";
-import { cancelRegistration, registerForEvent, signOut } from "@/app/dashboard/actions";
+import {
+  cancelRegistration,
+  registerForEvent,
+  signOut,
+} from "@/app/dashboard/actions";
 import { query } from "@/lib/db";
 import { ensureProfile, requireUser } from "@/lib/session";
 
@@ -63,7 +67,7 @@ export default async function DashboardPage() {
        JOIN public.events e ON e.id = r.event_id
        WHERE r.auth_user_id = $1::uuid
        ORDER BY e.start_at DESC NULLS LAST`,
-      [user.id]
+      [user.id],
     ),
     query<UpcomingEvent>(
       `SELECT
@@ -87,12 +91,12 @@ export default async function DashboardPage() {
          )
        ORDER BY e.start_at NULLS LAST
        LIMIT 4`,
-      [user.id]
+      [user.id],
     ),
   ]);
 
   const activeRegistrations = registrations.filter((item) =>
-    ["registered", "waitlist", "checked_in"].includes(item.status)
+    ["registered", "waitlist", "checked_in"].includes(item.status),
   );
 
   return (
@@ -110,14 +114,19 @@ export default async function DashboardPage() {
         <div className="member-dashboard-header-actions">
           {user.role !== "member" ? <Link href="/admin">CMS ↗</Link> : null}
           <Link href="/">LIVE SITE ↗</Link>
-          <form action={signOut}><button type="submit">LOG OUT</button></form>
+          <form noValidate action={signOut}>
+            <button type="submit">LOG OUT</button>
+          </form>
         </div>
       </header>
 
       <section className="member-dashboard-hero">
         <div>
           <span className="kicker">WELCOME BACK</span>
-          <h1>{(profile?.first_name || user.name).toUpperCase()}.<br />KEEP MOVING.</h1>
+          <h1>
+            {(profile?.first_name || user.name).toUpperCase()}.<br />
+            KEEP MOVING.
+          </h1>
         </div>
         <p>
           One USS ID for community runs, passes and your participation history.
@@ -138,7 +147,9 @@ export default async function DashboardPage() {
         </article>
         <article>
           <span>CHECK-INS</span>
-          <strong>{registrations.filter((item) => item.checked_in_at).length}</strong>
+          <strong>
+            {registrations.filter((item) => item.checked_in_at).length}
+          </strong>
           <small>community history</small>
         </article>
         <article>
@@ -163,7 +174,10 @@ export default async function DashboardPage() {
               <DownloadBarcode value={profile.member_code} />
             </>
           ) : null}
-          <small>Use this ID for member-facing USS experiences. Event passes remain event-specific.</small>
+          <small>
+            Use this ID for member-facing USS experiences. Event passes remain
+            event-specific.
+          </small>
         </article>
 
         <article className="member-dashboard-panel member-profile-panel">
@@ -189,34 +203,52 @@ export default async function DashboardPage() {
         <div className="member-section-head">
           <div>
             <span className="kicker">YOUR RUNS</span>
-            <h2>SHOW UP.<br />KEEP THE HISTORY.</h2>
+            <h2>
+              SHOW UP.
+              <br />
+              KEEP THE HISTORY.
+            </h2>
           </div>
           <Link href="/runs">EXPLORE ALL RUNS ↗</Link>
         </div>
 
         <div className="member-registration-list">
-          {registrations.length ? registrations.map((item) => (
-            <article key={item.id}>
-              <div>
-                <span>{item.status.toUpperCase()}</span>
-                <h3>{item.title}</h3>
-                <p>{formatDate(item.start_at)} · {item.location_name || "JAKARTA"} · {item.distance_label || "COMMUNITY RUN"}</p>
-              </div>
-              <div className="member-pass-code">
-                <small>RUN PASS</small>
-                <strong>{item.pass_code}</strong>
-              </div>
-              {item.status !== "cancelled" && item.status !== "checked_in" ? (
-                <form action={cancelRegistration}>
-                  <input type="hidden" name="registrationId" value={item.id} />
-                  <button type="submit">CANCEL</button>
-                </form>
-              ) : null}
-            </article>
-          )) : (
+          {registrations.length ? (
+            registrations.map((item) => (
+              <article key={item.id}>
+                <div>
+                  <span>{item.status.toUpperCase()}</span>
+                  <h3>{item.title}</h3>
+                  <p>
+                    {formatDate(item.start_at)} ·{" "}
+                    {item.location_name || "JAKARTA"} ·{" "}
+                    {item.distance_label || "COMMUNITY RUN"}
+                  </p>
+                </div>
+                <div className="member-pass-code">
+                  <small>RUN PASS</small>
+                  <strong>{item.pass_code}</strong>
+                </div>
+                {item.status !== "cancelled" && item.status !== "checked_in" ? (
+                  <form noValidate action={cancelRegistration}>
+                    <input
+                      type="hidden"
+                      name="registrationId"
+                      value={item.id}
+                    />
+                    <button type="submit">CANCEL</button>
+                  </form>
+                ) : null}
+              </article>
+            ))
+          ) : (
             <div className="member-empty-state">
               <span>NO RUNS YET</span>
-              <h3>YOUR NEXT START LINE<br />IS STILL OPEN.</h3>
+              <h3>
+                YOUR NEXT START LINE
+                <br />
+                IS STILL OPEN.
+              </h3>
               <Link href="/runs">FIND A RUN ↗</Link>
             </div>
           )}
@@ -227,7 +259,11 @@ export default async function DashboardPage() {
         <div className="member-section-head">
           <div>
             <span className="kicker">NEXT UP</span>
-            <h2>RUN WITH<br />THE CREW.</h2>
+            <h2>
+              RUN WITH
+              <br />
+              THE CREW.
+            </h2>
           </div>
         </div>
 
@@ -236,13 +272,18 @@ export default async function DashboardPage() {
             <article key={event.id}>
               <div className="member-next-image">
                 {event.image ? <img src={event.image} alt="" /> : null}
-                <span>{event.registration_status.replace("_", " ").toUpperCase()}</span>
+                <span>
+                  {event.registration_status.replace("_", " ").toUpperCase()}
+                </span>
               </div>
               <div className="member-next-copy">
                 <h3>{event.title}</h3>
-                <p>{formatDate(event.start_at)} · {event.location_name || "JAKARTA"}</p>
+                <p>
+                  {formatDate(event.start_at)} ·{" "}
+                  {event.location_name || "JAKARTA"}
+                </p>
                 {event.registration_status === "open" ? (
-                  <form action={registerForEvent}>
+                  <form noValidate action={registerForEvent}>
                     <input type="hidden" name="eventId" value={event.id} />
                     <button type="submit">RSVP WITH USS ID ↗</button>
                   </form>

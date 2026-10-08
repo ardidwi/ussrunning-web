@@ -4,6 +4,7 @@ import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signInWithEmail, type LoginState } from "@/app/login/actions";
 import USSNotice from "@/components/auth/USSNotice";
+import { Field, Input, PasswordInput, Button } from "@/components/ui";
 
 const initialState: LoginState = {};
 
@@ -11,9 +12,13 @@ export default function LoginForm() {
   const router = useRouter();
   const [state, formAction, pending] = useActionState(
     signInWithEmail,
-    initialState
+    initialState,
   );
   const [noticeOpen, setNoticeOpen] = useState(false);
+  const [values, setValues] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {},
+  );
 
   useEffect(() => {
     if (state.status) setNoticeOpen(true);
@@ -23,46 +28,83 @@ export default function LoginForm() {
 
   return (
     <>
-      <form action={formAction} className="login-form-v3" noValidate>
-        <label className="login-field-v3">
-          <span className="login-field-head">
-            <b>EMAIL</b>
-            <small>01</small>
-          </span>
-          <input
+      <form
+        action={formAction}
+        className="login-form-v3"
+        noValidate
+        onSubmit={(event) => {
+          if (pending) {
+            event.preventDefault();
+            return;
+          }
+          const next = {
+            email: !values.email.trim()
+              ? "Email is required."
+              : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())
+                ? "Enter a valid email address."
+                : undefined,
+            password: !values.password ? "Password is required." : undefined,
+          };
+          setErrors(next);
+          if (next.email || next.password) {
+            event.preventDefault();
+            (
+              event.currentTarget.elements.namedItem(
+                next.email ? "email" : "password",
+              ) as HTMLElement
+            )?.focus();
+          }
+        }}
+      >
+        <Field
+          label="Email address"
+          error={errors.email}
+          required
+          hint="Use the active email associated with your USS account."
+        >
+          <Input
             type="email"
             name="email"
+            value={values.email}
+            onChange={(event) => {
+              const value = event.target.value;
+              setValues((current) => ({ ...current, email: value }));
+              setErrors((current) => ({ ...current, email: undefined }));
+            }}
             placeholder="you@email.com"
             autoComplete="email"
             required
+            disabled={pending}
           />
-        </label>
-
-        <label className="login-field-v3">
-          <span className="login-field-head">
-            <b>PASSWORD</b>
-            <small>02</small>
-          </span>
-          <input
-            type="password"
+        </Field>
+        <Field
+          label="Password"
+          error={errors.password}
+          required
+          hint="Enter your account password. Use the eye button to check what you entered."
+        >
+          <PasswordInput
             name="password"
+            value={values.password}
+            onChange={(event) => {
+              const value = event.target.value;
+              setValues((current) => ({ ...current, password: value }));
+              setErrors((current) => ({ ...current, password: undefined }));
+            }}
             placeholder="Enter your password"
             autoComplete="current-password"
             required
+            disabled={pending}
           />
-        </label>
-
+        </Field>
         <div className="login-form-meta-v3">
           <span>SECURE MEMBER ACCESS</span>
           <a href="mailto:hello@ussrunning.com">NEED HELP? ↗</a>
         </div>
-
-        <button className="login-primary login-primary-v3" type="submit" disabled={pending}>
-          <span>{pending ? "SIGNING IN..." : "LOG IN"}</span>
-          <b>↗</b>
-        </button>
+        <Button type="submit" loading={pending} loadingLabel="Signing in…">
+          LOG IN ↗
+        </Button>
       </form>
-
       <USSNotice
         open={noticeOpen}
         kind={success ? "success" : "error"}

@@ -1,0 +1,385 @@
+/* Canonical public shell: extracted from the cinematic homepage, without its motion HUD. */
+:root {
+  --uss-red: var(--red);
+  --uss-paper: var(--off);
+  --page-gutter: clamp(1rem, 3.5vw, 4rem);
+  --page-max: 90rem;
+  --header-height: 6rem;
+  --uss-section-space: var(--space-16);
+  --uss-type-public-hero: clamp(3.25rem, 7.5vw, 7rem);
+  --uss-type-public-section: clamp(2.5rem, 5.5vw, 5.5rem);
+  --uss-type-public-card: clamp(1.75rem, 3vw, 2.75rem);
+}
+.site-header.uss-public-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: var(--header-height) !important;
+  padding: 0;
+  border-bottom: 1px solid var(--uss-border) !important;
+  background: rgb(7 7 7 / 0.8) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--uss-text);
+  pointer-events: auto;
+}
+.uss-public-header-inner {
+  width: min(calc(100% - 2 * var(--page-gutter)), var(--page-max));
+  height: 100%;
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr) auto;
+  gap: var(--space-8);
+  align-items: center;
+  margin-inline: auto;
+}
+.uss-public-brand {
+  display: inline-flex;
+  width: 140px;
+}
+.uss-public-brand img {
+  width: 100%;
+  max-height: 56px;
+  object-fit: contain;
+}
+.uss-public-nav {
+  display: flex;
+  gap: clamp(1.5rem, 3.7vw, 4.5rem);
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+.uss-public-nav a {
+  font-size: var(--uss-type-caption);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  padding-block: var(--space-3);
+  transition: color 0.16s ease;
+}
+.uss-public-nav a:hover,
+.uss-public-nav a[aria-current="page"] {
+  color: var(--uss-red);
+}
+.uss-public-brand:focus-visible,
+.uss-public-nav a:focus-visible,
+.uss-public-menu a:focus-visible,
+.uss-footer a:focus-visible {
+  outline: 3px solid var(--uss-red);
+  outline-offset: 4px;
+}
+.uss-button-navigation {
+  border: 1px solid rgb(255 255 255 / 0.78);
+  background: transparent;
+  color: var(--uss-text);
+  border-radius: 999px;
+  min-width: 180px;
+  min-height: 56px;
+  font-size: var(--uss-type-caption);
+  letter-spacing: 0.12em;
+}
+.uss-public-header .uss-public-menu-trigger {
+  display: none;
+}
+.uss-public-menu nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.uss-public-menu nav a {
+  min-height: 48px;
+  padding-block: var(--space-3);
+  border-bottom: 1px solid var(--uss-border);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+.uss-public-menu nav a:hover,
+.uss-public-menu nav a[aria-current="page"] {
+  color: var(--uss-red);
+}
+.page-black:has(> .uss-public-header) {
+  padding-top: var(--header-height) !important;
+}
+.page-black .content-frame,
+.page-black .crew-page-hero > .content-frame,
+.page-black .stories-grid-expanded,
+.uss-footer .uss-footer-inner {
+  width: min(calc(100% - 2 * var(--page-gutter)), var(--page-max));
+  margin-inline: auto;
+  min-width: 0;
+}
+.uss-page-hero {
+  padding: var(--uss-section-space) 0;
+  border-bottom: 1px solid var(--uss-border);
+}
+.uss-page-hero h1 {
+  font-family: var(--uss-font-display);
+  font-size: var(--uss-type-public-hero);
+  line-height: 0.9;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  margin: var(--space-6) 0 0;
+  overflow-wrap: anywhere;
+}
+.uss-section-kicker,
+.page-black .kicker,
+.uss-footer .kicker {
+  font-size: var(--uss-type-caption);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+}
+.uss-page-description {
+  font-size: var(--uss-type-body);
+  line-height: 1.7;
+  color: var(--uss-muted);
+  max-width: 38rem;
+  margin: var(--space-8) 0 0;
+}
+.uss-page-hero .page-hero-actions,
+.uss-page-hero .about-hero-copy {
+  margin-top: var(--space-8);
+}
+.page-black
+  :is(
+    .section,
+    .about-story,
+    .about-mission,
+    .about-timeline,
+    .about-close,
+    .membership-free-block,
+    .membership-benefits,
+    .membership-steps,
+    .partner-journey,
+    .partner-philosophy,
+    .run-philosophy
+  ) {
+  padding-block: var(--uss-section-space);
+}
+.page-black .section {
+  padding-inline: 0;
+}
+.page-black
+  :is(
+    .section-heading,
+    .about-story,
+    .about-close,
+    .membership-free-inner,
+    .membership-final-cta,
+    .run-philosophy,
+    .partner-cta
+  )
+  h2 {
+  font-family: var(--uss-font-display);
+  font-weight: 400;
+  font-size: var(--uss-type-public-section);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+.page-black
+  :is(
+    .story-card,
+    .event-card,
+    .journey-card,
+    .membership-benefit,
+    .about-mission-grid article
+  )
+  :is(h2, h3) {
+  font-family: var(--uss-font-display);
+  font-size: var(--uss-type-public-card);
+  font-weight: 400;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+.page-black
+  :is(
+    .about-story-copy,
+    .about-hero-copy,
+    .membership-free-copy,
+    .story-card,
+    .journey-card,
+    .membership-benefit,
+    .about-mission-grid article
+  )
+  p {
+  font-size: var(--uss-type-body);
+  line-height: 1.7;
+  max-width: 38rem;
+  overflow-wrap: anywhere;
+}
+.page-black :is(.story-card, .event-card, .journey-card, .membership-benefit) {
+  min-width: 0;
+}
+.page-black
+  :is(.event-grid, .stories-grid, .journey-grid, .membership-benefit-grid) {
+  gap: var(--space-6);
+}
+.page-black .partner-cta {
+  padding-inline: max(var(--page-gutter), calc((100% - var(--page-max)) / 2));
+}
+.uss-footer {
+  background: var(--uss-bg);
+  border-top: 1px solid var(--uss-border);
+  padding-block: var(--space-12) var(--space-6);
+}
+.uss-footer .uss-footer-column {
+  gap: var(--space-3);
+}
+.uss-footer :is(.uss-footer-heading, .uss-footer-bottom) {
+  font-size: var(--uss-type-caption);
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+}
+.uss-footer .uss-footer-column a {
+  font-size: var(--uss-type-small);
+  line-height: 1.6;
+  min-height: 24px;
+}
+.uss-footer .uss-footer-brand p {
+  font-size: var(--uss-type-small);
+  line-height: 1.6;
+  color: var(--uss-muted);
+}
+.uss-footer a:hover {
+  color: var(--uss-red);
+}
+.uss-footer .uss-footer-logo {
+  width: 140px;
+}
+.uss-footer .uss-newsletter h2 {
+  font-family: var(--uss-font-display);
+  font-weight: 400;
+  font-size: var(--uss-type-public-section);
+}
+.uss-footer .uss-newsletter p {
+  font-size: var(--uss-type-small);
+  line-height: 1.6;
+  color: var(--uss-muted);
+}
+@media (max-width: 1180px) {
+  .uss-public-header-inner {
+    grid-template-columns: 110px minmax(0, 1fr) auto;
+    gap: var(--space-6);
+  }
+  .uss-public-brand {
+    width: 110px;
+  }
+  .uss-public-nav {
+    gap: var(--space-5);
+  }
+  .uss-public-nav a {
+    font-size: var(--uss-type-caption);
+    letter-spacing: 0.08em;
+  }
+  .uss-button-navigation {
+    min-width: 140px;
+    min-height: 48px;
+  }
+}
+@media (max-width: 1000px) {
+  :root {
+    --header-height: 5.125rem;
+    --uss-section-space: var(--space-12);
+  }
+  .uss-public-header-inner {
+    grid-template-columns: 92px minmax(0, 1fr);
+  }
+  .uss-public-brand {
+    width: 92px;
+  }
+  .uss-public-nav,
+  .uss-public-header .uss-public-account {
+    display: none;
+  }
+  .uss-public-header .uss-public-menu-trigger {
+    display: inline-flex;
+    justify-self: end;
+  }
+}
+@media (max-width: 760px) {
+  .page-black .event-grid-three {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .uss-page-hero h1 {
+    font-size: clamp(3rem, 12vw, 5rem);
+  }
+  .uss-footer .uss-newsletter-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .uss-footer .uss-newsletter-row .uss-button {
+    width: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .uss-public-nav a {
+    transition: none;
+  }
+}
+.uss-footer .uss-newsletter-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-4);
+  align-items: start;
+}
+.uss-footer .uss-newsletter-row .uss-button {
+  margin-top: 29px;
+  height: var(--control-height);
+}
+.uss-footer .uss-newsletter-row .uss-control {
+  border: 1px solid var(--uss-border);
+  font-size: var(--uss-type-body);
+}
+.uss-newsletter-feedback {
+  min-height: 1.5em;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 760px) {
+  .uss-footer .uss-newsletter-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .uss-footer .uss-newsletter-row .uss-button {
+    margin-top: 0;
+  }
+}
+/* Intrinsic footer tracks must never outgrow a phone's content frame. */
+.uss-footer .uss-footer-main {
+  grid-template-columns: minmax(0, 1.35fr) repeat(3, minmax(0, 0.72fr));
+  gap: var(--space-8);
+}
+.uss-footer .uss-footer-main > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.uss-footer .uss-footer-main > .uss-footer-column:nth-child(n) {
+  grid-column: auto;
+  grid-row: auto;
+}
+.page-black :is(.about-close, .partner-cta) {
+  --uss-primary-bg: var(--uss-bg);
+  --uss-primary-text: var(--uss-paper);
+  --uss-text: var(--uss-bg);
+}
+@media (max-width: 760px) {
+  .uss-footer .uss-footer-main {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .uss-footer .uss-footer-brand {
+    grid-column: 1 / -1;
+  }
+  .uss-footer .uss-footer-bottom {
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+}
+@media (max-width: 430px) {
+  .uss-footer .uss-footer-main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

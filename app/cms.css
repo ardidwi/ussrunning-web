@@ -180,21 +180,8 @@ html {
   margin-bottom: 1.25rem;
   font-size: 0.875rem;
 }
-.cms-field :is(input, textarea),
-.cms-shell select {
-  width: 100%;
-  background: var(--black);
-  border: 1px solid var(--cms-border);
-  color: var(--white);
-  padding: 0.8rem;
-  font-size: 1rem;
-  border-radius: 0;
-  min-height: 44px;
-}
-.cms-field textarea {
-  resize: none;
-  min-height: 160px;
-}
+
+
 .cms-check {
   display: flex;
   gap: 0.75rem;
@@ -691,26 +678,10 @@ html {
   grid-template-columns:1fr 1fr;
   gap:18px;
 }
-.member-form-grid label{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-.member-form-grid label>span{
-  font-size:8px;
-  font-weight:900;
-  letter-spacing:.1em;
-  color:#777;
-}
-.member-form-grid input{
-  height:46px;
-  border:1px solid #3d3d3d;
-  background:#080808;
-  color:#fff;
-  padding:0 12px;
-  outline:none;
-}
-.member-form-grid input:focus{border-color:#999}
+
+
+
+
 .member-form-wide{grid-column:1 / -1}
 .dashboard-primary-button{
   width:100%;
@@ -1226,34 +1197,11 @@ html {
   gap:7px;
 }
 .admin-field-wide{grid-column:1 / -1}
-.admin-field>span,
-.admin-toggle>span{
-  font-size:7px;
-  font-weight:900;
-  letter-spacing:.1em;
-  color:#73736f;
-}
-.admin-field input,
-.admin-field textarea,
-.admin-field select,
-.admin-table select,
-.admin-table button,
-.admin-search{
-  width:100%;
-  border:1px solid #3b3b3b;
-  border-radius:0;
-  background:#080808;
-  color:#fff;
-  padding:10px 11px;
-  outline:none;
-}
-.admin-field input,
-.admin-field select{min-height:44px}
-.admin-field textarea{resize:vertical;min-height:116px}
-.admin-field input:focus,
-.admin-field textarea:focus,
-.admin-field select:focus,
-.admin-search:focus{border-color:#888}
+
+
+
+
+
 .admin-save-button{
   width:100%;
   min-height:48px;

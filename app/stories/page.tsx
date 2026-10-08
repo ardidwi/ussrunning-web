@@ -1,3 +1,4 @@
+import { PageHero } from "@/components/layout/PageHero";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { getStories } from "@/lib/content";
@@ -11,16 +12,22 @@ export default async function StoriesPage() {
     <main className="page-black">
       <SiteHeader />
 
-      <section className="page-hero crew-page-hero">
-        <div className="content-frame">
-          <span className="kicker">USS JOURNAL / PEOPLE / CITY / MILES</span>
-          <h1>THE STORIES<br />AROUND THE RUN.</h1>
-          <p>
+      <PageHero
+        kicker={<>USS JOURNAL / PEOPLE / CITY / MILES</>}
+        title={
+          <>
+            THE STORIES
+            <br />
+            AROUND THE RUN.
+          </>
+        }
+        description={
+          <>
             The run is one part of it. The people, meals, cheering, race-week
             nerves, collaborations and city moments are part of USS too.
-          </p>
-        </div>
-      </section>
+          </>
+        }
+      ></PageHero>
 
       <section className="stories-grid stories-grid-expanded section">
         {stories.map((story) => (

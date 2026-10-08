@@ -18,10 +18,6 @@
   pointer-events:auto!important;
 }
 
-.uss-motion-story .scroll-distance{
-  display:none!important;
-}
-
 .uss-motion-stage{
   position:fixed!important;
   inset:0!important;
@@ -194,51 +190,6 @@
     background:#efede6!important;
     z-index:2;
   }
-}
-
-/* Registration form validation: reserve message space so rows never jump. */
-.join-form-grid>label{
-  display:flex!important;
-  flex-direction:column!important;
-  min-width:0;
-}
-
-.join-field-label{
-  display:flex;
-  align-items:center;
-  gap:4px;
-  min-height:18px;
-}
-
-.join-field-message,
-.join-consent-message{
-  display:block;
-  min-height:17px;
-  margin-top:6px;
-  font-size:9px;
-  line-height:1.35;
-  letter-spacing:.03em;
-  color:transparent;
-}
-
-.join-field-message.is-error,
-.join-consent-message.is-error{
-  color:#c52f1b;
-}
-
-.join-form-grid input[aria-invalid="true"]{
-  border-color:#c52f1b!important;
-  box-shadow:inset 0 -1px 0 #c52f1b;
-}
-
-.consent-check.is-error{
-  outline:1px solid rgba(197,47,27,.34);
-  outline-offset:8px;
-}
-
-.join-submit[aria-busy="true"]{
-  cursor:wait;
-  opacity:.66;
 }
 
 @media (max-width:1000px){

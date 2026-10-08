@@ -1,3 +1,4 @@
+import { PageHero } from "@/components/layout/PageHero";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import EventCard from "@/components/EventCard";
@@ -12,20 +13,27 @@ export default async function RunsPage() {
     <main className="page-black">
       <SiteHeader />
 
-      <section className="page-hero crew-page-hero">
-        <div className="content-frame">
-          <span className="kicker">RUNS / TRAINING / RACE WEEK / COLLABORATIONS</span>
-          <h1>RUN WITH<br />USS.</h1>
-          <p>
+      <PageHero
+        kicker={<>RUNS / TRAINING / RACE WEEK / COLLABORATIONS</>}
+        title={
+          <>
+            RUN WITH
+            <br />
+            USS.
+          </>
+        }
+        description={
+          <>
             Community runs, training sessions, shakeouts, race-week moments and
             special collaborations. Find what&apos;s next and show up.
-          </p>
-          <div className="run-page-note">
-            <span>USS MEMBERSHIP IS FREE</span>
-            <span>RSVP WITH ONE USS ID</span>
-          </div>
+          </>
+        }
+      >
+        <div className="run-page-note">
+          <span>USS MEMBERSHIP IS FREE</span>
+          <span>RSVP WITH ONE USS ID</span>
         </div>
-      </section>
+      </PageHero>
 
       <section className="section event-list-section">
         <div className="content-frame">
@@ -38,7 +46,9 @@ export default async function RunsPage() {
           </div>
 
           <div className="event-grid event-grid-three">
-            {runs.map((run) => <EventCard run={run} key={run.slug} />)}
+            {runs.map((run) => (
+              <EventCard run={run} key={run.slug} />
+            ))}
           </div>
         </div>
       </section>
@@ -46,10 +56,15 @@ export default async function RunsPage() {
       <section className="run-philosophy">
         <div className="content-frame">
           <span className="kicker">THE POINT</span>
-          <h2>PACE MATTERS SOMETIMES.<br />PEOPLE MATTER EVERY TIME.</h2>
+          <h2>
+            PACE MATTERS SOMETIMES.
+            <br />
+            PEOPLE MATTER EVERY TIME.
+          </h2>
           <p>
             USS was built to connect runners through movement, lifestyle and
-            culture. Come ready to run. Stay ready to support the people around you.
+            culture. Come ready to run. Stay ready to support the people around
+            you.
           </p>
         </div>
       </section>

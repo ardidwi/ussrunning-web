@@ -1,17 +1,47 @@
+import { LinkButton } from "@/components/ui/Button";
+import { PageHero } from "@/components/layout/PageHero";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
 const journey = [
-  ["01", "CARB LOADING", "Pre-race fuel, community dinner and one last moment together before the start."],
-  ["02", "RACE DAY & CHEERING", "Runners take on the course while the community shows up, makes noise and carries the energy."],
-  ["03", "POST-RACE CELEBRATION", "Recover, celebrate every finish and keep the race-day story moving after the line."],
+  [
+    "01",
+    "CARB LOADING",
+    "Pre-race fuel, community dinner and one last moment together before the start.",
+  ],
+  [
+    "02",
+    "RACE DAY & CHEERING",
+    "Runners take on the course while the community shows up, makes noise and carries the energy.",
+  ],
+  [
+    "03",
+    "POST-RACE CELEBRATION",
+    "Recover, celebrate every finish and keep the race-day story moving after the line.",
+  ],
 ];
 
 const opportunities = [
-  ["01", "PRODUCT", "Food, beverages, hydration, recovery or relevant running products."],
-  ["02", "VENUE", "Carb loading, community gatherings and post-race locations."],
-  ["03", "EXPERIENCE", "Music, entertainment, photo moments and community activations."],
-  ["04", "PRODUCTION", "Event equipment, documentation and activation production."],
+  [
+    "01",
+    "PRODUCT",
+    "Food, beverages, hydration, recovery or relevant running products.",
+  ],
+  [
+    "02",
+    "VENUE",
+    "Carb loading, community gatherings and post-race locations.",
+  ],
+  [
+    "03",
+    "EXPERIENCE",
+    "Music, entertainment, photo moments and community activations.",
+  ],
+  [
+    "04",
+    "PRODUCTION",
+    "Event equipment, documentation and activation production.",
+  ],
   ["05", "MONETARY", "Contribution toward community-led race-week activities."],
 ];
 
@@ -20,23 +50,33 @@ export default function PartnersPage() {
     <main className="page-black">
       <SiteHeader />
 
-      <section className="partner-hero crew-page-hero">
-        <div className="content-frame">
-          <span className="kicker">PARTNERSHIPS / COMMUNITY-LED BRAND EXPOSURE</span>
-          <h1>BE PART OF<br />THE JOURNEY.</h1>
-          <p>
+      <PageHero
+        kicker={<>PARTNERSHIPS / COMMUNITY-LED BRAND EXPOSURE</>}
+        title={
+          <>
+            BE PART OF
+            <br />
+            THE JOURNEY.
+          </>
+        }
+        description={
+          <>
             Not just logo placement. Partners become part of moments runners
             naturally want to join, experience and share.
-          </p>
-        </div>
-      </section>
+          </>
+        }
+      ></PageHero>
 
       <section className="partner-journey">
         <div className="content-frame">
           <div className="section-heading compact-heading">
             <div>
               <span className="kicker">MORE THAN RACE DAY</span>
-              <h2>THE JOURNEY<br />IS THE PLATFORM.</h2>
+              <h2>
+                THE JOURNEY
+                <br />
+                IS THE PLATFORM.
+              </h2>
             </div>
             <p className="section-side-copy">
               USS Running brings runners, community, culture and shared
@@ -58,7 +98,9 @@ export default function PartnersPage() {
 
       <section className="partner-opportunities">
         <div className="content-frame">
-          <span className="kicker partner-opportunity-label">HOW BRANDS CAN SUPPORT</span>
+          <span className="kicker partner-opportunity-label">
+            HOW BRANDS CAN SUPPORT
+          </span>
           {opportunities.map(([n, title, copy]) => (
             <div className="opportunity" key={n}>
               <span>{n}</span>
@@ -74,16 +116,24 @@ export default function PartnersPage() {
         <div className="content-frame">
           <span className="kicker">OUR APPROACH</span>
           <p>
-            BUILD THE COMMUNITY EXPERIENCE FIRST.<br />
-            THEN FIND THE ROLE WHERE A BRAND CAN ADD REAL VALUE.<br />
+            BUILD THE COMMUNITY EXPERIENCE FIRST.
+            <br />
+            THEN FIND THE ROLE WHERE A BRAND CAN ADD REAL VALUE.
+            <br />
             <strong>NOT INTERRUPTION. PARTICIPATION.</strong>
           </p>
         </div>
       </section>
 
       <section className="partner-cta">
-        <h2>LET&apos;S BUILD IT<br />TOGETHER.</h2>
-        <a className="button button-dark" href="mailto:hello@ussrunning.com">START A CONVERSATION</a>
+        <h2>
+          LET&apos;S BUILD IT
+          <br />
+          TOGETHER.
+        </h2>
+        <LinkButton href="mailto:hello@ussrunning.com">
+          START A CONVERSATION
+        </LinkButton>
       </section>
 
       <SiteFooter />

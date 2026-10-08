@@ -9,6 +9,14 @@ import {
   type JoinState,
 } from "@/app/join/actions";
 import USSNotice from "@/components/auth/USSNotice";
+import {
+  Field,
+  Input,
+  PasswordInput,
+  Checkbox,
+  FormSection,
+  Button,
+} from "@/components/ui";
 
 const initialState: JoinState = {};
 
@@ -26,14 +34,6 @@ type Props = {
   validation: JoinValidationConfig;
 };
 
-function RequiredMark() {
-  return (
-    <span className="join-required" aria-hidden="true">
-      *
-    </span>
-  );
-}
-
 function normalizeInstagram(value: string) {
   return value
     .trim()
@@ -48,31 +48,43 @@ function phoneDigits(value: string) {
 
 export default function JoinForm({ validation }: Props) {
   const router = useRouter();
-  const [state, formAction, pending] = useActionState(createMember, initialState);
+  const [state, formAction, pending] = useActionState(
+    createMember,
+    initialState,
+  );
   const [noticeOpen, setNoticeOpen] = useState(false);
+  const [values, setValues] = useState<Record<string, string>>({
+    city: "Jakarta",
+  });
   const [clientErrors, setClientErrors] = useState<
     Partial<Record<JoinField, string>>
   >({});
-  const [editedFields, setEditedFields] = useState<Partial<Record<JoinField, boolean>>>({});
+  const [editedFields, setEditedFields] = useState<
+    Partial<Record<JoinField, boolean>>
+  >({});
 
   useEffect(() => {
-    if (state.status) setNoticeOpen(true);
+    if (state.status) {
+      setNoticeOpen(true);
+      setEditedFields({});
+      setClientErrors({});
+    }
   }, [state]);
 
   const success = state.status === "success";
   const serverErrors = state.fieldErrors || {};
 
   const errorFor = useMemo(
-    () =>
-      (field: JoinField) =>
-        clientErrors[field] || (!editedFields[field] ? serverErrors[field] : undefined),
-    [clientErrors, editedFields, serverErrors]
+    () => (field: JoinField) =>
+      clientErrors[field] ||
+      (!editedFields[field] ? serverErrors[field] : undefined),
+    [clientErrors, editedFields, serverErrors],
   );
 
   function validateField(
     field: JoinField,
     value: string,
-    form?: HTMLFormElement
+    form?: HTMLFormElement,
   ): string | undefined {
     const cleaned = value.trim();
 
@@ -144,7 +156,9 @@ export default function JoinForm({ validation }: Props) {
     }
 
     if (field === "confirmPassword") {
-      const password = form?.elements.namedItem("password") as HTMLInputElement | null;
+      const password = form?.elements.namedItem(
+        "password",
+      ) as HTMLInputElement | null;
       if (!value) return "Confirm your password.";
       if (password && value !== password.value) {
         return "Password confirmation does not match.";
@@ -152,8 +166,11 @@ export default function JoinForm({ validation }: Props) {
     }
 
     if (field === "acceptLegal") {
-      const legal = form?.elements.namedItem("acceptLegal") as HTMLInputElement | null;
-      if (!legal?.checked) return "Please accept the Privacy Policy and Terms of Use.";
+      const legal = form?.elements.namedItem(
+        "acceptLegal",
+      ) as HTMLInputElement | null;
+      if (!legal?.checked)
+        return "Please accept the Privacy Policy and Terms of Use.";
     }
 
     return undefined;
@@ -201,6 +218,8 @@ export default function JoinForm({ validation }: Props) {
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const field = event.currentTarget.name as JoinField;
+    const value = event.currentTarget.value;
+    setValues((current) => ({ ...current, [field]: value }));
     setEditedFields((current) => ({ ...current, [field]: true }));
 
     if (clientErrors[field]) {
@@ -213,29 +232,132 @@ export default function JoinForm({ validation }: Props) {
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    if (pending) {
+      event.preventDefault();
+      return;
+    }
     const errors = validateForm(event.currentTarget);
     if (Object.keys(errors).length === 0) return;
 
     event.preventDefault();
     setClientErrors(errors);
     setEditedFields(
-      Object.keys(errors).reduce<Partial<Record<JoinField, boolean>>>((acc, key) => {
-        acc[key as JoinField] = true;
-        return acc;
-      }, {})
+      Object.keys(errors).reduce<Partial<Record<JoinField, boolean>>>(
+        (acc, key) => {
+          acc[key as JoinField] = true;
+          return acc;
+        },
+        {},
+      ),
     );
 
     const firstField = Object.keys(errors)[0];
-    const target = event.currentTarget.elements.namedItem(firstField) as HTMLElement | null;
+    const target = event.currentTarget.elements.namedItem(
+      firstField,
+    ) as HTMLElement | null;
     target?.focus();
   }
 
-  function fieldMessage(field: JoinField) {
-    const message = errorFor(field);
+  const details: {
+    name: JoinField;
+    label: string;
+    hint: string;
+    type?: string;
+    autoComplete?: string;
+    placeholder?: string;
+    required?: boolean;
+    defaultValue?: string;
+    maxLength?: number;
+  }[] = [
+    {
+      name: "firstName",
+      label: "First name",
+      hint: "Use your real name for your USS Running membership profile.",
+      autoComplete: "given-name",
+      required: true,
+      maxLength: validation.maximumNameLength,
+    },
+    {
+      name: "lastName",
+      label: "Last name",
+      hint: "Add your family name if you use one.",
+      autoComplete: "family-name",
+      maxLength: validation.maximumNameLength,
+    },
+    {
+      name: "email",
+      label: "Email address",
+      hint: "Use an active email. Account verification will be sent here.",
+      type: "email",
+      autoComplete: "email",
+      placeholder: "you@email.com",
+      required: true,
+    },
+    {
+      name: "mobile",
+      label: "Mobile number",
+      hint: "A number where the USS team can reach you about your runs.",
+      type: "tel",
+      autoComplete: "tel",
+      placeholder: "+62…",
+      required: true,
+    },
+    {
+      name: "city",
+      label: "City",
+      hint: "Your current city, used for your community profile.",
+      autoComplete: "address-level2",
+      defaultValue: "Jakarta",
+      required: true,
+      maxLength: validation.maximumCityLength,
+    },
+    {
+      name: "instagram",
+      label: "Instagram",
+      hint: "Enter your Instagram username, for example @username.",
+      placeholder: "@username",
+      required: true,
+      maxLength: validation.maximumInstagramLength + 1,
+    },
+    {
+      name: "emergencyContactName",
+      label: "Contact name",
+      hint: "Someone the team can contact in an emergency during a run.",
+      required: true,
+      maxLength: validation.maximumNameLength,
+    },
+    {
+      name: "emergencyContactMobile",
+      label: "Contact number",
+      hint: "Use an active phone number for your emergency contact.",
+      type: "tel",
+      placeholder: "+62…",
+      required: true,
+    },
+  ];
+
+  function renderDetail(field: (typeof details)[number]) {
     return (
-      <span className={`join-field-message ${message ? "is-error" : ""}`} aria-live="polite">
-        {message || "\u00A0"}
-      </span>
+      <Field
+        key={field.name}
+        label={field.label}
+        hint={field.hint}
+        required={field.required}
+        error={errorFor(field.name)}
+      >
+        <Input
+          name={field.name}
+          type={field.type}
+          autoComplete={field.autoComplete ?? "off"}
+          placeholder={field.placeholder}
+          value={values[field.name] ?? field.defaultValue ?? ""}
+          maxLength={field.maxLength}
+          required={field.required}
+          onBlur={handleBlur}
+          onChange={handleChange}
+          disabled={pending}
+        />
+      </Field>
     );
   }
 
@@ -247,242 +369,106 @@ export default function JoinForm({ validation }: Props) {
         noValidate
         onSubmit={handleSubmit}
       >
-        <section className="join-form-section">
-          <div className="join-form-section-head">
-            <span>01</span>
-            <div>
-              <strong>YOUR DETAILS</strong>
-              <small>Basic information for your USS member profile.</small>
-            </div>
-          </div>
-
-          <div className="join-form-grid">
-            <label>
-              <span className="join-field-label">FIRST NAME <RequiredMark /></span>
-              <input
-                name="firstName"
-                autoComplete="given-name"
-                maxLength={validation.maximumNameLength}
-                aria-invalid={Boolean(errorFor("firstName"))}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                required
-              />
-              {fieldMessage("firstName")}
-            </label>
-
-            <label>
-              <span className="join-field-label">LAST NAME</span>
-              <input
-                name="lastName"
-                autoComplete="family-name"
-                maxLength={validation.maximumNameLength}
-                aria-invalid={Boolean(errorFor("lastName"))}
-                onBlur={handleBlur}
-                onChange={handleChange}
-              />
-              {fieldMessage("lastName")}
-            </label>
-
-            <label>
-              <span className="join-field-label">EMAIL <RequiredMark /></span>
-              <input
-                name="email"
-                type="email"
-                placeholder="you@email.com"
-                autoComplete="email"
-                inputMode="email"
-                aria-invalid={Boolean(errorFor("email"))}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                required
-              />
-              {fieldMessage("email")}
-            </label>
-
-            <label>
-              <span className="join-field-label">MOBILE NUMBER <RequiredMark /></span>
-              <input
-                name="mobile"
-                type="tel"
-                placeholder="+62..."
-                autoComplete="tel"
-                inputMode="tel"
-                aria-invalid={Boolean(errorFor("mobile"))}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                required
-              />
-              {fieldMessage("mobile")}
-            </label>
-
-            <label>
-              <span className="join-field-label">CITY <RequiredMark /></span>
-              <input
-                name="city"
-                defaultValue="Jakarta"
-                maxLength={validation.maximumCityLength}
-                aria-invalid={Boolean(errorFor("city"))}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                required
-              />
-              {fieldMessage("city")}
-            </label>
-
-            <label>
-              <span className="join-field-label">INSTAGRAM <RequiredMark /></span>
-              <input
-                name="instagram"
-                placeholder="@username"
-                autoComplete="off"
-                maxLength={validation.maximumInstagramLength + 1}
-                aria-invalid={Boolean(errorFor("instagram"))}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                required
-              />
-              {fieldMessage("instagram")}
-            </label>
-          </div>
-        </section>
-
-        <section className="join-form-section join-safety-section">
-          <div className="join-form-section-head">
-            <span>02</span>
-            <div>
-              <strong>EMERGENCY CONTACT</strong>
-              <small>Someone we can contact if support is needed during a USS activity.</small>
-            </div>
-          </div>
-
-          <div className="join-form-grid">
-            <label>
-              <span className="join-field-label">CONTACT NAME <RequiredMark /></span>
-              <input
-                name="emergencyContactName"
-                placeholder="Full name"
-                autoComplete="off"
-                maxLength={validation.maximumNameLength}
-                aria-invalid={Boolean(errorFor("emergencyContactName"))}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                required
-              />
-              {fieldMessage("emergencyContactName")}
-            </label>
-
-            <label>
-              <span className="join-field-label">CONTACT NUMBER <RequiredMark /></span>
-              <input
-                name="emergencyContactMobile"
-                type="tel"
-                placeholder="+62..."
-                autoComplete="off"
-                inputMode="tel"
-                aria-invalid={Boolean(errorFor("emergencyContactMobile"))}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                required
-              />
-              {fieldMessage("emergencyContactMobile")}
-            </label>
-          </div>
-        </section>
-
-        <section className="join-form-section">
-          <div className="join-form-section-head">
-            <span>03</span>
-            <div>
-              <strong>SECURITY</strong>
-              <small>Use at least {validation.minimumPasswordLength} characters for your password.</small>
-            </div>
-          </div>
-
-          <div className="join-form-grid">
-            <label>
-              <span className="join-field-label">PASSWORD <RequiredMark /></span>
-              <input
-                name="password"
-                type="password"
-                minLength={validation.minimumPasswordLength}
-                maxLength={validation.maximumPasswordLength}
-                autoComplete="new-password"
-                aria-invalid={Boolean(errorFor("password"))}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                required
-              />
-              {fieldMessage("password")}
-            </label>
-
-            <label>
-              <span className="join-field-label">CONFIRM PASSWORD <RequiredMark /></span>
-              <input
-                name="confirmPassword"
-                type="password"
-                minLength={validation.minimumPasswordLength}
-                maxLength={validation.maximumPasswordLength}
-                autoComplete="new-password"
-                aria-invalid={Boolean(errorFor("confirmPassword"))}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                required
-              />
-              {fieldMessage("confirmPassword")}
-            </label>
-          </div>
-        </section>
-
-        <div className="join-required-note">
-          <RequiredMark /> REQUIRED INFORMATION
-        </div>
-
-        <div className="consent-stack">
-          <label className={`consent-check ${errorFor("acceptLegal") ? "is-error" : ""}`}>
-            <input
-              type="checkbox"
-              name="acceptLegal"
-              required
-              onBlur={handleBlur}
-              onChange={handleChange}
-              aria-invalid={Boolean(errorFor("acceptLegal"))}
-            />
-            <span>
-              I have read and understood the <Link href="/privacy" target="_blank">Privacy Policy</Link> and
-              <Link href="/terms" target="_blank"> Terms of Use</Link>, and I agree to the processing of my personal data
-              for USS membership, event registration, run passes and community administration.
-            </span>
-          </label>
-          <span className={`join-consent-message ${errorFor("acceptLegal") ? "is-error" : ""}`} aria-live="polite">
-            {errorFor("acceptLegal") || "\u00A0"}
-          </span>
-
-          <label className="consent-check consent-optional">
-            <input type="checkbox" name="marketingConsent" />
-            <span>
-              I would also like to receive USS Running community news, event updates and selected announcements by email.
-              I can unsubscribe at any time.
-            </span>
-          </label>
-        </div>
-
-        <button
-          className="button button-dark full-button join-submit join-submit-v3"
-          type="submit"
-          disabled={pending}
-          aria-busy={pending}
+        <FormSection
+          title="YOUR DETAILS"
+          description="Basic information for your USS member profile."
         >
-          <span>{pending ? "CREATING USS ID..." : "CREATE USS ID"}</span>
-          <b aria-hidden="true">↗</b>
-        </button>
-
+          <div className="uss-form-grid">
+            {details.slice(0, 6).map(renderDetail)}
+          </div>
+        </FormSection>
+        <FormSection
+          title="EMERGENCY CONTACT"
+          description="Help the team reach someone if you need support during a run."
+        >
+          <div className="uss-form-grid">
+            {details.slice(6).map(renderDetail)}
+          </div>
+        </FormSection>
+        <FormSection
+          title="PASSWORD"
+          description="Create your login credentials."
+        >
+          <div className="uss-form-grid">
+            <Field
+              label="Password"
+              hint={`Use a secure password with ${validation.minimumPasswordLength}–${validation.maximumPasswordLength} characters.`}
+              required
+              error={errorFor("password")}
+            >
+              <PasswordInput
+                name="password"
+                value={values.password ?? ""}
+                autoComplete="new-password"
+                required
+                minLength={validation.minimumPasswordLength}
+                maxLength={validation.maximumPasswordLength}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                disabled={pending}
+              />
+            </Field>
+            <Field
+              label="Confirm password"
+              hint="Enter the same password again to confirm it."
+              required
+              error={errorFor("confirmPassword")}
+            >
+              <PasswordInput
+                name="confirmPassword"
+                value={values.confirmPassword ?? ""}
+                autoComplete="new-password"
+                required
+                maxLength={validation.maximumPasswordLength}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                disabled={pending}
+              />
+            </Field>
+          </div>
+        </FormSection>
+        <FormSection
+          title="CONSENT"
+          description="Review the policies before registering. Fields marked * are required."
+        >
+          <Checkbox
+            name="acceptLegal"
+            required
+            disabled={pending}
+            onBlur={handleBlur}
+            onChange={handleChange}
+            error={errorFor("acceptLegal") ?? ""}
+            label={
+              <>
+                I have read and understood the{" "}
+                <Link href="/privacy" target="_blank">
+                  Privacy Policy
+                </Link>{" "}
+                and{" "}
+                <Link href="/terms" target="_blank">
+                  Terms of Use
+                </Link>
+                , and I agree to the processing of my personal data for USS
+                membership, event registration, run passes and community
+                administration.
+              </>
+            }
+          />
+          <Checkbox
+            name="marketingConsent"
+            disabled={pending}
+            hint="Optional. You can unsubscribe at any time."
+            label="I would also like to receive USS Running community news, event updates and selected announcements by email."
+          />
+        </FormSection>
+        <Button type="submit" loading={pending} loadingLabel="Creating USS ID…">
+          CREATE USS ID ↗
+        </Button>
         <div className="join-login-link">
           <span>ALREADY A MEMBER?</span>
           <Link href="/login">LOG IN ↗</Link>
         </div>
       </form>
-
       <USSNotice
         open={noticeOpen}
         kind={success ? "success" : "error"}

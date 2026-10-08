@@ -1,47 +1,83 @@
 "use client";
 
 import QRCode from "qrcode";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  Field as FormField,
+  Input,
+  Textarea,
+  FieldError,
+} from "@/components/ui";
 import { validImage } from "@/lib/cms";
 
+const fieldHints: Record<string, string> = {
+  Judul: "Judul utama yang tampil di halaman dan kartu Story.",
+  "Slug URL": "Alamat artikel. Gunakan huruf kecil dan tanda hubung.",
+  Ringkasan: "Ringkasan singkat untuk kartu Story dan pratinjau sosial.",
+  Kategori: "Kategori yang ditampilkan pada kartu dan artikel.",
+  Penulis: "Nama penulis yang ditampilkan pada artikel.",
+  "Isi artikel": "Isi lengkap yang dibaca pengunjung halaman Story.",
+  Cover: "Visual utama untuk daftar Story dan header artikel.",
+  "Nama event": "Nama publik untuk run atau event ini.",
+  Tanggal:
+    "Tanggal yang tampil pada kartu event. Gunakan format yang mudah dibaca.",
+  Lokasi: "Lokasi pertemuan yang tampil pada event.",
+  "Kuota contoh":
+    "Jumlah peserta pada demo; kapasitas produksi ditentukan server.",
+  "Nama tampilan": "Nama yang ditampilkan pada profil member.",
+  "Nama Member baru": "Gunakan nama fiktif untuk akun demo.",
+  Headline: "Judul utama yang terlihat pada hero halaman.",
+  Deskripsi: "Teks pengantar yang terlihat di bawah headline.",
+  "Footer note": "Catatan yang ditampilkan pada footer publik.",
+  Caption: "Keterangan singkat untuk foto di galeri.",
+  "Cari Stories": "Cari judul Story dalam daftar demo di perangkat ini.",
+};
 export function Field({
   label,
   value,
   onChange,
   multiline = false,
   type = "text",
+  hint,
+  error,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   multiline?: boolean;
   type?: string;
+  hint?: string;
+  error?: string;
 }) {
-  const id = useId();
   return (
-    <div className="cms-field">
-      <label htmlFor={id}>{label}</label>
+    <FormField
+      label={label}
+      hint={
+        hint ??
+        fieldHints[label] ??
+        (label.includes("URL")
+          ? "Gunakan URL HTTPS untuk visual ini; pratinjau disimpan di browser untuk demo."
+          : "Nilai untuk pratinjau demo di browser ini.")
+      }
+      error={error}
+      className="cms-field"
+    >
       {multiline ? (
-        <textarea
+        <Textarea
           className="resize-none"
-          id={id}
-          style={{ resize: "none" }}
-          rows={5}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(event) => onChange(event.target.value)}
         />
       ) : (
-        <input
-          id={id}
+        <Input
           type={type}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(event) => onChange(event.target.value)}
         />
       )}
-    </div>
+    </FormField>
   );
 }
-
 export function ImageField({
   label,
   value,
@@ -102,7 +138,7 @@ export function ImageField({
       <small>
         JPG, PNG, WebP · maks. 2 MB · disimpan di browser untuk demo.
       </small>
-      {error && <p role="alert">{error}</p>}
+      <FieldError>{error}</FieldError>
       {value && validImage(value) && (
         <img className="cms-image-preview" src={value} alt="Preview foto" />
       )}
@@ -159,7 +195,10 @@ async function brandedQrPng(value: string) {
 
   const maxLogoWidth = inner * 0.76;
   const maxLogoHeight = inner * 0.42;
-  const ratio = Math.min(maxLogoWidth / logo.width, maxLogoHeight / logo.height);
+  const ratio = Math.min(
+    maxLogoWidth / logo.width,
+    maxLogoHeight / logo.height,
+  );
   const logoWidth = logo.width * ratio;
   const logoHeight = logo.height * ratio;
   ctx.drawImage(

@@ -4,6 +4,12 @@ import Link from "next/link";
 import { useDemo } from "./DemoProvider";
 import { Field, ImageField, Barcode, DownloadBarcode } from "./Controls";
 import {
+  Field as FormField,
+  Select,
+  PageLoading,
+  Input,
+} from "@/components/ui";
+import {
   Role,
   roleLabels,
   can,
@@ -29,7 +35,7 @@ export default function Workspace({ member = false }: { member?: boolean }) {
   if (!ready)
     return (
       <main className="cms-shell">
-        <p role="status">Memuat workspace…</p>
+        <PageLoading label="Memuat workspace…" />
       </main>
     );
   const role = account?.role || "member";
@@ -284,9 +290,11 @@ export default function Workspace({ member = false }: { member?: boolean }) {
                     ),
                   )}
                 </div>
-                <label className="cms-field">
-                  Posisi fokus: {state.draft.focus}%
-                  <input
+                <FormField
+                  label={`Posisi fokus: ${state.draft.focus}%`}
+                  hint="Atur posisi visual utama pada pratinjau hero."
+                >
+                  <Input
                     type="range"
                     min="0"
                     max="100"
@@ -301,10 +309,12 @@ export default function Workspace({ member = false }: { member?: boolean }) {
                       )
                     }
                   />
-                </label>
-                <label className="cms-field">
-                  Overlay: {state.draft.overlay}%
-                  <input
+                </FormField>
+                <FormField
+                  label={`Overlay: ${state.draft.overlay}%`}
+                  hint="Atur lapisan gelap agar teks hero mudah dibaca."
+                >
+                  <Input
                     type="range"
                     min="0"
                     max="85"
@@ -322,7 +332,7 @@ export default function Workspace({ member = false }: { member?: boolean }) {
                       )
                     }
                   />
-                </label>
+                </FormField>
                 <Field
                   label="Footer note"
                   value={state.draft.footer}
@@ -478,9 +488,11 @@ export default function Workspace({ member = false }: { member?: boolean }) {
                       value={story.cover}
                       onChange={(v) => setStory({ ...story, cover: v })}
                     />
-                    <label className="cms-field">
-                      Status
-                      <select
+                    <FormField
+                      label="Status"
+                      hint="Draft tidak tampil publik. Published tampil di daftar dan artikel."
+                    >
+                      <Select
                         value={story.status}
                         onChange={(e) =>
                           setStory({
@@ -492,8 +504,8 @@ export default function Workspace({ member = false }: { member?: boolean }) {
                         <option value="draft">Draft</option>
                         <option value="published">Published</option>
                         <option value="archived">Arsip</option>
-                      </select>
-                    </label>
+                      </Select>
+                    </FormField>
                     <label className="cms-check">
                       <input
                         type="checkbox"
@@ -786,9 +798,11 @@ export default function Workspace({ member = false }: { member?: boolean }) {
                       <strong>{a.name}</strong>
                       <small className="cms-id">{a.memberId}</small>
                     </div>
-                    <label>
-                      Role
-                      <select
+                    <FormField
+                      label="Role demo"
+                      hint="Simulasi akses di browser ini; bukan izin produksi."
+                    >
+                      <Select
                         disabled={a.id === account.id}
                         aria-label={"Role " + a.name}
                         value={a.role}
@@ -811,8 +825,8 @@ export default function Workspace({ member = false }: { member?: boolean }) {
                             {label}
                           </option>
                         ))}
-                      </select>
-                    </label>
+                      </Select>
+                    </FormField>
                   </div>
                 ))}
                 <p>
