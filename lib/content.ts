@@ -1,4 +1,4 @@
-import { query } from "@/lib/db";
+import { isDatabaseConfigured, query } from "@/lib/db";
 import { runs as fallbackRuns, type Run } from "@/data/site";
 
 export type CmsHero = {
@@ -161,6 +161,8 @@ function formatRun(row: {
 }
 
 export async function getRuns(): Promise<Run[]> {
+  if (!isDatabaseConfigured()) return fallbackRuns;
+
   try {
     const rows = await query<{
       slug: string;
@@ -187,9 +189,11 @@ export async function getRuns(): Promise<Run[]> {
        ORDER BY e.start_at NULLS LAST, e.created_at`
     );
 
-    return rows.length ? rows.map(formatRun) : fallbackRuns;
+    return rows.map(formatRun);
   } catch {
-    return fallbackRuns;
+    // When the live database is configured, never replace an unavailable or
+    // intentionally empty event list with presentation/demo events.
+    return [];
   }
 }
 
@@ -245,7 +249,6 @@ export async function getPartners(): Promise<string[]> {
   }
 }
 
-
 export type SiteSettings = {
   instagram: string;
   strava: string;
@@ -285,7 +288,6 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     return fallback;
   }
 }
-
 
 export type PublicMediaItem = {
   id: string;
