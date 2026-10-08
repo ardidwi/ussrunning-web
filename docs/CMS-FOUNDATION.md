@@ -19,3 +19,19 @@ Three role previews, role-dependent menus, account UUID/barcode SVG download, me
 ## Deferred until backend
 
 Real login/signup/password recovery, server role enforcement, durable cross-device records, production media storage, registration/check-in and event tickets, article scheduling, SEO metadata per story, multi-user conflict control, full pagination, sponsor editor and remaining global CMS sections. Demo content changes do not publish to other visitors. No migrations executed.
+
+If a feature requires user identity:
+- Never trust client role claims.
+- Resolve identity from authenticated server session.
+
+If content must be editable from CMS:
+- Do not hardcode it in page components.
+- Add it to a CMS-backed content model.
+
+If a member registers for an event:
+- Do not reuse account barcode as ticket.
+- Generate a registration-specific pass.
+
+If adding media upload:
+- Do not store production binary as data URL.
+- Upload to configured storage and persist metadata only.

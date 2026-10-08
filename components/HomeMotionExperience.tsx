@@ -456,40 +456,58 @@ export default function HomeMotionExperience(props: Props) {
       requestDraw();
     };
 
-    // Continuous dynamic updates for Chapter 01 (Track) & Chapter 02 (People / Pace)
+    let startTime = 0;
+    let assemblyProgress = 0;
+
+    // Continuous dynamic updates for Chapter 01 (Living Track & Staged Gathering) & Chapter 02 (People / Pace Community)
     const updateDynamicTargets = (time: number) => {
+      if (!startTime) startTime = time;
+      const elapsedTotal = time - startTime;
+      assemblyProgress = reduced ? 1 : clamp(elapsedTotal / 1600);
+      const gatherEase = smoothstep(assemblyProgress);
+      const gatherDisp = (1 - gatherEase) * (visualWidth * 0.85);
+
       for (let i = 0; i < count; i++) {
         const n = i * 2;
-        // 1. Running Track Oval (surrounding the central USS logo across 5 lanes)
+        // Gathering spiral offset for initial assembly
+        const gAngle = phase[i] + (1 - gatherEase) * 4.2;
+        const gOffsetX = Math.cos(gAngle) * gatherDisp * (0.4 + random(i + 13) * 0.6);
+        const gOffsetY = Math.sin(gAngle) * gatherDisp * (0.4 + random(i + 29) * 0.6);
+
+        // 1. Chapter 01: Living Running Track Oval (surrounding central USS logo with continuous pulse & wave)
         const lane = i % MOTION.lanes;
-        const laneScale = 1 - lane * 0.042;
-        const trackSpeed = MOTION.trackSpeed * (1.16 - lane * 0.065);
+        const laneScale = 1 - lane * 0.045;
+        const trackSpeed = MOTION.trackSpeed * (1.18 - lane * 0.06);
         const trackAngle = phase[i] + time * trackSpeed;
         const trkCos = Math.cos(trackAngle),
           trkSin = Math.sin(trackAngle);
-        const trkX = (trkCos * 0.32 + Math.tanh(trkCos * 4.5) * 0.16) * visualWidth * laneScale;
-        const trkY = trkSin * visualHeight * (0.35 + lane * 0.035) * laneScale;
-        runningTrackTarget[n] = trkX;
-        runningTrackTarget[n + 1] = trkY;
+        // Living track with subtle sinusoidal breathing wave
+        const wave = Math.sin(trackAngle * 3 + time * 0.0012) * (visualHeight * 0.015);
+        const trkX = (trkCos * 0.33 + Math.tanh(trkCos * 4.2) * 0.15) * visualWidth * laneScale;
+        const trkY = (trkSin * visualHeight * (0.34 + lane * 0.038) + wave) * laneScale;
+        
+        runningTrackTarget[n] = trkX + gOffsetX;
+        runningTrackTarget[n + 1] = trkY + gOffsetY;
+
         if (i >= coreCount) {
-          ussCoreTarget[n] = trkX;
-          ussCoreTarget[n + 1] = trkY;
+          ussCoreTarget[n] = trkX + gOffsetX;
+          ussCoreTarget[n + 1] = trkY + gOffsetY;
         }
 
-        // 2. Chapter 02: Runner Packs & Pace Groups (Different Runners, Different Paces, One Movement)
+        // 2. Chapter 02: Runner Packs & Pace Groups (Different Runners, Different Paces, Converging Movement)
         const pIdx = packIndex[i];
         const pCfg = PACK_DEFS[pIdx];
-        const packAngle = pCfg.baseAngle + time * pCfg.velocity + phase[i] * 0.06;
+        const packAngle = pCfg.baseAngle + time * pCfg.velocity + phase[i] * 0.05;
         const pCos = Math.cos(packAngle),
           pSin = Math.sin(packAngle);
-        // Sweeping urban avenue route through the city
-        const routeX = (pCos * 0.34 + Math.sin(packAngle * 2) * 0.08) * visualWidth * pCfg.rx;
-        const routeY = (pSin * 0.32 + Math.cos(packAngle * 2) * 0.06) * visualHeight * pCfg.ry;
-        // Running stride cadence bounce (vertical & slight forward thrust)
+        // Sweeping urban avenue routes with organic curvature
+        const routeX = (pCos * 0.35 + Math.sin(packAngle * 2) * 0.07) * visualWidth * pCfg.rx;
+        const routeY = (pSin * 0.33 + Math.cos(packAngle * 2) * 0.05) * visualHeight * pCfg.ry;
+        // Running stride cadence bounce (vertical oscillation + forward footstrike impulse)
         const cadenceT = time * pCfg.cadence + cadencePhase[i];
         const strideY = Math.sin(cadenceT) * cadenceAmp[i];
-        const strideX = Math.cos(cadenceT) * (cadenceAmp[i] * 0.35);
-        // Pack drafting formation
+        const strideX = Math.cos(cadenceT) * (cadenceAmp[i] * 0.38);
+        // Pack drafting formation & spacing
         const formX = packLocalX[i] * visualWidth * pCfg.spread;
         const formY = packLocalY[i] * visualHeight * pCfg.spread;
 
@@ -626,20 +644,35 @@ export default function HomeMotionExperience(props: Props) {
         // Micro 3D Parallax Calculation
         const normPointerX = clamp((pointer.x - centerX) / Math.max(1, width * 0.5), -1, 1);
         const normPointerY = clamp((pointer.y - centerY) / Math.max(1, height * 0.5), -1, 1);
-        const yaw = (core * 0.012 + final * 0.016 + city * 0.009) * (canInteract && pointer.active ? normPointerX : 0);
-        const pitch = -(core * 0.008 + final * 0.012 + city * 0.007) * (canInteract && pointer.active ? normPointerY : 0);
+        const yaw = (core * 0.014 + final * 0.018 + city * 0.010) * (canInteract && pointer.active ? normPointerX : 0);
+        const pitch = -(core * 0.010 + final * 0.014 + city * 0.008) * (canInteract && pointer.active ? normPointerY : 0);
         const cosYaw = Math.cos(yaw),
           sinYaw = Math.sin(yaw);
         const cosPitch = Math.cos(pitch),
           sinPitch = Math.sin(pitch);
 
+        // Staged gathering ease for initial opening
+        const gatherIntro = reduced ? 1 : assemblyProgress;
+        const introScatter = (1 - smoothstep(gatherIntro)) * (visualWidth * 0.35);
+
         for (let i = 0; i < count; i++) {
           const n = i * 2,
             idle = reduced ? 0 : MOTION.idleDisplacement;
-          // Interpolate base target with subtle breathing
-          const baseX = a[n] + (b[n] - a[n]) * mix + Math.sin(animationTime * 0.0008 + i * 0.71) * idle;
-          const baseY = a[n + 1] + (b[n + 1] - a[n + 1]) * mix + Math.cos(animationTime * 0.001 + i * 0.43) * idle;
-          const zVal = depthZ[i] * 30;
+          
+          // Organic intermediate morph offset during transitions
+          const morphCurve = Math.sin(mix * Math.PI) * (visualWidth * 0.035);
+          const morphX = Math.sin(i * 0.37 + animationTime * 0.001) * morphCurve;
+          const morphY = Math.cos(i * 0.53 + animationTime * 0.0012) * morphCurve;
+
+          // Initial gathering dispersion factor for logo particles
+          const introAngle = phase[i] * 2 + i * 0.1;
+          const introX = Math.cos(introAngle) * introScatter * (0.3 + random(i + 15) * 0.7);
+          const introY = Math.sin(introAngle) * introScatter * (0.3 + random(i + 31) * 0.7);
+
+          // Interpolate base target with subtle breathing & organic morphing
+          const baseX = a[n] + (b[n] - a[n]) * mix + morphX + introX + Math.sin(animationTime * 0.0008 + i * 0.71) * idle;
+          const baseY = a[n + 1] + (b[n + 1] - a[n + 1]) * mix + morphY + introY + Math.cos(animationTime * 0.001 + i * 0.43) * idle;
+          const zVal = depthZ[i] * 32;
 
           // Restrained 3D rotation & depth perspective
           const x3d = baseX * cosYaw - zVal * sinYaw;
@@ -702,7 +735,7 @@ export default function HomeMotionExperience(props: Props) {
           const accent =
             accentSeed[i] <
             (city > 0.5 ? MOTION.particleStyle.cityAccentRatio : MOTION.particleStyle.logoAccentRatio);
-          const flame = city > 0.5 && monasTarget[n + 1] < -monasHeight * 0.38;
+          const flame = city > 0.5 && monasTarget[n + 1] < -monasHeight * 0.36;
           const density =
             (i < coreCount ? core : 0) * MOTION.particleStyle.coreDensity +
             final * MOTION.particleStyle.finalDensity;
