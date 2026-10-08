@@ -1,0 +1,73 @@
+{
+  "cases": [
+    {
+      "name": "pending",
+      "passed": true
+    },
+    {
+      "name": "suspended",
+      "passed": true
+    },
+    {
+      "name": "deactivated",
+      "passed": true
+    },
+    {
+      "name": "expired",
+      "passed": true
+    },
+    {
+      "name": "unavailable",
+      "passed": true
+    },
+    {
+      "name": "failure",
+      "passed": true
+    },
+    {
+      "name": "loading",
+      "passed": true
+    },
+    {
+      "name": "minimal validation, field focus, stable feedback and optional values",
+      "passed": true
+    },
+    {
+      "name": "save active",
+      "passed": true
+    },
+    {
+      "name": "save save-failure",
+      "passed": true
+    },
+    {
+      "name": "save stale",
+      "passed": true
+    },
+    {
+      "name": "save malformed",
+      "passed": true
+    },
+    {
+      "name": "save server-validation",
+      "passed": true
+    },
+    {
+      "name": "save save-expired",
+      "passed": true
+    },
+    {
+      "name": "unsaved navigation dialog keyboard, keep and discard",
+      "passed": true
+    },
+    {
+      "name": "actual route session expiry and safe intended profile target",
+      "passed": true
+    },
+    {
+      "name": "public and auth regression",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

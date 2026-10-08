@@ -1,3 +1,4 @@
+import MemberReference from "@/components/dashboard/MemberReference";
 import AuthReference from "@/components/auth/AuthReference";
 import AuthShell from "@/components/auth/AuthShell";
 import { getClientAuthPolicy } from "@/lib/auth/policy";
@@ -34,7 +35,8 @@ export default async function DesignSystemPage({
       </AuthShell>
     );
   }
-  if (surface === "admin" || surface === "member")
-    return <WorkspaceReference member={surface === "member"} />;
+  if (surface === "member")
+    return <MemberReference view={requested} scenario={scenario} />;
+  if (surface === "admin") return <WorkspaceReference />;
   return <FormReference />;
 }

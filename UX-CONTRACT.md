@@ -60,3 +60,13 @@ Canonical auth owners: components/auth/AuthShell.tsx, AuthFlow.tsx, AuthStatus.t
 Requests run only on explicit submit, with a synchronous duplicate lock and idle/submitting/settled result phases. Recoverable failures preserve values. Register transitions only on a trusted verification_required result, never client activation. Verification/reset success returns to sign in. Forgot recovery copy does not disclose account existence. Resend countdowns originate from response timing; authorization and rate limits remain backend-owned.
 
 Existing /login query views provide verification/forgot/reset and session-expiry presentation without route restructuring. Safe return paths exclude external URLs and auth/API/reference loops. Account statuses come from adapter results, never roles/query/localStorage. Lifecycle operations without a maintained backend contract fail honestly with unavailable feedback; the development reference remains production-inaccessible.
+
+## FE-03 member profile behavior
+
+Business sources: PRD sections 3, 7, 18–19; ERD proposed member_profiles; docs/FE-03-MEMBER-FRONTEND.md records the provisional boundary. BE-04 is absent; proposed ERD columns do not constitute an implemented API. Production does not infer active/verified status from the provider session, write legacy profiles, or manufacture completion.
+
+MemberDashboardShell owns member navigation and one main landmark. Mobile navigation reuses Modal; current links use aria-current. Profile sections reuse canonical Field/Input/FormSection/FormActions, Button, Toast and validation associations. ProfileCompletion only presents response percentage/missing fields. MemberFeedback reuses FE-02 AuthStatus, code normalization, verification route and safe return paths.
+
+Profile saves are pessimistic, submit-locked and revision-aware. Recoverable failures preserve edits; conflict requires an explicit return/reload rather than silently overwriting. Internal links and sign-out use MemberNavigationGuard's discard dialog; actual unload uses beforeunload. Same-page anchors remain usable. Browser history navigation is not comprehensively blocked. Sensitive edits are not persisted in browser storage. Restricted responses remove protected form content. Optional marketing controls and unsupported profile fields wait for BE-04; registration remains the owner of required privacy consent.
+
+Member route titles follow `{Page} — USS Running`. Controlled errors leave navigation and sign-in/retry available; unavailable events are distinguished from a known empty registration list. The guarded reference uses fictional data and cannot activate in production.

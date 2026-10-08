@@ -97,3 +97,7 @@ HUD, timeline and 5000m progress. Its rendering engine is unchanged.
 ## FE-02 authentication flows
 
 AuthShell preserves the existing login visual, typography and scroll composition; join keeps its crew panel. components/auth/auth-flows.css owns composition and uses FE-01 tokens without new colors, fonts or control variants. Critical errors remain inline; account outcomes use restrained bordered status blocks. Labels and policy text stay readable on phones.
+
+## FE-03 member workspace
+
+MemberDashboardShell owns a 240px desktop sidebar and a modal menu below 768px, with document scrolling throughout. The overview uses a restrained Impact welcome, square bordered identity/completion panels, and readable Arial information. Member composition lives in components/dashboard/member-dashboard.css; control tokens stay in ui.css. Existing unused legacy dashboard selectors were retired from cms.css. No public shell, motion or brand color changed.
