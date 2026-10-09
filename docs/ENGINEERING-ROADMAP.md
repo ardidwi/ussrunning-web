@@ -70,9 +70,10 @@ Discovery date: 2026-10-09 (Asia/Jakarta).
 | Repository root | `C:\Users\ardid\Documents\ussrunning-web` |
 | Starting main and origin/main | Both `8eb9e394c2c6b7aa60221232d3f64b02394e7c84`; remote main independently checked. |
 | Original worktree | `feature/member-card-rbac-frontend`, starting HEAD `a91f910baf6d1b11e045a8fc69cf420287a9651b`; dirty unrelated work excluded. |
+| Main foundation/policy integration | `f4c6fcb2fcb32c5d3c6f916bd7d8cd4b3168b0a9` integrates all completed foundation rows below plus policy task `b00142baf5b59ea31a1b49c87d867bf46cf4857b`; main tree exactly matched the tested task tree. |
 | Verified integration baseline | `integration/pre-fe04-baseline` / `ffccaa0a75edce41595d8a8d376659d655b8de3f` — VERIFIED local integration with the documented lint/hydration/provider limits. |
 | Isolated checkout | `C:\Users\ardid\Documents\ussrunning-web-pre-fe04-baseline`; only committed foundation sources. |
-| Root baseline | `AGENTS.md`, commit `a91f910baf6d1b11e045a8fc69cf420287a9651b`, preserved intact. |
+| Root instructions | Historical foundation instruction commit `a91f910baf6d1b11e045a8fc69cf420287a9651b`; current early-development policy commit `b00142baf5b59ea31a1b49c87d867bf46cf4857b`, preserving unrelated rule bodies. |
 | Existing consolidation | `1670bae` has FE-03 `e80d3f2` as first parent and BE-06 `fc1c097` as second parent. |
 | Dependency policy | [AUTH-DEPENDENCY-BASELINE.md](AUTH-DEPENDENCY-BASELINE.md), preserved from approved repair history. |
 | Backend contracts | [DATABASE-FOUNDATION.md](DATABASE-FOUNDATION.md), [AUTH-ACCOUNT-LIFECYCLE.md](AUTH-ACCOUNT-LIFECYCLE.md), [EMAIL-VERIFICATION.md](EMAIL-VERIFICATION.md), [MEMBER-PROFILE-SERVICE.md](MEMBER-PROFILE-SERVICE.md), [MEMBER-CARD-SERVICE.md](MEMBER-CARD-SERVICE.md), [RBAC-AUDIT-FOUNDATION.md](RBAC-AUDIT-FOUNDATION.md). |
@@ -256,7 +257,7 @@ Agents still inspect Git state, dirty files, contracts and history. Intended nex
 | Date | Change | Evidence |
 | --- | --- | --- |
 | 2026-10-09 | Established roadmap, actual foundation/repair parent map, cutover boundaries and isolated forward-only integration. | Starting HEAD a91f910; all foundations and approved repair heads included. Integrated regression passed; exact counts and exceptions in PRE-FE04-INTEGRATION-VALIDATION.md. |
-| 2026-10-09 | Enabled temporary EARLY DEVELOPMENT FAST-FEEDBACK MODE, main/Vercel manual-audit workflow, lifecycle exit criteria and delivery evidence gates. | Policy branch chore/early-development-delivery from verified ffccaa0; Fresh policy-tree validation: npm ci/deps:check/build/standalone TypeScript passed; backend 106/106 and both FE contracts passed. Existing next lint failed as documented. Task/main/deployment SHAs are recorded after execution. |
+| 2026-10-09 | Enabled temporary EARLY DEVELOPMENT FAST-FEEDBACK MODE, main/Vercel manual-audit workflow, lifecycle exit criteria and delivery evidence gates. | Policy branch chore/early-development-delivery from verified ffccaa0; Fresh policy-tree validation: npm ci/deps:check/build/standalone TypeScript passed; backend 106/106 and both FE contracts passed. Existing next lint failed as documented. Task commit b00142baf5b59ea31a1b49c87d867bf46cf4857b; main integration f4c6fcb2fcb32c5d3c6f916bd7d8cd4b3168b0a9 pushed. GitHub Vercel check confirmed deployment started; final deployment state/SHA/core-page checks are reported after verification. |
 
 ### Verified integration evidence
 
