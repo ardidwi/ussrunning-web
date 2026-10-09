@@ -13,7 +13,8 @@
     "email:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/email-verification.test.mjs",
     "rbac:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/rbac-history.test.mjs",
     "member-card:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/member-card.test.mjs",
-    "member:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/member-profile.test.mjs"
+    "member:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/member-profile.test.mjs",
+    "deps:check": "npm ls --all"
   },
   "dependencies": {
     "@neondatabase/auth": "0.5.0-beta",
@@ -32,5 +33,12 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.0"
+  },
+  "overrides": {
+    "@better-auth/core": "1.6.23",
+    "@neondatabase/auth-ui@0.3.0-beta": {
+      "@daveyplate/better-auth-ui": "3.3.15"
+    },
+    "@better-fetch/fetch": "1.3.1"
   }
 }
