@@ -1,4 +1,4 @@
-import MemberLoading from "@/components/dashboard/MemberLoading";
+import { DashboardLoading } from "@/features/member-dashboard/components/DashboardLoading";
 export default function Loading() {
-  return <MemberLoading />;
+  return <DashboardLoading />;
 }

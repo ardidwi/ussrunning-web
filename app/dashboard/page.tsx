@@ -1,6 +1,7 @@
-import MemberOverview from "@/components/dashboard/MemberOverview";
-import { loadMember } from "@/lib/member/server";
+import { loadDashboard } from "@/features/member-dashboard/api/server";
+import { DashboardScreen } from "@/features/member-dashboard/components/DashboardScreen";
 export const metadata = { title: "MY USS — USS Running" };
 export default async function DashboardPage() {
-  return <MemberOverview result={await loadMember()} />;
+  const initial = await loadDashboard();
+  return <DashboardScreen key={JSON.stringify(initial)} initial={initial} />;
 }
