@@ -1,0 +1,32 @@
+[
+  {
+    "exitCode": 0,
+    "suite": "database-foundation",
+    "count": "ℹ tests 23"
+  },
+  {
+    "exitCode": 0,
+    "suite": "auth-account-lifecycle",
+    "count": "ℹ tests 18"
+  },
+  {
+    "exitCode": 0,
+    "suite": "email-verification",
+    "count": "ℹ tests 19"
+  },
+  {
+    "exitCode": 0,
+    "suite": "member-profile",
+    "count": "ℹ tests 21"
+  },
+  {
+    "exitCode": 0,
+    "suite": "member-card",
+    "count": "ℹ tests 6"
+  },
+  {
+    "exitCode": 0,
+    "suite": "rbac-history",
+    "count": "ℹ tests 19"
+  }
+]

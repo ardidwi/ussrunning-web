@@ -3,6 +3,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useTransition, type ReactNode } from "react";
 import { Button, Modal, ToastProvider } from "@/components/ui";
+import { PermissionGate } from "@/features/permissions/Permissions";
+import { CMS_ACCESS } from "@/features/permissions/model";
 import MemberNavigationGuard, { useMemberLeave } from "./MemberNavigationGuard";
 const navigation = [
   ["/dashboard", "Overview"],
@@ -100,6 +102,11 @@ export default function MemberDashboardShell({
               <Link className="uss-member-back" href="/">
                 Back to USS Running ↗
               </Link>
+              <PermissionGate anyOf={CMS_ACCESS}>
+                <Link className="uss-member-back" href="/admin">
+                  USS CMS ↗
+                </Link>
+              </PermissionGate>
               {signOutAction && <MemberSignOut action={signOutAction} />}
             </aside>
             <main
@@ -126,6 +133,11 @@ export default function MemberDashboardShell({
             >
               Back to USS Running ↗
             </Link>
+            <PermissionGate anyOf={CMS_ACCESS}>
+              <Link className="uss-member-back" href="/admin">
+                USS CMS ↗
+              </Link>
+            </PermissionGate>
             {signOutAction && <MemberSignOut action={signOutAction} />}
           </Modal>
         </div>

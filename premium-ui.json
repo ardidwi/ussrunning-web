@@ -16,7 +16,8 @@
     "app/dashboard",
     "app/login",
     "app/join",
-    "app/stories"
+    "app/stories",
+    "features"
   ],
   "locale": "id-ID",
   "canonicalMap": "UX-CONTRACT.md",
@@ -27,5 +28,8 @@
     "Toast",
     "CRUD"
   ],
-  "ownership": { "Select/Listbox": "native" }
+  "ownership": {
+    "Select/Listbox": "native",
+    "Date": "native"
+  }
 }
