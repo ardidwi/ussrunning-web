@@ -16,6 +16,38 @@ USS Running comprises a public website, free membership, authentication, account
 - CMS content != application configuration: editorial publication differs from runtime/environment policy.
 - Media metadata != media binary: database references/ownership differ from object storage.
 
+### Repository lifecycle and delivery policy
+
+| Phase | State | Delivery controls |
+| --- | --- | --- |
+| PHASE 1 — EARLY DEVELOPMENT | CURRENT | Auto-integrate validated main: allowed. Auto-push main: allowed. Vercel deployment after main: allowed. Manual product audit: expected. |
+| PHASE 2 — INTERNAL ALPHA | FUTURE | Reassess real users/data/operational reliance; establish stricter preview/staging/review gates before entry. |
+| PHASE 3 — CLOSED BETA | FUTURE | Controlled real-user releases through feature -> preview/staging -> review -> main -> production. |
+| PHASE 4 — PRODUCTION | FUTURE | Explicit release review, monitoring, migration/rollback and protected-environment controls. |
+
+USS Running is currently in **EARLY DEVELOPMENT FAST-FEEDBACK MODE**. As declared for this phase, there are no real production users or critical live business transactions. Priorities: rapid iteration, manual product review, continuous UI/UX feedback, early discovery of missing behavior and reduced backend/frontend integration lag. Security, data integrity, scalable architecture and relevant production-like discipline still apply.
+
+`main = latest known-good integrated development version`. Its Vercel deployment is the **live development review environment**, even if Vercel calls the Git target production. This temporary designation does not weaken data safety or claim production readiness.
+
+Delivery: `implement -> test/regression -> review diff -> commit -> push task branch -> integrate current main -> push main -> verify Vercel state/SHA/core pages -> manual product audit -> next iteration`. Feature branches remain preferred for meaningful/risky work; small low-risk changes may start directly on clean current main under AGENTS.md. Normal validated integration needs no separate merge approval. Do not leave completed work isolated indefinitely, force push or rewrite published history. Repair forward; severe blocking integrations that cannot be repaired immediately use normal revert commits.
+
+Agents verify deployment startup, successful completion, exact SHA and relevant core-page/runtime behavior, then provide the URL/limitations for manual audit. Human product audit is expected, never fabricated as completed by automated checks. Blocked verification must be reported explicitly. Persistent database/storage operations remain separately scoped and tested under AGENTS.md; this phase grants no destructive data authority.
+
+### Exit criteria for early development
+
+Reconsider this mode immediately when any becomes true:
+
+- Real members begin using the product.
+- Real event registrations are accepted.
+- Attendance/check-in becomes operational.
+- Production emails are sent to users.
+- Real personal data is stored.
+- Production payments or money flows are introduced.
+- Sponsors/partners rely on the application.
+- Uptime becomes operationally important.
+
+Before later phases, explicitly revise rules toward `feature -> preview/staging -> review -> main -> production` with stricter release controls. Phase 1 authorization does not apply forever.
+
 ## B. Status legend
 
 | Status | Meaning |
@@ -38,13 +70,15 @@ Discovery date: 2026-10-09 (Asia/Jakarta).
 | Repository root | `C:\Users\ardid\Documents\ussrunning-web` |
 | Starting main and origin/main | Both `8eb9e394c2c6b7aa60221232d3f64b02394e7c84`; remote main independently checked. |
 | Original worktree | `feature/member-card-rbac-frontend`, starting HEAD `a91f910baf6d1b11e045a8fc69cf420287a9651b`; dirty unrelated work excluded. |
-| Integration target | `integration/pre-fe04-baseline` — VERIFIED local integration, with explicit lint/hydration/provider limitations below. |
+| Verified integration baseline | `integration/pre-fe04-baseline` / `ffccaa0a75edce41595d8a8d376659d655b8de3f` — VERIFIED local integration with the documented lint/hydration/provider limits. |
 | Isolated checkout | `C:\Users\ardid\Documents\ussrunning-web-pre-fe04-baseline`; only committed foundation sources. |
 | Root baseline | `AGENTS.md`, commit `a91f910baf6d1b11e045a8fc69cf420287a9651b`, preserved intact. |
 | Existing consolidation | `1670bae` has FE-03 `e80d3f2` as first parent and BE-06 `fc1c097` as second parent. |
 | Dependency policy | [AUTH-DEPENDENCY-BASELINE.md](AUTH-DEPENDENCY-BASELINE.md), preserved from approved repair history. |
 | Backend contracts | [DATABASE-FOUNDATION.md](DATABASE-FOUNDATION.md), [AUTH-ACCOUNT-LIFECYCLE.md](AUTH-ACCOUNT-LIFECYCLE.md), [EMAIL-VERIFICATION.md](EMAIL-VERIFICATION.md), [MEMBER-PROFILE-SERVICE.md](MEMBER-PROFILE-SERVICE.md), [MEMBER-CARD-SERVICE.md](MEMBER-CARD-SERVICE.md), [RBAC-AUDIT-FOUNDATION.md](RBAC-AUDIT-FOUNDATION.md). |
 | Frontend contracts | [FE-01-REPORT.md](FE-01-REPORT.md), [FE-02-AUTH-FRONTEND.md](FE-02-AUTH-FRONTEND.md), [FE-03-MEMBER-FRONTEND.md](FE-03-MEMBER-FRONTEND.md). |
+
+Known open engineering limitations: live Neon provider authentication is not fully validated; hydration-warning root cause remains open; Next 16 next lint tooling remains unsupported. These limits survive this policy change and must not be reported as resolved.
 
 ### Git dependency map
 
@@ -191,17 +225,17 @@ Frontend must consume actual actions/DTOs/policies, never invent backend contrac
 | Administration | BE-16–18 + FE-15–16 | PLANNED; elevated permissions, audited mutations, bounded history. |
 | Production hardening | BE-19+ + FE-18+ + SEC/QA/OPS | PLANNED; staging provider/migration/rollback/scale evidence and release review. |
 
-Consolidate completed branches forward-only with normal merges or reviewed traceable cherry-picks/reconciliation. Preserve history, validate the combined manifest/lockfile, and rerun applicable regressions. Checkpoints grant no permission to merge main or deploy.
+Consolidate completed branches forward-only with normal merges or reviewed traceable cherry-picks/reconciliation. Preserve history, validate the combined manifest/lockfile, and rerun applicable regressions. During Phase 1, validated task/checkpoint integration into main and its Vercel Git deployment follow AGENTS.md sections 26–30; later phases use revised release gates. Checkpoint labels do not bypass validation or data safety.
 
 ## I. Definition of done and future workflow
 
-Reference AGENTS.md for the global definition of done. Roadmap tasks additionally require actual dependency/contract evidence, final branch/implementation commit, rerun validation summary, limits/cutover boundaries and a pushed branch. Integration is VERIFIED only after deterministic install, complete graph, build, standalone TypeScript, applicable domain/frontend/browser/visual regression and safety checks pass together. Unsupported lint and unvalidated provider/device boundaries remain explicit exceptions rather than fabricated passes.
+Reference AGENTS.md for the global definition of done. Roadmap tasks additionally require actual dependency/contract evidence, final branch/implementation commit, rerun validation summary, limits/cutover boundaries and pushed task work. During EARLY DEVELOPMENT, main integration, main push and Vercel checks are normal completion gates; record integration commit and deployed state/SHA/URL, or report verification blocked. Integration is VERIFIED only after deterministic install, complete graph, build, standalone TypeScript, applicable domain/frontend/browser/visual regression and safety checks pass together. Unsupported lint and unvalidated provider/device boundaries remain explicit exceptions rather than fabricated passes.
 
-After a BE/FE task completes and is pushed:
+After a BE/FE task completes, is pushed and is integrated into main during EARLY DEVELOPMENT:
 
 1. Update status on the task branch where appropriate; later flow into integration.
-2. Record branch and final implementation commit, avoiding self-referential documentation SHAs.
-3. Record actual validation summary/evidence.
+2. Record branch if used, final task commit and main integration commit when applicable, avoiding self-referential documentation SHAs.
+3. Record actual validation, deployment state/SHA/URL and manual-audit handoff; blocked checks stay explicit.
 4. Record newly discovered dependencies/limitations.
 5. Keep future tasks PLANNED.
 6. Never mark integration verified before combined regression passes.
@@ -215,13 +249,14 @@ Use BE-05 Member Card Service as the backend contract.
 Follow the roadmap dependencies and update task status when complete.
 ```
 
-Agents still inspect Git state, dirty files, contracts and history. Intended next sequence: FE-04 Member Card, then FE-05 RBAC-Aware CMS. This baseline task implements neither those tasks nor BE-07.
+Agents still inspect Git state, dirty files, contracts and history. Intended next sequence: FE-04 Member Card, then FE-05 RBAC-Aware CMS. This policy task implements neither those tasks nor BE-07. Preserve their planned status and verified baseline scope; unrelated branches require separate validation.
 
 ## J. Change log
 
 | Date | Change | Evidence |
 | --- | --- | --- |
 | 2026-10-09 | Established roadmap, actual foundation/repair parent map, cutover boundaries and isolated forward-only integration. | Starting HEAD a91f910; all foundations and approved repair heads included. Integrated regression passed; exact counts and exceptions in PRE-FE04-INTEGRATION-VALIDATION.md. |
+| 2026-10-09 | Enabled temporary EARLY DEVELOPMENT FAST-FEEDBACK MODE, main/Vercel manual-audit workflow, lifecycle exit criteria and delivery evidence gates. | Policy branch chore/early-development-delivery from verified ffccaa0; Fresh policy-tree validation: npm ci/deps:check/build/standalone TypeScript passed; backend 106/106 and both FE contracts passed. Existing next lint failed as documented. Task/main/deployment SHAs are recorded after execution. |
 
 ### Verified integration evidence
 
