@@ -10,7 +10,8 @@
     "db:migrate": "node --env-file-if-exists=.env.local scripts/database/migrate.mjs",
     "db:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/database-foundation.test.mjs",
     "auth:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/auth-account-lifecycle.test.mjs",
-    "email:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/email-verification.test.mjs"
+    "email:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/email-verification.test.mjs",
+    "deps:check": "npm ls --all"
   },
   "dependencies": {
     "@neondatabase/auth": "0.5.0-beta",
@@ -29,5 +30,12 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.0"
+  },
+  "overrides": {
+    "@better-auth/core": "1.6.23",
+    "@better-fetch/fetch": "1.3.1",
+    "@neondatabase/auth-ui@0.3.0-beta": {
+      "@daveyplate/better-auth-ui": "3.3.15"
+    }
   }
 }
