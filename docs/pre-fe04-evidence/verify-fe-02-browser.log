@@ -1,0 +1,52 @@
+{
+  "responsive": 53,
+  "flows": [
+    "Login empty and invalid email: first error focused, no request",
+    "Login INVALID_CREDENTIALS",
+    "Login EMAIL_NOT_VERIFIED",
+    "Login ACCOUNT_SUSPENDED",
+    "Login ACCOUNT_DEACTIVATED",
+    "Login ACCOUNT_NOT_PROVISIONED",
+    "Login network",
+    "Login UNKNOWN_ERROR",
+    "Login malformed",
+    "Login UNAUTHENTICATED",
+    "Login success, password visibility and duplicate submit prevention",
+    "Register empty/mismatch/consent and verification-required success",
+    "Register duplicate email preserved",
+    "Long name/email validation and layout",
+    "Verification success",
+    "Verification VERIFICATION_EXPIRED",
+    "Verification VERIFICATION_INVALID",
+    "Verification already",
+    "Verification UNKNOWN_ERROR",
+    "Verification network",
+    "Code verification uses same flow",
+    "Resend success",
+    "Resend cooldown",
+    "Resend rate",
+    "Resend UNKNOWN_ERROR",
+    "Forgot success",
+    "Forgot network",
+    "Reset success",
+    "Reset RESET_INVALID",
+    "Reset RESET_EXPIRED",
+    "Reset UNKNOWN_ERROR",
+    "Reset missing token",
+    "Session expired and unsafe return fallback",
+    "Production adapter unavailable: /join",
+    "Production adapter unavailable: /login?flow=forgot"
+  ],
+  "accessibility": [
+    "Labels/descriptions/autocomplete, first-error focus, keyboard password toggle and live feedback"
+  ],
+  "regression": [
+    "/",
+    "/about",
+    "/runs",
+    "/membership",
+    "/stories",
+    "/partners"
+  ],
+  "errors": []
+}

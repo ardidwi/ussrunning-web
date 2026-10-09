@@ -1,0 +1,66 @@
+{
+  "cases": [
+    {
+      "route": "/join",
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "route": "/design-system?surface=member&flow=profile&scenario=active",
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "route": "/about",
+      "width": 320,
+      "overflow": false
+    },
+    {
+      "route": "/join",
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "route": "/design-system?surface=member&flow=profile&scenario=active",
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "route": "/about",
+      "width": 375,
+      "overflow": false
+    },
+    {
+      "route": "/join",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "route": "/design-system?surface=member&flow=profile&scenario=active",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "route": "/about",
+      "width": 768,
+      "overflow": false
+    },
+    {
+      "route": "/join",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "route": "/design-system?surface=member&flow=profile&scenario=active",
+      "width": 1024,
+      "overflow": false
+    },
+    {
+      "route": "/about",
+      "width": 1024,
+      "overflow": false
+    }
+  ],
+  "warnings": [],
+  "method": "Fresh pages, no CSS zoom or screenshot style mutation before hydration; actual required 320/375/768/1024 widths."
+}

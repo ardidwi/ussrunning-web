@@ -1,0 +1,15 @@
+
+> ussrunning-web@0.1.0 db:migrate
+> node --env-file-if-exists=.env.local scripts/database/migrate.mjs --dry-run
+
+.env.local not found. Continuing without it.
+001_extensions.sql: 6 statements / d01a36076b3f36996122cfe965fa22560a284f795230f28305bdd1af004e1ad1
+002_identity.sql: 14 statements / 02ced7655bc84b26d53b6646c380e1a575ecd7dfef0cdfc4f43315d211cc3f04
+003_content.sql: 24 statements / 3acaadaec29a0aeeab2b637b3e03917674d683dabcdbe2ea1629f9f2cc610cf3
+004_events.sql: 23 statements / a8b8cde44ee616ba303e31e07da4ae26a87eb5174fab4706b19ce9d42b858c93
+005_notifications_audit.sql: 10 statements / f00c53d3b5e3753cfe4ebbe5d8196c3181d5a131d1ce67d9e85d090831dc7058
+006_reference_protection.sql: 6 statements / dce1568cc242c253d29b2aca43976620969c68693904ff56a432858692f4b136
+007_event_identity_anchors.sql: 6 statements / ed212e249c1a664221fb7372064d019aacf2bcbbc6c19a0f9d83cdf794487784
+008_optional_profile_name.sql: 1 statements / 912ddd2321b74a112518a3537e86fd1843e6258c9f4beb514d2e50eab67d5a26
+009_email_verification.sql: 8 statements / 9ff25b4825536d0f250ec53121886fdd6f16854195ea0c6a76b9de1430ba1869
+Offline plan only; no database accessed. Use --status for target history.

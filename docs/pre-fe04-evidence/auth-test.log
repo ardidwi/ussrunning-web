@@ -1,0 +1,30 @@
+
+> ussrunning-web@0.1.0 auth:test
+> node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/auth-account-lifecycle.test.mjs
+
+✔ new trusted user provisions pending account, minimal profile and only member role (4418.6607ms)
+✔ repeat and parallel provisioning return the same account with one profile and role (58.3667ms)
+✔ independent opaque identities are unique, permanent and contain no PII (48.3768ms)
+✔ missing provider/email are controlled; missing name stays NULL (15.8819ms)
+✔ duplicate email and changed provider email cannot merge/rebind accounts (44.2487ms)
+✔ partially existing account repairs profile/member assignment without changing identity or status (36.4976ms)
+✔ mandatory role failure rolls back account/profile and retry recovers atomically (30.62ms)
+✔ pending cannot pass active guard, even if provider says email verified (40.2433ms)
+✔ internal verification activation is email-bound, idempotent and transactional (78.5758ms)
+✔ suspended/deactivated reject protected server access and cannot be reactivated by verification (98.6696ms)
+✔ unauthenticated requests never provision or return an account (0.9444ms)
+✔ client supplied role/account identity ignored by input-free action (12.3722ms)
+✔ missing config, unavailable DB/provider and raw errors are safe (2.0878ms)
+✔ new server services work with BE-01 non-owner runtime grants (31.0343ms)
+✔ legacy guard blocks mapped suspended/deactivated identities, leaves unmapped/pending alone (14.9626ms)
+✔ legacy pre-migration schema absence is compatible; unexpected DB errors fail closed (4.6086ms)
+✔ actual auth config accessor rejects missing configuration and requests silent provider logging (15.7049ms)
+✔ provider names/IDs containing SQL syntax remain data and no passwords exist in application schema (84.2491ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5863.7745
