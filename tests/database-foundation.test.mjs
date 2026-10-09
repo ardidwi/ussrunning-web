@@ -12,6 +12,7 @@ const require = createRequire(import.meta.url);
 const ts = require('typescript');
 const pg = new PGlite({extensions:{citext,pgcrypto}});
 const migrations = await loadMigrations(new URL('../database/migrations/',import.meta.url));
+const nextVersion = String(Number(migrations.at(-1).version)+1).padStart(3,'0');
 const query = async (text,params=[]) => (await pg.query(text,params)).rows;
 const adapter = { query, transaction: statements => pg.transaction(async tx => {
   for (const s of statements) await tx.query(s.text,s.params);
@@ -47,10 +48,10 @@ test('applied migration drift and out-of-order history fail closed', async () =>
   assert.throws(()=>planMigrations(migrations,[applied[1]]),/ordered prefix/);
 });
 test('failed batch rolls back DDL and migration ledger atomically', async () => {
-  const bad = {version:'010',filename:'010_failure.sql',checksum:'a'.repeat(64),statements:['CREATE TABLE uss.rollback_probe(id integer)','SELECT * FROM uss.missing_table']};
+  const bad = {version:nextVersion,filename:nextVersion+'_failure.sql',checksum:'a'.repeat(64),statements:['CREATE TABLE uss.rollback_probe(id integer)','SELECT * FROM uss.missing_table']};
   await assert.rejects(migrate(adapter,[...migrations,bad]),e=>e.code==='42P01');
   assert.equal((await query("SELECT to_regclass('uss.rollback_probe') AS t"))[0].t,null);
-  assert.equal((await query("SELECT count(*)::int AS n FROM uss_migrations.schema_migrations WHERE version='010'"))[0].n,0);
+  assert.equal((await query("SELECT count(*)::int AS n FROM uss_migrations.schema_migrations WHERE version=$1",[nextVersion]))[0].n,0);
 });
 test('duplicate email is case-insensitive; provider mapping is unique', async () => {
   await rejected('INSERT INTO uss.accounts(auth_provider_user_id,email) VALUES($1,$2)',[crypto.randomUUID(),'MEMBER@example.COM'],'23505');
@@ -178,7 +179,7 @@ test('least-privilege runtime role can use foundation but cannot mutate history 
   } finally { await pg.exec('RESET ROLE'); }
 });
 test('post-lock ledger guard rejects a stale concurrent migration plan', async () => {
-  const next = {version:'010',filename:'010_concurrency.sql',checksum:'b'.repeat(64),statements:['CREATE TABLE uss.concurrent_probe(id integer)']};
+  const next = {version:nextVersion,filename:nextVersion+'_concurrency.sql',checksum:'b'.repeat(64),statements:['CREATE TABLE uss.concurrent_probe(id integer)']};
   const raced = {query,transaction:async statements => {
     await query('INSERT INTO uss_migrations.schema_migrations(version,filename,checksum) VALUES($1,$2,$3)',[next.version,next.filename,next.checksum]);
     return adapter.transaction(statements);
@@ -186,7 +187,7 @@ test('post-lock ledger guard rejects a stale concurrent migration plan', async (
   try {
     await assert.rejects(migrate(raced,[...migrations,next]),e=>e.code==='P0001'&&/concurrently/.test(e.message));
     assert.equal((await query("SELECT to_regclass('uss.concurrent_probe') AS t"))[0].t,null);
-  } finally { await query("DELETE FROM uss_migrations.schema_migrations WHERE version='010'"); }
+  } finally { await query("DELETE FROM uss_migrations.schema_migrations WHERE version=$1",[nextVersion]); }
 });
 test('consumed/invalidated verification artifacts cannot be revived and event UUID cannot be replaced', async () => {
   await rejected('UPDATE uss.email_verification_tokens SET invalidated_at=NULL WHERE token_hash=$1',['1'.repeat(64)],'23514');
