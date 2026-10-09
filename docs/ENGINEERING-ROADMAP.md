@@ -143,13 +143,8 @@ Numbering is a planning baseline, may continue beyond BE-22, and can be combined
 | BE-04 | Profile / Account Lifecycle | DONE | BE-02 + BE-03 | feature/member-profile-service / `2077e177a8364ba2e5ebb9a34ab4c019c1193965` | Parent `f7dd0a4796eda94ac818dd6a6da2098d4e42c0c0`; profile tests; MEMBER-PROFILE-SERVICE, BE-04-VALIDATION. |
 | BE-05 | Member Card Service | DONE | BE-04 | feature/member-card-rbac-foundation / `fd0d955a56dc00fc1a13fca391a681eeba689192` | Parent `2077e177a8364ba2e5ebb9a34ab4c019c1193965`; separate BE-05 commit on shared branch; card tests; MEMBER-CARD-SERVICE. |
 | BE-06 | RBAC / Audit / Revision Foundation | DONE | BE-01 + BE-02 + BE-05 | feature/member-card-rbac-foundation / `fc1c097d3574154a120b0c76d3bc4aa8094e4e46` | Parent `fd0d955a56dc00fc1a13fca391a681eeba689192`; RBAC/history tests; RBAC-AUDIT-FOUNDATION, BE-05-BE-06-VALIDATION. |
-<<<<<<< HEAD
-| BE-07 | Event Domain Foundation | DONE | BE-01 + BE-06 | feature/event-domain-foundation | Guarded event service/repository/actions, public projections, explicit lifecycle, optimistic updates and atomic revision/audit; 19 event tests + 125 regressions. EVENT-DOMAIN-FOUNDATION, BE-07-VALIDATION. Legacy public events unchanged; registration/pass/check-in remain BE-08–10. |
-| BE-08 | Event Registration Service | DONE | BE-07 + BE-02 | feature/event-registration-service | Own/managed typed registration contracts, event-locked capacity/waitlist, cancellation/reapply, bounded history and atomic minimized audit. EVENT-REGISTRATION-SERVICE, BE-08-VALIDATION; real Neon concurrency and FE cutover pending; no passes/check-in. |
-=======
 | BE-07 | Event Domain Foundation | DONE | BE-01 + BE-06 | feature/event-domain-foundation | Guarded event service/repository/actions, public projections, explicit lifecycle, optimistic updates and atomic revision/audit; 19 event tests + 125 regressions. EVENT-DOMAIN-FOUNDATION, BE-07-VALIDATION. Legacy public events unchanged; registration/pass/check-in remain BE-08â€“10. |
-| BE-08 | Event Registration Service | PLANNED | BE-07 + BE-02 | TBD | Eligibility, capacity concurrency, cancellation, idempotency. |
->>>>>>> origin/main
+| BE-08 | Event Registration Service | DONE | BE-07 + BE-02 | feature/event-registration-service | Own/managed typed registration contracts, event-locked capacity/waitlist, cancellation/reapply, bounded history and atomic minimized audit. EVENT-REGISTRATION-SERVICE, BE-08-VALIDATION; real Neon concurrency and FE cutover pending; no passes/check-in. |
 | BE-09 | Event Pass / Ticket Service | PLANNED | BE-07 + BE-08 | TBD | Event entitlement distinct from permanent member barcode. |
 | BE-10 | Check-In / Scanner Service | PLANNED | BE-08 + BE-09 + BE-06 | TBD | Authorized staff, replay protection, attendance and audit. |
 | BE-11 | Media Storage Service | PLANNED | BE-01 + BE-06 | TBD | Object storage + metadata; type/size/ownership validation. |
