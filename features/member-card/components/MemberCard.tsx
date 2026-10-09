@@ -20,6 +20,10 @@ export function MemberCard({ card }: { card: MemberCardPresentationDTO }) {
         <div className="uss-card-avatar">
           {avatar && failedAvatar !== avatar.url ? (
             <img
+              ref={(image) => {
+                if (image?.complete && image.naturalWidth === 0)
+                  setFailedAvatar(avatar.url);
+              }}
               src={avatar.url}
               alt={avatar.altText || "Member avatar"}
               width="64"
