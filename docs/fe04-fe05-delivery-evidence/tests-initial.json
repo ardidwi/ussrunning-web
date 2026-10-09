@@ -1,0 +1,32 @@
+[
+  {
+    "count": "ℹ tests 23",
+    "suite": "db",
+    "exitCode": 0
+  },
+  {
+    "count": "ℹ tests 18",
+    "suite": "auth",
+    "exitCode": 0
+  },
+  {
+    "count": "ℹ tests 19",
+    "suite": "email",
+    "exitCode": 0
+  },
+  {
+    "count": "ℹ tests 21",
+    "suite": "member",
+    "exitCode": 0
+  },
+  {
+    "count": "ℹ tests 6",
+    "suite": "member-card",
+    "exitCode": 0
+  },
+  {
+    "count": "ℹ tests 19",
+    "suite": "rbac",
+    "exitCode": 1
+  }
+]

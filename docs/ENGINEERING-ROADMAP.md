@@ -121,6 +121,14 @@ BE-06 supplies permission guards and bounded read-only history. CMS writes/publi
 
 Domain/auth suites use PGlite and mocked provider/email boundaries. Local runtime initialization, real Neon provider authentication and production authentication are separate evidence categories. No production traffic/migration/deployment is required for this checkpoint. Development reference hydration warnings require root cause audit rather than suppression.
 
+### FE-04 / FE-05 development delivery
+
+The FE branch actual head is `8961f0d`; its first-parent sequence is `3f7df20 -> 4d3f410 -> b427fae -> 8961f0d` after common ancestor `a91f910`. It did not include the verified Option A repair baseline `ffccaa0`. Delivery preserves both through normal merge `6cd80d2`, then includes policy `b00142b`, main integration `f4c6fcb` and its documentation checkpoint `05a8d3c`. No policy rewrite or dependency drift. Main was `8eb9e39` at discovery and advanced concurrently; newer main history was preserved.
+
+See [FE-04-05-MAIN-INTEGRATION.md](FE-04-05-MAIN-INTEGRATION.md) for fresh candidate validation and final delivery evidence. FE-05 is DONE only as a presentation/read-only foundation: protected CMS writers are not integrated, permission visibility never replaces server authorization, real authenticated Neon roles/sessions remain unvalidated, and revision preview is partial and non-restorable. Full operational CMS remains planned under its domain tasks.
+
+Next dependencies: connect FE-02 auth adapters to BE-02/03, connect FE-03/FE-06 profile adapters to BE-04, then validate independent real roles/status revocation and device scanning. CMS editors require BE-11/12/13/14/15 protected writers and legacy crosswalk review; users/roles mutations require BE-17/18. FE-QA hydration root-cause and unsupported lint tooling remain explicit separate tasks. Human manual product audit of the current main Vercel environment remains pending.
+
 ## D. Backend roadmap
 
 Numbering is a planning baseline, may continue beyond BE-22, and can be combined/reordered with evidence. Planned branch/commit values are TBD.
@@ -159,8 +167,8 @@ Numbering may continue beyond FE-20. Final approved dependency repair heads and 
 | FE-01 | Form System | DONE | Existing design/public shell | feature/frontend-form-system / `a40db36f4a03f3c54303306bd133d51d85992e35` | Parent `a17ed0f908a99bdedbbc2735de5d2a6dfe19370c`; form/public/motion/workspace audits; FE-01-REPORT. |
 | FE-02 | Authentication Flows | DONE | FE-01 + BE-02 + BE-03 | feature/frontend-auth-flows / `f7038c3c57530056cb17286b60e2f955ea07a0ef` | Parent `83d1859106a64a999cfa913ddb5c89166a5156e6`; contract/auth-flow/visual audits; FE-02-AUTH-FRONTEND. |
 | FE-03 | Member Dashboard Shell / Profile Onboarding Foundation | DONE | FE-01 + FE-02; BE-04 for production cutover | feature/member-dashboard-shell / `e80d3f2639f54d95e4f6466dbdda5a2ed6dc393b` | Parent `83d1859106a64a999cfa913ddb5c89166a5156e6`; contract/layout/outcome/visual audits; FE-03-MEMBER-FRONTEND. Provisional adapter remains. |
-| FE-04 | Member Card | PLANNED / NEXT | BE-05 + BE-04 + FE-03 | TBD | Canonical owner-only DTO, permanent barcode v1, responsive/print/scan QA. Explicitly scope adapter translation. |
-| FE-05 | RBAC-Aware CMS Foundation | PLANNED | BE-06 + FE-01 + FE-02 | TBD | Permission-aware navigation and server-enforced services, no implied CRUD. |
+| FE-04 | Member Card | DONE | BE-05 + BE-04 + FE-03 | feature/member-card-rbac-frontend / `b427fae8772d6c3e42065dc2ada3106837faff9b`; final feature head `8961f0d` | Canonical owner-only BE-05 DTO, responsive card, backend-issued barcode v1 and identical SVG export. Real authenticated Neon/device scan validation remains outstanding. |
+| FE-05 | RBAC-Aware CMS Foundation | DONE | BE-06 + FE-01 + FE-02 | feature/member-card-rbac-frontend / `8961f0d187806adcde2e5a3aabd76b9771f181c3` | Central trusted permission presentation, guarded navigation, bounded audit and partial non-restorable revision previews. Protected CMS writers are not integrated; frontend visibility is not server authorization. Real Neon role/session validation outstanding. Full operational CMS is not complete. |
 | FE-06 | Member Dashboard | PLANNED | FE-03 + BE-04; relevant event services | TBD | Trusted profile/status/completion, honest unavailable states. |
 | FE-07 | Event Registration UI | PLANNED | BE-07 + BE-08 + FE-06 | TBD | Eligibility/capacity/retry/duplicate handling. |
 | FE-08 | Event Pass UI | PLANNED | BE-09 + FE-07 | TBD | Event entitlement distinct from member identity. |
@@ -171,7 +179,7 @@ Numbering may continue beyond FE-20. Final approved dependency repair heads and 
 | FE-13 | Partner / Sponsor CMS | PLANNED | BE-14 + FE-05 | TBD | Managed partner content/media. |
 | FE-14 | Dynamic Site Content Editor | PLANNED | BE-15 + FE-05 | TBD | Draft/preview/publish; no runtime secrets/configuration in editorial UI. |
 | FE-15 | Users / Roles Administration UI | PLANNED | BE-17 + BE-18 + FE-05 | TBD | Narrow permissions and audited operations. |
-| FE-16 | Audit / Revision Workspace | PLANNED | BE-06 + domain history schemas + FE-05 | TBD | Bounded safe previews; restore requires future authorized write contract. |
+| FE-16 | Audit / Revision Workspace | PLANNED | BE-06 + domain history schemas + FE-05 | TBD | Read-only bounded safe preview foundation already delivered by FE-05; broader domain-history workflows remain planned; restore requires future authorized write contract. |
 | FE-17 | Member Registration History | PLANNED | BE-08 + BE-10 + FE-06 | TBD | Registration and attendance remain distinct. |
 | FE-18 | Responsive CMS Hardening | PLANNED | Implemented CMS | TBD | Mobile tables/cards/dialogs/touch/overflow. |
 | FE-19 | Accessibility Hardening | PLANNED | A11Y + implemented UI | TBD | Keyboard/screen-reader/contrast/error feedback. |
@@ -220,7 +228,7 @@ Frontend must consume actual actions/DTOs/policies, never invent backend contrac
 | Checkpoint | Scope | State / Gate |
 | --- | --- | --- |
 | Pre-FE04 | BE-01–06, FE-01–03, AGENTS, roadmap, five Option A repairs | integration/pre-fe04-baseline = VERIFIED; see PRE-FE04-INTEGRATION-VALIDATION.md and fresh pre-fe04-evidence. |
-| Foundation | BE-01–06 + FE-01–05 | PLANNED; trusted card/CMS permission integration and regression. |
+| Foundation | BE-01–06 + FE-01–05 | VERIFIED local integrated development candidate; see FE-04-05-MAIN-INTEGRATION.md. Explicit CMS writer/provider/scan/hydration/lint limits remain. |
 | Event platform | BE-07–10 + FE-07–09 | PLANNED; registration/pass/attendance concurrency and authorized scanning. |
 | CMS | BE-11–15 + FE-10–14 | PLANNED; ownership, drafts, atomic revision/publication/audit. |
 | Administration | BE-16–18 + FE-15–16 | PLANNED; elevated permissions, audited mutations, bounded history. |
@@ -245,17 +253,18 @@ Future prompts can be concise:
 
 ```text
 Read root AGENTS.md and docs/ENGINEERING-ROADMAP.md.
-Continue FE-04 from the latest verified integration baseline.
-Use BE-05 Member Card Service as the backend contract.
+Continue the next scoped integration task from current verified main.
+Use the task-specific backend action/DTO as the source of truth.
 Follow the roadmap dependencies and update task status when complete.
 ```
 
-Agents still inspect Git state, dirty files, contracts and history. Intended next sequence: FE-04 Member Card, then FE-05 RBAC-Aware CMS. This policy task implements neither those tasks nor BE-07. Preserve their planned status and verified baseline scope; unrelated branches require separate validation.
+Agents still inspect Git state, dirty files, contracts and history. FE-04 and FE-05 foundations are delivered; no full operational CMS claim. Next: explicit FE-02 -> BE-02/03 auth-flow cutover and FE-03/FE-06 -> BE-04 profile cutover, real independent Neon role/session QA, protected typed CMS writers/legacy identity crosswalk, and FE-QA hydration root-cause audit. Event passes, registration and attendance remain separate future domains.
 
 ## J. Change log
 
 | Date | Change | Evidence |
 | --- | --- | --- |
+| 2026-10-09 | Delivered FE-04 / FE-05 foundations into the current verified development main candidate, preserving dependency repairs and early-development policy. | Fresh validation and limits: FE-04-05-MAIN-INTEGRATION.md; permanent barcode remains identity-only, CMS writers/restore excluded. |
 | 2026-10-09 | Established roadmap, actual foundation/repair parent map, cutover boundaries and isolated forward-only integration. | Starting HEAD a91f910; all foundations and approved repair heads included. Integrated regression passed; exact counts and exceptions in PRE-FE04-INTEGRATION-VALIDATION.md. |
 | 2026-10-09 | Enabled temporary EARLY DEVELOPMENT FAST-FEEDBACK MODE, main/Vercel manual-audit workflow, lifecycle exit criteria and delivery evidence gates. | Policy branch chore/early-development-delivery from verified ffccaa0; Fresh policy-tree validation: npm ci/deps:check/build/standalone TypeScript passed; backend 106/106 and both FE contracts passed. Existing next lint failed as documented. Task commit b00142baf5b59ea31a1b49c87d867bf46cf4857b; main integration f4c6fcb2fcb32c5d3c6f916bd7d8cd4b3168b0a9 pushed. GitHub Vercel check confirmed deployment started; final deployment state/SHA/core-page checks are reported after verification. |
 

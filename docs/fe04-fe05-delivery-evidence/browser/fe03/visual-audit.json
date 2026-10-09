@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "checks": [
+    "Short discard modal bounds",
+    "Nested mobile navigation/discard recovery",
+    "Long helper and reserved long error",
+    "Reduced motion",
+    "Active overview/profile screenshots"
+  ],
+  "pageErrors": []
+}

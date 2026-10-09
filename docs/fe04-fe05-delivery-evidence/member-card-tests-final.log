@@ -1,0 +1,18 @@
+
+> ussrunning-web@0.1.0 member-card:test
+> node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/member-card.test.mjs
+
+✔ active owner card protocol is stable, opaque and excludes contact/session data (7748.8234ms)
+✔ anonymous and every non-active lifecycle state denied (52.7627ms)
+✔ supplied foreign identity ignored; profile edits cannot rotate either identity (100.3391ms)
+✔ fresh status check blocks stale active context and missing profile is controlled (31.4648ms)
+✔ legacy action retains exact BE-04 shape and identity (19.2567ms)
+✔ invalid barcode protocol and DB errors are sanitized without logging (8.9966ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8988.4908

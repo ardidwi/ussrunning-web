@@ -1,0 +1,35 @@
+
+> ussrunning-web@0.1.0 db:test
+> node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/database-foundation.test.mjs
+
+✔ fresh migrations create all foundation tables and only three role seeds (8626.201ms)
+✔ migration rerun does not repeat DDL or seed data (16.3981ms)
+✔ applied migration drift and out-of-order history fail closed (7.2617ms)
+✔ failed batch rolls back DDL and migration ledger atomically (66.5742ms)
+✔ duplicate email is case-insensitive; provider mapping is unique (14.3941ms)
+✔ member ID and barcode are server-defaulted, opaque, unique and immutable (26.6975ms)
+✔ active account requires verification and invalid role relation is rejected (27.1465ms)
+✔ verification hashes, expiry and outstanding-token uniqueness (35.4135ms)
+✔ duplicate event, Story and Partner slugs are rejected (222.0704ms)
+✔ one logical registration per event/member and foreign account rejected (11.0343ms)
+✔ one hashed event pass per registration and unique pass hash (19.8633ms)
+✔ check-in rejects wrong event and prevents duplicate attendance (14.6837ms)
+✔ custom answers reject questions from another event (17.9743ms)
+✔ invalid date ranges, zero/negative capacity and unknown timezone rejected (142.5274ms)
+✔ history is append-only and publication pointer belongs to its own published revision (18.9495ms)
+✔ operational FK policy protects accounts/events/media referenced by history (30.6605ms)
+✔ SQL lexer preserves semicolons in dollar bodies, comments and strings (0.8719ms)
+✔ missing environment fails usefully, dry-run needs no database, unavailable target is redacted (573.0738ms)
+✔ server-only accessor caches client, binds query params and opt-in errors remove secrets (215.1365ms)
+✔ least-privilege runtime role can use foundation but cannot mutate history or migration ledger (57.7132ms)
+✔ post-lock ledger guard rejects a stale concurrent migration plan (21.1048ms)
+✔ consumed/invalidated verification artifacts cannot be revived and event UUID cannot be replaced (9.0274ms)
+✔ registration/pass/check-in ownership cannot be rebound while operational fields remain mutable (335.2107ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11240.5176

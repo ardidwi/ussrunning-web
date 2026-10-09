@@ -1,0 +1,74 @@
+{
+  "fe01\\browser-audit.json": {
+    "responsive": 27,
+    "interactions": 5,
+    "regressions": 7,
+    "errors": 0
+  },
+  "fe01\\public-shell-audit.json": {
+    "responsive": 80,
+    "navigation": 2,
+    "motion": 1,
+    "zoom": 4,
+    "errors": 0
+  },
+  "fe01\\workspace-audit.json": {
+    "surfaces": 10,
+    "errors": 0
+  },
+  "fe02\\browser-audit.json": {
+    "responsive": 53,
+    "flows": 35,
+    "accessibility": 1,
+    "regression": 6,
+    "errors": 0
+  },
+  "fe03\\verify-fe-03-browser-audit.json": {
+    "cases": 41,
+    "errors": 0
+  },
+  "fe03\\visual-audit.json": {
+    "checks": 5,
+    "pageErrors": 0
+  },
+  "card-interactions-console.json": {
+    "consoleEvents": 0,
+    "pageErrors": 0
+  },
+  "card-layout-console.json": {
+    "consoleEvents": 0,
+    "pageErrors": 0
+  },
+  "verify-fe-01-console.json": {
+    "consoleEvents": 1,
+    "pageErrors": 0
+  },
+  "verify-fe-02-browser-console.json": {
+    "consoleEvents": 2,
+    "pageErrors": 0
+  },
+  "verify-fe-02-visual-console.json": {
+    "consoleEvents": 2,
+    "pageErrors": 0
+  },
+  "verify-fe-03-browser-console.json": {
+    "consoleEvents": 0,
+    "pageErrors": 0
+  },
+  "verify-fe-03-visual-console.json": {
+    "consoleEvents": 0,
+    "pageErrors": 0
+  },
+  "verify-public-shell-console.json": {
+    "consoleEvents": 6,
+    "pageErrors": 0
+  },
+  "verify-workspace-fe01-console.json": {
+    "consoleEvents": 0,
+    "pageErrors": 0
+  },
+  "total": {
+    "hydrationWarnings": 11,
+    "pageErrors": 0
+  }
+}

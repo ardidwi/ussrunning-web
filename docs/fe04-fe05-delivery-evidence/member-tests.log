@@ -1,0 +1,33 @@
+
+> ussrunning-web@0.1.0 member:test
+> node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/member-profile.test.mjs
+
+✔ active owner reads minimal safe DTO and centrally defined completion (6008.2615ms)
+✔ unauthenticated/pending/suspended/deactivated cannot read, mutate or get barcode (20.3481ms)
+✔ allowed PATCH normalizes fields, completion and minimal atomic audit (69.7354ms)
+✔ identity, roles, lifecycle, email and timestamp mutation rejected by allowlist (98.897ms)
+✔ client account IDs never select another member, including administrative role holders (61.9689ms)
+✔ invalid phone, dates, HTML, oversized and malformed values rejected (130.7713ms)
+✔ emergency consistency uses merged stored fields and empty optional values clear deliberately (182.9328ms)
+✔ privacy evidence retained, marketing changes are separate and no-op submits do not churn audits (140.8392ms)
+✔ stale and parallel updates conflict, rapid repeated submit does not duplicate audit (150.0283ms)
+✔ status recheck after account lock rejects a stale previously active session (185.0404ms)
+✔ fresh read rechecks DB status instead of trusting memoized account (26.797ms)
+✔ missing profile controlled, partial data retained and no fake PII generated (73.8019ms)
+✔ owned active image FK accepted; foreign/archived/non-image/unknown references rejected (288.7509ms)
+✔ member card contains only display identity/status/avatar, not contact or session data (55.823ms)
+✔ mandatory audit failure rolls profile/consent changes back atomically (54.099ms)
+✔ non-owner runtime grants support new service without permission escalation (81.8961ms)
+✔ DB failure and malformed stored preferences are controlled, no raw PII errors (21.6291ms)
+✔ SQL-looking profile text is bound data; optional demographics/marketing do not affect completion (96.2816ms)
+✔ unbounded/deep preferences and empty/oversized command payload are rejected safely (42.1149ms)
+✔ version is timezone-independent and detects mutation even if timestamps match (146.3485ms)
+✔ direct service errors are sanitized before any SSR/action consumer sees them (11.4338ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8978.1559

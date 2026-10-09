@@ -1,0 +1,58 @@
+
+> ussrunning-web@0.1.0 rbac:test
+> node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/rbac-history.test.mjs
+
+✔ member self permissions allowed; CMS/audit/reserved permissions rejected (5076.2418ms)
+✔ admin operational permissions allowed but reserved super-admin capabilities denied (50.8599ms)
+✔ super-admin has complete matrix; no role mutation/elevation endpoint exists (60.3587ms)
+✔ anonymous and non-active administrator denied despite role (38.7078ms)
+✔ fresh DB role/status authority overrides spoofed provider/client fields (43.2164ms)
+✔ any/role guards fail closed for unknown, empty and excessive permission input (15.5754ms)
+✔ member cannot inspect audit or unpublished revision even with valid identifiers (44.3739ms)
+✔ admin sees only positive-listed operational actions/entities, not security/member audit (84.3832ms)
+✔ audit DTO minimizes PII/secrets and unsafe raw metadata for every role (23.9187ms)
+✖ audit cursor retains microseconds, stable ties and fixed window without duplicate pages (37.1906ms)
+✔ bounded pagination and malformed/oversized/date filters rejected (91.7192ms)
+✔ valid date/action/entity/actor filters bind values, empty data is safe (37.6608ms)
+✔ same-query authorization blocks role revocation or suspension between guard and read (47.5995ms)
+✔ super-admin audit scope fails closed if elevated role revoked after guard (24.2184ms)
+✔ authorized revision list is bounded, newest first, cursor parent-bound (85.7898ms)
+✔ safe typed draft snapshot omits rich body/PII/token/unsafe text; parent ID prevents cross-entity lookup (45.4927ms)
+✔ site/partner/event history uses existing table linkage with explicit typed projections (224.1026ms)
+✔ revision/audit immutable history and runtime least privileges preserved (75.4762ms)
+✔ DB failure sanitized at guard/service/action boundary and no profile/card regression (73.7895ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 18
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7281.1399
+
+✖ failing tests:
+
+test at tests\rbac-history.test.mjs:95:1
+✖ audit cursor retains microseconds, stable ties and fixed window without duplicate pages (37.1906ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+  + []
+  - [
+  -   '2e9f1610-8dc9-460b-9758-b3b680e65806',
+  -   '327f880b-fdc7-489b-9aab-e9e83be96a23',
+  -   '59ce1dce-1d4d-4bd4-af7f-170e0bdd9ab1',
+  -   'e3d20163-06ce-4429-9c03-f128d7ce5b4d',
+  -   'ffeb8a7b-9724-4c6b-b5c5-3405fe8eb5a0'
+  - ]
+
+      at TestContext.<anonymous> (file:///C:/Users/ardid/Documents/ussrunning-web/tests/rbac-history.test.mjs:98:9)
+      at async Test.run (node:internal/test_runner/test:1404:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ '2e9f1610-8dc9-460b-9758-b3b680e65806', '327f880b-fdc7-489b-9aab-e9e83be96a23', '59ce1dce-1d4d-4bd4-af7f-170e0bdd9ab1', 'e3d20163-06ce-4429-9c03-f128d7ce5b4d', 'ffeb8a7b-9724-4c6b-b5c5-3405fe8eb5a0' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,80 @@
+{
+  "passed": 15,
+  "results": [
+    {
+      "path": "/",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/about",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/runs",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/membership",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/stories",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/partners",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/login",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/join",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/dashboard",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/dashboard/profile",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/dashboard/member-card",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/dashboard/events",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/dashboard/settings",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/admin?role=super_admin",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/design-system?surface=card&role=super_admin",
+      "status": 404,
+      "passed": true
+    }
+  ]
+}

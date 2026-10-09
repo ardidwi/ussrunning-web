@@ -1,0 +1,27 @@
+✔ card presentation uses exact shared backend DTO and preserves both distinct identities (2.3337ms)
+✔ all backend lifecycle failures remain safe failure results (1.5556ms)
+✔ defensive non-active success never displays a card (0.3619ms)
+✔ malformed or unknown barcode protocols cannot render member identity (0.4946ms)
+✔ initials fallback handles empty names and Unicode without splitting surrogate pairs (0.4399ms)
+✔ renderer gives existing QR library only backend payload, H correction and four-module quiet zone (13.327ms)
+✔ real renderer produces stable SVG without PII or textual full UUID (78.1409ms)
+✔ invalid barcode data is rejected before rendering (1.2466ms)
+✔ missing permission snapshot fails closed (1.7764ms)
+✔ member snapshot allows self features and no administrative modules (0.3927ms)
+✔ admin sees operational content/history but no elevated capabilities (0.3024ms)
+✔ super_admin snapshot permits elevated modules with exact hasRole semantics (0.1912ms)
+✔ frontend never derives permissions from a claimed role alone (0.222ms)
+✔ audit filter defaults/bounds use canonical HISTORY_POLICY (0.4448ms)
+✔ audit rejects invalid, incomplete, reversed and excessive date windows (0.9212ms)
+✔ date-only filters map unambiguously to inclusive UTC calendar dates (1.3508ms)
+✔ next-page filters retain exact trusted microsecond window and opaque cursor (0.6467ms)
+✔ revision input permits only canonical entity types and bounded pages (0.7979ms)
+✔ server permission projection omits account/provider/email/barcode data (46.7483ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 736.1903

@@ -1,0 +1,31 @@
+
+> ussrunning-web@0.1.0 email:test
+> node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/email-verification.test.mjs
+
+✔ pending issuance stores only SHA256, bound email, configured expiry and code-owned delivery (6791.5896ms)
+✔ active is safe; suspended/deactivated never issue (37.0302ms)
+✔ valid proof consumes once and activates with timestamp and append-only audit (51.12ms)
+✔ expired, malformed, unknown, consumed, revoked and pre-binding proofs rejected (113.5264ms)
+✔ suspended/deactivated and changed-email accounts cannot activate (85.8564ms)
+✔ already active valid proof consumes safely without replacing verification timestamp (22.3876ms)
+✔ cooldown and concurrent resend only issue one proof; allowed resend supersedes old proof (1183.4384ms)
+✔ DB-backed rolling limit counts revoked proofs and survives new app calls (40.2512ms)
+✔ parallel same-token consumption yields exactly one activation (38.1679ms)
+✔ verify/resend race and status-change interleavings preserve lifecycle (75.9499ms)
+✔ outstanding uniqueness and immutable email binding remain database-enforced (22.3583ms)
+✔ activation rolls back proof/account/audit on a mandatory audit-write failure (45.9496ms)
+✔ provider failure/throw/timeout sanitized; proof remains valid, pending account intact (188.68ms)
+✔ input-free own account request ignores role/account/email; anonymous never looks up email (24.5162ms)
+✔ trusted URL, missing config and database errors fail safely without startup failure (7.3027ms)
+✔ GET never consumes; fragment confirmation clears URL, restrictive CSP and explicit POST (238.6445ms)
+✔ issuance failure rolls back new proof, supersession, delivery and rate history (54.3155ms)
+✔ delivery claim is idempotent and provider acceptance with DB failure is controlled (51.6646ms)
+✔ actual pinned Resend SDK does not log provider responses with embedded secrets (115.2226ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10101.6981

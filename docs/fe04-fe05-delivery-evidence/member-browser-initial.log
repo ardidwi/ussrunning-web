@@ -1,0 +1,9 @@
+{
+  "cases": 40,
+  "errors": [
+    {
+      "name": "save stale",
+      "error": "page.goto: net::ERR_NETWORK_IO_SUSPENDED at http://localhost:3114/design-system?surface=member&flow=profile&scenario=stale\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3114/design-system?surface=member&flow=profile&scenario=stale\", waiting until \"networkidle\"\u001b[22m\n"
+    }
+  ]
+}
