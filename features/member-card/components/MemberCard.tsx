@@ -1,12 +1,9 @@
 "use client";
-import { useState } from "react";
 import type { MemberCardPresentationDTO } from "@/lib/member/member-card-types";
 import { Badge } from "@/components/ui";
-import { initials } from "../utils/presentation";
+import { MemberAvatar } from "./MemberAvatar";
 import { MemberBarcode } from "./MemberBarcode";
 export function MemberCard({ card }: { card: MemberCardPresentationDTO }) {
-  const [failedAvatar, setFailedAvatar] = useState<string | null>(null);
-  const avatar = card.avatar;
   return (
     <article
       className="uss-member-card"
@@ -17,26 +14,7 @@ export function MemberCard({ card }: { card: MemberCardPresentationDTO }) {
         <span>COMMUNITY IN MOTION</span>
       </div>
       <div className="uss-card-identity">
-        <div className="uss-card-avatar">
-          {avatar && failedAvatar !== avatar.url ? (
-            <img
-              ref={(image) => {
-                if (image?.complete && image.naturalWidth === 0)
-                  setFailedAvatar(avatar.url);
-              }}
-              src={avatar.url}
-              alt={avatar.altText || "Member avatar"}
-              width="64"
-              height="64"
-              referrerPolicy="no-referrer"
-              onError={() => setFailedAvatar(avatar.url)}
-            />
-          ) : (
-            <span aria-label="Member initials">
-              {initials(card.displayName)}
-            </span>
-          )}
-        </div>
+        <MemberAvatar avatar={card.avatar} displayName={card.displayName} />
         <div>
           <h2>{card.displayName}</h2>
           <Badge tone="success">Active · Email verified</Badge>

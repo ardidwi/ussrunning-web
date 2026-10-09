@@ -107,3 +107,11 @@ MemberDashboardShell owns a 240px desktop sidebar and a modal menu below 768px, 
 features/member-card owns private card composition. It reuses the existing qrcode dependency and the BE-05 protocol validator, with high correction and four-module white quiet zones. The centered USS logo sits in the card's separate brand area, never over required code modules. Member ID is human-readable; the full opaque payload is not noisy text. SVG export renders the same backend-issued value and does not create an identity or credential.
 
 features/cms reuses MemberDashboardShell's functional grammar and FE-01 controls. Permission-aware navigation uses links to existing /admin query views. Audit/revision entries use wrapping bordered lists on all widths, with native platform selects/date inputs. Dates filter UTC calendar days; displayed history timestamps explicitly use Asia/Jakarta (WIB). No new colors/fonts/library or homepage-style marketing hero in CMS. Legacy AdminWorkspace remains a clearly separate development reference pending the backend-documented legacy crosswalk.
+
+## FE-06 overview composition
+
+features/member-dashboard owns the overview, independent domain section slots and loading geometry.
+The signature is the member's own name in the restrained USS display face, followed by the functional
+identity/completion pair. Four quieter bordered sections reserve space for future activity without
+inventing counts, dates or registrations. No new palette, font, radius or spacing token is introduced.
+MemberDashboardShell remains the navigation/scroll owner; MemberAvatar is shared with FE-04.

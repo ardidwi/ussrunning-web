@@ -1,0 +1,418 @@
+{
+  "responsive": [
+    {
+      "route": "/login",
+      "width": 320,
+      "height": 568,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/join",
+      "width": 320,
+      "height": 568,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=forgot",
+      "width": 320,
+      "height": 568,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=reset&token=development-reference-only",
+      "width": 320,
+      "height": 568,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=verify",
+      "width": 320,
+      "height": 568,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login",
+      "width": 360,
+      "height": 640,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/join",
+      "width": 360,
+      "height": 640,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=forgot",
+      "width": 360,
+      "height": 640,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=reset&token=development-reference-only",
+      "width": 360,
+      "height": 640,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=verify",
+      "width": 360,
+      "height": 640,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/join",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=forgot",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=reset&token=development-reference-only",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=verify",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login",
+      "width": 430,
+      "height": 932,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/join",
+      "width": 430,
+      "height": 932,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=forgot",
+      "width": 430,
+      "height": 932,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=reset&token=development-reference-only",
+      "width": 430,
+      "height": 932,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=verify",
+      "width": 430,
+      "height": 932,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/join",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=forgot",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=reset&token=development-reference-only",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=verify",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/join",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=forgot",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=reset&token=development-reference-only",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=verify",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login",
+      "width": 1366,
+      "height": 768,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/join",
+      "width": 1366,
+      "height": 768,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=forgot",
+      "width": 1366,
+      "height": 768,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=reset&token=development-reference-only",
+      "width": 1366,
+      "height": 768,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=verify",
+      "width": 1366,
+      "height": 768,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login",
+      "width": 1366,
+      "height": 500,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/join",
+      "width": 1366,
+      "height": 500,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=forgot",
+      "width": 1366,
+      "height": 500,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=reset&token=development-reference-only",
+      "width": 1366,
+      "height": 500,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=verify",
+      "width": 1366,
+      "height": 500,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login",
+      "width": 390,
+      "height": 420,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/join",
+      "width": 390,
+      "height": 420,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=forgot",
+      "width": 390,
+      "height": 420,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=reset&token=development-reference-only",
+      "width": 390,
+      "height": 420,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=verify",
+      "width": 390,
+      "height": 420,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login",
+      "width": 720,
+      "height": 450,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/join",
+      "width": 720,
+      "height": 450,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=forgot",
+      "width": 720,
+      "height": 450,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=reset&token=development-reference-only",
+      "width": 720,
+      "height": 450,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login?flow=verify",
+      "width": 720,
+      "height": 450,
+      "overflow": false,
+      "submitReachable": true
+    },
+    {
+      "route": "/login",
+      "zoom": "200% CSS zoom",
+      "overflow": false
+    },
+    {
+      "route": "/join",
+      "zoom": "200% CSS zoom",
+      "overflow": false
+    },
+    {
+      "route": "/login?flow=forgot",
+      "zoom": "200% CSS zoom",
+      "overflow": false
+    }
+  ],
+  "flows": [
+    "Login empty and invalid email: first error focused, no request",
+    "Login INVALID_CREDENTIALS",
+    "Login EMAIL_NOT_VERIFIED",
+    "Login ACCOUNT_SUSPENDED",
+    "Login ACCOUNT_DEACTIVATED",
+    "Login ACCOUNT_NOT_PROVISIONED",
+    "Login network",
+    "Login UNKNOWN_ERROR",
+    "Login malformed",
+    "Login UNAUTHENTICATED",
+    "Login success, password visibility and duplicate submit prevention",
+    "Register empty/mismatch/consent and verification-required success",
+    "Register duplicate email preserved",
+    "Long name/email validation and layout",
+    "Verification success",
+    "Verification VERIFICATION_EXPIRED",
+    "Verification VERIFICATION_INVALID",
+    "Verification already",
+    "Verification UNKNOWN_ERROR",
+    "Verification network",
+    "Code verification uses same flow",
+    "Resend success",
+    "Resend cooldown",
+    "Resend rate",
+    "Resend UNKNOWN_ERROR",
+    "Forgot success",
+    "Forgot network",
+    "Reset success",
+    "Reset RESET_INVALID",
+    "Reset RESET_EXPIRED",
+    "Reset UNKNOWN_ERROR",
+    "Reset missing token",
+    "Session expired and unsafe return fallback",
+    "Production adapter unavailable: /join",
+    "Production adapter unavailable: /login?flow=forgot"
+  ],
+  "accessibility": [
+    "Labels/descriptions/autocomplete, first-error focus, keyboard password toggle and live feedback"
+  ],
+  "regression": [
+    "/",
+    "/about",
+    "/runs",
+    "/membership",
+    "/stories",
+    "/partners"
+  ],
+  "errors": []
+}

@@ -143,8 +143,13 @@ Numbering is a planning baseline, may continue beyond BE-22, and can be combined
 | BE-04 | Profile / Account Lifecycle | DONE | BE-02 + BE-03 | feature/member-profile-service / `2077e177a8364ba2e5ebb9a34ab4c019c1193965` | Parent `f7dd0a4796eda94ac818dd6a6da2098d4e42c0c0`; profile tests; MEMBER-PROFILE-SERVICE, BE-04-VALIDATION. |
 | BE-05 | Member Card Service | DONE | BE-04 | feature/member-card-rbac-foundation / `fd0d955a56dc00fc1a13fca391a681eeba689192` | Parent `2077e177a8364ba2e5ebb9a34ab4c019c1193965`; separate BE-05 commit on shared branch; card tests; MEMBER-CARD-SERVICE. |
 | BE-06 | RBAC / Audit / Revision Foundation | DONE | BE-01 + BE-02 + BE-05 | feature/member-card-rbac-foundation / `fc1c097d3574154a120b0c76d3bc4aa8094e4e46` | Parent `fd0d955a56dc00fc1a13fca391a681eeba689192`; RBAC/history tests; RBAC-AUDIT-FOUNDATION, BE-05-BE-06-VALIDATION. |
+<<<<<<< HEAD
 | BE-07 | Event Domain Foundation | DONE | BE-01 + BE-06 | feature/event-domain-foundation | Guarded event service/repository/actions, public projections, explicit lifecycle, optimistic updates and atomic revision/audit; 19 event tests + 125 regressions. EVENT-DOMAIN-FOUNDATION, BE-07-VALIDATION. Legacy public events unchanged; registration/pass/check-in remain BE-08�10. |
 | BE-08 | Event Registration Service | DONE | BE-07 + BE-02 | feature/event-registration-service | Own/managed typed registration contracts, event-locked capacity/waitlist, cancellation/reapply, bounded history and atomic minimized audit. EVENT-REGISTRATION-SERVICE, BE-08-VALIDATION; real Neon concurrency and FE cutover pending; no passes/check-in. |
+=======
+| BE-07 | Event Domain Foundation | DONE | BE-01 + BE-06 | feature/event-domain-foundation | Guarded event service/repository/actions, public projections, explicit lifecycle, optimistic updates and atomic revision/audit; 19 event tests + 125 regressions. EVENT-DOMAIN-FOUNDATION, BE-07-VALIDATION. Legacy public events unchanged; registration/pass/check-in remain BE-08–10. |
+| BE-08 | Event Registration Service | PLANNED | BE-07 + BE-02 | TBD | Eligibility, capacity concurrency, cancellation, idempotency. |
+>>>>>>> origin/main
 | BE-09 | Event Pass / Ticket Service | PLANNED | BE-07 + BE-08 | TBD | Event entitlement distinct from permanent member barcode. |
 | BE-10 | Check-In / Scanner Service | PLANNED | BE-08 + BE-09 + BE-06 | TBD | Authorized staff, replay protection, attendance and audit. |
 | BE-11 | Media Storage Service | PLANNED | BE-01 + BE-06 | TBD | Object storage + metadata; type/size/ownership validation. |
@@ -171,7 +176,7 @@ Numbering may continue beyond FE-20. Final approved dependency repair heads and 
 | FE-03 | Member Dashboard Shell / Profile Onboarding Foundation | DONE | FE-01 + FE-02; BE-04 for production cutover | feature/member-dashboard-shell / `e80d3f2639f54d95e4f6466dbdda5a2ed6dc393b` | Parent `83d1859106a64a999cfa913ddb5c89166a5156e6`; contract/layout/outcome/visual audits; FE-03-MEMBER-FRONTEND. Provisional adapter remains. |
 | FE-04 | Member Card | DONE | BE-05 + BE-04 + FE-03 | feature/member-card-rbac-frontend / `b427fae8772d6c3e42065dc2ada3106837faff9b`; final feature head `8961f0d` | Canonical owner-only BE-05 DTO, responsive card, backend-issued barcode v1 and identical SVG export. Real authenticated Neon/device scan validation remains outstanding. |
 | FE-05 | RBAC-Aware CMS Foundation | DONE | BE-06 + FE-01 + FE-02 | feature/member-card-rbac-frontend / `8961f0d187806adcde2e5a3aabd76b9771f181c3` | Central trusted permission presentation, guarded navigation, bounded audit and partial non-restorable revision previews. Protected CMS writers are not integrated; frontend visibility is not server authorization. Real Neon role/session validation outstanding. Full operational CMS is not complete. |
-| FE-06 | Member Dashboard | PLANNED | FE-03 + BE-04; relevant event services | TBD | Trusted profile/status/completion, honest unavailable states. |
+| FE-06 | Member Dashboard | DONE | FE-03 + BE-04 + FE-04/05; BE-08/09/16 for future activity | feature/member-dashboard-foundation / `ee5fc70` | Canonical owner profile projection, modular overview, shared avatar/card entry, backend completion, lifecycle/loading/retry and centralized permission navigation. Registrations/history/passes/notifications explicitly unavailable; real active-role QA pending. See FE-06-MEMBER-DASHBOARD.md. |
 | FE-07 | Event Registration UI | PLANNED | BE-07 + BE-08 + FE-06 | TBD | Eligibility/capacity/retry/duplicate handling. |
 | FE-08 | Event Pass UI | PLANNED | BE-09 + FE-07 | TBD | Event entitlement distinct from member identity. |
 | FE-09 | Scanner / Check-In Workspace | PLANNED | BE-10 + FE-05 | TBD | Staff permissions/current state/recoverable feedback. |
@@ -301,3 +306,32 @@ Fresh integrated checks: strict npm ci, npm ls --all, Next build, standalone Typ
 Vercel Git deployment `dpl_Hm9qVfLjuczDw8XxrZgNV7w3jfXw` was READY for main SHA `6e3e8ca18c752a319e1a0e7ae361c5cdd63cfa44`, project ussrunning-web, live development review URL https://ussrunning-web-seven.vercel.app. Live browser smoke at 320/375/768/1024px passed 20 route/viewport cases across home, login, join, member card and admin: HTTP 200, no horizontal overflow and no page exceptions. Live member-card/admin views show controlled service-unavailable feedback; authenticated functionality is BLOCKED pending Neon/session staging setup and is not claimed as passing. HTTP 200 alone does not establish domain-flow success. Development reference route returned 404. Final documentation checkpoint SHA/deployment is verified after push and reported in the delivery response to avoid self-referential SHA churn. Manual human audit remains pending.
 
 Explicit remaining limitations: real Neon authenticated role/session staging validation; physical barcode scanning; protected CMS writers; barcode reissue; revision restore (not implemented); hydration warning root-cause audit; unsupported next lint. Auth non-login and profile adapter cutovers remain separate roadmap work. No persistent migration, real email, credential/environment change or published history rewrite occurred.
+
+### Neon auth configuration cutover — 2026-10-09
+
+See [AUTH-CONFIGURATION-CUTOVER.md](AUTH-CONFIGURATION-CUTOVER.md). Reused existing Neon main Better Auth; supplied missing Vercel server cookie secrets for production/preview and production verification-link base origin. Existing nine USS migrations rehearsed in isolation then applied transactionally after empty-schema/legacy-data guards. Existing trusted review origin retained. Profile presentation now delegates to authorized BE-04 services; legacy admin compatibility uses current USS database roles/status, never provider role claims or an admin-email override. Member IDs/barcodes and existing data retained. Real provider/email checks are separately reported; Resend key and verified sender remain missing. Active role staging, scanning, CMS protected writers, barcode reissue, revision restore, hydration root-cause audit and next lint limitations remain open. No live flow success is inferred from fixtures or HTTP 200.
+
+Auth cutover live evidence: real Neon signup, shared-provider OTP request, confirmed mailbox receipt, successful OTP verification, sign-out/session removal and sign-in/session restore passed on d0ba3ab. Exactly one mapped USS account/profile with member only remains pending_verification; backend activation was not bypassed. Authenticated deployed profile/card/CMS fail closed with verification-required rather than AUTH_NOT_CONFIGURED. Real active role/card/CMS success remains blocked by missing Resend key/verified sender and the USS ownership-proof/UI cutover. Full integrated 148/148 tests and two Card/CMS browser suites passed; zero warnings in those targeted probes does not close the broader hydration audit.
+
+### FE-06 member dashboard foundation — 2026-10-09
+
+Delivered source `ee5fc70` on feature/member-dashboard-foundation. Normal merge `61cee44`
+preserved independently delivered BE-07 (`fb7fb11`), trusted auth/profile cutover (`2193a60`)
+and ownership documentation; later auth verification documentation also merged forward.
+FE-06 changes only overview/loading, reusable member identity media, scoped composition and tests/docs.
+No auth configuration, event service/schema, registration/pass/check-in or CMS writer changes.
+
+Combined validation: 157/157 Node tests (125 backend, 32 frontend), build, standalone TypeScript,
+dependency graph and strict UI audit (zero findings) pass. FE-06 browser: 43 cases / 154 assertions,
+zero page exceptions/hydration warnings; narrow/short/desktop layouts, 200% zoom, lifecycle,
+permission-aware mobile navigation, failed refresh, duplicate prevention and FE-04 card entry.
+Existing form/auth/member/workspace/public-shell/card audits pass; older auth/public tests still
+capture hydration warnings, so FE-QA remains open. See FE-06-MEMBER-DASHBOARD.md for counts/limits.
+The exact delivered main SHA and Vercel result are verified after push and returned in the delivery
+report; no active authenticated member test is inferred from development fixtures.
+
+FE-07 requires BE-08 own-registration/eligibility/capacity contract and BE-07 event projections;
+event passes require BE-09 and notifications BE-16. FE-06 invents no records/counts/entitlement.
+Real independent active role/session/device validation, CMS writers, physical scanning, hydration
+root cause and unsupported lint remain open. Inherited Windows-encoded punctuation in the concurrently
+updated roadmap was normalized to UTF-8 without changing other tasks' content or policy.

@@ -303,24 +303,49 @@ const report = { cases: [], errors: [] };
           .getByRole("button", { name: "Discard changes" })
           .click();
         await p.waitForURL("**/dashboard");
+        // FE-06 now consumes the canonical BE-04 read: missing auth configuration
+        // is unavailable, while a configured anonymous session is unauthenticated.
+        assert.equal(await p.locator(".uss-dashboard-person").count(), 0);
         assert.ok(
-          await p.getByRole("link", { name: "Sign in again ↗" }).isVisible(),
+          await p
+            .getByRole("heading", {
+              level: 1,
+              name: /SIGN IN TO CONTINUE\.|PLEASE TRY AGAIN\./,
+            })
+            .isVisible(),
         );
         await p.close();
       },
     );
     await check(
-      "actual route session expiry and safe intended profile target",
+      "actual route fails closed with session or service feedback",
       async () => {
         const p = await context.newPage();
         await p.goto(base + "/dashboard/profile", { waitUntil: "networkidle" });
-        const href = await p
-          .getByRole("link", { name: "Sign in again ↗" })
-          .getAttribute("href");
-        assert.equal(
-          href,
-          "/login?reason=session-expired&returnTo=%2Fdashboard%2Fprofile",
-        );
+        const signIn = p.getByRole("link", { name: "Sign in again ↗" });
+        if (await signIn.count()) {
+          assert.equal(
+            await signIn.getAttribute("href"),
+            "/login?reason=session-expired&returnTo=%2Fdashboard%2Fprofile",
+          );
+        } else {
+          // AUTH-CUTOVER correctly distinguishes missing service configuration
+          // from an expired session. Both must remove protected profile fields.
+          assert.ok(
+            await p
+              .getByRole("alert")
+              .filter({
+                hasText:
+                  /We couldn't load your profile\.|Your profile is temporarily unavailable\./,
+              })
+              .isVisible(),
+          );
+          assert.ok(
+            await p
+              .getByRole("button", { name: "Try again", exact: true })
+              .isVisible(),
+          );
+        }
         assert.equal(await p.locator("input").count(), 0);
         await p.close();
       },

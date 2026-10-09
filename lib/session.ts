@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
-import { getAuth } from "@/lib/auth/server";
+import { requireAuthenticatedUser } from "@/lib/auth/session";
+import { getAuthorization } from "@/lib/authz/guards";
 import { query } from "@/lib/db";
-import { assertLegacyAccountNotBlocked } from "@/lib/auth/legacy-status";
+
 
 export type AppRole = "member" | "admin" | "super_admin";
 
@@ -12,35 +13,15 @@ export type CurrentUser = {
   role: AppRole;
 };
 
-function normalizeRole(role: unknown): AppRole {
-  return role === "admin" || role === "super_admin" ? role : "member";
-}
-
+/** Legacy action compatibility: provider identity, USS status and DB-owned roles. */
 export async function getCurrentUser(): Promise<CurrentUser | null> {
   try {
-    const { data: session } = await getAuth().getSession();
-    const user = session?.user;
-    if (!user?.id || !user.email) return null;
-    await assertLegacyAccountNotBlocked(user.id);
-
-    const configuredSuperAdmin = process.env.USS_SUPER_ADMIN_EMAIL?.trim().toLowerCase();
-    const email = user.email.toLowerCase();
-    const role =
-      configuredSuperAdmin && email === configuredSuperAdmin
-        ? "super_admin"
-        : normalizeRole((user as { role?: unknown }).role);
-
-    return {
-      id: user.id,
-      email: user.email,
-      name: user.name || user.email.split("@")[0],
-      role,
-    };
-  } catch {
-    return null;
-  }
+    const user = await requireAuthenticatedUser();
+    const { account, roles } = await getAuthorization();
+    const role: AppRole = roles.includes("super_admin") ? "super_admin" : roles.includes("admin") ? "admin" : "member";
+    return { id: user.providerUserId, email: account.email, name: account.displayName || user.name || account.email.split("@")[0], role };
+  } catch { return null; }
 }
-
 export async function requireUser() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");

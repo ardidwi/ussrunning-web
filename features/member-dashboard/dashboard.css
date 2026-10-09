@@ -1,0 +1,38 @@
+/* Overview composition only; shell, controls and brand tokens retain their canonical owners. */
+.uss-dashboard-person {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  min-width: 0;
+}
+.uss-dashboard-person > div:last-child {
+  min-width: 0;
+}
+.uss-dashboard-person .uss-badge {
+  margin-top: var(--space-2);
+}
+.uss-dashboard-note {
+  color: var(--uss-muted);
+  font-size: var(--uss-type-small);
+  margin: 0;
+  line-height: 1.5;
+}
+.uss-dashboard-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.uss-dashboard-section > h2 {
+  font-size: var(--uss-type-section);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.uss-dashboard-section > .uss-button {
+  margin-top: auto;
+}
+@media (max-width: 430px) {
+  .uss-dashboard-person {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

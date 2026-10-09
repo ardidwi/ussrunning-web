@@ -1,13 +1,11 @@
 "use server";
-import { getCurrentUser } from "@/lib/session";
+import { updateOwnMemberProfile } from "./profile-actions";
+import { projectProfile } from "./profile-adapter";
 import type { MemberResult, ProfileValues } from "./contract";
-// Replace this boundary with BE-04's authorized mutation once its contract exists.
-// Unsupported updates are not sent to the legacy database action.
-export async function saveProfile(
-  _values: ProfileValues,
-  _revision: string,
-): Promise<MemberResult> {
-  if (!(await getCurrentUser()))
-    return { state: "error", code: "UNAUTHENTICATED" };
-  return { state: "error", code: "PROFILE_UNAVAILABLE" };
+export async function saveProfile(values: ProfileValues, revision: string): Promise<MemberResult> {
+  if (!values || typeof values !== "object") return { state: "error", code: "VALIDATION_ERROR" };
+  return projectProfile(await updateOwnMemberProfile({ expectedVersion: revision, changes: {
+    fullName: values.fullName, phone: values.phone, city: values.city, instagramHandle: values.instagram,
+    emergencyContactName: values.emergencyContactName, emergencyContactPhone: values.emergencyContactPhone,
+  } }));
 }
