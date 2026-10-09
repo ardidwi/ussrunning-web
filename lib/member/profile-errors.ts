@@ -4,7 +4,7 @@ import type { FieldErrors, ProfileErrorCode, ProfileResult } from "./profile-typ
 export class ProfileError extends Error {
   constructor(public readonly code: ProfileErrorCode, public readonly fieldErrors?: FieldErrors) { super(code); }
 }
-export function profileFailure(error: unknown): ProfileResult<never> {
+export function profileFailure(error: unknown): Extract<ProfileResult<never>, { ok: false }> {
   if (error instanceof ProfileError) return { ok: false, code: error.code, ...(error.fieldErrors ? { fieldErrors: error.fieldErrors } : {}) };
   if (error instanceof AccountError) return { ok: false, code: error.code };
   return { ok: false, code: "PROFILE_UNAVAILABLE" };

@@ -18,7 +18,7 @@ export interface MemberProfileDTO {
   completion: { percentage: number; missingFields: string[] };
 }
 /** Private owner-only identifier; barcodeValue never grants authorization. */
-export interface MemberCardDTO { displayName: string; memberId: string; barcodeValue: string; status: AccountStatus; avatar: AvatarDTO | null }
+export type MemberCardDTO = Omit<import("./member-card-types").MemberCardPresentationDTO, "barcode"> & { barcodeValue: string };
 export type ProfileErrorCode = AccountErrorCode | "PROFILE_NOT_FOUND" | "PROFILE_VALIDATION_ERROR" | "PROFILE_UNAVAILABLE" | "MEDIA_NOT_FOUND" | "CONFLICT";
 export type FieldErrors = Partial<Record<keyof ProfilePatch | "expectedVersion" | "changes", "INVALID" | "REQUIRED" | "UNSUPPORTED" | "INCONSISTENT">>;
 export type ProfileResult<T> = { ok: true; data: T } | { ok: false; code: ProfileErrorCode; fieldErrors?: FieldErrors };

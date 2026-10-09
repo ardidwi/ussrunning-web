@@ -1,26 +1,13 @@
 import "server-only";
+import { ownRecord, safeAvatar } from "./member-read";
+import { getCurrentMemberCardPresentation } from "./member-card-service";
 import { requireActiveAccount, assertActiveAccount } from "@/lib/auth/guards";
 import { AccountError } from "@/lib/auth/errors";
 import { ProfileError, profileOperation } from "./profile-errors";
 import { profileCompletion } from "./profile-completion";
 import { validateProfileUpdate, validatePreferences } from "./profile-validation";
-import { readOwnProfile, updateOwnProfile } from "./profile-repository";
-import type { ProfileRecord } from "./profile-repository";
-import type { AvatarDTO, MemberCardDTO, MemberProfileDTO } from "./profile-types";
-function safeAvatar(avatar: ProfileRecord["avatar"]): AvatarDTO | null {
-  if (!avatar?.url) return null;
-  try { const url = new URL(avatar.url); if (url.protocol !== "https:" || url.username || url.password) return null; }
-  catch { return null; }
-  return { ...avatar, url: avatar.url };
-}
-async function ownRecord() {
-  const current = await requireActiveAccount();
-  const record = await readOwnProfile(current.id);
-  if (!record) throw new AccountError("ACCOUNT_NOT_PROVISIONED");
-  assertActiveAccount({ ...current, status: record.status, emailVerifiedAt: record.email_verified_at });
-  if (!record.profile || !record.version) throw new ProfileError("PROFILE_NOT_FOUND");
-  return record;
-}
+import { updateOwnProfile } from "./profile-repository";
+import type { MemberCardDTO, MemberProfileDTO } from "./profile-types";
 /** No global mutable-profile cache. Session authority always comes from existing guards. */
 export async function getCurrentMemberProfile(): Promise<MemberProfileDTO> {
   return profileOperation(async () => {
@@ -51,10 +38,8 @@ export async function updateCurrentMemberProfile(value: unknown): Promise<Member
     return getCurrentMemberProfile();
   });
 }
+/** BE-04 compatibility adapter; canonical presentation contract is owned by BE-05. */
 export async function getCurrentMemberCard(): Promise<MemberCardDTO> {
-  return profileOperation(async () => {
-    const record = await ownRecord();
-    return { displayName: typeof record.profile!.full_name === "string" && record.profile!.full_name.trim() ? record.profile!.full_name : record.display_name || record.member_id,
-      memberId: record.member_id,barcodeValue: record.barcode_value,status: record.status,avatar: safeAvatar(record.avatar) };
-  });
+  const { barcode, ...card } = await getCurrentMemberCardPresentation();
+  return { ...card, barcodeValue: barcode.value };
 }

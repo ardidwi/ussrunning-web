@@ -11,6 +11,7 @@
     "db:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/database-foundation.test.mjs",
     "auth:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/auth-account-lifecycle.test.mjs",
     "email:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/email-verification.test.mjs",
+    "member-card:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/member-card.test.mjs",
     "member:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/member-profile.test.mjs"
   },
   "dependencies": {
