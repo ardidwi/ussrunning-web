@@ -127,6 +127,8 @@ The FE branch actual head is `8961f0d`; its first-parent sequence is `3f7df20 ->
 
 See [FE-04-05-MAIN-INTEGRATION.md](FE-04-05-MAIN-INTEGRATION.md) for fresh candidate validation and final delivery evidence. FE-05 is DONE only as a presentation/read-only foundation: protected CMS writers are not integrated, permission visibility never replaces server authorization, real authenticated Neon roles/sessions remain unvalidated, and revision preview is partial and non-restorable. Full operational CMS remains planned under its domain tasks.
 
+Deployed development checkpoint: Vercel ussrunning-web / main at `6e3e8ca` reached READY. Twenty deployed mobile/desktop page cases passed, reference route remained 404 and fresh probes captured zero page exceptions/hydration warnings. Protected Member Card and CMS responses report `AUTH_NOT_CONFIGURED` and show controlled unavailable feedback. Configure trusted Neon Auth through the existing environment contract and secure configuration workflow before real authenticated role/member-card validation; no credential/environment change was made in this delivery. This is an explicit integration gap, not live authenticated feature evidence.
+
 Next dependencies: connect FE-02 auth adapters to BE-02/03, connect FE-03/FE-06 profile adapters to BE-04, then validate independent real roles/status revocation and device scanning. CMS editors require BE-11/12/13/14/15 protected writers and legacy crosswalk review; users/roles mutations require BE-17/18. FE-QA hydration root-cause and unsupported lint tooling remain explicit separate tasks. Human manual product audit of the current main Vercel environment remains pending.
 
 ## D. Backend roadmap
