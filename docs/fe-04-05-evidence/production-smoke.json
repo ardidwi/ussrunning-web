@@ -1,0 +1,68 @@
+[
+  {
+    "path": "/",
+    "status": 200,
+    "fixturePresent": false,
+    "cardPresent": false
+  },
+  {
+    "path": "/about",
+    "status": 200,
+    "fixturePresent": false,
+    "cardPresent": false
+  },
+  {
+    "path": "/runs",
+    "status": 200,
+    "fixturePresent": false,
+    "cardPresent": false
+  },
+  {
+    "path": "/membership",
+    "status": 200,
+    "fixturePresent": false,
+    "cardPresent": false
+  },
+  {
+    "path": "/stories",
+    "status": 200,
+    "fixturePresent": false,
+    "cardPresent": false
+  },
+  {
+    "path": "/partners",
+    "status": 200,
+    "fixturePresent": false,
+    "cardPresent": false
+  },
+  {
+    "path": "/login",
+    "status": 200,
+    "fixturePresent": false,
+    "cardPresent": false
+  },
+  {
+    "path": "/join",
+    "status": 200,
+    "fixturePresent": false,
+    "cardPresent": false
+  },
+  {
+    "path": "/design-system?surface=card",
+    "status": 404,
+    "fixturePresent": false,
+    "cardPresent": false
+  },
+  {
+    "path": "/dashboard/member-card?role=super_admin",
+    "status": 200,
+    "fixturePresent": false,
+    "cardPresent": false
+  },
+  {
+    "path": "/admin?role=super_admin",
+    "status": 200,
+    "fixturePresent": false,
+    "cardPresent": false
+  }
+]

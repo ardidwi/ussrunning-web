@@ -101,3 +101,9 @@ AuthShell preserves the existing login visual, typography and scroll composition
 ## FE-03 member workspace
 
 MemberDashboardShell owns a 240px desktop sidebar and a modal menu below 768px, with document scrolling throughout. The overview uses a restrained Impact welcome, square bordered identity/completion panels, and readable Arial information. Member composition lives in components/dashboard/member-dashboard.css; control tokens stay in ui.css. Existing unused legacy dashboard selectors were retired from cms.css. No public shell, motion or brand color changed.
+
+## FE-04 / FE-05 runtime ownership
+
+features/member-card owns private card composition. It reuses the existing qrcode dependency and the BE-05 protocol validator, with high correction and four-module white quiet zones. The centered USS logo sits in the card's separate brand area, never over required code modules. Member ID is human-readable; the full opaque payload is not noisy text. SVG export renders the same backend-issued value and does not create an identity or credential.
+
+features/cms reuses MemberDashboardShell's functional grammar and FE-01 controls. Permission-aware navigation uses links to existing /admin query views. Audit/revision entries use wrapping bordered lists on all widths, with native platform selects/date inputs. Dates filter UTC calendar days; displayed history timestamps explicitly use Asia/Jakarta (WIB). No new colors/fonts/library or homepage-style marketing hero in CMS. Legacy AdminWorkspace remains a clearly separate development reference pending the backend-documented legacy crosswalk.

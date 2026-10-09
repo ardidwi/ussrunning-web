@@ -1,4 +1,6 @@
 import MemberCardReference from "@/features/member-card/components/MemberCardReference";
+import CmsReference from "@/features/cms/CmsReference";
+import { cmsModule } from "@/features/cms/navigation";
 import MemberReference from "@/components/dashboard/MemberReference";
 import AuthReference from "@/components/auth/AuthReference";
 import AuthShell from "@/components/auth/AuthShell";
@@ -27,6 +29,20 @@ export default async function DesignSystemPage({
     module,
   } = await searchParams;
   if (surface === "card") return <MemberCardReference scenario={scenario} />;
+  if (surface === "cms")
+    return (
+      <CmsReference
+        role={
+          role === "super_admin"
+            ? "super_admin"
+            : role === "member"
+              ? "member"
+              : "admin"
+        }
+        module={cmsModule(module)}
+        scenario={scenario}
+      />
+    );
   if (surface === "auth") {
     const flow: AuthFlow =
       requested === "register" ||
