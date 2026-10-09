@@ -4,6 +4,12 @@ This root `AGENTS.md` is the default instruction baseline for all future agents 
 
 Act as a senior product engineer, not merely a code generator. Every implementation must consider product intent, maintainability, scalability, security, data integrity, frontend and backend architecture, UI consistency, UX quality, accessibility, observability, testing, regression risk, and deployment safety. Do not optimize only for making the immediate task work. Keep implementations understandable and maintainable as the product grows.
 
+## Repository lifecycle: EARLY DEVELOPMENT
+
+USS Running is currently in **EARLY DEVELOPMENT FAST-FEEDBACK MODE**. As declared for this phase, there are no real production users or critical live business transactions. Rapid iteration, continuous UI/UX feedback, manual product review, early detection of missing behavior and reduced backend/frontend integration lag are priorities.
+
+`main` means **latest known-good integrated development version**; its Vercel deployment is the **live development review environment**. This mode is temporary. Security, data integrity, scalable architecture and relevant production-like discipline still apply. Section 30 defines delivery authority; [docs/ENGINEERING-ROADMAP.md](docs/ENGINEERING-ROADMAP.md) records lifecycle phases, exit criteria and task evidence. Reconsider the mode when real users/data/operational reliance begins; do not apply it to later phases automatically.
+
 ## 1. Product-first engineering
 
 Before making changes, understand the user problem, intended users, applicable permissions, involved data, whether the feature is public/authenticated/administrative/internal, and whether the requirement is temporary/configurable/permanent.
@@ -111,7 +117,9 @@ Do not introduce pagination everywhere when the domain clearly remains tiny, but
 
 Before schema changes, inspect existing tables, constraints, indexes, and migrations; understand backward compatibility; and consider nullability and existing rows.
 
-Do not alter production data casually. Make schema changes explicit and reversible where practical. Migration success alone does not establish production correctness.
+Do not alter persistent or production data casually. Make schema changes explicit and reversible where practical. Migration success alone does not establish environment correctness. Early development does not authorize uncontrolled destructive operations: do not automatically delete the default/main Neon branch, drop important tables, truncate persistent data, rewrite applied migrations, run destructive persistent-environment migrations, delete storage buckets or remove production credentials without explicit task scope and validation. Normal additive safe migrations may proceed only within the approved task and after testing.
+
+Temporary Neon preview branches may be used when required. Track ownership and avoid stale accumulation. Near branch limits, distinguish Vercel-generated previews from persistent/manual branches; clean only obsolete previews with verified ownership and disposable status within authorized cleanup scope. Never automatically delete the default/main database branch.
 
 ## 19. Media and files
 
@@ -147,9 +155,11 @@ Before committing completed work, inspect `git diff`, `git status`, the current 
 
 ## 26. Git branch policy
 
-Never implement product work directly on `main`. Use a dedicated branch, for example `feature/<scope>`, `fix/<scope>`, `refactor/<scope>`, or `chore/<scope>`.
+Read AGENTS.md and the roadmap, inspect current main and protect unrelated work before implementation. Feature branches remain preferred for meaningful work: `feature/<scope>`, `fix/<scope>`, `refactor/<scope>` or `chore/<scope>`.
 
-Do not merge to `main` automatically or push directly to `main`.
+Use an isolated branch for authentication, authorization, schema/migrations, registration, payments, member identity, barcodes/event passes, check-in, permissions, infrastructure and major architecture refactors. During EARLY DEVELOPMENT, small low-risk copy, spacing, typography, responsive, documentation or safe UI-polish work may start directly on current main only when repository state is clean.
+
+After required validation, integrate completed work forward into main under section 30; do not leave validated work isolated indefinitely. Later phases require explicitly revised release gates.
 
 ## 27. Commit policy
 
@@ -157,19 +167,17 @@ Create commits by logical units of work with descriptive messages, such as `feat
 
 Avoid vague messages such as `update`, `fix stuff`, `changes`, or `final`. Do not combine unrelated refactors with feature work.
 
-## 28. Global auto-push policy
+## 28. Global delivery and auto-push policy
 
 Once a task or meaningful checkpoint is complete and required validation passes:
 
-1. Review the diff.
-2. Confirm the current branch.
-3. Confirm no unrelated files are present in the completed change.
-4. Commit the completed work.
-5. Push the current feature branch to `origin`.
+1. Review diff, status, current branch and exact changed files; exclude unrelated work.
+2. Commit the completed logical unit and push its task branch, if used, to origin.
+3. During EARLY DEVELOPMENT, integrate tested work forward into current main; rerun relevant validation if the combined state differs from the tested state.
+4. Push main normally and verify its Vercel deployment under section 30.
+5. Record integration/deployment evidence, update the roadmap when applicable and report for manual product audit.
 
-If the remote branch does not exist, use `git push -u origin <current-branch>`. Otherwise use `git push origin <current-branch>`.
-
-Auto-push to feature/fix/refactor branches is allowed. Auto-merge is not allowed. Preserve unrelated pre-existing working tree changes; do not stage them into the task's commit.
+For a new task branch use `git push -u origin <current-branch>`; otherwise use `git push origin <current-branch>`. Push main explicitly with `git push origin main` after inspecting its state. Preserve unrelated pre-existing changes; never stage them into the task commit. Normal validated auto-integration/main push requires no separate approval during this declared phase; it is not perpetual production authorization.
 
 ## 29. Never force push by default
 
@@ -177,9 +185,19 @@ Never run `git push --force` or `git push -f` unless explicitly authorized for t
 
 If remote history diverges, fetch, inspect, understand the divergence, integrate safely, rerun validation, and push normally. Do not overwrite another developer's changes.
 
-## 30. Never auto-merge main
+## 30. Early development main integration and Vercel delivery
 
-Agents may implement, test, commit, and push a feature branch. Do not merge to main, push main, deploy production, delete remote branches, or rewrite history unless explicitly requested. Human review is the default merge gate.
+During **EARLY DEVELOPMENT FAST-FEEDBACK MODE**, agents may merge validated completed work into main, push main, allow existing Vercel Git integration to deploy main, verify deployment and repair forward without separate human approval for each normal merge. Main must remain the latest known-good integrated development state. Meaningful work uses a feature branch; low-risk clean-main work follows section 26.
+
+Before main updates, inspect diff/status and verify dependency integrity, standalone TypeScript, build, relevant tests and browser/contract checks where applicable. Record pre-existing failures explicitly; never hide new failures or equate typecheck with frontend completion. Fetch/inspect divergence, integrate safely, rerun relevant checks and push normally. Never overwrite others' work. Remote branch deletion and published history rewrite are not implied; section 29 still applies.
+
+After main push, verify the intended Vercel project/environment started deployment, completed successfully and deployed the correct SHA. Check core/relevant pages for obvious runtime failures. Report state, SHA, URL and errors. Blocked access/infrastructure must be reported explicitly; do not claim deployment verification or complete delivery without evidence.
+
+The deployed main application is this phase's primary manual product review environment. Every frontend task reviews relevant deployed desktop/mobile layout, responsiveness, typography, spacing, navigation, motion, forms, loading/empty/error states, touch interactions, accessibility and overflow. Provide the URL for manual audit; never claim a human audit occurred unless it did.
+
+If integration/deployment reveals a problem, identify it, fix forward, validate, commit and push main. If it severely blocks the application and cannot be repaired immediately, use a normal `git revert <problematic-integration-commit>` and push the revert. Never rewrite main history or silently leave it broken.
+
+This mode is temporary. Reconsider it at the roadmap's real-user/data/operational exit triggers and explicitly adopt stricter `feature -> preview/staging -> review -> main -> production` controls for later phases. Database/storage/credential safety remains strict; deployment authorization does not permit destructive data operations or broader infrastructure changes outside task scope.
 
 ## 31. Dependency changes
 
@@ -229,21 +247,25 @@ A rendered page, existing button, single API response, or working happy path alo
 
 After every engineering task, report:
 
-- **Task:** What was implemented.
-- **Architecture:** Important architectural decisions.
-- **Files:** Created and modified files.
-- **Validation:** Exact tests/build/typecheck results; distinguish passed, failed, blocked, not executed, and pre-existing issues.
-- **Git:** Branch, commit SHA, remote branch, push result, and clean/dirty working tree.
-- **Main safety:** Explicitly state whether main was modified or pushed, whether any merge occurred, and whether production changed.
-- **Limitations:** Anything not validated or intentionally deferred.
-- **Follow-up:** Recommended next engineering step; do not perform it unless included in scope.
+- **Task / Files:** What changed and the created/modified files.
+- **Product impact:** What users/admins can now do, or the policy effect for documentation tasks.
+- **Architecture:** Important decisions and preserved boundaries.
+- **UI / UX:** What was reviewed, including deployed results where relevant.
+- **Validation:** Exact results; distinguish passed, failed, blocked, not executed and pre-existing issues.
+- **Git:** Task branch if used, task commit, main integration commit, origin/main SHA, push results and clean/dirty worktree status.
+- **Deployment:** Vercel state, deployed SHA, URL when available and errors; distinguish requested checks from verified evidence.
+- **Data safety:** Database/storage changes, whether migrations ran and persistent-environment impact.
+- **Known limitations:** Anything not fully validated or deferred; accurately state main merge/push and deployment actions.
+- **Next roadmap task:** Recommended next action; do not implement it unless included in scope.
 
 ## 42. Default engineering flow
 
-Follow `UNDERSTAND -> INSPECT EXISTING ARCHITECTURE -> IDENTIFY REUSABLE PATTERNS -> DESIGN SMALLEST SCALABLE SOLUTION -> IMPLEMENT -> CHECK UI/UX -> CHECK SECURITY -> TEST -> REGRESSION -> REVIEW DIFF -> COMMIT -> PUSH FEATURE BRANCH -> REPORT`.
+During EARLY DEVELOPMENT follow `READ AGENTS.md -> READ ENGINEERING-ROADMAP.md -> INSPECT CURRENT MAIN -> UNDERSTAND PRODUCT/CONTRACTS -> REUSE EXISTING PATTERNS -> IMPLEMENT SMALLEST SCALABLE SOLUTION -> CHECK SCALABILITY/UI/UX/SECURITY -> TEST -> REGRESSION -> REVIEW DIFF -> COMMIT -> PUSH -> INTEGRATE TO MAIN -> PUSH MAIN -> VERIFY VERCEL DEPLOYMENT -> REPORT / MANUAL PRODUCT AUDIT -> NEXT ITERATION`.
 
-Never use `IMPLEMENT -> PUSH -> HOPE IT WORKS`.
+Later phases use their revised preview/staging/review release gates. Never use `IMPLEMENT -> PUSH -> HOPE IT WORKS`.
 
 ## 43. Global definition of done
 
-Unless the task clearly excludes a category, completion requires respected product intent, maintainable architecture, preserved security boundaries, consistent UI, handled UX states, acceptable mobile behavior, basic accessibility, scalable data handling, reused contracts, passing relevant tests, regression checks, reviewed diff, created commit, pushed feature branch, reported working tree status, untouched main, and untouched production unless deployment was explicitly requested.
+Unless the task clearly excludes a category, completion requires respected product intent, maintainable/scalable architecture, preserved security boundaries, consistent reviewed UI/UX, acceptable mobile behavior/accessibility, scalable data handling, reused contracts, passing relevant TypeScript/build/tests, checked regressions, reviewed diff, clear commit, pushed task work, reported worktree state and documented limitations.
+
+During EARLY DEVELOPMENT normal delivery additionally requires integration into main, main push, Vercel deployment verification and roadmap updates when applicable. Main integration is part of done, not an indefinitely deferred option. Document known pre-existing failures; blocked deployment verification means incomplete delivery, not a fabricated success. Database/storage changes remain scoped/tested. Manual product audit is expected after deployment and remains pending unless actually performed. Later phases replace these gates with approved stricter release controls.
