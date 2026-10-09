@@ -176,15 +176,15 @@ const { chromium } = require(modulePath);
     );
     report.interactions.push("Toast dismissal and reduced motion");
     await page.goto(base + "/join");
-    const first = page.getByLabel("First name", { exact: false });
+    const first = page.getByLabel("Full name", { exact: false });
     await first.fill("Very long community member name");
     await page.locator('input[name="password"]').fill("PasswordPreview123");
     await page
       .locator('input[name="confirmPassword"]')
       .fill("MismatchPreview123");
-    await page.getByRole("button", { name: "CREATE USS ID" }).click();
+    await page.getByRole("button", { name: "Create account ↗" }).click();
     assert.ok(
-      await page.getByText("Password confirmation does not match.").isVisible(),
+      await page.getByText("Passwords do not match.").isVisible(),
     );
     assert.equal(await first.inputValue(), "Very long community member name");
     report.interactions.push(

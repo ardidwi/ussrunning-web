@@ -26,9 +26,18 @@ const { chromium } = require(
       await page.setViewportSize({ width, height });
       for (const surface of ["admin", "member"]) {
         await page.goto(
-          "http://127.0.0.1:3000/design-system?surface=" + surface,
+          "http://127.0.0.1:3000/design-system?surface=" +
+            surface +
+            (surface === "member" ? "&flow=profile&scenario=active" : ""),
           { waitUntil: "domcontentloaded" },
         );
+        await page.waitForFunction(() => {
+          const button = document.querySelector("button");
+          return (
+            button &&
+            Object.keys(button).some((key) => key.startsWith("__reactProps"))
+          );
+        });
         if (surface === "admin")
           await page.getByRole("button", { name: "02 Website" }).click();
         assert.ok(
@@ -45,7 +54,7 @@ const { chromium } = require(
           ),
         );
         const save = page.getByRole("button", {
-          name: surface === "member" ? "SAVE PROFILE" : "PUBLISH HOME HERO",
+          name: surface === "member" ? /Save changes/i : "PUBLISH HOME HERO",
           exact: false,
         });
         await save.first().scrollIntoViewIfNeeded();
