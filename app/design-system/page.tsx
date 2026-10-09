@@ -1,3 +1,4 @@
+import MemberCardReference from "@/features/member-card/components/MemberCardReference";
 import MemberReference from "@/components/dashboard/MemberReference";
 import AuthReference from "@/components/auth/AuthReference";
 import AuthShell from "@/components/auth/AuthShell";
@@ -9,10 +10,23 @@ import WorkspaceReference from "@/components/ui/WorkspaceReference";
 export default async function DesignSystemPage({
   searchParams,
 }: {
-  searchParams: Promise<{ surface?: string; flow?: string; scenario?: string }>;
+  searchParams: Promise<{
+    surface?: string;
+    flow?: string;
+    scenario?: string;
+    role?: string;
+    module?: string;
+  }>;
 }) {
   if (process.env.NODE_ENV !== "development") notFound();
-  const { surface, flow: requested, scenario = "success" } = await searchParams;
+  const {
+    surface,
+    flow: requested,
+    scenario = "success",
+    role,
+    module,
+  } = await searchParams;
+  if (surface === "card") return <MemberCardReference scenario={scenario} />;
   if (surface === "auth") {
     const flow: AuthFlow =
       requested === "register" ||
