@@ -93,7 +93,9 @@ test('audit DTO minimizes PII/secrets and unsafe raw metadata for every role',as
  for(const secret of ['private@example.com','raw-proof','raw-secret','12025550100','password','provider','ip_hash','request_id'])assert.ok(!JSON.stringify(row).includes(secret));
 });
 test('audit cursor retains microseconds, stable ties and fixed window without duplicate pages',async()=>{
- const a=await principal('admin');const at=new Date().toISOString().slice(0,19)+'.123456Z';const ids=[];for(let i=0;i<5;i++)ids.push(await log(a.id,'story.updated','story',{},at));
+ // Keep the fixed microsecond fixture before the default query window end.
+ // Using the current second can put .123456 ahead of now and make this test timing-dependent.
+ const a=await principal('admin');const at=new Date(Date.now()-1000).toISOString().slice(0,19)+'.123456Z';assert.ok(Date.parse(at)<Date.now());const ids=[];for(let i=0;i<5;i++)ids.push(await log(a.id,'story.updated','story',{},at));
  let cursor;const seen=[];do{const response=await auditActions.getAuditHistory({actorId:a.id,limit:2,...(cursor?{cursor}:{})});assert.equal(response.ok,true);seen.push(...response.data.items.map(x=>x.id));cursor=response.data.nextCursor;}while(cursor);
  assert.deepEqual(seen,[...ids].sort());assert.equal(new Set(seen).size,5);
 });
