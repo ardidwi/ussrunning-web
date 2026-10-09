@@ -1,0 +1,35 @@
+✔ active owner confirmed, UUID identity and PII-free DTO (1907.9938ms)
+✔ duplicate and parallel same-owner registration are idempotent without extra audit (45.1585ms)
+✔ last-slot concurrency across accounts gives one confirmed and one waitlisted (46.2672ms)
+✔ without waitlist a full event fails without creating registration (47.6669ms)
+✔ unlimited capacity permits all members without fabricated availability (53.8785ms)
+✔ unpublished/private/archived and invalid lifecycle fail closed (248.9825ms)
+✔ window before open/after close/at start rejected; nullable bounds supported (142.8081ms)
+✔ active verified members-only eligibility; invitations/custom requirements not bypassed (143.307ms)
+✔ anonymous/pending/suspended/deactivated are rejected before writes (65.9023ms)
+✔ owner detail/history cannot enumerate another member or spoof authority (58.531ms)
+✔ cancellation preserves row and identity, repeats idempotently and frees slot (69.5164ms)
+✔ cancelled re-registration rechecks full capacity and preserves original identity/date (128.399ms)
+✔ cancelled re-registration full without waitlist remains cancelled (103.2199ms)
+✔ pending/rejected cannot self-confirm; no automatic waitlist promotion (282.1694ms)
+✔ checked-in registration cannot be cancelled through owner/admin crafted requests (111.2136ms)
+✔ owner cutoff/state restrictions and managed cancellation permission (111.9644ms)
+✔ event changes/role revocation/account suspension between guard and transaction reject (131.5905ms)
+✔ event capacity cannot be lowered below confirmed occupancy (127.485ms)
+✔ identity immutable DB anchors reject reassignment; service performs no deletion/pass issuance (54.9364ms)
+✔ history pagination bounded, cursor owner/filter bound and microsecond safe (242.5387ms)
+✔ managed list requires event scope and fresh admin/super-admin authority (71.8085ms)
+✔ audit is minimized and failure rolls back booking and occupied slot (121.3684ms)
+✔ runtime grants permit services without destructive privilege; missing DB sanitized (76.5324ms)
+✔ parallel fixture load stays within capacity and counts every remaining member as waitlisted (270.1465ms)
+✔ cancel/re-register race never allows a stale cancellation to remove the new booking (98.5626ms)
+✔ capacity decision reads changes after lock, not stale service preflight data (79.1841ms)
+✔ precise history cursor handles microsecond timestamp ties without duplicates (208.178ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5589.6325

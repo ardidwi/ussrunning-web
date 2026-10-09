@@ -1,7 +1,7 @@
 import "server-only";
 import { AccountError } from "@/lib/auth/errors";
 import { AuthorizationError } from "@/lib/authz/errors";
-export type EventErrorCode = "EVENT_VALIDATION_ERROR" | "EVENT_NOT_FOUND" | "EVENT_SLUG_CONFLICT" | "EVENT_CONFLICT" | "EVENT_INVALID_TRANSITION" | "EVENT_MEDIA_NOT_FOUND" | "EVENT_UNAVAILABLE";
+export type EventErrorCode = "EVENT_VALIDATION_ERROR" | "EVENT_NOT_FOUND" | "EVENT_SLUG_CONFLICT" | "EVENT_CONFLICT" | "EVENT_INVALID_TRANSITION" | "EVENT_MEDIA_NOT_FOUND" | "EVENT_UNAVAILABLE" | "EVENT_CAPACITY_CONFLICT";
 export class EventError extends Error {
     constructor(public readonly code: EventErrorCode) { super(code); }
 }

@@ -50,6 +50,7 @@ export async function writeEvent(actorId: string, content: EventContent | null, 
  WHEN $4::uuid IS NOT NULL AND NOT EXISTS(SELECT 1 FROM current) THEN 'EVENT_NOT_FOUND'
  WHEN $4::uuid IS NOT NULL AND (SELECT token FROM current)<>$5 THEN 'EVENT_CONFLICT'
  WHEN $6::text IS NOT NULL AND NOT ((SELECT status FROM current)=ANY($7::text[])) THEN 'EVENT_INVALID_TRANSITION'
+ WHEN $3::jsonb IS NOT NULL AND (input.patch->>'capacity') IS NOT NULL AND (input.patch->>'capacity')::integer < (SELECT count(*) FROM uss.event_registrations r WHERE r.event_id=$4 AND (r.status='confirmed' OR EXISTS(SELECT 1 FROM uss.check_ins c WHERE c.registration_id=r.id))) THEN 'EVENT_CAPACITY_CONFLICT'
  WHEN $3::jsonb IS NOT NULL AND (input.patch->>'coverMediaId') IS NOT NULL AND NOT EXISTS(SELECT 1 FROM media) THEN 'EVENT_MEDIA_NOT_FOUND'
  ELSE 'OK' END AS code FROM input), changed AS (${mutation}),
  revision AS (INSERT INTO uss.event_revisions(event_id,version,snapshot,created_by,action)
