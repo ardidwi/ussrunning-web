@@ -1,0 +1,36 @@
+{
+  "node": {
+    "total": 157,
+    "passed": 157,
+    "failed": 0,
+    "skipped": 0,
+    "backend": 125,
+    "frontend": 32,
+    "dashboardNew": 9
+  },
+  "dashboardBrowser": {
+    "cases": 43,
+    "assertions": 154,
+    "exceptions": 0,
+    "hydrationWarnings": 0
+  },
+  "memberBrowser": {
+    "cases": 41,
+    "errors": 0
+  },
+  "npmCi": "passed: 259 installed",
+  "depsCheck": "passed",
+  "build": "passed",
+  "standaloneTypescript": "passed",
+  "strictUiAudit": {
+    "findings": 0
+  },
+  "lint": "known unsupported next lint failure",
+  "designLint": {
+    "errors": 0,
+    "existingWarnings": 4
+  },
+  "olderBrowserHydrationWarnings": 3,
+  "dependencyDrift": false,
+  "liveActiveRoleQa": "not performed by FE-06"
+}

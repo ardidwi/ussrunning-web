@@ -63,7 +63,7 @@ Existing /login query views provide verification/forgot/reset and session-expiry
 
 ## FE-03 member profile behavior
 
-Business sources: PRD sections 3, 7, 18–19; ERD proposed member_profiles; docs/FE-03-MEMBER-FRONTEND.md records the provisional boundary. BE-04 is absent; proposed ERD columns do not constitute an implemented API. Production does not infer active/verified status from the provider session, write legacy profiles, or manufacture completion.
+Business sources: PRD sections 3, 7, 18–19; ERD proposed member_profiles; docs/FE-03-MEMBER-FRONTEND.md records the provisional boundary. The original FE-03 foundation predates BE-04; the AUTH-CUTOVER-owned adapter now projects its trusted owner contract. Proposed ERD columns do not constitute an implemented API. Production does not infer active/verified status from the provider session, write legacy profiles, or manufacture completion.
 
 MemberDashboardShell owns member navigation and one main landmark. Mobile navigation reuses Modal; current links use aria-current. Profile sections reuse canonical Field/Input/FormSection/FormActions, Button, Toast and validation associations. ProfileCompletion only presents response percentage/missing fields. MemberFeedback reuses FE-02 AuthStatus, code normalization, verification route and safe return paths.
 

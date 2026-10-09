@@ -318,17 +318,34 @@ const report = { cases: [], errors: [] };
       },
     );
     await check(
-      "actual route session expiry and safe intended profile target",
+      "actual route fails closed with session or service feedback",
       async () => {
         const p = await context.newPage();
         await p.goto(base + "/dashboard/profile", { waitUntil: "networkidle" });
-        const href = await p
-          .getByRole("link", { name: "Sign in again ↗" })
-          .getAttribute("href");
-        assert.equal(
-          href,
-          "/login?reason=session-expired&returnTo=%2Fdashboard%2Fprofile",
-        );
+        const signIn = p.getByRole("link", { name: "Sign in again ↗" });
+        if (await signIn.count()) {
+          assert.equal(
+            await signIn.getAttribute("href"),
+            "/login?reason=session-expired&returnTo=%2Fdashboard%2Fprofile",
+          );
+        } else {
+          // AUTH-CUTOVER correctly distinguishes missing service configuration
+          // from an expired session. Both must remove protected profile fields.
+          assert.ok(
+            await p
+              .getByRole("alert")
+              .filter({
+                hasText:
+                  /We couldn't load your profile\.|Your profile is temporarily unavailable\./,
+              })
+              .isVisible(),
+          );
+          assert.ok(
+            await p
+              .getByRole("button", { name: "Try again", exact: true })
+              .isVisible(),
+          );
+        }
         assert.equal(await p.locator("input").count(), 0);
         await p.close();
       },
