@@ -80,4 +80,3 @@ Domain tests use isolated PostgreSQL WASM and mocked provider/transport boundari
 5. Document every override's upstream cause, expected versions, and removal criteria.
 6. Gate future CI/agent delivery on install, dependency health, build, TypeScript, and applicable domain/frontend tests.
 7. Preserve internal auth/session boundaries as member, CMS, event, admin, integration, email, and future mobile/API features expand.
-
