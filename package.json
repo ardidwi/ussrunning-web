@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deps:check": "npm ls --all"
   },
   "dependencies": {
     "@neondatabase/auth": "0.5.0-beta",
@@ -20,5 +21,12 @@
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "typescript": "^5.7.2"
+  },
+  "overrides": {
+    "@better-auth/core": "1.6.23",
+    "@better-fetch/fetch": "1.3.1",
+    "@neondatabase/auth-ui@0.3.0-beta": {
+      "@daveyplate/better-auth-ui": "3.3.15"
+    }
   }
 }
