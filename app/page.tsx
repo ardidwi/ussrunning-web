@@ -1,3 +1,4 @@
+import { LinkButton } from "@/components/ui/Button";
 import Link from "next/link";
 import SiteFooter from "@/components/SiteFooter";
 import EventCard from "@/components/EventCard";
@@ -25,7 +26,7 @@ function objectContent(value: unknown) {
 function textValue(
   value: Record<string, unknown>,
   key: string,
-  fallback: string
+  fallback: string,
 ) {
   return typeof value[key] === "string" ? String(value[key]) : fallback;
 }
@@ -91,7 +92,11 @@ export default async function HomePage() {
           <div className="section-heading">
             <div>
               <span className="kicker">01 / NEXT UP</span>
-              <h2>MEET US<br />ON THE ROAD.</h2>
+              <h2>
+                MEET US
+                <br />
+                ON THE ROAD.
+              </h2>
             </div>
             <Link href="/runs" className="arrow-link">
               VIEW ALL RUNS ↗
@@ -131,14 +136,21 @@ export default async function HomePage() {
         <div className="content-frame">
           <div className="collaborations-head">
             <span className="kicker">03 / SELECTED COLLABORATIONS</span>
-            <h2>BRANDS WE&apos;VE<br />RUN WITH.</h2>
+            <h2>
+              BRANDS WE&apos;VE
+              <br />
+              RUN WITH.
+            </h2>
             <p>
               A selection of brands, spaces and communities that have moved with
               USS Running across events, campaigns and race-week moments.
             </p>
           </div>
 
-          <div className="collaboration-grid" aria-label="Selected collaborators">
+          <div
+            className="collaboration-grid"
+            aria-label="Selected collaborators"
+          >
             {collaborations.map((brand) => (
               <div className="collaboration-brand" key={brand}>
                 <span>{brand}</span>
@@ -159,7 +171,7 @@ export default async function HomePage() {
             src={textValue(
               membership,
               "imageUrl",
-              "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=1500&q=85"
+              "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=1500&q=85",
             )}
             alt="USS membership"
           />
@@ -173,29 +185,35 @@ export default async function HomePage() {
             {textValue(
               membership,
               "headline",
-              "ONE COMMUNITY.\nNO PAID TIER.\nONE ID."
+              "ONE COMMUNITY.\nNO PAID TIER.\nONE ID.",
             )}
           </h2>
           <p>
             {textValue(
               membership,
               "description",
-              "USS membership is free. Create one community ID to RSVP to runs, keep your run pass and build your USS history as you keep showing up."
+              "USS membership is free. Create one community ID to RSVP to runs, keep your run pass and build your USS history as you keep showing up.",
             )}
           </p>
-          <Link
-            className="button button-light"
+          <LinkButton
+            className=""
             href={textValue(membership, "ctaHref", "/membership")}
           >
             {textValue(membership, "ctaLabel", "JOIN USS — FREE")}
-          </Link>
+          </LinkButton>
         </div>
       </section>
 
       <section className="story-band">
         <div className="story-band-title">
           <span className="kicker">05 / STORIES</span>
-          <h2>THE PEOPLE.<br />THE CITY.<br />THE MILES.</h2>
+          <h2>
+            THE PEOPLE.
+            <br />
+            THE CITY.
+            <br />
+            THE MILES.
+          </h2>
         </div>
 
         <Link
@@ -212,7 +230,7 @@ export default async function HomePage() {
               textValue(
                 storyFeature,
                 "imageUrl",
-                "https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=1600&q=85"
+                "https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=1600&q=85",
               )
             }
             alt=""
@@ -227,7 +245,7 @@ export default async function HomePage() {
                 textValue(
                   storyFeature,
                   "headline",
-                  "18 RUNNERS. DAY ONE. THE START OF USS."
+                  "18 RUNNERS. DAY ONE. THE START OF USS.",
                 )}
             </h3>
             <span>READ THE STORY ↗</span>
@@ -241,7 +259,11 @@ export default async function HomePage() {
             <div className="home-gallery-head">
               <div>
                 <span className="kicker">06 / COMMUNITY GALLERY</span>
-                <h2>SEEN ON<br />THE ROAD.</h2>
+                <h2>
+                  SEEN ON
+                  <br />
+                  THE ROAD.
+                </h2>
               </div>
               <p>
                 Selected USS moments. The CMS controls which images appear here,
@@ -252,9 +274,14 @@ export default async function HomePage() {
 
             <div className="home-gallery-grid">
               {gallery.slice(0, 6).map((item, index) => (
-                <figure key={item.id} className={index === 0 ? "is-featured" : ""}>
+                <figure
+                  key={item.id}
+                  className={index === 0 ? "is-featured" : ""}
+                >
                   <img src={item.url} alt={item.alt} />
-                  {item.caption ? <figcaption>{item.caption}</figcaption> : null}
+                  {item.caption ? (
+                    <figcaption>{item.caption}</figcaption>
+                  ) : null}
                 </figure>
               ))}
             </div>
@@ -264,10 +291,19 @@ export default async function HomePage() {
 
       <section className="partner-strip">
         <div className="partner-strip-inner">
-          <span className="partner-strip-label">RUNNING IS THE ENTRY POINT</span>
+          <span className="partner-strip-label">
+            RUNNING IS THE ENTRY POINT
+          </span>
           <div className="partner-wordmarks" aria-label="USS community pillars">
-            <b>RUN</b><i>/</i><b>CHEER</b><i>/</i><b>EAT</b><i>/</i>
-            <b>CREATE</b><i>/</i><b>CONNECT</b>
+            <b>RUN</b>
+            <i>/</i>
+            <b>CHEER</b>
+            <i>/</i>
+            <b>EAT</b>
+            <i>/</i>
+            <b>CREATE</b>
+            <i>/</i>
+            <b>CONNECT</b>
           </div>
           <Link href="/partners">BUILD WITH USS ↗</Link>
         </div>

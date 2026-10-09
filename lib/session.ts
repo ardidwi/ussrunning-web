@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getAuth } from "@/lib/auth/server";
 import { query } from "@/lib/db";
+import { assertLegacyAccountNotBlocked } from "@/lib/auth/legacy-status";
 
 export type AppRole = "member" | "admin" | "super_admin";
 
@@ -20,6 +21,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     const { data: session } = await getAuth().getSession();
     const user = session?.user;
     if (!user?.id || !user.email) return null;
+    await assertLegacyAccountNotBlocked(user.id);
 
     const configuredSuperAdmin = process.env.USS_SUPER_ADMIN_EMAIL?.trim().toLowerCase();
     const email = user.email.toLowerCase();

@@ -17,34 +17,7 @@
   border-bottom:0!important;
   pointer-events:auto;
 }
-.uss-motion-story .scroll-distance{display:none!important}
-.uss-motion-story .site-header-inner{
-  min-height:96px;
-  padding-inline:3.5vw;
-}
 .uss-motion-story .brand-logo{width:140px;max-height:56px;object-fit:contain}
-.uss-motion-story .header-main-nav{
-  display:flex;
-  align-items:center;
-  width:100%;
-  gap:clamp(28px,3.7vw,72px);
-  margin-left:clamp(36px,8vw,150px);
-}
-.uss-motion-story .header-main-nav a{
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:.12em;
-  white-space:nowrap;
-}
-.uss-motion-story .header-main-nav a:last-child{
-  margin-left:auto;
-  min-width:180px;
-  justify-content:center;
-  padding:18px 28px;
-  border:1px solid rgba(255,255,255,.78);
-  border-radius:999px;
-}
-.uss-motion-story .header-main-nav a:last-child:after{content:" ↗";font-size:16px}
 .uss-motion-story .header-actions{display:none!important}
 
 .uss-motion-stage{
@@ -196,20 +169,14 @@
 .uss-motion-scrubber>a:hover{color:var(--red)}
 
 @media(max-width:1180px){
-  .uss-motion-story .header-main-nav{gap:26px;margin-left:56px}
-  .uss-motion-story .header-main-nav a{font-size:10px}
-  .uss-motion-story .header-main-nav a:last-child{min-width:150px;padding:15px 22px}
   .uss-motion-copy{width:min(43vw,600px)}
   .uss-motion-copy h1{font-size:clamp(62px,7vw,96px)}
   .uss-motion-hud{right:20px}
 }
 
 @media(max-width:860px){
-  .uss-motion-story .site-header-inner{min-height:82px;padding-inline:16px}
   .uss-motion-story .brand-logo{width:92px}
-  .uss-motion-story .header-main-nav{display:none!important}
   .uss-motion-story .header-actions{display:flex!important}
-  .uss-motion-story .mobile-menu-trigger{display:flex!important}
   .uss-motion-est{top:106px;right:16px;font-size:7px}
   .uss-motion-hud{display:none}
   .uss-motion-background img{opacity:.28;object-position:60% center}

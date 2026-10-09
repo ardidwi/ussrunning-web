@@ -1,0 +1,77 @@
+[
+  {
+    "route": "/design-system",
+    "status": 404,
+    "passed": true
+  },
+  {
+    "route": "/design-system?surface=member&flow=profile",
+    "status": 404,
+    "passed": true
+  },
+  {
+    "route": "/dashboard",
+    "status": 200,
+    "passed": true
+  },
+  {
+    "route": "/dashboard/profile",
+    "status": 200,
+    "passed": true
+  },
+  {
+    "route": "/dashboard/member-card",
+    "status": 200,
+    "passed": true
+  },
+  {
+    "route": "/dashboard/events",
+    "status": 200,
+    "passed": true
+  },
+  {
+    "route": "/dashboard/settings",
+    "status": 200,
+    "passed": true
+  },
+  {
+    "route": "/",
+    "status": 200,
+    "passed": true
+  },
+  {
+    "route": "/about",
+    "status": 200,
+    "passed": true
+  },
+  {
+    "route": "/runs",
+    "status": 200,
+    "passed": true
+  },
+  {
+    "route": "/membership",
+    "status": 200,
+    "passed": true
+  },
+  {
+    "route": "/stories",
+    "status": 200,
+    "passed": true
+  },
+  {
+    "route": "/partners",
+    "status": 200,
+    "passed": true
+  },
+  {
+    "route": "/login",
+    "status": 200,
+    "passed": true
+  },
+  {
+    "route": "/join",
+    "status": 200,
+    "passed": true
+  }
+]

@@ -1,3 +1,4 @@
+import "server-only";
 import { createNeonAuth } from "@neondatabase/auth/next/server";
 
 export function isAuthConfigured() {
@@ -21,6 +22,6 @@ export function getAuth() {
     cookies: {
       secret,
     },
-    logLevel: "warn",
+    logLevel: "silent",
   });
 }

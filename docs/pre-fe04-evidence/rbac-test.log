@@ -1,0 +1,31 @@
+
+> ussrunning-web@0.1.0 rbac:test
+> node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/rbac-history.test.mjs
+
+✔ member self permissions allowed; CMS/audit/reserved permissions rejected (5505.6231ms)
+✔ admin operational permissions allowed but reserved super-admin capabilities denied (35.9861ms)
+✔ super-admin has complete matrix; no role mutation/elevation endpoint exists (24.7301ms)
+✔ anonymous and non-active administrator denied despite role (27.6527ms)
+✔ fresh DB role/status authority overrides spoofed provider/client fields (27.0896ms)
+✔ any/role guards fail closed for unknown, empty and excessive permission input (9.6662ms)
+✔ member cannot inspect audit or unpublished revision even with valid identifiers (22.5555ms)
+✔ admin sees only positive-listed operational actions/entities, not security/member audit (62.9318ms)
+✔ audit DTO minimizes PII/secrets and unsafe raw metadata for every role (13.8406ms)
+✔ audit cursor retains microseconds, stable ties and fixed window without duplicate pages (56.1258ms)
+✔ bounded pagination and malformed/oversized/date filters rejected (42.8754ms)
+✔ valid date/action/entity/actor filters bind values, empty data is safe (12.1518ms)
+✔ same-query authorization blocks role revocation or suspension between guard and read (13.2772ms)
+✔ super-admin audit scope fails closed if elevated role revoked after guard (7.3449ms)
+✔ authorized revision list is bounded, newest first, cursor parent-bound (22.1327ms)
+✔ safe typed draft snapshot omits rich body/PII/token/unsafe text; parent ID prevents cross-entity lookup (16.7263ms)
+✔ site/partner/event history uses existing table linkage with explicit typed projections (121.6748ms)
+✔ revision/audit immutable history and runtime least privileges preserved (51.5363ms)
+✔ DB failure sanitized at guard/service/action boundary and no profile/card regression (50.5093ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7678.159

@@ -1,0 +1,34 @@
+[
+  {
+    "path": "/design-system",
+    "status": 404
+  },
+  {
+    "path": "/design-system?surface=auth&flow=login",
+    "status": 404
+  },
+  {
+    "path": "/login",
+    "status": 200
+  },
+  {
+    "path": "/join",
+    "status": 200
+  },
+  {
+    "path": "/login?flow=forgot",
+    "status": 200
+  },
+  {
+    "path": "/login?flow=verify",
+    "status": 200
+  },
+  {
+    "path": "/login?flow=reset",
+    "status": 200
+  },
+  {
+    "path": "/privacy",
+    "status": 200
+  }
+]

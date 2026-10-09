@@ -1,0 +1,10 @@
+{
+  "root": "C:/Users/ardid/Documents/ussrunning-web",
+  "branch": "feature/member-card-rbac-frontend",
+  "head": "a91f910baf6d1b11e045a8fc69cf420287a9651b",
+  "main": "8eb9e394c2c6b7aa60221232d3f64b02394e7c84",
+  "originMain": "8eb9e394c2c6b7aa60221232d3f64b02394e7c84",
+  "modified": ["AGENTS.md", "DESIGN.md", "UX-CONTRACT.md", "app/admin/page.tsx", "app/dashboard/layout.tsx", "app/dashboard/member-card/page.tsx", "app/design-system/page.tsx", "app/layout.tsx", "components/dashboard/MemberDashboardShell.tsx", "next-env.d.ts", "premium-ui.json"],
+  "untracked": ["app/admin/error.tsx", "app/admin/loading.tsx", "app/dashboard/member-card/loading.tsx", "docs/FE-04A-ARCHITECTURE.md", "docs/fe-04-05-evidence/", "features/", "tests/frontend-loader.mjs", "tests/frontend-member-card.test.mjs", "tests/frontend-permissions-history.test.mjs"],
+  "safetyBoundary": "Recorded from initial Git discovery output. No original dirty content was copied, staged, reset, or edited by integration. Concurrent external activity changed and committed original files and removed the nested integration checkout. Initial hash snapshot in the disposable sandbox temp directory was unavailable at final comparison, so byte-for-byte preservation cannot be claimed."
+}

@@ -1,0 +1,245 @@
+{
+  "responsive": [
+    {
+      "route": "/design-system",
+      "width": 320,
+      "height": 568,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/join",
+      "width": 320,
+      "height": 568,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/login",
+      "width": 320,
+      "height": 568,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/design-system",
+      "width": 360,
+      "height": 640,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/join",
+      "width": 360,
+      "height": 640,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/login",
+      "width": 360,
+      "height": 640,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/design-system",
+      "width": 390,
+      "height": 844,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/join",
+      "width": 390,
+      "height": 844,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/login",
+      "width": 390,
+      "height": 844,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/design-system",
+      "width": 430,
+      "height": 932,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/join",
+      "width": 430,
+      "height": 932,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/login",
+      "width": 430,
+      "height": 932,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/design-system",
+      "width": 768,
+      "height": 1024,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/join",
+      "width": 768,
+      "height": 1024,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/login",
+      "width": 768,
+      "height": 1024,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/design-system",
+      "width": 1440,
+      "height": 900,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/join",
+      "width": 1440,
+      "height": 900,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/login",
+      "width": 1440,
+      "height": 900,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/design-system",
+      "width": 1366,
+      "height": 600,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/join",
+      "width": 1366,
+      "height": 600,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/login",
+      "width": 1366,
+      "height": 600,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/design-system",
+      "width": 390,
+      "height": 420,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/join",
+      "width": 390,
+      "height": 420,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/login",
+      "width": 390,
+      "height": 420,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/design-system",
+      "width": 720,
+      "height": 450,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/join",
+      "width": 720,
+      "height": 450,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    },
+    {
+      "route": "/login",
+      "width": 720,
+      "height": 450,
+      "horizontalOverflow": false,
+      "controlsFit": true
+    }
+  ],
+  "interactions": [
+    "Stable long errors and describedBy; password show/hide",
+    "Loading disables submit and preserves dimensions",
+    "Short-screen modal, Cancel focus, Tab trap, Escape and focus restoration",
+    "Toast dismissal and reduced motion",
+    "Signup empty submission, mismatch and retained input; no backend call"
+  ],
+  "regressions": [
+    {
+      "route": "/",
+      "status": 200,
+      "destination": "/",
+      "documentScroll": "auto"
+    },
+    {
+      "route": "/about",
+      "status": 200,
+      "destination": "/about",
+      "documentScroll": "auto"
+    },
+    {
+      "route": "/stories",
+      "status": 200,
+      "destination": "/stories",
+      "documentScroll": "auto"
+    },
+    {
+      "route": "/partners",
+      "status": 200,
+      "destination": "/partners",
+      "documentScroll": "auto"
+    },
+    {
+      "route": "/membership",
+      "status": 200,
+      "destination": "/membership",
+      "documentScroll": "auto"
+    },
+    {
+      "route": "/dashboard",
+      "status": 200,
+      "destination": "/dashboard",
+      "documentScroll": "auto"
+    },
+    {
+      "route": "/admin",
+      "status": 200,
+      "destination": "/login",
+      "documentScroll": "auto"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,84 @@
+{
+  "routes": [
+    {
+      "route": "/",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "route": "/about",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "route": "/runs",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "route": "/membership",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "route": "/stories",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "route": "/partners",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "route": "/login",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "route": "/join",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "route": "/dashboard",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "route": "/dashboard/profile",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "route": "/dashboard/member-card",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "route": "/dashboard/events",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "route": "/dashboard/settings",
+      "status": 200,
+      "expected": 200
+    },
+    {
+      "route": "/design-system",
+      "status": 404,
+      "expected": 404
+    },
+    {
+      "route": "/design-system?surface=member",
+      "status": 404,
+      "expected": 404
+    }
+  ],
+  "localAuth": {
+    "status": 502,
+    "expected": "NETWORK_ERROR against dummy loopback provider",
+    "realProvider": false
+  }
+}

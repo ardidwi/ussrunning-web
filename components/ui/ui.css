@@ -1,0 +1,687 @@
+/* FE-01: canonical controls. Brand aliases remain owned by globals.css. */
+:root {
+  --uss-bg: var(--black);
+  --uss-surface: #151515;
+  --uss-text: var(--white);
+  --uss-muted: #bdbdbd;
+  --uss-border: #424242;
+  --uss-control-bg: #070707;
+  --uss-danger: #ffb3a8;
+  --uss-success: #c8edbf;
+  --uss-warning: #f3ce80;
+  --uss-focus: var(--red);
+  --uss-primary-bg: var(--red);
+  --uss-primary-text: #070707;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --control-height: 3.25rem;
+  --uss-font-body: Arial, Helvetica, sans-serif;
+  --uss-font-display: Impact, "Arial Narrow", sans-serif;
+  --uss-type-display: clamp(4rem, 8vw, 8rem);
+  --uss-type-h1: clamp(3rem, 6vw, 6rem);
+  --uss-type-h2: 2rem;
+  --uss-type-h3: 1.5rem;
+  --uss-type-section: 0.875rem;
+  --uss-type-body: 1rem;
+  --uss-type-small: 0.875rem;
+  --uss-type-label: 0.875rem;
+  --uss-type-helper: 0.875rem;
+  --uss-type-error: 0.875rem;
+  --uss-type-caption: 0.75rem;
+  --uss-shadow-modal: 0 1.5rem 4rem rgb(0 0 0 / 0.45);
+}
+.uss-theme-light,
+.login-panel-v3,
+.join-form-panel-v4 {
+  --uss-bg: #efede6;
+  --uss-surface: #f8f6f0;
+  --uss-text: #090909;
+  --uss-muted: #625e57;
+  --uss-border: #aaa69d;
+  --uss-control-bg: #fff;
+  --uss-danger: #a52b1b;
+  --uss-success: #315c2a;
+  --uss-warning: #765600;
+  --uss-focus: #090909;
+  --uss-primary-bg: #080808;
+  --uss-primary-text: #fff;
+}
+.uss-field {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: var(--uss-text);
+  font-family: var(--uss-font-body);
+  letter-spacing: normal;
+}
+.uss-field-label {
+  display: block;
+  font-size: var(--uss-type-label);
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  overflow-wrap: anywhere;
+}
+.uss-required {
+  color: var(--uss-danger);
+}
+.uss-field-hint {
+  color: var(--uss-muted);
+  font-size: var(--uss-type-helper);
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: normal;
+  overflow-wrap: anywhere;
+}
+.uss-field-error {
+  height: 4.5em;
+  flex: 0 0 4.5em;
+  overflow: auto;
+  scrollbar-gutter: stable;
+  color: var(--uss-danger);
+  font-size: var(--uss-type-error);
+  line-height: 1.5;
+  font-weight: 400;
+  letter-spacing: normal;
+  overflow-wrap: anywhere;
+}
+.uss-field-error:empty {
+  visibility: hidden;
+}
+.uss-field-success {
+  color: var(--uss-success);
+  font-size: var(--uss-type-small);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.uss-control {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: var(--control-height);
+  border: 1px solid var(--uss-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-4);
+  margin: 0;
+  background: var(--uss-control-bg);
+  color: var(--uss-text);
+  font-family: var(--uss-font-body);
+  font-size: var(--uss-type-body);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: normal;
+  transition:
+    border-color 0.16s ease,
+    background 0.16s ease;
+}
+.uss-control::placeholder {
+  color: var(--uss-muted);
+  opacity: 1;
+}
+.uss-control:hover:not(:disabled):not([readonly]) {
+  border-color: var(--uss-text);
+}
+.uss-control:focus-visible,
+.uss-button:focus-visible,
+.uss-password-toggle:focus-visible,
+.uss-choice input:focus-visible,
+.uss-toast button:focus-visible,
+.uss-field-error:focus-visible {
+  outline: 3px solid var(--uss-focus);
+  outline-offset: 3px;
+}
+.uss-control[aria-invalid="true"] {
+  border: 2px solid var(--uss-danger);
+}
+.uss-control[data-success="true"] {
+  border: 2px solid var(--uss-success);
+}
+.uss-control:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.uss-control[readonly] {
+  background: var(--uss-surface);
+  border-style: dashed;
+}
+.uss-control:not(:placeholder-shown) {
+  font-weight: 500;
+}
+select.uss-control {
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+.uss-textarea {
+  min-height: 10rem;
+  resize: none;
+  overflow-y: auto;
+}
+.uss-password {
+  min-width: 0;
+}
+.uss-password-control {
+  position: relative;
+}
+.uss-password-control .uss-control {
+  padding-inline-end: 3.5rem;
+}
+.uss-password-toggle {
+  position: absolute;
+  inset-inline-end: 4px;
+  top: 4px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--uss-text);
+  cursor: pointer;
+}
+.uss-password-toggle:hover {
+  background: var(--uss-surface);
+}
+.uss-password-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.uss-password-strength {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  font-size: var(--uss-type-small);
+}
+.uss-choice-field {
+  min-width: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+.uss-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  min-height: 44px;
+}
+.uss-choice input {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin: var(--space-1) 0;
+  accent-color: var(--uss-primary-bg);
+  cursor: pointer;
+}
+.uss-choice label {
+  min-width: 0;
+  cursor: pointer;
+  font-size: var(--uss-type-small);
+  line-height: 1.6;
+  color: var(--uss-text);
+  font-weight: 400;
+  letter-spacing: normal;
+  overflow-wrap: anywhere;
+}
+.uss-choice label a {
+  text-decoration: underline;
+}
+.uss-choice input:disabled,
+.uss-choice input:disabled + label {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.uss-switch input {
+  appearance: none;
+  width: 44px;
+  height: 24px;
+  border: 1px solid var(--uss-border);
+  background: var(--uss-surface);
+  position: relative;
+}
+.uss-switch input::before {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 3px;
+  left: 3px;
+  background: var(--uss-muted);
+  transition: transform 0.16s;
+}
+.uss-switch input:checked::before {
+  transform: translateX(20px);
+  background: var(--uss-primary-text);
+}
+.uss-switch input:checked {
+  background: var(--uss-primary-bg);
+}
+.uss-radio-group {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.uss-form-section {
+  min-width: 0;
+  margin: 0;
+  padding: var(--space-6);
+  border: 1px solid var(--uss-border);
+  background: var(--uss-surface);
+}
+.uss-form-section legend {
+  padding-inline: var(--space-2);
+  font-size: var(--uss-type-section);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+.uss-section-description {
+  font-size: var(--uss-type-small);
+  color: var(--uss-muted);
+  line-height: 1.5;
+  margin: 0 0 var(--space-6);
+}
+.uss-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6);
+}
+.uss-form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+.uss-form-submit,
+.uss-form-cancel {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.uss-button {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 48px;
+  min-width: 44px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--uss-type-label);
+  font-weight: 800;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition:
+    background 0.16s ease,
+    border-color 0.16s ease;
+}
+.uss-button-primary {
+  background: var(--uss-primary-bg);
+  color: var(--uss-primary-text);
+}
+.uss-button-secondary {
+  border-color: var(--uss-border);
+  background: var(--uss-surface);
+  color: var(--uss-text);
+}
+.uss-button-ghost,
+.uss-button-icon,
+.uss-button-text {
+  background: transparent;
+  color: var(--uss-text);
+}
+.uss-button-danger {
+  background: var(--uss-danger);
+  color: var(--uss-bg);
+}
+.uss-button-text {
+  text-decoration: underline;
+  padding-inline: var(--space-2);
+}
+.uss-button-icon {
+  width: 48px;
+  padding: var(--space-2);
+}
+.uss-button:hover:not(:disabled) {
+  border-color: var(--uss-text);
+  filter: brightness(0.9);
+}
+.uss-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.uss-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.uss-button[aria-busy="true"] {
+  cursor: wait;
+}
+.uss-button-content,
+.uss-button-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  overflow-wrap: anywhere;
+}
+.uss-button-loading {
+  position: absolute;
+  inset: var(--space-2);
+  font-size: var(--uss-type-small);
+}
+.uss-spinner {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: uss-spin 0.8s linear infinite;
+}
+@keyframes uss-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.uss-skeleton {
+  max-width: 100%;
+  background: var(--uss-border);
+  animation: uss-pulse 1.4s ease-in-out infinite alternate;
+}
+@keyframes uss-pulse {
+  to {
+    opacity: 0.4;
+  }
+}
+.uss-page-loading {
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--space-6);
+}
+.uss-empty-state {
+  padding: var(--space-8);
+  border: 1px solid var(--uss-border);
+  overflow-wrap: anywhere;
+}
+.uss-empty-state h3 {
+  font-size: var(--uss-type-h3);
+}
+.uss-empty-state p {
+  color: var(--uss-muted);
+  line-height: 1.5;
+}
+.uss-badge {
+  display: inline-flex;
+  border: 1px solid currentColor;
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--uss-type-caption);
+  overflow-wrap: anywhere;
+}
+.uss-tone-success {
+  color: var(--uss-success);
+}
+.uss-tone-error {
+  color: var(--uss-danger);
+}
+.uss-tone-warning {
+  color: var(--uss-warning);
+}
+.uss-tone-info {
+  color: var(--uss-text);
+}
+.uss-modal {
+  width: min(35rem, calc(100% - 2rem));
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--uss-border);
+  background: var(--uss-surface);
+  color: var(--uss-text);
+  box-shadow: var(--uss-shadow-modal);
+  overflow-y: auto;
+}
+.uss-modal::backdrop {
+  background: rgb(0 0 0 / 0.75);
+  backdrop-filter: blur(8px);
+}
+.uss-modal-body {
+  padding: var(--space-6);
+  overflow-wrap: anywhere;
+}
+.uss-modal-body h2 {
+  font-family: var(--uss-font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 6vw, 3rem);
+  line-height: 1.1;
+}
+.uss-modal-body p {
+  color: var(--uss-muted);
+  line-height: 1.6;
+}
+.uss-modal-actions {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--uss-border);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+.uss-toast-region {
+  position: fixed;
+  z-index: 100;
+  top: max(var(--space-4), env(safe-area-inset-top));
+  right: var(--space-4);
+  width: min(26rem, calc(100% - 2rem));
+  display: grid;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+.uss-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid currentColor;
+  background: var(--uss-surface);
+  font-size: var(--uss-type-small);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  pointer-events: auto;
+}
+.uss-toast > span {
+  flex: 1;
+  min-width: 0;
+}
+.uss-toast button {
+  flex: 0 0 44px;
+  min-height: 44px;
+  border: 1px solid var(--uss-border);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.uss-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Geometry adapters only; screens do not own control appearance. */
+.login-form-v3 > .uss-button,
+.join-form-v3 > .uss-button {
+  width: 100%;
+}
+.member-profile-form .uss-form-actions .uss-form-submit {
+  width: 100%;
+}
+.member-profile-form .uss-form-actions .uss-button {
+  width: 100%;
+}
+.admin-form-grid > .uss-field {
+  align-self: start;
+}
+.admin-field-wide {
+  grid-column: 1 / -1;
+}
+.uss-reference {
+  max-width: 70rem;
+  margin: auto;
+  padding: var(--space-6);
+  display: grid;
+  gap: var(--space-8);
+}
+.uss-reference-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+@media (max-width: 760px) {
+  .uss-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+  .uss-form-section {
+    padding: var(--space-4);
+  }
+  .uss-form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .uss-form-submit,
+  .uss-form-cancel {
+    width: 100%;
+  }
+  .uss-form-actions .uss-button {
+    width: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .uss-control,
+  .uss-button,
+  .uss-switch input::before {
+    transition: none;
+  }
+  .uss-spinner,
+  .uss-skeleton {
+    animation: none;
+  }
+}
+@media (forced-colors: active) {
+  .uss-control,
+  .uss-button,
+  .uss-modal {
+    border-color: ButtonText;
+  }
+  .uss-switch input {
+    appearance: auto;
+  }
+}
+
+/* Auth owns its scroll regions. Public/member/admin pages keep document scrolling. */
+@media (min-width: 1001px) {
+  body > main.join-shell-v4,
+  body > main.login-page-v3 {
+    position: relative !important;
+    inset: auto !important;
+    height: 100dvh !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    align-items: stretch !important;
+    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr) !important;
+  }
+  .join-shell-v4 > .join-form-panel-v4,
+  .login-page-v3 > .login-panel-v3 {
+    height: 100dvh !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    scrollbar-gutter: stable;
+    overscroll-behavior: contain;
+  }
+  .join-shell-v4 > .join-intro-v4,
+  .login-page-v3 > .login-visual-v3 {
+    height: 100dvh !important;
+    min-height: 0 !important;
+    position: relative !important;
+    overflow-y: auto !important;
+    align-self: stretch !important;
+  }
+}
+@media (max-width: 760px) {
+  .join-form-head-v4 {
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .login-form-meta-v3 {
+    flex-wrap: wrap;
+  }
+}
+.member-profile-form {
+  display: grid;
+  gap: var(--space-6);
+}
+.cms-shell .uss-control {
+  background: var(--uss-control-bg);
+  color: var(--uss-text);
+}
+.cms-shell .uss-button {
+  background: var(--uss-primary-bg);
+  color: var(--uss-primary-text);
+}
+.uss-notice .uss-modal-body h2 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 0.95;
+}
+.uss-notice-index {
+  margin-block: var(--space-4);
+}
+@media (min-width: 1001px) {
+  body > main.login-page-v3 {
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr) !important;
+  }
+}
+.uss-form-section legend {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.uss-reference-disclosure {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--uss-border);
+  color: var(--uss-warning);
+  font-size: var(--uss-type-small);
+}
+
+/* Intrinsic grid content must not widen the functional shell on phones. */
+.uss-admin-shell > *,
+.admin-content-grid > *,
+.admin-form-grid > * {
+  min-width: 0;
+}
+@media (max-width: 900px) {
+  .uss-admin-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

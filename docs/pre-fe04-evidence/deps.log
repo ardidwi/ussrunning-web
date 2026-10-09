@@ -1,0 +1,835 @@
+
+> ussrunning-web@0.1.0 deps:check
+> npm ls --all
+
+ussrunning-web@0.1.0 C:\Users\ardid\Documents\ussrunning-web-pre-fe04-baseline
+├── @electric-sql/pglite@0.5.8
+├─┬ @neondatabase/auth@0.5.0-beta
+│ ├── @better-fetch/fetch@1.3.1 overridden
+│ ├─┬ @neondatabase/auth-ui@0.3.0-beta
+│ │ ├─┬ @better-auth/passkey@1.6.23
+│ │ │ ├── @better-auth/core@1.6.23 deduped
+│ │ │ ├── @better-auth/utils@0.4.2 deduped
+│ │ │ ├── @better-fetch/fetch@1.3.1 deduped
+│ │ │ ├── @simplewebauthn/browser@13.3.0
+│ │ │ ├─┬ @simplewebauthn/server@13.3.3
+│ │ │ │ ├── @hexagon/base64@1.1.28
+│ │ │ │ ├── @levischuck/tiny-cbor@0.2.11
+│ │ │ │ ├─┬ @peculiar/asn1-android@2.10.0
+│ │ │ │ │ ├── @peculiar/asn1-schema@2.10.0 deduped
+│ │ │ │ │ ├─┬ asn1js@3.0.10
+│ │ │ │ │ │ ├── pvtsutils@1.3.6 deduped
+│ │ │ │ │ │ ├── pvutils@1.2.0
+│ │ │ │ │ │ └── tslib@2.8.1 deduped
+│ │ │ │ │ └── tslib@2.8.1 deduped
+│ │ │ │ ├─┬ @peculiar/asn1-ecc@2.10.0
+│ │ │ │ │ ├── @peculiar/asn1-schema@2.10.0 deduped
+│ │ │ │ │ ├── @peculiar/asn1-x509@2.10.0 deduped
+│ │ │ │ │ ├── asn1js@3.0.10 deduped
+│ │ │ │ │ └── tslib@2.8.1 deduped
+│ │ │ │ ├─┬ @peculiar/asn1-rsa@2.10.0
+│ │ │ │ │ ├── @peculiar/asn1-schema@2.10.0 deduped
+│ │ │ │ │ ├── @peculiar/asn1-x509@2.10.0 deduped
+│ │ │ │ │ ├── asn1js@3.0.10 deduped
+│ │ │ │ │ └── tslib@2.8.1 deduped
+│ │ │ │ ├─┬ @peculiar/asn1-schema@2.10.0
+│ │ │ │ │ ├─┬ @peculiar/utils@2.0.3
+│ │ │ │ │ │ └── tslib@2.8.1 deduped
+│ │ │ │ │ ├── asn1js@3.0.10 deduped
+│ │ │ │ │ └── tslib@2.8.1 deduped
+│ │ │ │ ├─┬ @peculiar/asn1-x509@2.10.0
+│ │ │ │ │ ├── @peculiar/asn1-schema@2.10.0 deduped
+│ │ │ │ │ ├── @peculiar/utils@2.0.3 deduped
+│ │ │ │ │ ├── asn1js@3.0.10 deduped
+│ │ │ │ │ └── tslib@2.8.1 deduped
+│ │ │ │ └─┬ @peculiar/x509@1.14.3
+│ │ │ │   ├─┬ @peculiar/asn1-cms@2.10.0
+│ │ │ │   │ ├── @peculiar/asn1-schema@2.10.0 deduped
+│ │ │ │   │ ├─┬ @peculiar/asn1-x509-attr@2.10.0
+│ │ │ │   │ │ ├── @peculiar/asn1-schema@2.10.0 deduped
+│ │ │ │   │ │ ├── @peculiar/asn1-x509@2.10.0 deduped
+│ │ │ │   │ │ ├── asn1js@3.0.10 deduped
+│ │ │ │   │ │ └── tslib@2.8.1 deduped
+│ │ │ │   │ ├── @peculiar/asn1-x509@2.10.0 deduped
+│ │ │ │   │ ├── asn1js@3.0.10 deduped
+│ │ │ │   │ └── tslib@2.8.1 deduped
+│ │ │ │   ├─┬ @peculiar/asn1-csr@2.10.0
+│ │ │ │   │ ├── @peculiar/asn1-schema@2.10.0 deduped
+│ │ │ │   │ ├── @peculiar/asn1-x509@2.10.0 deduped
+│ │ │ │   │ ├── asn1js@3.0.10 deduped
+│ │ │ │   │ └── tslib@2.8.1 deduped
+│ │ │ │   ├── @peculiar/asn1-ecc@2.10.0 deduped
+│ │ │ │   ├─┬ @peculiar/asn1-pkcs9@2.10.0
+│ │ │ │   │ ├── @peculiar/asn1-cms@2.10.0 deduped
+│ │ │ │   │ ├─┬ @peculiar/asn1-pfx@2.10.0
+│ │ │ │   │ │ ├── @peculiar/asn1-cms@2.10.0 deduped
+│ │ │ │   │ │ ├── @peculiar/asn1-pkcs8@2.10.0 deduped
+│ │ │ │   │ │ ├── @peculiar/asn1-rsa@2.10.0 deduped
+│ │ │ │   │ │ ├── @peculiar/asn1-schema@2.10.0 deduped
+│ │ │ │   │ │ ├── asn1js@3.0.10 deduped
+│ │ │ │   │ │ └── tslib@2.8.1 deduped
+│ │ │ │   │ ├─┬ @peculiar/asn1-pkcs8@2.10.0
+│ │ │ │   │ │ ├── @peculiar/asn1-schema@2.10.0 deduped
+│ │ │ │   │ │ ├── @peculiar/asn1-x509@2.10.0 deduped
+│ │ │ │   │ │ ├── asn1js@3.0.10 deduped
+│ │ │ │   │ │ └── tslib@2.8.1 deduped
+│ │ │ │   │ ├── @peculiar/asn1-schema@2.10.0 deduped
+│ │ │ │   │ ├── @peculiar/asn1-x509-attr@2.10.0 deduped
+│ │ │ │   │ ├── @peculiar/asn1-x509@2.10.0 deduped
+│ │ │ │   │ ├── asn1js@3.0.10 deduped
+│ │ │ │   │ └── tslib@2.8.1 deduped
+│ │ │ │   ├── @peculiar/asn1-rsa@2.10.0 deduped
+│ │ │ │   ├── @peculiar/asn1-schema@2.10.0 deduped
+│ │ │ │   ├── @peculiar/asn1-x509@2.10.0 deduped
+│ │ │ │   ├─┬ pvtsutils@1.3.6
+│ │ │ │   │ └── tslib@2.8.1 deduped
+│ │ │ │   ├── reflect-metadata@0.2.2
+│ │ │ │   ├── tslib@2.8.1 deduped
+│ │ │ │   └─┬ tsyringe@4.10.0
+│ │ │ │     └── tslib@1.14.1
+│ │ │ ├── better-auth@1.6.23 deduped
+│ │ │ ├── better-call@1.3.7 deduped
+│ │ │ ├── nanostores@1.5.5 deduped
+│ │ │ └── zod@4.3.6 deduped
+│ │ ├─┬ @captchafox/react@1.13.0
+│ │ │ ├── @captchafox/types@1.6.0
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ @daveyplate/better-auth-ui@3.3.15 overridden
+│ │ │ ├── @better-auth/passkey@1.6.23 deduped
+│ │ │ ├── @better-fetch/fetch@1.3.1 deduped
+│ │ │ ├── @captchafox/react@1.13.0 deduped
+│ │ │ ├─┬ @daveyplate/better-auth-tanstack@1.3.6
+│ │ │ │ ├── @tanstack/query-core@5.104.1
+│ │ │ │ ├── @tanstack/react-query@5.104.1 deduped
+│ │ │ │ ├── better-auth@1.6.23 deduped
+│ │ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├── @hcaptcha/react-hcaptcha@1.17.4 deduped
+│ │ │ ├── @hookform/resolvers@5.9.1 deduped
+│ │ │ ├─┬ @instantdb/react@1.0.67
+│ │ │ │ ├─┬ @instantdb/core@1.0.67
+│ │ │ │ │ ├── @instantdb/version@1.0.67 deduped
+│ │ │ │ │ ├── mutative@1.3.0
+│ │ │ │ │ └── uuid@11.1.1
+│ │ │ │ ├─┬ @instantdb/react-common@1.0.67
+│ │ │ │ │ ├── @instantdb/core@1.0.67 deduped
+│ │ │ │ │ ├── @instantdb/version@1.0.67 deduped
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├── @instantdb/version@1.0.67
+│ │ │ │ ├─┬ eventsource@4.1.1
+│ │ │ │ │ └── eventsource-parser@3.1.1
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├── @marsidev/react-turnstile@1.6.1 deduped
+│ │ │ ├── @noble/hashes@2.4.0 deduped
+│ │ │ ├── @radix-ui/react-avatar@1.2.7 deduped
+│ │ │ ├── @radix-ui/react-checkbox@1.3.12 deduped
+│ │ │ ├── @radix-ui/react-context@1.2.2 deduped
+│ │ │ ├── @radix-ui/react-dialog@1.2.0 deduped
+│ │ │ ├── @radix-ui/react-dropdown-menu@2.1.25 deduped
+│ │ │ ├── @radix-ui/react-label@2.1.16 deduped
+│ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ ├── @radix-ui/react-select@2.3.8 deduped
+│ │ │ ├── @radix-ui/react-separator@1.1.16 deduped
+│ │ │ ├── @radix-ui/react-slot@1.4.0 deduped
+│ │ │ ├── @radix-ui/react-tabs@1.1.22 deduped
+│ │ │ ├─┬ @radix-ui/react-tooltip@1.3.0
+│ │ │ │ ├── @radix-ui/primitive@1.1.7 deduped
+│ │ │ │ ├── @radix-ui/react-compose-refs@1.1.5 deduped
+│ │ │ │ ├── @radix-ui/react-context@1.2.2 deduped
+│ │ │ │ ├── @radix-ui/react-dismissable-layer@1.1.20 deduped
+│ │ │ │ ├── @radix-ui/react-id@1.1.4 deduped
+│ │ │ │ ├── @radix-ui/react-popper@1.3.8 deduped
+│ │ │ │ ├── @radix-ui/react-portal@1.1.18 deduped
+│ │ │ │ ├── @radix-ui/react-presence@1.1.11 deduped
+│ │ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ │ ├── @radix-ui/react-slot@1.4.0 deduped
+│ │ │ │ ├── @radix-ui/react-use-controllable-state@1.2.6 deduped
+│ │ │ │ ├── @radix-ui/react-use-layout-effect@1.1.4 deduped
+│ │ │ │ ├── @radix-ui/react-visually-hidden@1.2.12 deduped
+│ │ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├── @radix-ui/react-use-callback-ref@1.1.4 deduped
+│ │ │ ├── @radix-ui/react-use-layout-effect@1.1.4 deduped
+│ │ │ ├─┬ @react-email/components@1.0.12
+│ │ │ │ ├─┬ @react-email/body@0.3.0
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/button@0.2.1
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/code-block@0.2.1
+│ │ │ │ │ ├── prismjs@1.30.0
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/code-inline@0.0.6
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/column@0.0.14
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/container@0.0.16
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/font@0.0.10
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/head@0.0.13
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/heading@0.0.16
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/hr@0.0.12
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/html@0.0.12
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/img@0.0.12
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/link@0.0.13
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/markdown@0.0.18
+│ │ │ │ │ ├── marked@15.0.12
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/preview@0.0.14
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/render@2.0.6
+│ │ │ │ │ ├─┬ html-to-text@9.0.5
+│ │ │ │ │ │ ├─┬ @selderee/plugin-htmlparser2@0.11.0
+│ │ │ │ │ │ │ ├─┬ domhandler@5.0.3
+│ │ │ │ │ │ │ │ └── domelementtype@2.3.0 deduped
+│ │ │ │ │ │ │ └── selderee@0.11.0 deduped
+│ │ │ │ │ │ ├── deepmerge@4.3.1
+│ │ │ │ │ │ ├─┬ dom-serializer@2.0.0
+│ │ │ │ │ │ │ ├── domelementtype@2.3.0
+│ │ │ │ │ │ │ ├── domhandler@5.0.3 deduped
+│ │ │ │ │ │ │ └── entities@4.5.0
+│ │ │ │ │ │ ├─┬ htmlparser2@8.0.2
+│ │ │ │ │ │ │ ├── domelementtype@2.3.0 deduped
+│ │ │ │ │ │ │ ├── domhandler@5.0.3 deduped
+│ │ │ │ │ │ │ ├─┬ domutils@3.2.2
+│ │ │ │ │ │ │ │ ├── dom-serializer@2.0.0 deduped
+│ │ │ │ │ │ │ │ ├── domelementtype@2.3.0 deduped
+│ │ │ │ │ │ │ │ └── domhandler@5.0.3 deduped
+│ │ │ │ │ │ │ └── entities@4.5.0 deduped
+│ │ │ │ │ │ └─┬ selderee@0.11.0
+│ │ │ │ │ │   └─┬ parseley@0.12.1
+│ │ │ │ │ │     ├── leac@0.6.0
+│ │ │ │ │ │     └── peberminta@0.9.0
+│ │ │ │ │ ├── prettier@3.9.9
+│ │ │ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/row@0.0.13
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/section@0.0.17
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @react-email/tailwind@2.0.7
+│ │ │ │ │ ├── @react-email/body@0.3.0 deduped
+│ │ │ │ │ ├── @react-email/button@0.2.1 deduped
+│ │ │ │ │ ├── @react-email/code-block@0.2.1 deduped
+│ │ │ │ │ ├── @react-email/code-inline@0.0.6 deduped
+│ │ │ │ │ ├── @react-email/container@0.0.16 deduped
+│ │ │ │ │ ├── @react-email/heading@0.0.16 deduped
+│ │ │ │ │ ├── @react-email/hr@0.0.12 deduped
+│ │ │ │ │ ├── @react-email/img@0.0.12 deduped
+│ │ │ │ │ ├── @react-email/link@0.0.13 deduped
+│ │ │ │ │ ├── @react-email/preview@0.0.14 deduped
+│ │ │ │ │ ├── @react-email/text@0.1.6 deduped
+│ │ │ │ │ ├── react@19.2.6 deduped
+│ │ │ │ │ └── tailwindcss@4.2.1 deduped
+│ │ │ │ ├─┬ @react-email/text@0.1.6
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├─┬ @tanstack/react-query@5.104.1
+│ │ │ │ ├── @tanstack/query-core@5.104.1 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├─┬ @triplit/client@1.0.50
+│ │ │ │ ├─┬ @triplit/db@1.1.10
+│ │ │ │ │ ├── @triplit/logger@0.0.3 deduped
+│ │ │ │ │ ├── UNMET OPTIONAL DEPENDENCY better-sqlite3@*
+│ │ │ │ │ ├── core-js@3.50.0
+│ │ │ │ │ ├── elen@1.0.10
+│ │ │ │ │ ├── UNMET OPTIONAL DEPENDENCY expo-sqlite@*
+│ │ │ │ │ ├── UNMET OPTIONAL DEPENDENCY lmdb@*
+│ │ │ │ │ ├── nanoid@5.1.16
+│ │ │ │ │ ├── sorted-btree@1.8.1
+│ │ │ │ │ ├── UNMET OPTIONAL DEPENDENCY uuidv7@*
+│ │ │ │ │ └── web-worker@1.5.0
+│ │ │ │ ├─┬ @triplit/logger@0.0.3
+│ │ │ │ │ └── typescript@5.9.3 deduped
+│ │ │ │ ├── comlink@4.4.2
+│ │ │ │ └─┬ superjson@2.2.6
+│ │ │ │   └── copy-anything@4.1.5
+│ │ │ ├─┬ @triplit/react@1.0.51
+│ │ │ │ ├── @triplit/client@1.0.50 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├── @wojtekmaj/react-recaptcha-v3@0.1.4 deduped
+│ │ │ ├── better-auth@1.6.23 deduped
+│ │ │ ├── class-variance-authority@0.7.1 deduped
+│ │ │ ├── clsx@2.1.1 deduped
+│ │ │ ├── input-otp@1.5.0 deduped
+│ │ │ ├── lucide-react@0.555.0 deduped
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ ├── react-google-recaptcha@3.1.0 deduped
+│ │ │ ├── react-hook-form@7.89.0 deduped
+│ │ │ ├── react-qr-code@2.2.0 deduped
+│ │ │ ├── react@19.2.6 deduped
+│ │ │ ├── sonner@2.0.8 deduped
+│ │ │ ├── tailwind-merge@3.7.0 deduped
+│ │ │ ├── tailwindcss@4.2.1 deduped
+│ │ │ ├── ua-parser-js@2.0.10 deduped
+│ │ │ ├── vaul@1.1.2 deduped
+│ │ │ └── zod@4.3.6 deduped
+│ │ ├─┬ @hcaptcha/react-hcaptcha@1.17.4
+│ │ │ ├── @babel/runtime@7.29.10
+│ │ │ ├── @hcaptcha/loader@2.4.2
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ @hookform/resolvers@5.9.1
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY @sinclair/typebox@>=0.25.24
+│ │ │ ├── @standard-schema/spec@1.1.0
+│ │ │ ├── @standard-schema/utils@0.3.0
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY @typeschema/main@>=0.13.7
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY @vinejs/vine@^2.0.0 || ^3.0.0 || ^4.0.0
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY ajv-errors@^3.0.0
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY ajv-formats@^2.1.1
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY ajv@^8.12.0
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY arktype@^2.0.0
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY ata-validator@^1.2.0
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY class-transformer@>=0.4.0
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY class-validator@>=0.12.0
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY computed-types@^1.0.0
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY effect@^3.10.3
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY fluentvalidation-ts@^3.0.0
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY fp-ts@^2.7.0
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY io-ts@^2.0.0
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY joi@^17.0.0 || ^18.0.0
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY nope-validator@>=0.12.0
+│ │ │ ├── react-hook-form@7.89.0 deduped
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY superstruct@>=0.12.0
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY typanion@^3.3.2
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY valibot@>=0.31.0 || ^1.0.0-beta.4 || ^1.0.0-rc
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY vest@>=6.0.0
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY yup@^1.0.0
+│ │ │ └── zod@4.3.6 deduped
+│ │ ├─┬ @marsidev/react-turnstile@1.6.1
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├── @neondatabase/auth@0.5.0-beta deduped
+│ │ ├─┬ @radix-ui/react-avatar@1.2.7
+│ │ │ ├── @radix-ui/primitive@1.1.7
+│ │ │ ├── @radix-ui/react-context@1.2.2 deduped
+│ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ ├── @radix-ui/react-use-callback-ref@1.1.4 deduped
+│ │ │ ├─┬ @radix-ui/react-use-is-hydrated@0.1.3
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├── @radix-ui/react-use-layout-effect@1.1.4 deduped
+│ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ @radix-ui/react-checkbox@1.3.12
+│ │ │ ├── @radix-ui/primitive@1.1.7 deduped
+│ │ │ ├─┬ @radix-ui/react-compose-refs@1.1.5
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├── @radix-ui/react-context@1.2.2 deduped
+│ │ │ ├─┬ @radix-ui/react-presence@1.1.11
+│ │ │ │ ├── @radix-ui/react-use-layout-effect@1.1.4 deduped
+│ │ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ ├─┬ @radix-ui/react-use-controllable-state@1.2.6
+│ │ │ │ ├── @radix-ui/primitive@1.1.7 deduped
+│ │ │ │ ├─┬ @radix-ui/react-use-effect-event@0.0.5
+│ │ │ │ │ ├── @radix-ui/react-use-layout-effect@1.1.4 deduped
+│ │ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├── @radix-ui/react-use-layout-effect@1.1.4 deduped
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├─┬ @radix-ui/react-use-size@1.1.5
+│ │ │ │ ├── @radix-ui/react-use-layout-effect@1.1.4 deduped
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ @radix-ui/react-context@1.2.2
+│ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ @radix-ui/react-dialog@1.2.0
+│ │ │ ├── @radix-ui/primitive@1.1.7 deduped
+│ │ │ ├── @radix-ui/react-compose-refs@1.1.5 deduped
+│ │ │ ├── @radix-ui/react-context@1.2.2 deduped
+│ │ │ ├─┬ @radix-ui/react-dismissable-layer@1.1.20
+│ │ │ │ ├── @radix-ui/primitive@1.1.7 deduped
+│ │ │ │ ├── @radix-ui/react-compose-refs@1.1.5 deduped
+│ │ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ │ ├── @radix-ui/react-use-callback-ref@1.1.4 deduped
+│ │ │ │ ├── @radix-ui/react-use-effect-event@0.0.5 deduped
+│ │ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├─┬ @radix-ui/react-focus-guards@1.1.6
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├─┬ @radix-ui/react-focus-scope@1.2.0
+│ │ │ │ ├── @radix-ui/react-compose-refs@1.1.5 deduped
+│ │ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ │ ├── @radix-ui/react-use-callback-ref@1.1.4 deduped
+│ │ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├─┬ @radix-ui/react-id@1.1.4
+│ │ │ │ ├── @radix-ui/react-use-layout-effect@1.1.4 deduped
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├─┬ @radix-ui/react-portal@1.1.18
+│ │ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ │ ├── @radix-ui/react-use-layout-effect@1.1.4 deduped
+│ │ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├── @radix-ui/react-presence@1.1.11 deduped
+│ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ ├── @radix-ui/react-slot@1.4.0 deduped
+│ │ │ ├── @radix-ui/react-use-controllable-state@1.2.6 deduped
+│ │ │ ├── @radix-ui/react-use-layout-effect@1.1.4 deduped
+│ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ ├─┬ aria-hidden@1.2.6
+│ │ │ │ └── tslib@2.8.1 deduped
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ ├─┬ react-remove-scroll@2.7.2
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ ├─┬ react-remove-scroll-bar@2.3.8
+│ │ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ │ ├── react-style-singleton@2.2.3 deduped
+│ │ │ │ │ ├── react@19.2.6 deduped
+│ │ │ │ │ └── tslib@2.8.1 deduped
+│ │ │ │ ├─┬ react-style-singleton@2.2.3
+│ │ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ │ ├── get-nonce@1.0.1
+│ │ │ │ │ ├── react@19.2.6 deduped
+│ │ │ │ │ └── tslib@2.8.1 deduped
+│ │ │ │ ├── react@19.2.6 deduped
+│ │ │ │ ├── tslib@2.8.1 deduped
+│ │ │ │ ├─┬ use-callback-ref@1.3.3
+│ │ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ │ ├── react@19.2.6 deduped
+│ │ │ │ │ └── tslib@2.8.1 deduped
+│ │ │ │ └─┬ use-sidecar@1.1.3
+│ │ │ │   ├── @types/react@19.3.0 deduped
+│ │ │ │   ├── detect-node-es@1.1.0
+│ │ │ │   ├── react@19.2.6 deduped
+│ │ │ │   └── tslib@2.8.1 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ @radix-ui/react-dropdown-menu@2.1.25
+│ │ │ ├── @radix-ui/primitive@1.1.7 deduped
+│ │ │ ├── @radix-ui/react-compose-refs@1.1.5 deduped
+│ │ │ ├── @radix-ui/react-context@1.2.2 deduped
+│ │ │ ├── @radix-ui/react-id@1.1.4 deduped
+│ │ │ ├─┬ @radix-ui/react-menu@2.1.25
+│ │ │ │ ├── @radix-ui/primitive@1.1.7 deduped
+│ │ │ │ ├── @radix-ui/react-collection@1.1.16 deduped
+│ │ │ │ ├── @radix-ui/react-compose-refs@1.1.5 deduped
+│ │ │ │ ├── @radix-ui/react-context@1.2.2 deduped
+│ │ │ │ ├── @radix-ui/react-direction@1.1.5 deduped
+│ │ │ │ ├── @radix-ui/react-dismissable-layer@1.1.20 deduped
+│ │ │ │ ├── @radix-ui/react-focus-guards@1.1.6 deduped
+│ │ │ │ ├── @radix-ui/react-focus-scope@1.2.0 deduped
+│ │ │ │ ├── @radix-ui/react-id@1.1.4 deduped
+│ │ │ │ ├── @radix-ui/react-popper@1.3.8 deduped
+│ │ │ │ ├── @radix-ui/react-portal@1.1.18 deduped
+│ │ │ │ ├── @radix-ui/react-presence@1.1.11 deduped
+│ │ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ │ ├── @radix-ui/react-roving-focus@1.1.20 deduped
+│ │ │ │ ├── @radix-ui/react-slot@1.4.0 deduped
+│ │ │ │ ├── @radix-ui/react-use-callback-ref@1.1.4 deduped
+│ │ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ ├── aria-hidden@1.2.6 deduped
+│ │ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ │ ├── react-remove-scroll@2.7.2 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ ├── @radix-ui/react-use-controllable-state@1.2.6 deduped
+│ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ @radix-ui/react-label@2.1.16
+│ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ @radix-ui/react-primitive@2.1.11
+│ │ │ ├── @radix-ui/react-slot@1.4.0 deduped
+│ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ @radix-ui/react-select@2.3.8
+│ │ │ ├── @radix-ui/number@1.1.3
+│ │ │ ├── @radix-ui/primitive@1.1.7 deduped
+│ │ │ ├─┬ @radix-ui/react-collection@1.1.16
+│ │ │ │ ├── @radix-ui/react-compose-refs@1.1.5 deduped
+│ │ │ │ ├── @radix-ui/react-context@1.2.2 deduped
+│ │ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ │ ├── @radix-ui/react-slot@1.4.0 deduped
+│ │ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├── @radix-ui/react-compose-refs@1.1.5 deduped
+│ │ │ ├── @radix-ui/react-context@1.2.2 deduped
+│ │ │ ├─┬ @radix-ui/react-direction@1.1.5
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├── @radix-ui/react-dismissable-layer@1.1.20 deduped
+│ │ │ ├── @radix-ui/react-focus-guards@1.1.6 deduped
+│ │ │ ├── @radix-ui/react-focus-scope@1.2.0 deduped
+│ │ │ ├── @radix-ui/react-id@1.1.4 deduped
+│ │ │ ├─┬ @radix-ui/react-popper@1.3.8
+│ │ │ │ ├─┬ @floating-ui/react-dom@2.1.9
+│ │ │ │ │ ├─┬ @floating-ui/dom@1.8.0
+│ │ │ │ │ │ ├─┬ @floating-ui/core@1.8.0
+│ │ │ │ │ │ │ └── @floating-ui/utils@0.2.12 deduped
+│ │ │ │ │ │ └── @floating-ui/utils@0.2.12
+│ │ │ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├─┬ @radix-ui/react-arrow@1.1.16
+│ │ │ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├── @radix-ui/react-compose-refs@1.1.5 deduped
+│ │ │ │ ├── @radix-ui/react-context@1.2.2 deduped
+│ │ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ │ ├── @radix-ui/react-use-callback-ref@1.1.4 deduped
+│ │ │ │ ├── @radix-ui/react-use-layout-effect@1.1.4 deduped
+│ │ │ │ ├─┬ @radix-ui/react-use-rect@1.1.4
+│ │ │ │ │ ├── @radix-ui/rect@1.1.3 deduped
+│ │ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ │ └── react@19.2.6 deduped
+│ │ │ │ ├── @radix-ui/react-use-size@1.1.5 deduped
+│ │ │ │ ├── @radix-ui/rect@1.1.3
+│ │ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├── @radix-ui/react-portal@1.1.18 deduped
+│ │ │ ├── @radix-ui/react-presence@1.1.11 deduped
+│ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ ├── @radix-ui/react-slot@1.4.0 deduped
+│ │ │ ├── @radix-ui/react-use-callback-ref@1.1.4 deduped
+│ │ │ ├── @radix-ui/react-use-controllable-state@1.2.6 deduped
+│ │ │ ├── @radix-ui/react-use-layout-effect@1.1.4 deduped
+│ │ │ ├─┬ @radix-ui/react-use-previous@1.1.4
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├─┬ @radix-ui/react-visually-hidden@1.2.12
+│ │ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ ├── aria-hidden@1.2.6 deduped
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ ├── react-remove-scroll@2.7.2 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ @radix-ui/react-separator@1.1.16
+│ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ @radix-ui/react-slot@1.4.0
+│ │ │ ├── @radix-ui/react-compose-refs@1.1.5 deduped
+│ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ @radix-ui/react-tabs@1.1.22
+│ │ │ ├── @radix-ui/primitive@1.1.7 deduped
+│ │ │ ├── @radix-ui/react-context@1.2.2 deduped
+│ │ │ ├── @radix-ui/react-direction@1.1.5 deduped
+│ │ │ ├── @radix-ui/react-id@1.1.4 deduped
+│ │ │ ├── @radix-ui/react-presence@1.1.11 deduped
+│ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ ├─┬ @radix-ui/react-roving-focus@1.1.20
+│ │ │ │ ├── @radix-ui/primitive@1.1.7 deduped
+│ │ │ │ ├── @radix-ui/react-collection@1.1.16 deduped
+│ │ │ │ ├── @radix-ui/react-compose-refs@1.1.5 deduped
+│ │ │ │ ├── @radix-ui/react-context@1.2.2 deduped
+│ │ │ │ ├── @radix-ui/react-direction@1.1.5 deduped
+│ │ │ │ ├── @radix-ui/react-id@1.1.4 deduped
+│ │ │ │ ├── @radix-ui/react-primitive@2.1.11 deduped
+│ │ │ │ ├── @radix-ui/react-use-callback-ref@1.1.4 deduped
+│ │ │ │ ├── @radix-ui/react-use-controllable-state@1.2.6 deduped
+│ │ │ │ ├── @radix-ui/react-use-is-hydrated@0.1.3 deduped
+│ │ │ │ ├── @radix-ui/react-use-layout-effect@1.1.4 deduped
+│ │ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ ├── @radix-ui/react-use-controllable-state@1.2.6 deduped
+│ │ │ ├── @types/react-dom@19.3.0 deduped
+│ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ @radix-ui/react-use-callback-ref@1.1.4
+│ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ @radix-ui/react-use-layout-effect@1.1.4
+│ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ @wojtekmaj/react-recaptcha-v3@0.1.4
+│ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ ├── react@19.2.6 deduped
+│ │ │ └─┬ warning@4.0.3
+│ │ │   └─┬ loose-envify@1.4.0
+│ │ │     └── js-tokens@4.0.0
+│ │ ├── better-auth@1.6.23 deduped
+│ │ ├─┬ better-call@1.3.7
+│ │ │ ├── @better-auth/utils@0.4.2 deduped
+│ │ │ ├── @better-fetch/fetch@1.3.1 deduped
+│ │ │ ├── rou3@0.7.12
+│ │ │ ├── set-cookie-parser@3.1.3
+│ │ │ └── zod@4.3.6 deduped
+│ │ ├─┬ class-variance-authority@0.7.1
+│ │ │ └── clsx@2.1.1 deduped
+│ │ ├── clsx@2.1.1
+│ │ ├─┬ input-otp@1.5.0
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ lucide-react@0.555.0
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ next-themes@0.4.6
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├── react-dom@19.2.6 deduped
+│ │ ├─┬ react-google-recaptcha@3.1.0
+│ │ │ ├─┬ prop-types@15.8.1
+│ │ │ │ ├── loose-envify@1.4.0 deduped
+│ │ │ │ ├── object-assign@4.1.1
+│ │ │ │ └── react-is@16.13.1
+│ │ │ ├─┬ react-async-script@1.2.0
+│ │ │ │ ├─┬ hoist-non-react-statics@3.3.2
+│ │ │ │ │ └── react-is@16.13.1 deduped
+│ │ │ │ ├── prop-types@15.8.1 deduped
+│ │ │ │ └── react@19.2.6 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ react-hook-form@7.89.0
+│ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├─┬ react-qr-code@2.2.0
+│ │ │ ├── prop-types@15.8.1 deduped
+│ │ │ ├── qrcode-generator@2.0.4
+│ │ │ └── react@19.2.6 deduped
+│ │ ├── react@19.2.6 deduped
+│ │ ├─┬ sonner@2.0.8
+│ │ │ ├── @types/react@19.3.0 deduped
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ ├── tailwind-merge@3.7.0
+│ │ ├── tailwindcss@4.2.1
+│ │ ├── tw-animate-css@1.4.0
+│ │ ├─┬ ua-parser-js@2.0.10
+│ │ │ ├── detect-europe-js@0.1.2
+│ │ │ ├── is-standalone-pwa@0.1.1
+│ │ │ └── ua-is-frozen@0.1.2
+│ │ ├─┬ vaul@1.1.2
+│ │ │ ├── @radix-ui/react-dialog@1.2.0 deduped
+│ │ │ ├── react-dom@19.2.6 deduped
+│ │ │ └── react@19.2.6 deduped
+│ │ └── zod@4.3.6 deduped
+│ ├─┬ @supabase/auth-js@2.79.0
+│ │ └── tslib@2.8.1
+│ ├─┬ better-auth@1.6.23
+│ │ ├─┬ @better-auth/core@1.6.23 overridden
+│ │ │ ├── @better-auth/utils@0.4.2 deduped
+│ │ │ ├── @better-fetch/fetch@1.3.1 deduped
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY @cloudflare/workers-types@>=4
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY @opentelemetry/api@^1.9.0
+│ │ │ ├── @opentelemetry/semantic-conventions@1.43.0
+│ │ │ ├── @standard-schema/spec@1.1.0 deduped
+│ │ │ ├── better-call@1.3.7 deduped
+│ │ │ ├── jose@6.2.5 deduped
+│ │ │ ├── kysely@0.29.6 deduped
+│ │ │ ├── nanostores@1.5.5 deduped
+│ │ │ └── zod@4.3.6 deduped
+│ │ ├─┬ @better-auth/drizzle-adapter@1.6.23
+│ │ │ ├── @better-auth/core@1.6.23 deduped
+│ │ │ ├── @better-auth/utils@0.4.2 deduped
+│ │ │ └── UNMET OPTIONAL DEPENDENCY drizzle-orm@^0.45.2
+│ │ ├─┬ @better-auth/kysely-adapter@1.6.23
+│ │ │ ├── @better-auth/core@1.6.23 deduped
+│ │ │ ├── @better-auth/utils@0.4.2 deduped
+│ │ │ └── kysely@0.29.6 deduped
+│ │ ├─┬ @better-auth/memory-adapter@1.6.23
+│ │ │ ├── @better-auth/core@1.6.23 deduped
+│ │ │ └── @better-auth/utils@0.4.2 deduped
+│ │ ├─┬ @better-auth/mongo-adapter@1.6.23
+│ │ │ ├── @better-auth/core@1.6.23 deduped
+│ │ │ ├── @better-auth/utils@0.4.2 deduped
+│ │ │ └── UNMET OPTIONAL DEPENDENCY mongodb@^6.0.0 || ^7.0.0
+│ │ ├─┬ @better-auth/prisma-adapter@1.6.23
+│ │ │ ├── @better-auth/core@1.6.23 deduped
+│ │ │ ├── @better-auth/utils@0.4.2 deduped
+│ │ │ ├── UNMET OPTIONAL DEPENDENCY @prisma/client@^5.0.0 || ^6.0.0 || ^7.0.0
+│ │ │ └── UNMET OPTIONAL DEPENDENCY prisma@^5.0.0 || ^6.0.0 || ^7.0.0
+│ │ ├─┬ @better-auth/telemetry@1.6.23
+│ │ │ ├── @better-auth/core@1.6.23 deduped
+│ │ │ ├── @better-auth/utils@0.4.2 deduped
+│ │ │ └── @better-fetch/fetch@1.3.1 deduped
+│ │ ├─┬ @better-auth/utils@0.4.2
+│ │ │ └── @noble/hashes@2.4.0 deduped
+│ │ ├── @better-fetch/fetch@1.3.1 deduped
+│ │ ├── UNMET OPTIONAL DEPENDENCY @lynx-js/react@*
+│ │ ├── @noble/ciphers@2.4.0
+│ │ ├── @noble/hashes@2.4.0
+│ │ ├── UNMET OPTIONAL DEPENDENCY @prisma/client@^5.0.0 || ^6.0.0 || ^7.0.0
+│ │ ├── UNMET OPTIONAL DEPENDENCY @sveltejs/kit@^2.0.0
+│ │ ├── UNMET OPTIONAL DEPENDENCY @tanstack/react-start@^1.0.0
+│ │ ├── UNMET OPTIONAL DEPENDENCY @tanstack/solid-start@^1.0.0
+│ │ ├── better-call@1.3.7 deduped
+│ │ ├── UNMET OPTIONAL DEPENDENCY better-sqlite3@^12.0.0
+│ │ ├── defu@6.1.7
+│ │ ├── UNMET OPTIONAL DEPENDENCY drizzle-kit@>=0.31.4
+│ │ ├── UNMET OPTIONAL DEPENDENCY drizzle-orm@^0.45.2
+│ │ ├── jose@6.2.5 deduped
+│ │ ├── kysely@0.29.6
+│ │ ├── UNMET OPTIONAL DEPENDENCY mongodb@^6.0.0 || ^7.0.0
+│ │ ├── UNMET OPTIONAL DEPENDENCY mysql2@^3.0.0
+│ │ ├── nanostores@1.5.5
+│ │ ├── next@16.3.8 deduped
+│ │ ├── UNMET OPTIONAL DEPENDENCY pg@^8.0.0
+│ │ ├── UNMET OPTIONAL DEPENDENCY prisma@^5.0.0 || ^6.0.0 || ^7.0.0
+│ │ ├── react-dom@19.2.6 deduped
+│ │ ├── react@19.2.6 deduped
+│ │ ├── UNMET OPTIONAL DEPENDENCY solid-js@^1.0.0
+│ │ ├── UNMET OPTIONAL DEPENDENCY svelte@^4.0.0 || ^5.0.0
+│ │ ├── UNMET OPTIONAL DEPENDENCY vitest@^2.0.0 || ^3.0.0 || ^4.0.0
+│ │ ├── UNMET OPTIONAL DEPENDENCY vue@^3.0.0
+│ │ └── zod@4.3.6 deduped
+│ ├── jose@6.2.5
+│ ├── next@16.3.8 deduped
+│ ├── react-dom@19.2.6 deduped
+│ ├── react@19.2.6 deduped
+│ └── zod@4.3.6
+├── @neondatabase/serverless@1.2.0
+├─┬ @types/node@22.20.5
+│ └── undici-types@6.21.0
+├─┬ @types/qrcode@1.5.6
+│ └── @types/node@22.20.5 deduped
+├─┬ @types/react-dom@19.3.0
+│ └── @types/react@19.3.0 deduped
+├─┬ @types/react@19.3.0
+│ └── csstype@3.2.3
+├─┬ next@16.3.8
+│ ├── @next/env@16.3.8
+│ ├── UNMET OPTIONAL DEPENDENCY @next/swc-darwin-arm64@16.3.8
+│ ├── UNMET OPTIONAL DEPENDENCY @next/swc-darwin-x64@16.3.8
+│ ├── UNMET OPTIONAL DEPENDENCY @next/swc-linux-arm64-gnu@16.3.8
+│ ├── UNMET OPTIONAL DEPENDENCY @next/swc-linux-arm64-musl@16.3.8
+│ ├── UNMET OPTIONAL DEPENDENCY @next/swc-linux-x64-gnu@16.3.8
+│ ├── UNMET OPTIONAL DEPENDENCY @next/swc-linux-x64-musl@16.3.8
+│ ├── UNMET OPTIONAL DEPENDENCY @next/swc-win32-arm64-msvc@16.3.8
+│ ├── @next/swc-win32-x64-msvc@16.3.8
+│ ├── UNMET OPTIONAL DEPENDENCY @opentelemetry/api@^1.1.0
+│ ├── UNMET OPTIONAL DEPENDENCY @playwright/test@^1.51.1
+│ ├─┬ @swc/helpers@0.5.23
+│ │ └── tslib@2.8.1 deduped
+│ ├── UNMET OPTIONAL DEPENDENCY babel-plugin-react-compiler@*
+│ ├── baseline-browser-mapping@2.11.28
+│ ├── caniuse-lite@1.0.30001815
+│ ├─┬ postcss@8.5.23
+│ │ ├── nanoid@3.3.20
+│ │ ├── picocolors@1.1.1
+│ │ └── source-map-js@1.2.2
+│ ├── react-dom@19.2.6 deduped
+│ ├── react@19.2.6 deduped
+│ ├── UNMET OPTIONAL DEPENDENCY sass@^1.3.0
+│ ├─┬ sharp@0.35.5
+│ │ ├── @img/colour@1.1.0
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-darwin-arm64@0.35.5
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-darwin-x64@0.35.5
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-freebsd-wasm32@0.35.5
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-libvips-darwin-arm64@1.3.4
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-libvips-darwin-x64@1.3.4
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-libvips-linux-arm@1.3.4
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-libvips-linux-arm64@1.3.4
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-libvips-linux-ppc64@1.3.4
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-libvips-linux-riscv64@1.3.4
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-libvips-linux-s390x@1.3.4
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-libvips-linux-x64@1.3.4
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-libvips-linuxmusl-arm64@1.3.4
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-libvips-linuxmusl-x64@1.3.4
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-linux-arm@0.35.5
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-linux-arm64@0.35.5
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-linux-ppc64@0.35.5
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-linux-riscv64@0.35.5
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-linux-s390x@0.35.5
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-linux-x64@0.35.5
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-linuxmusl-arm64@0.35.5
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-linuxmusl-x64@0.35.5
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-webcontainers-wasm32@0.35.5
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-win32-arm64@0.35.5
+│ │ ├── UNMET OPTIONAL DEPENDENCY @img/sharp-win32-ia32@0.35.5
+│ │ ├── @img/sharp-win32-x64@0.35.5
+│ │ ├── detect-libc@2.1.2
+│ │ └── semver@7.8.5
+│ └─┬ styled-jsx@5.1.6
+│   ├── client-only@0.0.1
+│   └── react@19.2.6 deduped
+├─┬ qrcode@1.5.4
+│ ├── dijkstrajs@1.0.3
+│ ├── pngjs@5.0.0
+│ └─┬ yargs@15.4.1
+│   ├─┬ cliui@6.0.0
+│   │ ├── string-width@4.2.3 deduped
+│   │ ├─┬ strip-ansi@6.0.1
+│   │ │ └── ansi-regex@5.0.1
+│   │ └─┬ wrap-ansi@6.2.0
+│   │   ├─┬ ansi-styles@4.3.0
+│   │   │ └─┬ color-convert@2.0.1
+│   │   │   └── color-name@1.1.4
+│   │   ├── string-width@4.2.3 deduped
+│   │   └── strip-ansi@6.0.1 deduped
+│   ├── decamelize@1.2.0
+│   ├─┬ find-up@4.1.0
+│   │ ├─┬ locate-path@5.0.0
+│   │ │ └─┬ p-locate@4.1.0
+│   │ │   └─┬ p-limit@2.3.0
+│   │ │     └── p-try@2.2.0
+│   │ └── path-exists@4.0.0
+│   ├── get-caller-file@2.0.5
+│   ├── require-directory@2.1.1
+│   ├── require-main-filename@2.0.0
+│   ├── set-blocking@2.0.0
+│   ├─┬ string-width@4.2.3
+│   │ ├── emoji-regex@8.0.0
+│   │ ├── is-fullwidth-code-point@3.0.0
+│   │ └── strip-ansi@6.0.1 deduped
+│   ├── which-module@2.0.1
+│   ├── y18n@4.0.3
+│   └─┬ yargs-parser@18.1.3
+│     ├── camelcase@5.3.1
+│     └── decamelize@1.2.0 deduped
+├─┬ react-dom@19.2.6
+│ ├── react@19.2.6 deduped
+│ └── scheduler@0.27.0
+├── react@19.2.6
+├─┬ resend@6.13.0
+│ ├── UNMET OPTIONAL DEPENDENCY @react-email/render@*
+│ ├── postal-mime@2.7.4
+│ └─┬ standardwebhooks@1.0.0
+│   ├── @stablelib/base64@1.0.1
+│   └── fast-sha256@1.3.0
+├── server-only@0.0.1
+└── typescript@5.9.3
