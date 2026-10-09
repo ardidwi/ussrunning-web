@@ -1,0 +1,16 @@
+✔ card presentation uses exact shared backend DTO and preserves both distinct identities (2.3399ms)
+✔ all backend lifecycle failures remain safe failure results (2.9222ms)
+✔ defensive non-active success never displays a card (0.3689ms)
+✔ malformed or unknown barcode protocols cannot render member identity (0.8189ms)
+✔ initials fallback handles empty names and Unicode without splitting surrogate pairs (0.5077ms)
+✔ renderer gives existing QR library only backend payload, H correction and four-module quiet zone (19.5533ms)
+✔ real renderer produces stable SVG without PII or textual full UUID (160.969ms)
+✔ invalid barcode data is rejected before rendering (1.5328ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 883.5237

@@ -1,0 +1,19 @@
+✔ missing permission snapshot fails closed (1.5297ms)
+✔ member snapshot allows self features and no administrative modules (0.3051ms)
+✔ admin sees operational content/history but no elevated capabilities (0.2395ms)
+✔ super_admin snapshot permits elevated modules with exact hasRole semantics (0.192ms)
+✔ frontend never derives permissions from a claimed role alone (0.1843ms)
+✔ audit filter defaults/bounds use canonical HISTORY_POLICY (0.3943ms)
+✔ audit rejects invalid, incomplete, reversed and excessive date windows (0.8686ms)
+✔ date-only filters map unambiguously to inclusive UTC calendar dates (2.186ms)
+✔ next-page filters retain exact trusted microsecond window and opaque cursor (0.5842ms)
+✔ revision input permits only canonical entity types and bounded pages (0.9106ms)
+✔ server permission projection omits account/provider/email/barcode data (46.2298ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1087.9977

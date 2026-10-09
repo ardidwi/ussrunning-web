@@ -1,0 +1,14 @@
+✔ active owner card protocol is stable, opaque and excludes contact/session data (4301.0155ms)
+✔ anonymous and every non-active lifecycle state denied (13.7869ms)
+✔ supplied foreign identity ignored; profile edits cannot rotate either identity (29.2874ms)
+✔ fresh status check blocks stale active context and missing profile is controlled (17.3161ms)
+✔ legacy action retains exact BE-04 shape and identity (12.7689ms)
+✔ invalid barcode protocol and DB errors are sanitized without logging (5.6862ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4895.9699

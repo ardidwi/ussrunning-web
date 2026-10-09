@@ -1,0 +1,26 @@
+✔ new trusted user provisions pending account, minimal profile and only member role (6085.182ms)
+✔ repeat and parallel provisioning return the same account with one profile and role (34.8117ms)
+✔ independent opaque identities are unique, permanent and contain no PII (30.9901ms)
+✔ missing provider/email are controlled; missing name stays NULL (17.0381ms)
+✔ duplicate email and changed provider email cannot merge/rebind accounts (28.9399ms)
+✔ partially existing account repairs profile/member assignment without changing identity or status (20.9407ms)
+✔ mandatory role failure rolls back account/profile and retry recovers atomically (17.8529ms)
+✔ pending cannot pass active guard, even if provider says email verified (25.5021ms)
+✔ internal verification activation is email-bound, idempotent and transactional (56.1653ms)
+✔ suspended/deactivated reject protected server access and cannot be reactivated by verification (81.6419ms)
+✔ unauthenticated requests never provision or return an account (0.5609ms)
+✔ client supplied role/account identity ignored by input-free action (9.0981ms)
+✔ missing config, unavailable DB/provider and raw errors are safe (1.2906ms)
+✔ new server services work with BE-01 non-owner runtime grants (24.8218ms)
+✔ legacy guard blocks mapped suspended/deactivated identities, leaves unmapped/pending alone (8.6044ms)
+✔ legacy pre-migration schema absence is compatible; unexpected DB errors fail closed (3.4468ms)
+✔ actual auth config accessor rejects missing configuration and requests silent provider logging (13.6428ms)
+✔ provider names/IDs containing SQL syntax remain data and no passwords exist in application schema (54.6855ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7312.2187

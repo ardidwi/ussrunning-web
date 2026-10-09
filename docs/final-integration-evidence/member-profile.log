@@ -1,0 +1,29 @@
+✔ active owner reads minimal safe DTO and centrally defined completion (6639.1815ms)
+✔ unauthenticated/pending/suspended/deactivated cannot read, mutate or get barcode (16.3922ms)
+✔ allowed PATCH normalizes fields, completion and minimal atomic audit (39.5997ms)
+✔ identity, roles, lifecycle, email and timestamp mutation rejected by allowlist (66.8504ms)
+✔ client account IDs never select another member, including administrative role holders (54.0646ms)
+✔ invalid phone, dates, HTML, oversized and malformed values rejected (97.8571ms)
+✔ emergency consistency uses merged stored fields and empty optional values clear deliberately (75.8149ms)
+✔ privacy evidence retained, marketing changes are separate and no-op submits do not churn audits (47.2841ms)
+✔ stale and parallel updates conflict, rapid repeated submit does not duplicate audit (57.2337ms)
+✔ status recheck after account lock rejects a stale previously active session (52.2336ms)
+✔ fresh read rechecks DB status instead of trusting memoized account (12.9915ms)
+✔ missing profile controlled, partial data retained and no fake PII generated (40.9112ms)
+✔ owned active image FK accepted; foreign/archived/non-image/unknown references rejected (118.521ms)
+✔ member card contains only display identity/status/avatar, not contact or session data (20.1467ms)
+✔ mandatory audit failure rolls profile/consent changes back atomically (15.387ms)
+✔ non-owner runtime grants support new service without permission escalation (40.0502ms)
+✔ DB failure and malformed stored preferences are controlled, no raw PII errors (5.7136ms)
+✔ SQL-looking profile text is bound data; optional demographics/marketing do not affect completion (38.8813ms)
+✔ unbounded/deep preferences and empty/oversized command payload are rejected safely (22.0803ms)
+✔ version is timezone-independent and detects mutation even if timestamps match (57.6707ms)
+✔ direct service errors are sanitized before any SSR/action consumer sees them (2.4573ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8496.1592

@@ -1,0 +1,31 @@
+✔ fresh migrations create all foundation tables and only three role seeds (6069.3316ms)
+✔ migration rerun does not repeat DDL or seed data (8.2774ms)
+✔ applied migration drift and out-of-order history fail closed (4.8507ms)
+✔ failed batch rolls back DDL and migration ledger atomically (41.1698ms)
+✔ duplicate email is case-insensitive; provider mapping is unique (12.5875ms)
+✔ member ID and barcode are server-defaulted, opaque, unique and immutable (18.1274ms)
+✔ active account requires verification and invalid role relation is rejected (17.1931ms)
+✔ verification hashes, expiry and outstanding-token uniqueness (27.2862ms)
+✔ duplicate event, Story and Partner slugs are rejected (150.6773ms)
+✔ one logical registration per event/member and foreign account rejected (4.8515ms)
+✔ one hashed event pass per registration and unique pass hash (13.8642ms)
+✔ check-in rejects wrong event and prevents duplicate attendance (7.1393ms)
+✔ custom answers reject questions from another event (9.4928ms)
+✔ invalid date ranges, zero/negative capacity and unknown timezone rejected (170.0739ms)
+✔ history is append-only and publication pointer belongs to its own published revision (24.8334ms)
+✔ operational FK policy protects accounts/events/media referenced by history (21.0549ms)
+✔ SQL lexer preserves semicolons in dollar bodies, comments and strings (0.3732ms)
+✔ missing environment fails usefully, dry-run needs no database, unavailable target is redacted (416.5787ms)
+✔ server-only accessor caches client, binds query params and opt-in errors remove secrets (259.9316ms)
+✔ least-privilege runtime role can use foundation but cannot mutate history or migration ledger (57.5335ms)
+✔ post-lock ledger guard rejects a stale concurrent migration plan (14.1206ms)
+✔ consumed/invalidated verification artifacts cannot be revived and event UUID cannot be replaced (14.8267ms)
+✔ registration/pass/check-in ownership cannot be rebound while operational fields remain mutable (336.3114ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8420.9997

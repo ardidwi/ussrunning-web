@@ -1,0 +1,27 @@
+✔ member self permissions allowed; CMS/audit/reserved permissions rejected (5952.9389ms)
+✔ admin operational permissions allowed but reserved super-admin capabilities denied (74.8872ms)
+✔ super-admin has complete matrix; no role mutation/elevation endpoint exists (80.2797ms)
+✔ anonymous and non-active administrator denied despite role (35.6631ms)
+✔ fresh DB role/status authority overrides spoofed provider/client fields (53.7167ms)
+✔ any/role guards fail closed for unknown, empty and excessive permission input (15.3543ms)
+✔ member cannot inspect audit or unpublished revision even with valid identifiers (52.4503ms)
+✔ admin sees only positive-listed operational actions/entities, not security/member audit (106.548ms)
+✔ audit DTO minimizes PII/secrets and unsafe raw metadata for every role (37.4327ms)
+✔ audit cursor retains microseconds, stable ties and fixed window without duplicate pages (107.6223ms)
+✔ bounded pagination and malformed/oversized/date filters rejected (94.7415ms)
+✔ valid date/action/entity/actor filters bind values, empty data is safe (53.3283ms)
+✔ same-query authorization blocks role revocation or suspension between guard and read (66.6685ms)
+✔ super-admin audit scope fails closed if elevated role revoked after guard (41.573ms)
+✔ authorized revision list is bounded, newest first, cursor parent-bound (109.2399ms)
+✔ safe typed draft snapshot omits rich body/PII/token/unsafe text; parent ID prevents cross-entity lookup (100.1121ms)
+✔ site/partner/event history uses existing table linkage with explicit typed projections (428.7691ms)
+✔ revision/audit immutable history and runtime least privileges preserved (77.2998ms)
+✔ DB failure sanitized at guard/service/action boundary and no profile/card regression (66.6775ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8512.8279

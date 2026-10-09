@@ -1,0 +1,599 @@
+{
+  "responsive": [
+    {
+      "route": "/",
+      "width": 320,
+      "height": 568,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/about",
+      "width": 320,
+      "height": 568,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/runs",
+      "width": 320,
+      "height": 568,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/membership",
+      "width": 320,
+      "height": 568,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/stories",
+      "width": 320,
+      "height": 568,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/partners",
+      "width": 320,
+      "height": 568,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/login",
+      "width": 320,
+      "height": 568,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/join",
+      "width": 320,
+      "height": 568,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/",
+      "width": 360,
+      "height": 640,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/about",
+      "width": 360,
+      "height": 640,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/runs",
+      "width": 360,
+      "height": 640,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/membership",
+      "width": 360,
+      "height": 640,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/stories",
+      "width": 360,
+      "height": 640,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/partners",
+      "width": 360,
+      "height": 640,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/login",
+      "width": 360,
+      "height": 640,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/join",
+      "width": 360,
+      "height": 640,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/about",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/runs",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/membership",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/stories",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/partners",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/login",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/join",
+      "width": 390,
+      "height": 844,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/",
+      "width": 430,
+      "height": 932,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/about",
+      "width": 430,
+      "height": 932,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/runs",
+      "width": 430,
+      "height": 932,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/membership",
+      "width": 430,
+      "height": 932,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/stories",
+      "width": 430,
+      "height": 932,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/partners",
+      "width": 430,
+      "height": 932,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/login",
+      "width": 430,
+      "height": 932,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/join",
+      "width": 430,
+      "height": 932,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/about",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/runs",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/membership",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/stories",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/partners",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/login",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/join",
+      "width": 768,
+      "height": 1024,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/",
+      "width": 1024,
+      "height": 768,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/about",
+      "width": 1024,
+      "height": 768,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/runs",
+      "width": 1024,
+      "height": 768,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/membership",
+      "width": 1024,
+      "height": 768,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/stories",
+      "width": 1024,
+      "height": 768,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/partners",
+      "width": 1024,
+      "height": 768,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/login",
+      "width": 1024,
+      "height": 768,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/join",
+      "width": 1024,
+      "height": 768,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/",
+      "width": 1280,
+      "height": 800,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/about",
+      "width": 1280,
+      "height": 800,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/runs",
+      "width": 1280,
+      "height": 800,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/membership",
+      "width": 1280,
+      "height": 800,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/stories",
+      "width": 1280,
+      "height": 800,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/partners",
+      "width": 1280,
+      "height": 800,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/login",
+      "width": 1280,
+      "height": 800,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/join",
+      "width": 1280,
+      "height": 800,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/about",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/runs",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/membership",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/stories",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/partners",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/login",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/join",
+      "width": 1440,
+      "height": 900,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/",
+      "width": 1920,
+      "height": 1080,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/about",
+      "width": 1920,
+      "height": 1080,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/runs",
+      "width": 1920,
+      "height": 1080,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/membership",
+      "width": 1920,
+      "height": 1080,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/stories",
+      "width": 1920,
+      "height": 1080,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/partners",
+      "width": 1920,
+      "height": 1080,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/login",
+      "width": 1920,
+      "height": 1080,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/join",
+      "width": 1920,
+      "height": 1080,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/",
+      "width": 1366,
+      "height": 600,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/about",
+      "width": 1366,
+      "height": 600,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/runs",
+      "width": 1366,
+      "height": 600,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/membership",
+      "width": 1366,
+      "height": 600,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/stories",
+      "width": 1366,
+      "height": 600,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/partners",
+      "width": 1366,
+      "height": 600,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/login",
+      "width": 1366,
+      "height": 600,
+      "overflow": false,
+      "legacyMeter": false
+    },
+    {
+      "route": "/join",
+      "width": 1366,
+      "height": 600,
+      "overflow": false,
+      "legacyMeter": false
+    }
+  ],
+  "navigation": [
+    "Nested run route uses RUNS active",
+    "Mobile menu route navigation closes and restores scrolling"
+  ],
+  "motion": [
+    {
+      "chapters": true,
+      "canvas": true,
+      "progress": true,
+      "chapter": "2"
+    }
+  ],
+  "zoom": [
+    {
+      "route": "/about",
+      "zoom": "200% CSS zoom",
+      "overflow": false
+    },
+    {
+      "route": "/stories",
+      "zoom": "200% CSS zoom",
+      "overflow": false
+    },
+    {
+      "route": "/login",
+      "zoom": "200% CSS zoom",
+      "overflow": false
+    },
+    {
+      "route": "/join",
+      "zoom": "200% CSS zoom",
+      "overflow": false
+    }
+  ],
+  "errors": []
+}

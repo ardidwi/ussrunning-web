@@ -1,0 +1,27 @@
+✔ pending issuance stores only SHA256, bound email, configured expiry and code-owned delivery (3963.7891ms)
+✔ active is safe; suspended/deactivated never issue (27.4921ms)
+✔ valid proof consumes once and activates with timestamp and append-only audit (51.7634ms)
+✔ expired, malformed, unknown, consumed, revoked and pre-binding proofs rejected (62.2192ms)
+✔ suspended/deactivated and changed-email accounts cannot activate (34.9746ms)
+✔ already active valid proof consumes safely without replacing verification timestamp (12.8596ms)
+✔ cooldown and concurrent resend only issue one proof; allowed resend supersedes old proof (1145.4631ms)
+✔ DB-backed rolling limit counts revoked proofs and survives new app calls (18.1206ms)
+✔ parallel same-token consumption yields exactly one activation (16.6055ms)
+✔ verify/resend race and status-change interleavings preserve lifecycle (32.4892ms)
+✔ outstanding uniqueness and immutable email binding remain database-enforced (10.7385ms)
+✔ activation rolls back proof/account/audit on a mandatory audit-write failure (16.3126ms)
+✔ provider failure/throw/timeout sanitized; proof remains valid, pending account intact (153.0893ms)
+✔ input-free own account request ignores role/account/email; anonymous never looks up email (8.8627ms)
+✔ trusted URL, missing config and database errors fail safely without startup failure (3.8617ms)
+✔ GET never consumes; fragment confirmation clears URL, restrictive CSP and explicit POST (95.9543ms)
+✔ issuance failure rolls back new proof, supersession, delivery and rate history (32.4173ms)
+✔ delivery claim is idempotent and provider acceptance with DB failure is controlled (47.893ms)
+✔ actual pinned Resend SDK does not log provider responses with embedded secrets (72.6458ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6517.2374
