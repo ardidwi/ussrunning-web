@@ -1,0 +1,80 @@
+/* Canonical FE-03 shell grammar reused for functional CMS views. */
+.uss-cms-foundation .uss-member-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+.uss-history-filters {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+.uss-history-filters .uss-form-actions {
+  grid-column: 1/-1;
+}
+.uss-history-list {
+  display: grid;
+  gap: var(--space-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.uss-history-list article {
+  border: 1px solid var(--uss-border);
+  padding: var(--space-6);
+  background: var(--uss-surface);
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.uss-history-list h2 {
+  font-size: var(--uss-type-h3);
+  margin-bottom: var(--space-4);
+}
+.uss-history-list dl,
+.uss-history-preview dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+}
+.uss-history-list dt,
+.uss-history-preview dt {
+  color: var(--uss-muted);
+  font-size: var(--uss-type-label);
+}
+.uss-history-list dd,
+.uss-history-preview dd {
+  margin: var(--space-2) 0 0;
+  overflow-wrap: anywhere;
+}
+.uss-history-page-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.uss-history-status {
+  min-height: 3em;
+  color: var(--uss-muted);
+  font-size: var(--uss-type-small);
+  overflow-wrap: anywhere;
+}
+.uss-history-preview {
+  padding: var(--space-6);
+  border: 1px solid var(--uss-border);
+}
+.uss-history-window {
+  font-size: var(--uss-type-small);
+  color: var(--uss-muted);
+  overflow-wrap: anywhere;
+}
+@media (max-width: 767px) {
+  .uss-history-filters,
+  .uss-history-list dl,
+  .uss-history-preview dl {
+    grid-template-columns: 1fr;
+  }
+  .uss-history-list article {
+    padding: var(--space-4);
+  }
+}

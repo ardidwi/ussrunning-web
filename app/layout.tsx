@@ -11,6 +11,7 @@ import "@/components/layout/public-shell.css";
 import "@/components/auth/auth-flows.css";
 import "@/components/dashboard/member-dashboard.css";
 import "@/features/member-card/member-card.css";
+import "@/features/cms/cms-foundation.css";
 
 export const metadata: Metadata = {
   title: "USS Running — Community in Motion",

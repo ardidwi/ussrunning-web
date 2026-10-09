@@ -1,75 +1,44 @@
-import AdminWorkspace from "@/components/admin/AdminWorkspace";
-import {
-  getAdminActivity,
-  getAdminEvents,
-  getAdminMedia,
-  getAdminMembers,
-  getMediaCollectionIds,
-  getAdminOverview,
-  getAdminStories,
-} from "@/lib/admin";
-import { getHomeHero, getLoginHero } from "@/lib/content";
-import { query } from "@/lib/db";
-import { requireAdmin } from "@/lib/session";
-
+import { loadCmsPermissions } from "@/features/permissions/server";
+import { PermissionsProvider } from "@/features/permissions/Permissions";
+import { permissionView } from "@/features/permissions/model";
+import { CmsShell } from "@/features/cms/CmsShell";
+import { CmsModuleBoundary } from "@/features/cms/CmsModuleBoundary";
+import { CMS_MODULES, cmsModule } from "@/features/cms/navigation";
+import { ServiceFeedback } from "@/features/shared/ServiceFeedback";
+type Query = Record<string, string | string[] | undefined>;
 export const dynamic = "force-dynamic";
-
-export default async function AdminPage() {
-  const user = await requireAdmin();
-
-  const [
-    overview,
-    homeHero,
-    loginHero,
-    events,
-    stories,
-    media,
-    members,
-    activity,
-    homeGalleryIds,
-    settingsRows,
-  ] = await Promise.all([
-    getAdminOverview(),
-    getHomeHero(),
-    getLoginHero(),
-    getAdminEvents(),
-    getAdminStories(),
-    getAdminMedia(),
-    getAdminMembers(),
-    getAdminActivity(),
-    getMediaCollectionIds("home-gallery"),
-    query<{ value: unknown }>(
-      `SELECT value FROM public.site_settings WHERE key='socials' LIMIT 1`
-    ),
+export const metadata = { title: "USS CMS — USS Running" };
+export default async function AdminPage({
+  searchParams,
+}: {
+  searchParams: Promise<Query>;
+}) {
+  const [context, query] = await Promise.all([
+    loadCmsPermissions(),
+    searchParams,
   ]);
-
-  const rawSettings = settingsRows[0]?.value;
-  const settings =
-    rawSettings && typeof rawSettings === "object"
-      ? (rawSettings as {
-          instagram?: string;
-          strava?: string;
-          contactEmail?: string;
-        })
-      : {};
-
+  if (!context.ok)
+    return (
+      <div className="uss-member-shell">
+        <main className="uss-member-content">
+          <ServiceFeedback code={context.code} returnTo="/admin" />
+        </main>
+      </div>
+    );
+  const module = cmsModule(typeof query.module === "string" ? query.module : ""),
+    access = permissionView(context.data),
+    item = CMS_MODULES.find((item) => item.id === module)!;
+  let content;
+  if (!access.canAny(item.permissions))
+    content = (
+      <ServiceFeedback code="INSUFFICIENT_PERMISSION" returnTo="/admin" />
+    );
+  else content = <CmsModuleBoundary module={module} />;
   return (
-    <AdminWorkspace
-      user={{
-        name: user.name,
-        email: user.email,
-        role: user.role === "super_admin" ? "super_admin" : "admin",
-      }}
-      overview={overview}
-      homeHero={homeHero}
-      loginHero={loginHero}
-      events={events}
-      stories={stories}
-      media={media}
-      members={members}
-      activity={activity}
-      homeGalleryIds={homeGalleryIds}
-      settings={settings}
-    />
+    <PermissionsProvider snapshot={context.data}>
+      <CmsShell module={module} displayName={context.data.displayName}>
+        {content}
+      </CmsShell>
+    </PermissionsProvider>
   );
 }
