@@ -1,0 +1,27 @@
+✔ create draft UUID and normalized stable slug, revision and minimized audit (11806.8283ms)
+✔ public excludes drafts/private/member-only/archived and missing same result (1041.7389ms)
+✔ public projection excludes private configs, identities and version (241.0968ms)
+✔ explicit lifecycle and terminal archive restore; invalid transitions rejected (839.6401ms)
+✔ update preserves identity and rejects stale/repeated/concurrent write (665.6271ms)
+✔ allowlist rejects identity/role/status and slug mutations (237.0847ms)
+✔ duplicate slug rolls back full audit/revision transaction (404.4018ms)
+✔ capacity metadata null accepted; malformed/zero/negative/overflow rejected (215.0701ms)
+✔ date/timezone/window malformed and reversed validations (40.8823ms)
+✔ merged partial update validates retained dates; optional nulls (454.2916ms)
+✔ bounded plain description/text/link and media FK validation (348.4951ms)
+✔ anonymous/member/forged roles/inactive admins denied, super admin allowed (319.8686ms)
+✔ transaction rechecks revoked role/status after guard (110.2423ms)
+✔ bounded keyset pagination, cursor/filter binding and empty data (1373.2517ms)
+✔ runtime grants work, append-only revisions and no destructive privilege (423.3544ms)
+✔ missing record and DB failures sanitized (18.8223ms)
+✔ write and mandatory history rollback together when audit persistence fails (327.9636ms)
+✔ BE-06 event revision preview and operational audit read remain compatible (507.4442ms)
+✔ cursor preserves existing fractional timestamps without repeating pages (821.1859ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 21649.1475
