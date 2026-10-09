@@ -203,6 +203,22 @@ Numbering may continue beyond FE-20. Final approved dependency repair heads and 
 | OPS | Deployment / staging / production | PLANNED | Safe staging provider, least-privilege grants, legacy crosswalk, migration/rollback rehearsal. |
 | DOC | Architecture documentation | DONE | Roadmap/evidence and task-contract updates. |
 
+### OPS-OWNERSHIP-MIGRATION — dedicated USS ownership
+
+Status **IN_PROGRESS (audit/plan only)**. See [USS-OWNERSHIP-MIGRATION-PLAN.md](USS-OWNERSHIP-MIGRATION-PLAN.md) for actual ownership/IDs, evidence gaps, backups, risk/rollback matrices, phased gates and cutover acceptance. No migration executed. Audit baseline main fb7fb116c7899a2ac663067dec6e151ee1b52217; refresh before execution.
+
+| Sub-track | Execution status | Dependency / limit |
+| --- | --- | --- |
+| GitHub | BLOCKED | Target org/name/incoming permission/App grants; transfer existing ardidwi/ussrunning-web, preserve history |
+| Vercel | BLOCKED | USS team access/source Owner; existing project transfer preferred; unchanged-Neon bridge must be verified first |
+| Resend | BLOCKED | Team/sender/key-name inventory, DNS ownership and connected BE-03 flow; separate from Neon shared OTP mail |
+| Neon | BLOCKED | Phases 1–3 DONE + VERIFIED + ROLLBACK_READY; managed transfer/Auth continuity and tested backup recovery; highest risk |
+| Auth Cutover | BLOCKED | Trusted live session/crosswalk/roles/card/CMS acceptance and non-login/profile adapters |
+| DNS | BLOCKED | Authoritative zone/owner export and approved sender/web/origin mapping; no DNS writes in audit |
+| Decommission | NOT_STARTED | Full cutover + rollback window + explicit scoped cleanup approval |
+
+Order: inventory/backup -> GitHub -> Vercel -> Resend -> Neon -> Auth verification -> full cutover -> rollback window -> decommission. Each predecessor requires independent DONE, VERIFIED and ROLLBACK_READY evidence. Plan/metadata success do not complete migration. Native integration/resource transfer is separate from project transfer; never implicitly move Neon in Vercel phase. Preserve BE/FE statuses, permanent identity, server authorization and audit history. No product feature implemented.
+
 ## G. Dependency matrix
 
 | Frontend | Backend dependency |
@@ -266,6 +282,7 @@ Agents still inspect Git state, dirty files, contracts and history. FE-04 and FE
 
 | Date | Change | Evidence |
 | --- | --- | --- |
+| 2026-10-09 | Added ownership audit and gated migration track; no infrastructure migration executed. | USS-OWNERSHIP-MIGRATION-PLAN.md; current metadata/browser/aggregate evidence, explicit target/Resend/DNS gaps. |
 | 2026-10-09 | Revalidated BE-05/06 and FE-04/05 on latest main, preserving concurrent delivery 6e3e8ca through fast-forward. | FINAL-MEMBER-FOUNDATION-INTEGRATION.md; fresh backend 106/106, FE 19/19, browser/contract audits, dependency graph/build/types and local smoke passed. Hydration/lint/provider/scan/writer/reissue/restore limits remain open. |
 | 2026-10-09 | Delivered FE-04 / FE-05 foundations into the current verified development main candidate, preserving dependency repairs and early-development policy. | Fresh validation and limits: FE-04-05-MAIN-INTEGRATION.md; permanent barcode remains identity-only, CMS writers/restore excluded. |
 | 2026-10-09 | Established roadmap, actual foundation/repair parent map, cutover boundaries and isolated forward-only integration. | Starting HEAD a91f910; all foundations and approved repair heads included. Integrated regression passed; exact counts and exceptions in PRE-FE04-INTEGRATION-VALIDATION.md. |
