@@ -146,7 +146,7 @@ Numbering is a planning baseline, may continue beyond BE-22, and can be combined
 | BE-07 | Event Domain Foundation | DONE | BE-01 + BE-06 | feature/event-domain-foundation | Guarded event service/repository/actions, public projections, explicit lifecycle, optimistic updates and atomic revision/audit; 19 event tests + 125 regressions. EVENT-DOMAIN-FOUNDATION, BE-07-VALIDATION. Legacy public events unchanged; registration/pass/check-in remain BE-08â€“10. |
 | BE-08 | Event Registration Service | DONE | BE-07 + BE-02 | feature/event-registration-service | Own/managed typed registration contracts, event-locked capacity/waitlist, cancellation/reapply, bounded history and atomic minimized audit. EVENT-REGISTRATION-SERVICE, BE-08-VALIDATION; real Neon concurrency and FE cutover pending; no passes/check-in. |
 | BE-09 | Event Pass / Ticket Service | DONE | BE-07 + BE-08 | feature/event-pass-service | Owner/managed issuance and read, hash-only opaque v1, idempotency, scoped resolution, atomic invalidation/audit; migration 010. EVENT-PASS-SERVICE, BE-09-VALIDATION. Persistent migration/keyring and real Neon concurrency pending; reissue/scanner excluded. |
-| BE-10 | Check-In / Scanner Service | PLANNED | BE-08 + BE-09 + BE-06 | TBD | Authorized staff, replay protection, attendance and audit. |
+| BE-10 | Check-In / Scanner Service | DONE | BE-08 + BE-09 + BE-06 | feature/event-check-in-service / 3be4613 | Atomic event-scoped BE-09 resolver + attendance + audit; 35/35 scanner, 270/270 integrated regression. Migration 011 local validation only; independent Neon/device staging pending. See CHECK-IN-SERVICE.md and BE-10-VALIDATION.md. |
 | BE-11 | Media Storage Service | PLANNED | BE-01 + BE-06 | TBD | Object storage + metadata; type/size/ownership validation. |
 | BE-12 | Stories / Editorial Service | PLANNED | BE-06 + BE-11 | TBD | Typed writes, drafts/publish, atomic revision/audit. |
 | BE-13 | Gallery Service | PLANNED | BE-11 + BE-06 | TBD | Bounded collections and publication. |
@@ -353,3 +353,21 @@ Private/unpublished/members-only detail is not exposed by public reads; an autho
 read/discovery contract remains a backend prerequisite for members-only detail expansion.
 FE-08 next consumes BE-09 after approved persistent migration 010/keyring setup and active
 session validation; pass UI, scanner/check-in and CMS protected writers remain future work.
+### BE-10 attendance foundation — 2026-10-12
+
+Resumed existing worktree at e24222b without discarding source or concurrent FE-07 work.
+Task 3be4613, forward reconciliation b663568 preserves FE-07 main 6baf018. Uses BE-09
+protected resolver in the same transaction as attendance/audit, events.manage authorization,
+existing check-in window timestamps, unique registration attendance and composite pass FK.
+No scanner UI, member barcode/auth/pass-token semantic changes or manual reversal/search.
+
+Integrated install/dependency baseline unchanged; build and standalone TypeScript pass.
+BE-10 35/35, full integrated regression 270/270, local core browser 20/20 with zero page
+exceptions/overflow/hydration warnings in those probes. Offline migration plan and local
+fresh/010 upgrade/legacy retention/rerun/rollback/constraints pass. Existing next lint and
+broader hydration audit remain open. Real independent Neon connections, migration 010/011
+staging, active provider/staff operational flow and camera/physical scanning remain pending.
+Read-only Neon inventory has 10 branches and no task-owned isolated connection; no persistent
+migration or branch deletion. Main/Vercel exact SHA and READY evidence are reported after push;
+HTTP smoke is not authenticated attendance proof. FE-09 consumes documented scanEventPass
+contract after approved isolated migration/keyring/role setup.

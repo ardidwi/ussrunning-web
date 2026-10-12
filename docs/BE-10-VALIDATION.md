@@ -32,3 +32,16 @@ diff and dependency baseline reviewed; no logs/debug endpoints/token persistence
 
 Concurrent main advanced to 6baf018 (FE-07). Its frontend/docs/test changes will be merged
 forward into this task branch and the combined tree revalidated before main delivery.
+
+## Integrated checkpoint
+
+Forward merge b6635683586d063eee2bc6b654401412a87fba85 preserves concurrent FE-07
+6baf018bfda83e832c1685a900010d6e8ee943c7 without conflict or frontend edits.
+Combined npm run build and standalone TypeScript PASS. Full integrated regression
+270/270 PASS, 0 failed/skipped; BE-10 remains 35/35. Dependency manifest/lockfile identical
+to validated baseline. Combined local browser 20/20 PASS, 0 page errors/overflow/warnings,
+reference route 404. Broader hydration/unsupported lint/staging limits remain unchanged.
+
+Feature/main pushes and deployment SHA/READY are verified after this documentation
+checkpoint and reported in final delivery to avoid self-referential commit churn.
+No production/default Neon SQL write, auth provider configuration change or physical scan.
