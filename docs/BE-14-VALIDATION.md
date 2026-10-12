@@ -21,3 +21,6 @@ Edge cases cover statuses, invalid windows, slug collisions, malformed/oversized
 Local PGlite parallel transaction tests do not prove independent-connection Neon concurrency. Real staging database/auth sessions/query plans remain pending. No persistent migration, credential/provider/storage change or real email. Existing media persistence limitation remains. Public legacy frontend stays unchanged; FE-13 wiring and approved staging migration/grants required.
 
 Delivery evidence and roadmap DONE are recorded only after main integration and exact-SHA Vercel READY verification.
+
+## Delivered implementation evidence
+Task commit71b94e63028cb34b61b4d6b77e977ae513a16006 pushed and fast-forward integrated into main without conflicts. Main/origin matched. Vercel dpl_3V5THYH2CWjDDMEZfWoFNk2UEBUX READY exact taskSHA; alias https://ussrunning-web-seven.vercel.app. Deployed browser20/20 with zero page errors/overflow/targeted hydration warnings. Final documentation SHA/deployment verified after push and reported at handoff. Main and task worktrees clean; root feature/stories-cms remains intentionally dirty with concurrent FE-10 work untouched. No force/history rewrite/destructive DB-storage operation/auth-provider change.

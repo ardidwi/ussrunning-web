@@ -150,7 +150,7 @@ Numbering is a planning baseline, may continue beyond BE-22, and can be combined
 | BE-11 | Media Storage Service | DONE | BE-01 + BE-06 | feature/media-storage-foundation | Typed media foundation, migration 012, raster validation and retention; [evidence](BE-11-VALIDATION.md). Persistent storage adapter/configuration pending. |
 | BE-12 | Stories / Editorial Service | DONE | BE-06 + BE-11 | feature/stories-editorial-service / 1771a33 | Guarded editorial lifecycle, scheduling, media references, atomic revision/audit; see BE-12-VALIDATION.md. |
 | BE-13 | Gallery Service | DONE | BE-11 + BE-06 | feature/gallery-service / 975be4a | Guarded bounded collections, publication, atomic item ordering/history; see BE-13-VALIDATION.md. |
-| BE-14 | Partner / Sponsor Service | PLANNED | BE-06 + BE-11 | TBD | Managed records/media and visibility. |
+| BE-14 | Partner / Sponsor Service | DONE | BE-06 + BE-11 | 71b94e6 | Guarded canonical Partner + event sponsorship, atomic history, MediaAsset references; staging limitations documented. |
 | BE-15 | Dynamic Site Content Service | PLANNED | BE-06 + BE-11 | TBD | Typed drafts and public published projections, separate from configuration. |
 | BE-16 | Notification Service | PLANNED | BE-03 + relevant domain events | TBD | Preferences, retries, deduplication and consent. |
 | BE-17 | Admin User Management | PLANNED | BE-02 + BE-04 + BE-06 | TBD | Audited lifecycle actions with least privilege. |
@@ -493,3 +493,11 @@ Persistent storage, approved migration/grants staging, real trusted admin sessio
 Neon concurrency, large-library query-plan QA, bulk upload and human audit remain pending.
 Collection cap1000/read pages100; no restore/scheduling/physical cleanup. Next lint and broader
 hydration root-cause audit remain open. See GALLERY-SERVICE.md and BE-13-VALIDATION.md.
+
+### BE-14 Partner / Sponsor delivery - 2026-10-13
+
+Implemented 71b94e6 from latest BE-13 main b6100da. Reuses partners/event_partners, existing partners.manage and BE-11 MediaAsset serializer. Additive migration015 preserves legacy rows and associations; explicit lifecycle, server slugs, optimistic versions, canonical/event-scoped presentation, exact-set atomic reorder and immutable revisions/minimized audit. No frontend or auth/storage/domain replacement.
+
+Validation: Partner41/41, full regression494/494, clean install/dependency graph, production build, standalone TypeScript and diff check PASS. Local fresh/001-014 upgrade/legacy retention/rerun/runtime grants/atomic rollback and offline15-migration plan PASS. No persistent migration. Local/deployed browser core each20/20 at320/1366px; zero page errors/overflow/targeted hydration warnings in these probes. Implementation deployment dpl_3V5THYH2CWjDDMEZfWoFNk2UEBUX READY, exact71b94e63028cb34b61b4d6b77e977ae513a16006, alias ussrunning-web-seven.vercel.app. Final documentation deployment is checked after push.
+
+FE-13 consumes typed canonical and event relationship contracts. Approved migration/grants staging, real admin sessions/independent Neon concurrency, persistent media delivery, legacy unsafe-content remediation and query-plan QA remain pending. No bulk operations, restore, automatic QR-branding selection or unrelated CMS writers. Known next lint and broader hydration audit remain open. Concurrent FE-10 worktree changes preserved. See PARTNER-SPONSOR-SERVICE.md and BE-14-VALIDATION.md.
