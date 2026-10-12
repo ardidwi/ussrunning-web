@@ -100,7 +100,7 @@ export default async function RunsPage({
 
           <div className="event-grid event-grid-three">
             {runs.map((run) => (
-              <EventCard run={run} key={run.slug} />
+              <EventCard run={run} key={run.slug} editorialListing />
             ))}
           </div>
         </div>

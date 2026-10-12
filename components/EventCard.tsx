@@ -1,12 +1,12 @@
 import Link from "next/link";
 import type { Run } from "@/data/site";
 
-export default function EventCard({ run }: { run: Run }) {
+export default function EventCard({ run, editorialListing = false }: { run: Run; editorialListing?: boolean }) {
   return (
     <Link href={"/runs/" + run.slug} className="event-card">
       <div className="event-image-wrap">
         <img src={run.image} alt="" className="event-image" />
-        <div className="event-status">{run.status}</div>
+        <div className="event-status">{editorialListing ? "SESSION LISTING" : run.status}</div>
       </div>
       <div className="event-card-topline">
         <span>{run.eyebrow}</span>

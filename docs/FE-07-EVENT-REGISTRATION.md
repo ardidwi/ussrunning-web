@@ -44,6 +44,8 @@ reported successful after server acceptance. Public reads intentionally exclude 
 unpublished and members-only events; their details are not exposed using managed admin reads.
 An owner can still read retained event metadata in history under BE-08's ownership contract.
 Members-only event discovery/detail needs a future authorized backend read contract.
+Live review also removed inherited availability claims from the legacy Runs cards/detail:
+they identify editorial sessions and disconnected registration, without changing Home styling.
 
 Event timestamps explicitly use the DTO IANA timezone. History dates/cancellation dates use
 the same event timezone. No invented totals, offsets, waitlist promotion or event entitlement.
@@ -54,8 +56,8 @@ Successful mutation revalidates dashboard, history and public routes.
 - Clean npm ci --ignore-scripts: 259 installed/260 audited, zero reported vulnerabilities;
   inherited email-package deprecations. No manifest/lock drift.
 - deps:check, production build, standalone TypeScript and git diff --check pass.
-- Integrated Node regression: 235/235, zero failures/skips (219 baseline including BE-09,
-  plus 16 new frontend registration contract/date tests).
+- Integrated Node regression: 270/270, zero failures/skips (219 baseline including BE-09,
+  plus 16 new frontend registration contract/date tests and 35 concurrent BE-10 tests).
 - FE-07 browser: 138 cases / 254 assertions. 320/375/768/1366px, short viewport,
   emulated 200% zoom, duplicate submit, server-confirmed/waitlisted/full/closed responses,
   existing/cancelled records, pagination, cancellation conflict, reload, safe initial focus,
@@ -88,3 +90,10 @@ trusted active-role staging validation. It must show scoped entitlement/status/e
 invalidation without reusing permanent member identity. No pass/scanner/payment UI or
 backend semantics were added here. CMS writers, physical scanning, broader hydration audit
 and lint tooling remain separately scoped.
+
+Final forward reconciliation preserves BE-10 main f3d2e0d as well as BE-09, without
+FE-07 backend changes. Reconciled build/types/dependency graph and 270/270 regressions pass.
+Legacy-label production smoke checks cover four widths. Local unknown-event reads returned
+controlled service-unavailable feedback instead of not-found; deployed not-found is separately
+verified. Real active-member mutations remain untested. Final SHA/READY/live counts are reported
+following the forward-only copy fix delivery.

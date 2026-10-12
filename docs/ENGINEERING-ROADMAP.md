@@ -340,7 +340,7 @@ server-owned versioned cancellation, cursor history and recent dashboard records
 `/runs/[slug]` is intentional canonical public routing with legacy editorial compatibility;
 FE-12 content migration can retire the compatibility boundary without inventing identity.
 
-Final validation: 235/235 Node regressions, 138 FE-07 browser cases / 254 assertions, zero
+Final validation: 270/270 Node regressions after BE-10 reconciliation, 138 FE-07 browser cases / 254 assertions, zero
 FE-07 exceptions/hydration warnings, dependency graph/build/standalone TypeScript and strict
 UI audit passed. Existing form/public/auth/profile/workspace/dashboard/card audits passed;
 older reference hydration warnings remain separately recorded. Unsupported next lint is unchanged.
@@ -353,7 +353,7 @@ Private/unpublished/members-only detail is not exposed by public reads; an autho
 read/discovery contract remains a backend prerequisite for members-only detail expansion.
 FE-08 next consumes BE-09 after approved persistent migration 010/keyring setup and active
 session validation; pass UI, scanner/check-in and CMS protected writers remain future work.
-### BE-10 attendance foundation — 2026-10-12
+### BE-10 attendance foundation ï¿½ 2026-10-12
 
 Resumed existing worktree at e24222b without discarding source or concurrent FE-07 work.
 Task 3be4613, forward reconciliation b663568 preserves FE-07 main 6baf018. Uses BE-09

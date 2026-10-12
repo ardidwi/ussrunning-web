@@ -93,8 +93,8 @@ export default async function RunDetailPage({
               <b>{run.distance}</b>
             </div>
             <div>
-              <span>ACCESS</span>
-              <b>{run.status}</b>
+              <span>REGISTRATION</span>
+              <b>NOT CONNECTED</b>
             </div>
           </div>
           <p>
