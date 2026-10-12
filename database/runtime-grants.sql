@@ -10,3 +10,7 @@ REVOKE UPDATE ON uss.site_content_revisions,uss.story_revisions,uss.partner_revi
 
 -- BE-03 operations are invoker functions, requiring the table privileges above.
 GRANT EXECUTE ON FUNCTION uss.issue_email_verification(uuid,text,integer,integer,integer,integer),uss.consume_email_verification(text) TO :"app_role";
+
+-- BE-13 gallery history is append-only; invoker mutation needs no DELETE.
+REVOKE UPDATE ON uss.gallery_revisions FROM :"app_role";
+GRANT EXECUTE ON FUNCTION uss.mutate_gallery(uuid,uuid,text,integer,jsonb,text) TO :"app_role";
