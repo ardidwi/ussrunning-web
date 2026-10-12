@@ -164,3 +164,19 @@ contract exists yet; production uses USS defaults and no query parameter supplie
 Screenshot copy is not offline verification: check-in backend remains current authority.
 Fictional fixtures and custom-logo route are independently development-only and return 404
 in production. No pass token enters URLs, logging, analytics or persistent browser storage.
+
+## FE-09 scanner behavior
+
+Scanner selection/read uses trusted managed-event access; every scan delegates to BE-10.
+Camera permission never confers staff authorization. Event context stays explicit and
+backend WRONG_EVENT cannot become successful attendance. The managed DTO has no window
+fields; only BE-10 scan results establish window availability.
+
+Camera acquisition is explicit, rear-facing preferred, with manual fallback. Streams and
+workers stop during submission/results, hidden documents and unmount. A synchronous
+latch blocks repeated frames until Scan next acknowledgement; no timed auto-submit.
+Manual and camera payloads use one adapter and preserve the exact token. Rate countdown
+is backend-derived. Result focus and live status announce safe confirmation; identity
+fields, event and attendance time are text. Unknown outcomes do not imply no mutation.
+FE-01 Button/Field/Input, FE-02 ServiceFeedback and FE-05 PermissionGate own shared UI.
+No client account claims, event authorization, persistent tokens or member-ticket conflation.

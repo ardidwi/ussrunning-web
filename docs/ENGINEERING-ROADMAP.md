@@ -174,7 +174,7 @@ Numbering may continue beyond FE-20. Final approved dependency repair heads and 
 | FE-06 | Member Dashboard | DONE | FE-03 + BE-04 + FE-04/05; BE-08/09/16 for future activity | feature/member-dashboard-foundation / `ee5fc70` | Canonical owner profile projection, modular overview, shared avatar/card entry, backend completion, lifecycle/loading/retry and centralized permission navigation. Registrations/history/passes/notifications explicitly unavailable; real active-role QA pending. See FE-06-MEMBER-DASHBOARD.md. |
 | FE-07 | Event Registration UI | DONE | BE-07 + BE-08 + FE-06 | feature/event-registration-ui | Public event detail, backend-owned booking/cancellation, bounded own history and dashboard preview. FE-07-EVENT-REGISTRATION.md records validation and live active-member limits. |
 | FE-08 | Event Pass UI | DONE | BE-09 + FE-07 | FE-08-EVENT-PASS.md; feature/event-pass-ui | Owner-only read/explicit issuance, branded QR, guarded dashboard/history entries; live active-owner/device QA remains outstanding. |
-| FE-09 | Scanner / Check-In Workspace | PLANNED | BE-10 + FE-05 | TBD | Staff permissions/current state/recoverable feedback. |
+| FE-09 | Scanner / Check-In Workspace | DONE | BE-10 + FE-05 | feature/scanner-check-in-ui | Event-scoped staff scanner, native/worker QR decoding, manual fallback and authoritative result states. See FE-09-SCANNER.md. Live staff/Neon/device QA remains pending. |
 | FE-10 | Stories CMS | PLANNED | BE-12 + FE-05 | TBD | Draft/publication/revision workflows. |
 | FE-11 | Gallery CMS | PLANNED | BE-11 + BE-13 + FE-05 | TBD | Upload ownership/progress/failure and bounded collections. |
 | FE-12 | Events CMS | PLANNED | BE-07 + FE-05 | TBD | Lifecycle/configuration/audit/publication clarity. |
@@ -435,3 +435,38 @@ human audit and broader hydration root-cause work remain pending. Next lint rema
 Legacy public pages are preserved; FE-10 must explicitly consume the new typed contracts.
 Rich text, revision restore, taxonomy management and BE-19 search are deferred. See
 STORIES-EDITORIAL-SERVICE.md and BE-12-VALIDATION.md. No auth/pass/check-in/storage semantic changes.
+
+### FE-09 Scanner / Check-In UI delivery — 2026-10-12
+
+DONE for the frontend contract: `/dashboard/check-in` selects a bounded managed event,
+`/dashboard/check-in/[eventId]` confirms its context and calls BE-10 scanEventPass with
+only eventId and unchanged value. Central events.manage presentation uses trusted reads;
+BE-10 reauthorizes every mutation. Member barcodes never become event tickets.
+
+Camera is explicit and rear-preferred, with lazy qr-scanner 1.4.2 native/worker decoding,
+permission/unavailable/manual fallback, duplicate suppression and resource cleanup.
+Results distinguish success, existing attendance and stable failures; crew acknowledgement
+controls the next scan. Only safe participant fields are rendered. No automatic retry or
+attendance override. Managed event DTO lacks check-in windows, so availability is checked
+by BE-10 on scan rather than invented from browser time.
+
+Final integrated validation: 417/417 Node tests including 44 scanner tests and BE-12;
+118 scanner browser cases / 644 assertions and three actual rendered-QR decoder variants;
+4 navigation cases / 16 assertions; FE-08 128/386 with 16 independent QR decodes, FE-07
+138/254 and FE-06 43/154. All these browser probes had zero runtime/hydration errors.
+Clean install (262 audited, zero vulnerabilities), deps, production build, standalone
+TypeScript, diff check and strict UI audit pass (zero findings). Production local smoke
+73/73 includes protected scanner screens and production fixture 404 guards. Known Next 16
+next lint remains unsupported. See FE-09-SCANNER.md and fe-09-evidence.
+
+Preserved concurrent BE-12 implementation 1771a33 and delivery documentation 58a2040 by
+forward-only integration. No existing dependency version drift: qr-scanner and its canvas
+types are the only additions. Main/deployment SHA and READY are checked after push and
+reported with deployed smoke evidence. This remains development product review.
+
+Operational gates remain: real authenticated crew mutation/session checks, approved
+persistent migration/keyring configuration, independent Neon concurrency and physical
+iOS/Android phone/screenshot/outdoor-brightness/scan-distance testing. Synthetic browser
+camera frames are not physical-device proof. FE-12 should consume trusted check-in
+configuration/event administration; no auth, BE-09/BE-10 semantics, Event Pass behavior,
+member identity, Stories, payments, scanner override or CMS writers were changed.

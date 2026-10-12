@@ -134,3 +134,11 @@ occupy at most 12% of the symbol width (including padding); reserved QR patterns
 covered. Four-module quiet zones, high correction and dark/light contrast take precedence
 over branding. Failed event artwork falls back to USS, then a plain QR. Permanent member
 barcode presentation and the public motion engine are unchanged.
+
+## FE-09 crew operations
+
+Scanner surfaces reuse FE-01 square controls, USS black/white/red tokens and the existing
+member shell. A large static result heading and labeled success/error border serve crew
+recognition. The camera viewport is bounded for short phones; result acknowledgement is
+a full-width touch action. No animation overlays QR decoding. Runtime ownership is
+features/check-in/check-in.css; public and Event Pass visuals are unchanged.

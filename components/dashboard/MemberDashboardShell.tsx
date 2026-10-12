@@ -105,6 +105,19 @@ export default function MemberDashboardShell({
               <Link className="uss-member-back" href="/">
                 Back to USS Running ↗
               </Link>
+              <PermissionGate permission="events.manage">
+                <Link
+                  className="uss-member-back uss-scanner-nav"
+                  href="/dashboard/check-in"
+                  aria-current={
+                    currentPath.startsWith("/dashboard/check-in")
+                      ? "page"
+                      : undefined
+                  }
+                >
+                  Event check-in ↗
+                </Link>
+              </PermissionGate>
               <PermissionGate anyOf={CMS_ACCESS}>
                 <Link className="uss-member-back" href="/admin">
                   USS CMS ↗
@@ -136,6 +149,19 @@ export default function MemberDashboardShell({
             >
               Back to USS Running ↗
             </Link>
+            <PermissionGate permission="events.manage">
+              <Link
+                className="uss-member-back uss-scanner-nav"
+                href="/dashboard/check-in"
+                aria-current={
+                  currentPath.startsWith("/dashboard/check-in")
+                    ? "page"
+                    : undefined
+                }
+              >
+                Event check-in ↗
+              </Link>
+            </PermissionGate>
             <PermissionGate anyOf={CMS_ACCESS}>
               <Link className="uss-member-back" href="/admin">
                 USS CMS ↗

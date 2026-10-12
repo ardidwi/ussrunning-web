@@ -1,0 +1,49 @@
+{
+  "baseline": "58a20401807837acacdf8303742dbf9744100afa",
+  "node": {
+    "passed": 417,
+    "failed": 0,
+    "scanner": 44
+  },
+  "scannerBrowser": {
+    "cases": 118,
+    "assertions": 644,
+    "decodedVariants": 3,
+    "runtimeErrors": 0,
+    "hydrationWarnings": 0
+  },
+  "navigation": {
+    "cases": 4,
+    "assertions": 16
+  },
+  "regressions": {
+    "FE06": [
+      43,
+      154
+    ],
+    "FE07": [
+      138,
+      254
+    ],
+    "FE08": [
+      128,
+      386
+    ],
+    "FE08IndependentDecodes": 16
+  },
+  "productionLocalSmoke": 73,
+  "install": {
+    "command": "npm ci --ignore-scripts",
+    "passed": true,
+    "packagesAudited": 262,
+    "vulnerabilities": 0
+  },
+  "depsCheck": "PASS",
+  "build": "PASS",
+  "standaloneTypeScript": "PASS",
+  "strictUiAudit": 0,
+  "lint": "KNOWN FAILURE: Next 16 does not support next lint",
+  "liveStaffMutations": false,
+  "physicalDeviceScans": false,
+  "independentNeonConcurrency": false
+}
