@@ -149,7 +149,7 @@ Numbering is a planning baseline, may continue beyond BE-22, and can be combined
 | BE-10 | Check-In / Scanner Service | DONE | BE-08 + BE-09 + BE-06 | feature/event-check-in-service / 3be4613 | Atomic event-scoped BE-09 resolver + attendance + audit; 35/35 scanner, 270/270 integrated regression. Migration 011 local validation only; independent Neon/device staging pending. See CHECK-IN-SERVICE.md and BE-10-VALIDATION.md. |
 | BE-11 | Media Storage Service | DONE | BE-01 + BE-06 | feature/media-storage-foundation | Typed media foundation, migration 012, raster validation and retention; [evidence](BE-11-VALIDATION.md). Persistent storage adapter/configuration pending. |
 | BE-12 | Stories / Editorial Service | DONE | BE-06 + BE-11 | feature/stories-editorial-service / 1771a33 | Guarded editorial lifecycle, scheduling, media references, atomic revision/audit; see BE-12-VALIDATION.md. |
-| BE-13 | Gallery Service | PLANNED | BE-11 + BE-06 | TBD | Bounded collections and publication. |
+| BE-13 | Gallery Service | DONE | BE-11 + BE-06 | feature/gallery-service / 975be4a | Guarded bounded collections, publication, atomic item ordering/history; see BE-13-VALIDATION.md. |
 | BE-14 | Partner / Sponsor Service | PLANNED | BE-06 + BE-11 | TBD | Managed records/media and visibility. |
 | BE-15 | Dynamic Site Content Service | PLANNED | BE-06 + BE-11 | TBD | Typed drafts and public published projections, separate from configuration. |
 | BE-16 | Notification Service | PLANNED | BE-03 + relevant domain events | TBD | Preferences, retries, deduplication and consent. |
@@ -470,3 +470,26 @@ iOS/Android phone/screenshot/outdoor-brightness/scan-distance testing. Synthetic
 camera frames are not physical-device proof. FE-12 should consume trusted check-in
 configuration/event administration; no auth, BE-09/BE-10 semantics, Event Pass behavior,
 member identity, Stories, payments, scanner override or CMS writers were changed.
+
+### BE-13 Gallery foundation delivery — 2026-10-13
+
+Delivered 975be4a from latest FE-09 main 43e0deb; BE-12/BE-11 and concurrent scanner work
+preserved. Reuses existing gallery_items and MediaAsset serializer; additive collection,
+retained item relation and immutable revision schema in migration 014. Server-owned slugs,
+cms.content.manage, Gallery version/locking and exact-set atomic reorder; public reads fail
+closed for drafts/private/archive/future/ineligible media or event references. No frontend UI
+or universal CMS history entity expansion; typed Gallery revision metadata is protected.
+
+Validation: Gallery 36/36, integrated regression 453/453, clean install/dependency graph,
+production build, standalone TypeScript and diff check passed. Migration local fresh/001-013
+upgrade/legacy retention/rerun/rollback/runtime grants and offline plan passed. No persistent
+migration executed. Local and deployed core browser each 20/20, zero page exceptions/overflow/
+hydration warnings in these probes. Implementation deployment dpl_2xeQ1xduqNSH9uhGHefUXujVcfqb
+READY for exact 975be4a698b01fabdb3a50c9506023f8e7c5ffca. Final documentation deployment is
+verified after push; Vercel remains the development review environment.
+
+FE-11 consumes typed Gallery metadata/items/lifecycle/history and existing BE-11 media picker.
+Persistent storage, approved migration/grants staging, real trusted admin sessions/independent
+Neon concurrency, large-library query-plan QA, bulk upload and human audit remain pending.
+Collection cap1000/read pages100; no restore/scheduling/physical cleanup. Next lint and broader
+hydration root-cause audit remain open. See GALLERY-SERVICE.md and BE-13-VALIDATION.md.

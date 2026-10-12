@@ -25,3 +25,6 @@ Quality: no new dependencies/framework/provider/debug endpoint, no raw file/toke
 
 ## Limits
 No persistent migration or DB/storage changes. Production media adapter/credentials, active trusted role/session staging, independent Neon concurrency and runtime grants/migration staging pending. Collection limit 1000, bounded reads100; bulk uploads/large-library chunked reorder/query-plan scale work deferred. No restore/scheduling/physical cleanup; retained removed references intentionally protect historical assets. Existing next lint and broader hydration root-cause audit remain open. Human product audit pending.
+
+## Verified deployment
+Implementation main 975be4a698b01fabdb3a50c9506023f8e7c5ffca deployed READY as dpl_2xeQ1xduqNSH9uhGHefUXujVcfqb. Live core browser 20/20 PASS at 320/1366px, zero exceptions/overflow/hydration warnings; reference route 404 guard PASS. URL https://ussrunning-web-seven.vercel.app. This is route smoke, not authenticated Gallery staging proof. Final documentation checkpoint SHA/READY is verified after push and reported separately.
