@@ -7,6 +7,7 @@ import type { PassCode } from './pass-errors';
 import type { EventPassDTO, PassResolution } from './pass-types';
 import { reference, revocation, resolution } from './pass-validation';
 import { candidate, present } from './pass-token';
+import type { PassEffect } from './pass-repository';
 import { passTransaction } from './pass-repository';
 async function actor(managed:boolean) { return managed ? (await requirePermission('events.manage')).account : await requireActiveAccount(); }
 function check(code:string) {
@@ -36,4 +37,10 @@ export async function resolveManagedPass(value:unknown):Promise<PassResolution> 
   const a=await actor(true),v=resolution(value),r=await passTransaction({actorId:a.id,managed:true,eventId:v.eventId,lookupHash:v.hash,mode:'resolve'});
   check(r.code);if(!r.resolution) throw new PassError('EVENT_PASS_NOT_FOUND');return r.resolution;
  });
+}
+
+/** Server-owned transaction composition: same protected resolver and lock order, no client SQL. */
+export async function resolveManagedPassWithEffect<T>(value:unknown,effect:()=>PassEffect<T>) {
+ const a=await actor(true),v=resolution(value);
+ return passTransaction({actorId:a.id,managed:true,eventId:v.eventId,lookupHash:v.hash,mode:'resolve'},effect());
 }

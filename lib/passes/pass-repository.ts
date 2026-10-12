@@ -8,14 +8,15 @@ type Request = {
   mode: PassMode; passId?: string; lookupHash?: string;
   candidate?: {id:string;hash:string;keyId:string};
 };
-type Result = {code:string;data:PassRecord|null;resolution:PassResolution|null};
+export type PassEffect<T> = { ctes: string; resultSql: string; params: unknown[] };
+type Result<T> = {code:string;data:PassRecord|null;resolution:PassResolution|null;effect:T};
 const roles=rolesForPermission('events.manage');
 const allowedEvents=['published','registration_open','registration_closed'];
 const utc=(c:string)=>`to_char(${c} AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"')`;
 const projection=`jsonb_build_object('id',p.id,'registrationId',p.registration_id,'eventId',p.event_id,
  'status',p.status,'issuedAt',${utc('p.issued_at')},'expiresAt',${utc('p.expires_at')},'revokedAt',${utc('p.revoked_at')},
  'revokedReason',p.revoked_reason,'formatVersion',p.format_version,'tokenKeyId',p.token_key_id,'tokenHash',p.token_hash)`;
-export async function passTransaction(v:Request):Promise<Result> {
+export async function passTransaction<T = null>(v:Request,effect?:PassEffect<T>):Promise<Result<T>> {
  const sql=getSql();
  const statement=`WITH authority AS MATERIALIZED (
  SELECT a.id FROM uss.accounts a WHERE a.id=$1 AND a.status='active' AND a.email_verified_at IS NOT NULL
@@ -50,9 +51,10 @@ export async function passTransaction(v:Request):Promise<Result> {
  jsonb_build_object('registrationId',p.registration_id,'eventId',p.event_id,'formatVersion',p.format_version,'initiator',CASE WHEN $2 THEN 'admin' ELSE 'owner' END,'reason',p.revoked_reason)
  FROM changes p RETURNING id),
  resolved AS (SELECT * FROM changes UNION ALL SELECT * FROM current WHERE NOT EXISTS(SELECT 1 FROM changes))
+ ${effect ? ',' + effect.ctes : ''}
  SELECT d.code,(SELECT ${projection} FROM resolved p WHERE d.code='OK') data,
  (SELECT jsonb_build_object('passId',p.id,'registrationId',r.id,'eventId',r.event_id,'accountId',r.account_id,'formatVersion',p.format_version)
- FROM resolved p JOIN registration r ON r.id=p.registration_id WHERE d.code='OK' AND $6='resolve') resolution FROM decision d`;
+ FROM resolved p JOIN registration r ON r.id=p.registration_id WHERE d.code='OK' AND $6='resolve') resolution,${effect ? '(' + effect.resultSql + ')' : 'NULL'} AS effect FROM decision d`;
  const results=await sql.transaction([
   sql.query("SELECT set_config('lock_timeout','15s',true)"),
   // Account locks precede event/registration/pass locks, including the managed target account.
@@ -63,7 +65,7 @@ export async function passTransaction(v:Request):Promise<Result> {
   sql.query('SELECT ar.account_id FROM uss.account_roles ar JOIN uss.roles role ON role.id=ar.role_id WHERE ar.account_id=$1 FOR SHARE OF ar,role',[v.actorId]),
   sql.query('SELECT id FROM uss.events WHERE id=$1 FOR UPDATE',[v.eventId]),
   // Separate fresh READ COMMITTED statement after lock wait: observes cancellation and previous issuance.
-  sql.query(statement,[v.actorId,v.managed,roles,v.eventId,v.registrationId??null,v.mode,v.candidate?.id??null,v.candidate?.hash??null,v.candidate?.keyId??null,v.passId??null,v.lookupHash??null,allowedEvents]),
+  sql.query(statement,[v.actorId,v.managed,roles,v.eventId,v.registrationId??null,v.mode,v.candidate?.id??null,v.candidate?.hash??null,v.candidate?.keyId??null,v.passId??null,v.lookupHash??null,allowedEvents,...(effect?.params??[])]),
  ],{isolationLevel:'ReadCommitted'});
- return (results[4] as Result[])[0];
+ return (results[4] as Result<T>[])[0];
 }
