@@ -4,3 +4,6 @@ export type RevisionEntity = typeof REVISION_ENTITIES[number];
 /** Admin may see only these positive-listed content operations, never account/security logs. */
 export const OPERATIONAL_ACTIONS = ["created", "updated", "published", "scheduled", "archived", "restored"] as const;
 export const OPERATIONAL_AUDIT_ACTIONS = REVISION_ENTITIES.flatMap(entity => OPERATIONAL_ACTIONS.map(action => `${entity}.${action}`));
+
+// Partner/Sponsor lifecycle and sponsorship operations, additive to existing history policy.
+OPERATIONAL_AUDIT_ACTIONS.push('partner.activated','partner.deactivated',...['attach','update','detach','reorder'].map(action=>`partner.event.${action}`));

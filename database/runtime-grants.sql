@@ -14,3 +14,6 @@ GRANT EXECUTE ON FUNCTION uss.issue_email_verification(uuid,text,integer,integer
 -- BE-13 gallery history is append-only; invoker mutation needs no DELETE.
 REVOKE UPDATE ON uss.gallery_revisions FROM :"app_role";
 GRANT EXECUTE ON FUNCTION uss.mutate_gallery(uuid,uuid,text,integer,jsonb,text) TO :"app_role";
+
+-- BE-14 invoker writes use existing partner/event relation privileges, no DELETE.
+GRANT EXECUTE ON FUNCTION uss.mutate_partner(uuid,uuid,text,integer,jsonb,text),uss.mutate_sponsorship(uuid,uuid,text,jsonb) TO :"app_role";
