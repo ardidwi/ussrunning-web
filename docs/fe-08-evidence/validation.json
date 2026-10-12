@@ -1,0 +1,33 @@
+{
+  "baseline": "3ca433b5b6648e17ecc70df7499b0875cdb6982b",
+  "node": {
+    "pass": 338,
+    "fail": 0,
+    "fe08": 31
+  },
+  "browser": {
+    "cases": 128,
+    "assertions": 386,
+    "decoded": 16,
+    "runtime": 0,
+    "hydration": 0
+  },
+  "registrationRegression": {
+    "cases": 138,
+    "assertions": 254
+  },
+  "productionLocal": {
+    "cases": 62,
+    "runtime": 0,
+    "hydration": 0
+  },
+  "install": "PASS 259 packages, 260 audited, 0 vulnerabilities",
+  "deps": "PASS",
+  "build": "PASS",
+  "typescript": "PASS",
+  "staticFindings": 0,
+  "lint": "KNOWN FAIL: unsupported next lint",
+  "olderAuditHydrationWarnings": 5,
+  "activeOwnerLiveMutationTested": false,
+  "physicalScanningTested": false
+}

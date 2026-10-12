@@ -1,0 +1,96 @@
+.uss-event-pass {
+  max-width: 48rem;
+  min-width: 0;
+}
+.uss-pass-paper {
+  padding: var(--space-6);
+  border: 1px solid var(--uss-border);
+  background: var(--uss-surface);
+  overflow-wrap: anywhere;
+}
+.uss-pass-paper header {
+  margin-bottom: var(--space-6);
+}
+.uss-pass-paper h1 {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  margin: var(--space-4) 0;
+}
+.uss-pass-paper h2 {
+  font-size: var(--uss-type-h3);
+  margin-top: var(--space-6);
+}
+.uss-pass-paper dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+.uss-pass-paper dl > div:first-child {
+  grid-column: 1 / -1;
+}
+.uss-pass-paper dt {
+  color: var(--uss-muted);
+  font-size: var(--uss-type-helper);
+  margin-bottom: var(--space-1);
+}
+.uss-pass-paper dd {
+  margin: 0;
+}
+.uss-pass-note {
+  color: var(--uss-muted);
+  font-size: var(--uss-type-helper);
+}
+.uss-pass-feedback {
+  margin: var(--space-6) 0;
+  overflow-wrap: anywhere;
+}
+.uss-pass-entry {
+  margin-top: var(--space-4);
+}
+.uss-pass-error-focus:focus-visible {
+  outline: 2px solid var(--uss-focus);
+  outline-offset: var(--space-1);
+}
+.uss-branded-qr {
+  width: min(100%, 360px);
+  aspect-ratio: 1;
+  position: relative;
+  margin: var(--space-6) auto;
+  background: #fff;
+  color: #000;
+  isolation: isolate;
+}
+.uss-branded-qr > div {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-content: center;
+}
+.uss-qr-symbol {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.uss-qr-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  aspect-ratio: 1;
+  background: #fff;
+}
+.uss-qr-logo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #070707;
+}
+@media (max-width: 430px) {
+  .uss-pass-paper {
+    padding: var(--space-4);
+  }
+  .uss-pass-entry .uss-button {
+    width: 100%;
+  }
+}

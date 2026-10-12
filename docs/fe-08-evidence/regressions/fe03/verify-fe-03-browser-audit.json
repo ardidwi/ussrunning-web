@@ -1,0 +1,169 @@
+{
+  "cases": [
+    {
+      "name": "overview 320x568",
+      "passed": true
+    },
+    {
+      "name": "overview 360x640",
+      "passed": true
+    },
+    {
+      "name": "overview 390x844",
+      "passed": true
+    },
+    {
+      "name": "overview 430x932",
+      "passed": true
+    },
+    {
+      "name": "overview 768x1024",
+      "passed": true
+    },
+    {
+      "name": "overview 1366x768",
+      "passed": true
+    },
+    {
+      "name": "overview 1440x900",
+      "passed": true
+    },
+    {
+      "name": "overview 1920x1080",
+      "passed": true
+    },
+    {
+      "name": "overview 1366x500",
+      "passed": true
+    },
+    {
+      "name": "overview 390x420",
+      "passed": true
+    },
+    {
+      "name": "overview 720x450",
+      "passed": true
+    },
+    {
+      "name": "profile 320x568",
+      "passed": true
+    },
+    {
+      "name": "profile 360x640",
+      "passed": true
+    },
+    {
+      "name": "profile 390x844",
+      "passed": true
+    },
+    {
+      "name": "profile 430x932",
+      "passed": true
+    },
+    {
+      "name": "profile 768x1024",
+      "passed": true
+    },
+    {
+      "name": "profile 1366x768",
+      "passed": true
+    },
+    {
+      "name": "profile 1440x900",
+      "passed": true
+    },
+    {
+      "name": "profile 1920x1080",
+      "passed": true
+    },
+    {
+      "name": "profile 1366x500",
+      "passed": true
+    },
+    {
+      "name": "profile 390x420",
+      "passed": true
+    },
+    {
+      "name": "profile 720x450",
+      "passed": true
+    },
+    {
+      "name": "overview 200% CSS zoom",
+      "passed": true
+    },
+    {
+      "name": "profile 200% CSS zoom",
+      "passed": true
+    },
+    {
+      "name": "pending",
+      "passed": true
+    },
+    {
+      "name": "suspended",
+      "passed": true
+    },
+    {
+      "name": "deactivated",
+      "passed": true
+    },
+    {
+      "name": "expired",
+      "passed": true
+    },
+    {
+      "name": "unavailable",
+      "passed": true
+    },
+    {
+      "name": "failure",
+      "passed": true
+    },
+    {
+      "name": "loading",
+      "passed": true
+    },
+    {
+      "name": "minimal validation, field focus, stable feedback and optional values",
+      "passed": true
+    },
+    {
+      "name": "save active",
+      "passed": true
+    },
+    {
+      "name": "save save-failure",
+      "passed": true
+    },
+    {
+      "name": "save stale",
+      "passed": true
+    },
+    {
+      "name": "save malformed",
+      "passed": true
+    },
+    {
+      "name": "save server-validation",
+      "passed": true
+    },
+    {
+      "name": "save save-expired",
+      "passed": true
+    },
+    {
+      "name": "unsaved navigation dialog keyboard, keep and discard",
+      "passed": true
+    },
+    {
+      "name": "actual route fails closed with session or service feedback",
+      "passed": true
+    },
+    {
+      "name": "public and auth regression",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

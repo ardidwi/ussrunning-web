@@ -168,9 +168,23 @@ export default function RegistrationReference({
           }
         />
       ) : view === "dashboard" ? (
-        <DashboardRegistrations initial={initial} adapter={read} />
+        <DashboardRegistrations
+          initial={initial}
+          adapter={read}
+          passAdapter={async () => ({
+            ok: false,
+            code: "EVENT_PASS_UNAVAILABLE",
+          })}
+        />
       ) : (
-        <RegistrationHistory initial={initial} adapter={{ read, cancel }} />
+        <RegistrationHistory
+          initial={initial}
+          adapter={{ read, cancel }}
+          passAdapter={async () => ({
+            ok: false,
+            code: "EVENT_PASS_UNAVAILABLE",
+          })}
+        />
       )}
     </main>
   );

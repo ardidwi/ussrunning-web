@@ -1,0 +1,495 @@
+{
+  "base": "http://localhost:3149",
+  "cases": [
+    {
+      "route": "/",
+      "width": 320,
+      "height": 650,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/about",
+      "width": 320,
+      "height": 650,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/runs",
+      "width": 320,
+      "height": 650,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/membership",
+      "width": 320,
+      "height": 650,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/stories",
+      "width": 320,
+      "height": 650,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/partners",
+      "width": 320,
+      "height": 650,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/login",
+      "width": 320,
+      "height": 650,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/join",
+      "width": 320,
+      "height": 650,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard",
+      "width": 320,
+      "height": 650,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard/events",
+      "width": 320,
+      "height": 650,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard/member-card",
+      "width": 320,
+      "height": 650,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard/registrations/22222222-2222-4222-8222-222222222222?eventId=11111111-1111-4111-8111-111111111111",
+      "width": 320,
+      "height": 650,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/",
+      "width": 375,
+      "height": 700,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/about",
+      "width": 375,
+      "height": 700,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/runs",
+      "width": 375,
+      "height": 700,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/membership",
+      "width": 375,
+      "height": 700,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/stories",
+      "width": 375,
+      "height": 700,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/partners",
+      "width": 375,
+      "height": 700,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/login",
+      "width": 375,
+      "height": 700,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/join",
+      "width": 375,
+      "height": 700,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard",
+      "width": 375,
+      "height": 700,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard/events",
+      "width": 375,
+      "height": 700,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard/member-card",
+      "width": 375,
+      "height": 700,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard/registrations/22222222-2222-4222-8222-222222222222?eventId=11111111-1111-4111-8111-111111111111",
+      "width": 375,
+      "height": 700,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/",
+      "width": 768,
+      "height": 800,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/about",
+      "width": 768,
+      "height": 800,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/runs",
+      "width": 768,
+      "height": 800,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/membership",
+      "width": 768,
+      "height": 800,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/stories",
+      "width": 768,
+      "height": 800,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/partners",
+      "width": 768,
+      "height": 800,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/login",
+      "width": 768,
+      "height": 800,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/join",
+      "width": 768,
+      "height": 800,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard",
+      "width": 768,
+      "height": 800,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard/events",
+      "width": 768,
+      "height": 800,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard/member-card",
+      "width": 768,
+      "height": 800,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard/registrations/22222222-2222-4222-8222-222222222222?eventId=11111111-1111-4111-8111-111111111111",
+      "width": 768,
+      "height": 800,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/",
+      "width": 1366,
+      "height": 768,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/about",
+      "width": 1366,
+      "height": 768,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/runs",
+      "width": 1366,
+      "height": 768,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/membership",
+      "width": 1366,
+      "height": 768,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/stories",
+      "width": 1366,
+      "height": 768,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/partners",
+      "width": 1366,
+      "height": 768,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/login",
+      "width": 1366,
+      "height": 768,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/join",
+      "width": 1366,
+      "height": 768,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard",
+      "width": 1366,
+      "height": 768,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard/events",
+      "width": 1366,
+      "height": 768,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard/member-card",
+      "width": 1366,
+      "height": 768,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard/registrations/22222222-2222-4222-8222-222222222222?eventId=11111111-1111-4111-8111-111111111111",
+      "width": 1366,
+      "height": 768,
+      "zoom": 1,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/",
+      "width": 768,
+      "height": 600,
+      "zoom": 2,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/about",
+      "width": 768,
+      "height": 600,
+      "zoom": 2,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/runs",
+      "width": 768,
+      "height": 600,
+      "zoom": 2,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/membership",
+      "width": 768,
+      "height": 600,
+      "zoom": 2,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/stories",
+      "width": 768,
+      "height": 600,
+      "zoom": 2,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/partners",
+      "width": 768,
+      "height": 600,
+      "zoom": 2,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/login",
+      "width": 768,
+      "height": 600,
+      "zoom": 2,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/join",
+      "width": 768,
+      "height": 600,
+      "zoom": 2,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard",
+      "width": 768,
+      "height": 600,
+      "zoom": 2,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard/events",
+      "width": 768,
+      "height": 600,
+      "zoom": 2,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard/member-card",
+      "width": 768,
+      "height": 600,
+      "zoom": 2,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/dashboard/registrations/22222222-2222-4222-8222-222222222222?eventId=11111111-1111-4111-8111-111111111111",
+      "width": 768,
+      "height": 600,
+      "zoom": 2,
+      "status": 200,
+      "overflow": false
+    },
+    {
+      "route": "/design-system?surface=pass",
+      "status": 404
+    },
+    {
+      "route": "/design-system/qr-fixture",
+      "status": 404
+    }
+  ],
+  "errors": [],
+  "hydration": []
+}

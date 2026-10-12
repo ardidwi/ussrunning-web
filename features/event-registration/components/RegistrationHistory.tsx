@@ -12,13 +12,17 @@ import type { RegistrationDTO } from "@/lib/registrations/registration-types";
 import { readHistory, requestCancellation } from "../api/actions";
 import { restrictedAccount, type HistoryResult } from "../model";
 import { RegistrationFeedback } from "./RegistrationFeedback";
+import { PassEntry } from "@/features/event-pass/components/PassEntry";
+import { readPassEntry } from "@/features/event-pass/api/actions";
 import { RegistrationList } from "./RegistrationList";
 export function RegistrationHistory({
   initial,
   adapter = { read: readHistory, cancel: requestCancellation },
+  passAdapter = readPassEntry,
 }: {
   initial: HistoryResult;
   adapter?: { read: typeof readHistory; cancel: typeof requestCancellation };
+  passAdapter?: typeof readPassEntry;
 }) {
   const [result, setResult] = useState<HistoryResult>(initial),
     [phase, setPhase] = useState<"idle" | "loading" | "cancelling">("idle"),
@@ -100,20 +104,28 @@ export function RegistrationHistory({
       )}
       <RegistrationList
         items={result.data.items}
-        actions={(item) =>
-          item.status !== "cancelled" && item.status !== "rejected" ? (
-            <Button
-              variant="text"
-              disabled={phase !== "idle"}
-              onClick={() => {
-                setError(null);
-                setSelected(item);
-              }}
-            >
-              Request cancellation
-            </Button>
-          ) : null
-        }
+        actions={(item) => (
+          <>
+            {item.status === "confirmed" && (
+              <PassEntry
+                adapter={passAdapter}
+                reference={{ eventId: item.event.id, registrationId: item.id }}
+              />
+            )}
+            {item.status !== "cancelled" && item.status !== "rejected" ? (
+              <Button
+                variant="text"
+                disabled={phase !== "idle"}
+                onClick={() => {
+                  setError(null);
+                  setSelected(item);
+                }}
+              >
+                Request cancellation
+              </Button>
+            ) : null}
+          </>
+        )}
       />
       <div className="uss-registration-actions">
         <Button

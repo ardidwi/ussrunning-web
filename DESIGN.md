@@ -122,3 +122,15 @@ features/event-registration owns public event detail and wrapping registration l
 the existing public gutters, display hierarchy, flat borders and shared buttons/badges/dialog.
 MemberDashboardShell continues to own member navigation and scrolling. Native time elements
 display each event's IANA timezone explicitly. No new palette, typeface or dependency.
+
+## FE-08 Event Pass composition
+
+features/event-pass owns the restrained square pass panel, timezone-aware event details,
+status and shared actions. Its signature is the large static QR on an opaque light surface;
+surrounding typography, borders and spacing consume the FE-01 tokens. BrandedQrCode in
+features/qr owns rendering configuration and centered branding, independent of pass identity.
+The existing USS white logo uses a small black patch within a bounded white pad. Logos may
+occupy at most 12% of the symbol width (including padding); reserved QR patterns are never
+covered. Four-module quiet zones, high correction and dark/light contrast take precedence
+over branding. Failed event artwork falls back to USS, then a plain QR. Permanent member
+barcode presentation and the public motion engine are unchanged.

@@ -109,6 +109,7 @@ Development-only dashboard fixtures are independently gated and cannot activate 
 ## FE-07 event registration behavior
 
 Business sources: EVENT-DOMAIN-FOUNDATION.md and EVENT-REGISTRATION-SERVICE.md.
+
 features/event-registration/api delegates to BE-07 public reads and BE-08 owner actions;
 no account/role/identity claim or availability arithmetic is accepted from the browser.
 Public event reads disclose only published public projections. Not-found includes private,
@@ -131,3 +132,35 @@ Empty is distinct from service unavailable. Mutation success revalidates dashboa
 routes; sensitive data is not stored in browser storage. Member barcode remains unrelated;
 passes and attendance are not generated or inferred. Reference fixtures require development
 both at the route and adapter, and perform no real backend mutation.
+
+## FE-08 Event Pass behavior
+
+Business source: EVENT-PASS-SERVICE.md. /dashboard/registrations/[id] uses eventId as a
+resource locator only. readEventPass delegates to BE-08 getCurrentRegistration and BE-09
+getCurrentEventPass; both enforce trusted owner/lifecycle state. requestEventPass delegates
+to BE-09 issueCurrentEventPass, then reads again. Neither client identity nor a hidden control
+authorizes a pass. Empty reads do not issue; backend issuance is explicit and idempotent.
+The PRD's eventual automatic confirmation issuance/email orchestration remains backend work.
+
+EventPassScreen uses idle/loading/issuing and the backend result. Refresh/issuance removes
+the QR while checking, blocks duplicate requests, ignores unmounted responses and restores
+focus after completion. Account denial removes registration context; revoked/expired/ineligible
+results never retain a scannable QR. Returning from background refreshes eligibility. A timer
+rechecks the backend at its supplied expiry; the browser clock never declares eligibility or
+expiration. One check per deadline avoids repeat requests when client/server clocks differ.
+Unknown mutation/network outcome directs a fresh read rather than claiming nothing changed.
+
+PassEntry performs a lazy owner read on explicit Check Event Pass. View Event Pass appears
+only after a successful active pass read; Request Event Pass appears only after backend
+NOT_FOUND. Navigation receives availability only, never the credential. Dashboard/history
+reuse this entry without automatic per-row fetches or new collection/capacity authority.
+
+BrandedQrCode is the shared QR presentation owner. It encodes the exact supplied value with
+the existing qrcode library, no trimming, identity generation or PII addition. Event Pass always
+requests H correction. QrBranding controls centerLogoUrl, logoScale, logoPadding (modules),
+errorCorrection, foreground/background and quietZone (modules). Bounds, opaque contrast and
+reserved-module checks override unsafe appearance settings. No persistent event branding
+contract exists yet; production uses USS defaults and no query parameter supplies branding.
+Screenshot copy is not offline verification: check-in backend remains current authority.
+Fictional fixtures and custom-logo route are independently development-only and return 404
+in production. No pass token enters URLs, logging, analytics or persistent browser storage.

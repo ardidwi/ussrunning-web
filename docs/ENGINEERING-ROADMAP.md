@@ -173,7 +173,7 @@ Numbering may continue beyond FE-20. Final approved dependency repair heads and 
 | FE-05 | RBAC-Aware CMS Foundation | DONE | BE-06 + FE-01 + FE-02 | feature/member-card-rbac-frontend / `8961f0d187806adcde2e5a3aabd76b9771f181c3` | Central trusted permission presentation, guarded navigation, bounded audit and partial non-restorable revision previews. Protected CMS writers are not integrated; frontend visibility is not server authorization. Real Neon role/session validation outstanding. Full operational CMS is not complete. |
 | FE-06 | Member Dashboard | DONE | FE-03 + BE-04 + FE-04/05; BE-08/09/16 for future activity | feature/member-dashboard-foundation / `ee5fc70` | Canonical owner profile projection, modular overview, shared avatar/card entry, backend completion, lifecycle/loading/retry and centralized permission navigation. Registrations/history/passes/notifications explicitly unavailable; real active-role QA pending. See FE-06-MEMBER-DASHBOARD.md. |
 | FE-07 | Event Registration UI | DONE | BE-07 + BE-08 + FE-06 | feature/event-registration-ui | Public event detail, backend-owned booking/cancellation, bounded own history and dashboard preview. FE-07-EVENT-REGISTRATION.md records validation and live active-member limits. |
-| FE-08 | Event Pass UI | PLANNED | BE-09 + FE-07 | TBD | Event entitlement distinct from member identity. |
+| FE-08 | Event Pass UI | DONE | BE-09 + FE-07 | FE-08-EVENT-PASS.md; feature/event-pass-ui | Owner-only read/explicit issuance, branded QR, guarded dashboard/history entries; live active-owner/device QA remains outstanding. |
 | FE-09 | Scanner / Check-In Workspace | PLANNED | BE-10 + FE-05 | TBD | Staff permissions/current state/recoverable feedback. |
 | FE-10 | Stories CMS | PLANNED | BE-12 + FE-05 | TBD | Draft/publication/revision workflows. |
 | FE-11 | Gallery CMS | PLANNED | BE-11 + BE-13 + FE-05 | TBD | Upload ownership/progress/failure and bounded collections. |
@@ -387,3 +387,31 @@ and credentials are configured. No persistent migrations/objects/buckets changed
 Neon/storage validation, malware scanning, streaming upload endpoints, physical cleanup,
 real authenticated roles and human audit remain pending. See MEDIA-STORAGE-FOUNDATION.md
 and BE-11-VALIDATION.md; BE-12 may build on protected typed media references.
+
+### FE-08 Event Pass UI delivery — 2026-10-12
+
+DONE within the BE-09 frontend contract: owner registration/pass detail at the PRD
+/dashboard/registrations/[id] route, explicit backend-idempotent issuance, controlled account/
+pass/network states, reusable branded QR and lazy pass entries in dashboard/history. Empty reads
+never issue; confirmed history alone never proves pass availability. Backend owns eligibility,
+identity and check-in. At backend-provided expiry the UI rechecks, rather than declaring expiry
+from the browser clock. No token appears in navigation, primary text, logs or browser storage.
+
+Fresh integrated validation: 338/338 Node tests including 31 FE-08 tests and concurrent BE-11;
+128 FE-08 browser cases / 386 assertions; 16/16 independent rendered screenshot decodes;
+138 FE-07 cases / 254 assertions; clean install, deps, build, standalone TypeScript and strict
+UI audit (zero findings). Production local smoke: 62/62 cases with zero exceptions/hydration
+warnings and production reference/custom-logo 404 guards. Existing forms/auth/profile/workspace/
+public-shell/dashboard/card audits pass, retaining five older auth/public hydration warnings.
+Next 16 next lint remains unsupported. See FE-08-EVENT-PASS.md and fe-08-evidence.
+
+Preserved BE-09/BE-10 and forward-integrated BE-11 3ca433b, including its approved media/Sharp
+baseline. No FE-08 dependency/lock drift, auth configuration, persistent DB mutation/migration
+or scanner changes. Task/main/deployment SHA and deployed live smoke are verified after push
+and returned in delivery; Vercel is development review, not production-readiness evidence.
+
+Remaining gates: approved persistent pass migration/keyring setup and real trusted active-owner
+issuance/read/revocation/role QA; physical phone/camera scans and BE-10 staff/window/replay checks
+through FE-09. Per-event QR branding is a rendering contract only: FE-12/backend/CMS must supply
+validated persistent media configuration. Automatic confirmation issuance/email orchestration,
+pass reissue, CMS writers, payment and broader hydration root-cause work remain separate tasks.

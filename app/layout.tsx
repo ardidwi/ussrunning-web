@@ -13,6 +13,7 @@ import "@/components/dashboard/member-dashboard.css";
 import "@/features/member-card/member-card.css";
 import "@/features/member-dashboard/dashboard.css";
 import "@/features/event-registration/registration.css";
+import "@/features/event-pass/event-pass.css";
 import "@/features/cms/cms-foundation.css";
 
 export const metadata: Metadata = {

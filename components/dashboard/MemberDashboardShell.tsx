@@ -43,7 +43,10 @@ export default function MemberDashboardShell({
   signOutAction?: () => Promise<void>;
 }) {
   const pathname = usePathname(),
-    path = activePath ?? pathname;
+    currentPath = activePath ?? pathname,
+    path = currentPath.startsWith("/dashboard/registrations/")
+      ? "/dashboard/events"
+      : currentPath;
   const [open, setOpen] = useState(false);
   useEffect(() => setOpen(false), [pathname]);
   const links = (mobile = false) => (

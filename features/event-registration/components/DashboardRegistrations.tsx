@@ -4,13 +4,17 @@ import { useRef, useState } from "react";
 import type { HistoryResult } from "../model";
 import { readHistory } from "../api/actions";
 import { RegistrationFeedback } from "./RegistrationFeedback";
+import { PassEntry } from "@/features/event-pass/components/PassEntry";
+import { readPassEntry } from "@/features/event-pass/api/actions";
 import { RegistrationList } from "./RegistrationList";
 export function DashboardRegistrations({
   initial,
   adapter = readHistory,
+  passAdapter = readPassEntry,
 }: {
   initial: HistoryResult;
   adapter?: () => Promise<HistoryResult>;
+  passAdapter?: typeof readPassEntry;
 }) {
   const [result, setResult] = useState(initial),
     [loading, setLoading] = useState(false),
@@ -42,7 +46,17 @@ export function DashboardRegistrations({
       ) : !result.ok ? (
         <RegistrationFeedback code={result.code} retry={refresh} />
       ) : (
-        <RegistrationList items={result.data.items.slice(0, 3)} />
+        <RegistrationList
+          items={result.data.items.slice(0, 3)}
+          actions={(item) =>
+            item.status === "confirmed" ? (
+              <PassEntry
+                adapter={passAdapter}
+                reference={{ eventId: item.event.id, registrationId: item.id }}
+              />
+            ) : null
+          }
+        />
       )}
       <div className="uss-registration-actions">
         <LinkButton href="/dashboard/events" variant="text">

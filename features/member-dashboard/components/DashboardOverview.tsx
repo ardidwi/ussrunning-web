@@ -101,9 +101,12 @@ export function DashboardOverview({
         )}
         <DashboardSection title="Event passes">
           <DashboardUnavailable
-            title="A pass for each registered event."
-            description="Event passes are not available yet. Your Member Card does not reserve a place or confirm attendance."
+            title="Check your Event Pass."
+            description="Open a confirmed registration to check or request its Event Pass. Availability is checked by USS Running; your Member Card is separate."
           />
+          <LinkButton href="/dashboard/events" variant="text">
+            Open registrations ↗
+          </LinkButton>
         </DashboardSection>
         <DashboardSection title="Notifications">
           <DashboardUnavailable
