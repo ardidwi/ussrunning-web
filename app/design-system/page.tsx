@@ -1,4 +1,5 @@
 import DashboardReference from "@/features/member-dashboard/components/DashboardReference";
+import RegistrationReference from "@/features/event-registration/components/RegistrationReference";
 import MemberCardReference from "@/features/member-card/components/MemberCardReference";
 import CmsReference from "@/features/cms/CmsReference";
 import { cmsModule } from "@/features/cms/navigation";
@@ -36,6 +37,8 @@ export default async function DesignSystemPage({
         role={role === "admin" || role === "super_admin" ? role : "member"}
       />
     );
+  if (surface === "registration")
+    return <RegistrationReference scenario={scenario} view={requested} />;
   if (surface === "card") return <MemberCardReference scenario={scenario} />;
   if (surface === "cms")
     return (

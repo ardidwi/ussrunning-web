@@ -1,0 +1,95 @@
+.uss-event-detail {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: calc(var(--header-height) + var(--space-12)) var(--page-gutter)
+    var(--space-16);
+}
+.uss-event-detail h1 {
+  font-family: var(--uss-font-display);
+  font-size: var(--uss-type-h1);
+  line-height: 1;
+  overflow-wrap: anywhere;
+  margin: var(--space-6) 0;
+}
+.uss-event-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-8);
+  margin-top: var(--space-10);
+}
+.uss-event-detail-grid > section,
+.uss-registration-panel {
+  min-width: 0;
+  border: 1px solid var(--uss-border);
+  padding: var(--space-6);
+}
+.uss-registration-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-6) 0;
+}
+.uss-registration-list li {
+  padding: var(--space-5) 0;
+  border-bottom: 1px solid var(--uss-border);
+  min-width: 0;
+}
+.uss-registration-list li > div:first-child,
+.uss-registration-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.uss-registration-list a {
+  font-weight: 700;
+  text-decoration: underline;
+  overflow-wrap: anywhere;
+}
+.uss-registration-list h3 {
+  overflow-wrap: anywhere;
+}
+.uss-event-detail p,
+.uss-registration-history p,
+.uss-registration-panel p {
+  margin: var(--space-4) 0;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.uss-event-detail dl,
+.uss-registration-list dl {
+  margin: var(--space-4) 0;
+  display: grid;
+  gap: var(--space-3);
+}
+.uss-event-detail dt,
+.uss-registration-list dt {
+  font-size: var(--uss-type-helper);
+  color: var(--uss-muted);
+}
+.uss-event-detail dd,
+.uss-registration-list dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.uss-registration-feedback {
+  padding: var(--space-4);
+  border-left: 3px solid var(--uss-danger);
+}
+.uss-registration-actions {
+  margin-top: var(--space-6);
+}
+@media (max-width: 768px) {
+  .uss-event-detail-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 430px) {
+  .uss-event-detail-grid > section,
+  .uss-registration-panel {
+    padding: var(--space-4);
+  }
+  .uss-registration-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

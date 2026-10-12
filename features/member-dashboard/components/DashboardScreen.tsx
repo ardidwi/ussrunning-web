@@ -6,13 +6,16 @@ import { refreshDashboard } from "../api/actions";
 import type { DashboardResult, DashboardState } from "../model";
 import { DashboardOverview } from "./DashboardOverview";
 import { DashboardLoading } from "./DashboardLoading";
+import type { HistoryResult } from "@/features/event-registration/model";
 export type DashboardAdapter = () => Promise<DashboardResult>;
 export function DashboardScreen({
   initial,
   adapter = refreshDashboard,
+  registrations,
 }: {
   initial: DashboardResult;
   adapter?: DashboardAdapter;
+  registrations?: HistoryResult;
 }) {
   const [state, setState] = useState<DashboardState>({
     phase: "settled",
@@ -58,7 +61,10 @@ export function DashboardScreen({
       <p className="uss-sr-only" role="status">
         Your USS dashboard is up to date.
       </p>
-      <DashboardOverview member={state.result.data} />
+      <DashboardOverview
+        member={state.result.data}
+        registrations={registrations}
+      />
       <Button variant="text" onClick={refresh}>
         Refresh dashboard
       </Button>

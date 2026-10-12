@@ -115,3 +115,10 @@ The signature is the member's own name in the restrained USS display face, follo
 identity/completion pair. Four quieter bordered sections reserve space for future activity without
 inventing counts, dates or registrations. No new palette, font, radius or spacing token is introduced.
 MemberDashboardShell remains the navigation/scroll owner; MemberAvatar is shared with FE-04.
+
+## FE-07 registration composition
+
+features/event-registration owns public event detail and wrapping registration lists, using
+the existing public gutters, display hierarchy, flat borders and shared buttons/badges/dialog.
+MemberDashboardShell continues to own member navigation and scrolling. Native time elements
+display each event's IANA timezone explicitly. No new palette, typeface or dependency.
