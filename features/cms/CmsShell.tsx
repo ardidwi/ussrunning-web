@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button, Modal } from "@/components/ui";
 import { CMS_MODULES, type CmsModule } from "./navigation";
 import { usePermissions } from "@/features/permissions/Permissions";
+import MemberNavigationGuard from "@/components/dashboard/MemberNavigationGuard";
 export function CmsShell({
   module,
   children,
@@ -35,7 +36,7 @@ export function CmsShell({
       )}
     </nav>
   );
-  return (
+  return <MemberNavigationGuard subject="Story">
     <div className="uss-member-shell uss-cms-foundation">
       <a className="uss-member-skip" href="#cms-content">
         Skip to content
@@ -79,5 +80,5 @@ export function CmsShell({
         </Link>
       </Modal>
     </div>
-  );
+  </MemberNavigationGuard>;
 }

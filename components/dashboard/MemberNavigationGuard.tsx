@@ -17,8 +17,10 @@ export const useMemberDirty = () => useContext(GuardContext).setDirty;
 export const useMemberLeave = () => useContext(GuardContext).leave;
 export default function MemberNavigationGuard({
   children,
+  subject = "profile",
 }: {
   children: ReactNode;
+  subject?: string;
 }) {
   const router = useRouter();
   const [dirty, setDirty] = useState(false);
@@ -82,7 +84,7 @@ export default function MemberNavigationGuard({
         open={destination !== null}
         onClose={() => setDestination(null)}
         title="Discard your changes?"
-        description="Your profile changes haven't been saved. You can keep editing or leave without saving."
+        description={`Your ${subject} changes haven't been saved. You can keep editing or leave without saving.`}
         actions={
           <>
             <Button variant="secondary" onClick={() => setDestination(null)}>

@@ -1,0 +1,54 @@
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const { chromium } = require(path.join(process.env.USERPROFILE, ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright"));
+const base = process.env.FE10_URL || "http://localhost:3168";
+const out = path.join(process.cwd(), "docs/fe-10-evidence");
+const images = path.join(process.env.USERPROFILE, ".codex/visualizations/2026/10/08/01a11a53-72aa-70c1-9a8a-993df76092eb/fe10");
+const report = { cases: [], assertions: 0, runtimeErrors: [], hydrationWarnings: [] };
+function check(value, label) { assert.ok(value, label); report.assertions++; }
+async function open(page, scenario, flow = "edit") {
+  await page.goto(`${base}/design-system?surface=stories&scenario=${scenario}&flow=${flow}`, { waitUntil: "domcontentloaded" });
+  await page.waitForFunction(() => Array.from(document.querySelectorAll("button")).some((element) => Object.keys(element).some((key) => key.startsWith("__reactProps"))));
+}
+async function caseOf(label, fn) { await fn(); report.cases.push(label); }
+(async () => {
+  fs.mkdirSync(out, { recursive: true }); fs.mkdirSync(images, { recursive: true });
+  const browser = await chromium.launch({ executablePath: "C:/Program Files/Google/Chrome/Application/chrome.exe", headless: true });
+  try {
+    const page = await browser.newPage({ viewport: { width: 1366, height: 768 }, reducedMotion: "reduce" });
+    page.on("pageerror", (error) => report.runtimeErrors.push(error.message));
+    page.on("console", (message) => { if (/hydrat|didn't match|server rendered HTML/i.test(message.text())) report.hydrationWarnings.push(message.text()); });
+    for (const width of [320, 375, 768, 1024, 1366, 1920]) {
+      for (const flow of ["list", "edit", "preview", "create"]) {
+        await caseOf(`${flow} at ${width}px`, async () => {
+          await page.setViewportSize({ width, height: width < 500 ? 640 : 768 });
+          await open(page, "draft", flow);
+          check(await page.locator("body").evaluate((element) => element.scrollWidth <= window.innerWidth + 1), "no horizontal overflow");
+          check(await page.getByText("Development-only fictional Stories.").isVisible(), "fixture disclosed");
+          check(await page.locator("main").isVisible(), "main landmark visible");
+          if (flow === "list") check(await page.getByRole("heading", { name: "STORIES." }).isVisible(), "list heading");
+          if (flow === "edit") check(await page.getByLabel("Story body").isVisible(), "editor body accessible");
+          if (flow === "preview") check(await page.getByText("PREVIEW · PRIVATE WORKSPACE").isVisible(), "private preview labelled");
+          if (flow === "create") check(await page.getByRole("button", { name: "Create draft" }).isVisible(), "create CTA visible");
+          if (width === 320 && flow === "edit") await page.screenshot({ path: path.join(images, "editor-320.png"), fullPage: true });
+          if (width === 1366 && flow === "list") await page.screenshot({ path: path.join(images, "list-1366.png"), fullPage: true });
+        });
+      }
+    }
+    await caseOf("200% CSS zoom editor", async () => { await page.setViewportSize({ width: 768, height: 650 }); await open(page, "draft"); await page.addStyleTag({ content: "html { zoom: 2 }" }); check(await page.locator("body").evaluate((element) => element.scrollWidth <= window.innerWidth + 1), "zoom no overflow"); check(await page.getByRole("button", { name: "Save changes" }).isVisible(), "zoom save reachable"); await page.screenshot({ path: path.join(images, "editor-zoom200.png"), fullPage: true }); });
+    await caseOf("media picker, pagination and unavailable delivery", async () => { await page.setViewportSize({ width: 375, height: 640 }); await open(page, "draft"); await page.getByRole("button", { name: "Select existing media" }).click(); check(await page.getByRole("dialog", { name: "Select cover media" }).isVisible(), "picker open"); check(await page.getByRole("button", { name: "Load more media" }).isVisible(), "bounded next page"); await page.getByRole("button", { name: "Load more media" }).click(); check(await page.getByText("Delivery unavailable").count() > 0, "null URL honest"); await page.getByRole("button", { name: /Undeliverable fictional image/ }).click(); check(await page.getByText("Cover delivery unavailable").isVisible(), "selected unavailable cover"); });
+    await caseOf("keyboard picker focus and Escape restoration", async () => { await open(page, "draft"); const trigger = page.getByRole("button", { name: "Select existing media" }); await trigger.focus(); await page.keyboard.press("Enter"); check(await page.getByRole("dialog", { name: "Select cover media" }).isVisible(), "keyboard opened"); await page.keyboard.press("Escape"); check(!await page.getByRole("dialog", { name: "Select cover media" }).isVisible(), "Escape closed"); check(await trigger.evaluate((element) => document.activeElement === element), "focus restored"); });
+    await caseOf("draft preview stays private and plain text", async () => { await open(page, "draft"); await page.getByLabel("Story body").fill("One line\n\n<script>alert('x')</script>"); await page.getByRole("button", { name: "Preview draft" }).click(); check(await page.getByText("PREVIEW · PRIVATE WORKSPACE").isVisible(), "private label"); check(await page.locator(".uss-story-preview-body script").count() === 0, "script never rendered as HTML"); check(await page.getByText("<script>alert('x')</script>").isVisible(), "text retained"); });
+    await caseOf("field validation and no save on invalid title", async () => { await open(page, "draft"); await page.getByLabel(/^Title/).fill(""); await page.getByRole("button", { name: "Save changes" }).click(); check(await page.getByText("Add a Story title.").isVisible().catch(() => false), "field error: " + (await page.locator(".uss-story-status").textContent())); check(await page.getByRole("alert").count() > 0, "error announced"); });
+    await caseOf("optimistic conflict never blindly retries", async () => { await open(page, "conflict"); await page.getByLabel(/^Title/).fill("Updated editorial title"); await page.getByRole("button", { name: "Save changes" }).click(); check(await page.getByText(/changed since you opened it/).isVisible(), "conflict copy"); check(await page.getByRole("button", { name: "Reload latest version" }).isVisible(), "safe reload"); });
+    await caseOf("published Story enforces unpublish to edit", async () => { await open(page, "published"); check(await page.getByLabel(/^Title/).isDisabled(), "published title locked"); check(await page.getByRole("button", { name: "Unpublish to edit" }).isVisible(), "unpublish action"); await page.getByRole("button", { name: "Unpublish to edit" }).click(); check(await page.getByRole("dialog", { name: "Unpublish this Story?" }).isVisible(), "confirm dialog"); await page.getByRole("button", { name: "Unpublish", exact: true }).click(); check(await page.getByLabel(/^Title/).isEnabled(), "draft edit enabled after server result"); });
+    await caseOf("schedule confirms explicit Jakarta timestamp", async () => { await open(page, "draft"); await page.getByRole("button", { name: "Schedule", exact: true }).click(); await page.getByLabel(/Publication time/).fill("2026-12-01T18:30"); check(await page.getByText(/2026-12-01T18:30:00\+07:00/).isVisible(), "explicit offset"); check(await page.getByText(/18:30 WIB/).count() > 0, "Jakarta review"); });
+    await caseOf("archive confirmation and terminal state", async () => { await open(page, "draft"); await page.getByRole("button", { name: "Archive Story" }).click(); check(await page.getByRole("dialog", { name: "Archive this Story?" }).isVisible(), "archive confirmation"); await page.getByRole("dialog", { name: "Archive this Story?" }).getByRole("button", { name: "Archive Story" }).click(); check(await page.getByText(/Story archived/).isVisible(), "archive result"); check(await page.getByLabel(/^Title/).isDisabled(), "archived read only"); });
+    await caseOf("restricted and unavailable feedback", async () => { await open(page, "forbidden"); check(await page.getByText(/cannot open this view/).isVisible(), "forbidden state"); await open(page, "unavailable"); check(await page.getByText(/temporarily unavailable/).isVisible(), "unavailable state"); });
+    await caseOf("unsaved navigation requires discard", async () => { await open(page, "draft"); await page.getByLabel(/^Title/).fill("Unsaved title"); await page.getByRole("link", { name: "All Stories" }).click(); check(await page.getByRole("dialog", { name: "Discard your changes?" }).isVisible(), "discard confirmation"); await page.getByRole("button", { name: "Keep editing" }).click(); check(await page.getByLabel(/^Title/).inputValue() === "Unsaved title", "work retained"); });
+    check(report.runtimeErrors.length === 0, "zero runtime errors"); check(report.hydrationWarnings.length === 0, "zero hydration warnings");
+    fs.writeFileSync(path.join(out, "browser.json"), JSON.stringify(report, null, 2));
+    console.log(`FE-10 browser: ${report.cases.length} cases / ${report.assertions} assertions PASS; runtime=${report.runtimeErrors.length}; hydration=${report.hydrationWarnings.length}`);
+  } finally { await browser.close(); }
+})().catch((error) => { console.error(error); process.exitCode = 1; });

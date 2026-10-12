@@ -16,6 +16,7 @@ import "@/features/event-registration/registration.css";
 import "@/features/event-pass/event-pass.css";
 import "@/features/cms/cms-foundation.css";
 import "@/features/check-in/check-in.css";
+import "@/features/stories-cms/stories-cms.css";
 
 export const metadata: Metadata = {
   title: "USS Running — Community in Motion",

@@ -20,11 +20,16 @@ export function CmsModuleBoundary({ module }: { module: CmsModule }) {
         </header>
         <div className="uss-member-panel">
           <EmptyState
-            title="Content editing is not connected yet."
-            description="Content, media, users and settings will become available when their protected services are connected. Existing records haven't been changed."
+            title="Editorial work starts with Stories."
+            description="Managed Stories are available to permitted editors. Other content modules will appear as their protected services are connected."
           />
         </div>
         <div className="uss-member-quick">
+          <PermissionGate permission="cms.content.manage">
+            <LinkButton href="/admin?module=stories" variant="secondary">
+              Open Stories ↗
+            </LinkButton>
+          </PermissionGate>
           <PermissionGate permission="audit.read">
             <LinkButton href="/admin?module=activity" variant="secondary">
               View audit history ↗

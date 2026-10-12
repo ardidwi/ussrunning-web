@@ -1,0 +1,58 @@
+.uss-story-toolbar,.uss-story-editor-header{display:flex;justify-content:space-between;align-items:end;gap:var(--space-6);margin:var(--space-8) 0;min-width:0}
+.uss-story-toolbar h1,.uss-story-editor-header h1{font-size:clamp(2.8rem,6vw,5rem);line-height:.96;margin:var(--space-3) 0;letter-spacing:-.055em}
+.uss-story-toolbar p,.uss-story-editor-header p{max-width:42rem;overflow-wrap:anywhere}
+.uss-story-filters{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-bottom:var(--space-6)}
+.uss-story-list,.uss-media-list{list-style:none;margin:0;padding:0;display:grid;gap:var(--space-3)}
+.uss-story-row{display:grid;grid-template-columns:minmax(7rem,10rem) minmax(0,1fr) auto;gap:var(--space-5);align-items:center;border-top:1px solid var(--uss-border);padding:var(--space-4) 0;min-width:0}
+.uss-story-row:last-child{border-bottom:1px solid var(--uss-border)}
+.uss-story-thumb,.uss-story-cover-preview,.uss-story-preview-cover{overflow:hidden;background:var(--uss-surface);border:1px solid var(--uss-border)}
+.uss-story-thumb{aspect-ratio:4/3}
+.uss-story-thumb img,.uss-story-cover-preview img,.uss-story-preview-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.uss-story-cover-fallback,.uss-media-unavailable{display:grid;place-items:center;min-height:100%;padding:var(--space-4);font-size:var(--uss-type-small);color:var(--uss-muted);text-align:center}
+.uss-story-row-copy{min-width:0;overflow-wrap:anywhere}
+.uss-story-row-copy h2{font-size:var(--uss-type-h3);line-height:1.1;margin:var(--space-2) 0}
+.uss-story-row-meta,.uss-story-identity{display:flex;gap:var(--space-3);align-items:center;flex-wrap:wrap;font-size:var(--uss-type-small);text-transform:uppercase;letter-spacing:.06em}
+.uss-story-slug,.uss-story-row-date,.uss-story-pagination{color:var(--uss-muted);font-size:var(--uss-type-small);overflow-wrap:anywhere}
+.uss-story-pagination{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-4);margin:var(--space-6) 0}
+.uss-story-identity{border-block:1px solid var(--uss-border);padding:var(--space-4) 0;margin-bottom:var(--space-4)}
+.uss-story-url{overflow-wrap:anywhere}
+.uss-story-notice,.uss-story-status,.uss-story-failure{padding:var(--space-4);border:1px solid var(--uss-border);background:var(--uss-surface);overflow-wrap:anywhere}
+.uss-story-status{min-height:3.5rem;margin:var(--space-4) 0;display:flex;align-items:center;gap:var(--space-4);flex-wrap:wrap}
+.uss-story-editor-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(15rem,.65fr);gap:var(--space-8);align-items:start;min-width:0}
+.uss-story-editor-grid form,.uss-story-editor-rail{min-width:0}
+.uss-story-editor-grid .uss-form-section{margin-bottom:var(--space-8)}
+.uss-story-fields-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-4)}
+.uss-story-cover-field{margin:var(--space-4) 0}
+.uss-story-cover-preview{width:min(100%,20rem);aspect-ratio:16/10;margin:var(--space-4) 0}
+.uss-story-actions,.uss-story-rail-actions{display:flex;flex-wrap:wrap;gap:var(--space-3)}
+.uss-story-body-input{min-height:18rem}
+.uss-story-character-count,.uss-story-rail-note,.uss-story-field-error{font-size:var(--uss-type-small);color:var(--uss-muted);overflow-wrap:anywhere}
+.uss-story-field-error{color:var(--uss-danger)}
+.uss-story-editor-rail{border:1px solid var(--uss-border);padding:var(--space-6);background:var(--uss-surface)}
+.uss-story-editor-rail h2{font-size:var(--uss-type-h3);margin:0 0 var(--space-4)}
+.uss-story-editor-rail dl{display:grid;grid-template-columns:1fr 1.5fr;gap:var(--space-3);font-size:var(--uss-type-small);overflow-wrap:anywhere}
+.uss-story-editor-rail dt{color:var(--uss-muted)}
+.uss-story-editor-rail dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.uss-story-rail-actions{margin-top:var(--space-6)}
+.uss-story-preview{max-width:56rem;margin:auto;min-width:0}
+.uss-story-preview-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-4);margin:var(--space-6) 0}
+.uss-story-preview-label{color:var(--uss-red);font-weight:700;letter-spacing:.14em}
+.uss-story-preview-cover{aspect-ratio:16/9;margin-bottom:var(--space-8)}
+.uss-story-preview h1{font-size:clamp(2.5rem,6vw,5rem);line-height:1;overflow-wrap:anywhere}
+.uss-story-preview-excerpt{font-size:var(--uss-type-h3)}
+.uss-story-preview-body{max-width:42rem;font-size:var(--uss-type-body);line-height:1.7;overflow-wrap:anywhere}
+.uss-story-preview-body p{white-space:pre-wrap;margin-bottom:var(--space-5)}
+.uss-story-preview-note{border-top:1px solid var(--uss-border);padding:var(--space-4) 0;color:var(--uss-muted)}
+.uss-media-picker{width:min(44rem,calc(100vw - 2rem));max-height:min(90dvh,45rem)}
+.uss-media-list{margin:var(--space-5) 0}
+.uss-media-choice{display:grid;grid-template-columns:5rem minmax(0,1fr) auto;align-items:center;gap:var(--space-4);width:100%;min-height:5rem;padding:var(--space-2);border:1px solid var(--uss-border);background:var(--uss-surface);color:var(--uss-text);text-align:left;cursor:pointer}
+.uss-media-choice[aria-pressed="true"]{border-color:var(--uss-red)}
+.uss-media-choice:focus-visible{outline:3px solid var(--uss-red);outline-offset:2px}
+.uss-media-choice img{width:5rem;height:5rem;object-fit:cover}
+.uss-media-choice span{min-width:0;overflow-wrap:anywhere}
+.uss-media-choice small{display:block;color:var(--uss-muted);margin-top:var(--space-2)}
+.uss-story-schedule-review{overflow-wrap:anywhere}
+@media(max-width:900px){.uss-story-editor-grid{grid-template-columns:1fr}.uss-story-editor-rail{order:-1}.uss-story-rail-actions{flex-direction:row}}
+@media(max-width:600px){.uss-story-toolbar,.uss-story-editor-header{align-items:stretch;flex-direction:column}.uss-story-row{grid-template-columns:5.5rem minmax(0,1fr)}.uss-story-row>.uss-button{grid-column:1/-1;justify-self:stretch}.uss-story-fields-two{grid-template-columns:1fr}.uss-story-editor-rail{padding:var(--space-4)}}
+@media(max-width:360px){.uss-story-row{grid-template-columns:1fr}.uss-story-thumb{width:100%;max-height:11rem}.uss-story-filters .uss-button{flex:1 1 7rem}.uss-media-choice{grid-template-columns:3.5rem minmax(0,1fr)}.uss-media-choice img{width:3.5rem;height:3.5rem}}
+@media(prefers-reduced-motion:reduce){.uss-story-editor *,.uss-media-picker *{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}

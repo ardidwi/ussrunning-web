@@ -1,4 +1,5 @@
 import ScannerReference from "@/features/check-in/components/ScannerReference";
+import StoryReference from "@/features/stories-cms/StoryReference";
 import DashboardReference from "@/features/member-dashboard/components/DashboardReference";
 import RegistrationReference from "@/features/event-registration/components/RegistrationReference";
 import PassReference from "@/features/event-pass/components/PassReference";
@@ -42,6 +43,7 @@ export default async function DesignSystemPage({
   if (surface === "registration")
     return <RegistrationReference scenario={scenario} view={requested} />;
   if (surface === "scanner") return <ScannerReference scenario={scenario} />;
+  if (surface === "stories") return <StoryReference scenario={scenario} view={requested} />;
   if (surface === "pass") return <PassReference scenario={scenario} />;
   if (surface === "card") return <MemberCardReference scenario={scenario} />;
   if (surface === "cms")

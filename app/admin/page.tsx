@@ -14,6 +14,7 @@ import {
   type Query,
 } from "@/features/history/query";
 import { getAuditHistory } from "@/lib/audit/audit-actions";
+import { StoriesWorkspace } from "@/features/stories-cms/StoriesWorkspace";
 import {
   getRevisionHistory,
   getHistorySnapshot,
@@ -45,7 +46,9 @@ export default async function AdminPage({
     content = (
       <ServiceFeedback code="INSUFFICIENT_PERMISSION" returnTo="/admin" />
     );
-  else if (module === "activity") {
+  else if (module === "stories") {
+    content = <StoriesWorkspace query={query} />;
+  } else if (module === "activity") {
     const input = auditQuery(query);
     content = (
       <AuditHistory
