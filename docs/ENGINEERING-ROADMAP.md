@@ -148,7 +148,7 @@ Numbering is a planning baseline, may continue beyond BE-22, and can be combined
 | BE-09 | Event Pass / Ticket Service | DONE | BE-07 + BE-08 | feature/event-pass-service | Owner/managed issuance and read, hash-only opaque v1, idempotency, scoped resolution, atomic invalidation/audit; migration 010. EVENT-PASS-SERVICE, BE-09-VALIDATION. Persistent migration/keyring and real Neon concurrency pending; reissue/scanner excluded. |
 | BE-10 | Check-In / Scanner Service | DONE | BE-08 + BE-09 + BE-06 | feature/event-check-in-service / 3be4613 | Atomic event-scoped BE-09 resolver + attendance + audit; 35/35 scanner, 270/270 integrated regression. Migration 011 local validation only; independent Neon/device staging pending. See CHECK-IN-SERVICE.md and BE-10-VALIDATION.md. |
 | BE-11 | Media Storage Service | DONE | BE-01 + BE-06 | feature/media-storage-foundation | Typed media foundation, migration 012, raster validation and retention; [evidence](BE-11-VALIDATION.md). Persistent storage adapter/configuration pending. |
-| BE-12 | Stories / Editorial Service | PLANNED | BE-06 + BE-11 | TBD | Typed writes, drafts/publish, atomic revision/audit. |
+| BE-12 | Stories / Editorial Service | DONE | BE-06 + BE-11 | feature/stories-editorial-service / 1771a33 | Guarded editorial lifecycle, scheduling, media references, atomic revision/audit; see BE-12-VALIDATION.md. |
 | BE-13 | Gallery Service | PLANNED | BE-11 + BE-06 | TBD | Bounded collections and publication. |
 | BE-14 | Partner / Sponsor Service | PLANNED | BE-06 + BE-11 | TBD | Managed records/media and visibility. |
 | BE-15 | Dynamic Site Content Service | PLANNED | BE-06 + BE-11 | TBD | Typed drafts and public published projections, separate from configuration. |
@@ -415,3 +415,23 @@ issuance/read/revocation/role QA; physical phone/camera scans and BE-10 staff/wi
 through FE-09. Per-event QR branding is a rendering contract only: FE-12/backend/CMS must supply
 validated persistent media configuration. Automatic confirmation issuance/email orchestration,
 pass reissue, CMS writers, payment and broader hydration root-cause work remain separate tasks.
+
+### BE-12 Stories / Editorial delivery — 2026-10-12
+
+Resumed the preserved Stories worktree without restarting. Implementation 1771a33 retains
+FE-08 99f448f and BE-11. Reuses existing Stories/revision schema, plain-text paragraphs,
+server-owned stable slugs, cms.content.manage, optimistic concurrency and atomic writes/history.
+Public reads exclude draft/private/archived/future publications; scheduling uses server time.
+Additive migration 013 only; no persistent database migration executed.
+
+Validation: Stories 35/35, integrated regression 373/373, clean install/dependency graph,
+production build, standalone TypeScript and diff check passed. Local and deployed core browser
+smoke each passed 20/20 at 320/1366px, zero page exceptions/overflow/hydration warnings in these
+probes. Implementation deployment dpl_2DDoLSdk3NzmA2fJWUNWRFmad23S was READY for exact
+1771a333589c0977261e25461e7f36b137ee1690. Final documentation deployment is verified after push.
+
+Real Neon migration/independent concurrency/authenticated role staging, persistent media delivery,
+human audit and broader hydration root-cause work remain pending. Next lint remains unsupported.
+Legacy public pages are preserved; FE-10 must explicitly consume the new typed contracts.
+Rich text, revision restore, taxonomy management and BE-19 search are deferred. See
+STORIES-EDITORIAL-SERVICE.md and BE-12-VALIDATION.md. No auth/pass/check-in/storage semantic changes.

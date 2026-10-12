@@ -30,3 +30,7 @@ Code quality: existing taxonomy/schema/history/permission reused, no new framewo
 ## Remaining staging / FE-10 boundaries
 
 No persistent migration, production data/storage operation, auth provider/config change or real email. Real independent Neon concurrency, active-role/session, runtime/query-plan and migration 012/013 staging remain pending. Persistent media delivery/credentials are still unconfigured; URL null is intentional. Taxonomy needs approved configured records; no fake editorial types seeded. Rich blocks, taxonomy management, slug redirects, revision restore, tags/SEO/disclosure enrichment and BE-19 search remain separate tasks. Live core smoke/READY evidence is not authenticated editorial workflow proof; human manual audit remains pending.
+
+## Verified development deployment
+
+Implementation main 1771a333589c0977261e25461e7f36b137ee1690 deployed READY as dpl_2DDoLSdk3NzmA2fJWUNWRFmad23S. Live core browser 20/20 PASS at 320/1366px, zero page exceptions/overflow/hydration warnings; reference route 404 guard passed. Review URL: https://ussrunning-web-seven.vercel.app. This is public/controlled-state smoke, not authenticated editorial staging proof. Final documentation checkpoint deployment/SHA is reported after verification.
