@@ -303,6 +303,13 @@ const report = { cases: [], errors: [] };
           .getByRole("button", { name: "Discard changes" })
           .click();
         await p.waitForURL("**/dashboard");
+        // App Router can update the URL before its server-rendered result arrives.
+        await p
+          .getByRole("heading", {
+            level: 1,
+            name: /SIGN IN TO CONTINUE\.|PLEASE TRY AGAIN\./,
+          })
+          .waitFor();
         // FE-06 now consumes the canonical BE-04 read: missing auth configuration
         // is unavailable, while a configured anonymous session is unauthenticated.
         assert.equal(await p.locator(".uss-dashboard-person").count(), 0);

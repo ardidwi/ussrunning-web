@@ -1,0 +1,125 @@
+{
+  "passed": 30,
+  "results": [
+    {
+      "name": "card overflow 320",
+      "passed": true
+    },
+    {
+      "name": "barcode fits 320",
+      "passed": true
+    },
+    {
+      "name": "cms overflow 320",
+      "passed": true
+    },
+    {
+      "name": "card overflow 375",
+      "passed": true
+    },
+    {
+      "name": "barcode fits 375",
+      "passed": true
+    },
+    {
+      "name": "cms overflow 375",
+      "passed": true
+    },
+    {
+      "name": "card overflow 768",
+      "passed": true
+    },
+    {
+      "name": "barcode fits 768",
+      "passed": true
+    },
+    {
+      "name": "cms overflow 768",
+      "passed": true
+    },
+    {
+      "name": "card overflow 1024",
+      "passed": true
+    },
+    {
+      "name": "barcode fits 1024",
+      "passed": true
+    },
+    {
+      "name": "cms overflow 1024",
+      "passed": true
+    },
+    {
+      "name": "card overflow 1366",
+      "passed": true
+    },
+    {
+      "name": "barcode fits 1366",
+      "passed": true
+    },
+    {
+      "name": "cms overflow 1366",
+      "passed": true
+    },
+    {
+      "name": "permission navigation member",
+      "passed": true
+    },
+    {
+      "name": "permission navigation admin",
+      "passed": true
+    },
+    {
+      "name": "permission navigation super_admin",
+      "passed": true
+    },
+    {
+      "name": "controlled card anonymous",
+      "passed": true
+    },
+    {
+      "name": "controlled card pending",
+      "passed": true
+    },
+    {
+      "name": "controlled card suspended",
+      "passed": true
+    },
+    {
+      "name": "controlled card deactivated",
+      "passed": true
+    },
+    {
+      "name": "controlled card server",
+      "passed": true
+    },
+    {
+      "name": "controlled card empty",
+      "passed": true
+    },
+    {
+      "name": "controlled card invalid",
+      "passed": true
+    },
+    {
+      "name": "controlled card forbidden",
+      "passed": true
+    },
+    {
+      "name": "safe actor",
+      "passed": true
+    },
+    {
+      "name": "mobile dialog",
+      "passed": true
+    },
+    {
+      "name": "escape dismissal",
+      "passed": true
+    },
+    {
+      "name": "zoom overflow",
+      "passed": true
+    }
+  ]
+}

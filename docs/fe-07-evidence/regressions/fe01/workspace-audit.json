@@ -1,0 +1,75 @@
+{
+  "surfaces": [
+    {
+      "surface": "admin",
+      "width": 320,
+      "height": 568,
+      "controlsFit": true,
+      "submitReachable": true
+    },
+    {
+      "surface": "member",
+      "width": 320,
+      "height": 568,
+      "controlsFit": true,
+      "submitReachable": true
+    },
+    {
+      "surface": "admin",
+      "width": 390,
+      "height": 420,
+      "controlsFit": true,
+      "submitReachable": true
+    },
+    {
+      "surface": "member",
+      "width": 390,
+      "height": 420,
+      "controlsFit": true,
+      "submitReachable": true
+    },
+    {
+      "surface": "admin",
+      "width": 768,
+      "height": 1024,
+      "controlsFit": true,
+      "submitReachable": true
+    },
+    {
+      "surface": "member",
+      "width": 768,
+      "height": 1024,
+      "controlsFit": true,
+      "submitReachable": true
+    },
+    {
+      "surface": "admin",
+      "width": 1440,
+      "height": 900,
+      "controlsFit": true,
+      "submitReachable": true
+    },
+    {
+      "surface": "member",
+      "width": 1440,
+      "height": 900,
+      "controlsFit": true,
+      "submitReachable": true
+    },
+    {
+      "surface": "admin",
+      "width": 1366,
+      "height": 600,
+      "controlsFit": true,
+      "submitReachable": true
+    },
+    {
+      "surface": "member",
+      "width": 1366,
+      "height": 600,
+      "controlsFit": true,
+      "submitReachable": true
+    }
+  ],
+  "errors": []
+}

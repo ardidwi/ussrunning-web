@@ -172,7 +172,7 @@ Numbering may continue beyond FE-20. Final approved dependency repair heads and 
 | FE-04 | Member Card | DONE | BE-05 + BE-04 + FE-03 | feature/member-card-rbac-frontend / `b427fae8772d6c3e42065dc2ada3106837faff9b`; final feature head `8961f0d` | Canonical owner-only BE-05 DTO, responsive card, backend-issued barcode v1 and identical SVG export. Real authenticated Neon/device scan validation remains outstanding. |
 | FE-05 | RBAC-Aware CMS Foundation | DONE | BE-06 + FE-01 + FE-02 | feature/member-card-rbac-frontend / `8961f0d187806adcde2e5a3aabd76b9771f181c3` | Central trusted permission presentation, guarded navigation, bounded audit and partial non-restorable revision previews. Protected CMS writers are not integrated; frontend visibility is not server authorization. Real Neon role/session validation outstanding. Full operational CMS is not complete. |
 | FE-06 | Member Dashboard | DONE | FE-03 + BE-04 + FE-04/05; BE-08/09/16 for future activity | feature/member-dashboard-foundation / `ee5fc70` | Canonical owner profile projection, modular overview, shared avatar/card entry, backend completion, lifecycle/loading/retry and centralized permission navigation. Registrations/history/passes/notifications explicitly unavailable; real active-role QA pending. See FE-06-MEMBER-DASHBOARD.md. |
-| FE-07 | Event Registration UI | PLANNED | BE-07 + BE-08 + FE-06 | TBD | Eligibility/capacity/retry/duplicate handling. |
+| FE-07 | Event Registration UI | DONE | BE-07 + BE-08 + FE-06 | feature/event-registration-ui | Public event detail, backend-owned booking/cancellation, bounded own history and dashboard preview. FE-07-EVENT-REGISTRATION.md records validation and live active-member limits. |
 | FE-08 | Event Pass UI | PLANNED | BE-09 + FE-07 | TBD | Event entitlement distinct from member identity. |
 | FE-09 | Scanner / Check-In Workspace | PLANNED | BE-10 + FE-05 | TBD | Staff permissions/current state/recoverable feedback. |
 | FE-10 | Stories CMS | PLANNED | BE-12 + FE-05 | TBD | Draft/publication/revision workflows. |
@@ -330,3 +330,26 @@ event passes require BE-09 and notifications BE-16. FE-06 invents no records/cou
 Real independent active role/session/device validation, CMS writers, physical scanning, hydration
 root cause and unsupported lint remain open. Inherited Windows-encoded punctuation in the concurrently
 updated roadmap was normalized to UTF-8 without changing other tasks' content or policy.
+
+### FE-07 event registration delivery — 2026-10-12
+
+Resumed the preserved feature/event-registration-ui worktree after quota interruption.
+BE-09 e24222b is retained through a forward-only fast-forward; no backend semantics changed.
+FE-07 is DONE within the typed BE-07/08 frontend contract: public detail/list, owner booking,
+server-owned versioned cancellation, cursor history and recent dashboard records.
+`/runs/[slug]` is intentional canonical public routing with legacy editorial compatibility;
+FE-12 content migration can retire the compatibility boundary without inventing identity.
+
+Final validation: 235/235 Node regressions, 138 FE-07 browser cases / 254 assertions, zero
+FE-07 exceptions/hydration warnings, dependency graph/build/standalone TypeScript and strict
+UI audit passed. Existing form/public/auth/profile/workspace/dashboard/card audits passed;
+older reference hydration warnings remain separately recorded. Unsupported next lint is unchanged.
+See FE-07-EVENT-REGISTRATION.md and fe-07-evidence for exact coverage and limitations.
+Main SHA, Vercel READY/SHA and live smoke are verified after push and reported in delivery.
+
+Real active-member mutations and independent Neon session/concurrency QA remain outstanding.
+No authoritative remaining-capacity or canCancel read exists; frontend invents neither.
+Private/unpublished/members-only detail is not exposed by public reads; an authorized member
+read/discovery contract remains a backend prerequisite for members-only detail expansion.
+FE-08 next consumes BE-09 after approved persistent migration 010/keyring setup and active
+session validation; pass UI, scanner/check-in and CMS protected writers remain future work.

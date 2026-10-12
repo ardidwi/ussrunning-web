@@ -2,7 +2,15 @@ import { Badge, LinkButton } from "@/components/ui";
 import { MemberAvatar } from "@/features/member-card/components/MemberAvatar";
 import { completionGuidance, type DashboardMember } from "../model";
 import { DashboardSection, DashboardUnavailable } from "./DashboardSection";
-export function DashboardOverview({ member }: { member: DashboardMember }) {
+import { DashboardRegistrations } from "@/features/event-registration/components/DashboardRegistrations";
+import type { HistoryResult } from "@/features/event-registration/model";
+export function DashboardOverview({
+  member,
+  registrations,
+}: {
+  member: DashboardMember;
+  registrations?: HistoryResult;
+}) {
   return (
     <>
       <header className="uss-member-intro">
@@ -70,21 +78,27 @@ export function DashboardOverview({ member }: { member: DashboardMember }) {
         </section>
       </div>
       <div className="uss-member-grid">
-        <DashboardSection title="Upcoming registrations">
-          <DashboardUnavailable
-            title="Your next run, in one place."
-            description="Registered event information is not available yet."
-          />
-          <LinkButton href="/dashboard/events" variant="text">
-            Events overview ↗
-          </LinkButton>
-        </DashboardSection>
-        <DashboardSection title="Registration history">
-          <DashboardUnavailable
-            title="Your running history will appear here."
-            description="Registration history is not available yet."
-          />
-        </DashboardSection>
+        {registrations ? (
+          <DashboardRegistrations initial={registrations} />
+        ) : (
+          <>
+            <DashboardSection title="Upcoming registrations">
+              <DashboardUnavailable
+                title="Your next run, in one place."
+                description="Registered event information is not available yet."
+              />
+              <LinkButton href="/dashboard/events" variant="text">
+                Events overview ↗
+              </LinkButton>
+            </DashboardSection>
+            <DashboardSection title="Registration history">
+              <DashboardUnavailable
+                title="Your running history will appear here."
+                description="Registration history is not available yet."
+              />
+            </DashboardSection>
+          </>
+        )}
         <DashboardSection title="Event passes">
           <DashboardUnavailable
             title="A pass for each registered event."

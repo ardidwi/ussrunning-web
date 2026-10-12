@@ -1,25 +1,14 @@
-import { EmptyState, LinkButton } from "@/components/ui";
-import MemberFeedback from "@/components/dashboard/MemberFeedback";
-import { loadMember } from "@/lib/member/server";
-export const metadata = { title: "Events — USS Running" };
+import { loadRegistrationHistory } from "@/features/event-registration/api/server";
+import { RegistrationHistory } from "@/features/event-registration/components/RegistrationHistory";
+export const metadata = { title: "Registrations — USS Running" };
 export default async function Page() {
-  const result = await loadMember();
-  if (result.state === "error")
-    return <MemberFeedback code={result.code} returnTo="/dashboard/events" />;
+  const initial = await loadRegistrationHistory();
   return (
     <>
       <p className="uss-member-kicker">MY USS / EVENTS</p>
-      <h1>EVENTS.</h1>
+      <h1>YOUR RUNS.</h1>
       <div className="uss-member-panel">
-        <EmptyState
-          title="Events is coming next."
-          description="Your registered events and running history will be available here."
-          action={
-            <LinkButton href="/dashboard" variant="secondary">
-              Back to overview ↗
-            </LinkButton>
-          }
-        />
+        <RegistrationHistory key={JSON.stringify(initial)} initial={initial} />
       </div>
     </>
   );

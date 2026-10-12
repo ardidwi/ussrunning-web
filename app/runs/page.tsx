@@ -3,11 +3,25 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import EventCard from "@/components/EventCard";
 import { getRuns } from "@/lib/content";
+import { getPublicEventList } from "@/lib/events/event-actions";
+import { eventDate } from "@/features/event-registration/model";
+import { LinkButton } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
-export default async function RunsPage() {
-  const runs = await getRuns();
+export default async function RunsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ cursor?: string }>;
+}) {
+  const { cursor } = await searchParams;
+  const [runs, events] = await Promise.all([
+    getRuns(),
+    getPublicEventList({
+      limit: 20,
+      ...(cursor ? { cursor } : {}),
+    }),
+  ]);
 
   return (
     <main className="page-black">
@@ -37,6 +51,45 @@ export default async function RunsPage() {
 
       <section className="section event-list-section">
         <div className="content-frame">
+          {events.ok && events.data.items.length > 0 && (
+            <section aria-label="USS events">
+              <h2>USS EVENTS</h2>
+              <ul className="uss-registration-list">
+                {events.data.items.map((event) => (
+                  <li key={event.id}>
+                    <h3>{event.title}</h3>
+                    <p>{eventDate(event.startsAt, event.timezone)}</p>
+                    <p>{event.status.replaceAll("_", " ")}</p>
+                    <LinkButton
+                      href={`/runs/${encodeURIComponent(event.slug)}`}
+                      variant="secondary"
+                    >
+                      View event ↗
+                    </LinkButton>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+          {!events.ok && (
+            <p role="status">
+              USS event listings are temporarily unavailable. Existing sessions
+              remain below.
+            </p>
+          )}
+          {events.ok && events.data.nextCursor && (
+            <LinkButton
+              href={`/runs?cursor=${encodeURIComponent(events.data.nextCursor)}`}
+              variant="secondary"
+            >
+              More USS events ↗
+            </LinkButton>
+          )}
+          {cursor && (
+            <LinkButton href="/runs" variant="text">
+              First event page ↗
+            </LinkButton>
+          )}
           <div className="filter-row">
             <button className="filter-active">ALL</button>
             <button>COMMUNITY RUN</button>
