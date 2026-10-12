@@ -175,7 +175,7 @@ Numbering may continue beyond FE-20. Final approved dependency repair heads and 
 | FE-07 | Event Registration UI | DONE | BE-07 + BE-08 + FE-06 | feature/event-registration-ui | Public event detail, backend-owned booking/cancellation, bounded own history and dashboard preview. FE-07-EVENT-REGISTRATION.md records validation and live active-member limits. |
 | FE-08 | Event Pass UI | DONE | BE-09 + FE-07 | FE-08-EVENT-PASS.md; feature/event-pass-ui | Owner-only read/explicit issuance, branded QR, guarded dashboard/history entries; live active-owner/device QA remains outstanding. |
 | FE-09 | Scanner / Check-In Workspace | DONE | BE-10 + FE-05 | feature/scanner-check-in-ui | Event-scoped staff scanner, native/worker QR decoding, manual fallback and authoritative result states. See FE-09-SCANNER.md. Live staff/Neon/device QA remains pending. |
-| FE-10 | Stories CMS | PLANNED | BE-12 + FE-05 | TBD | Draft/publication/revision workflows. |
+| FE-10 | Stories CMS | DONE | BE-12 + FE-05 + BE-11 | feature/stories-cms / `157d0e0` | Protected managed list/editor, plain-text preview, MediaAsset picker, versioned lifecycle and explicit Jakarta scheduling. See FE-10-STORIES-CMS.md. Public Stories migration, persistent media delivery and full revision workspace remain separate. |
 | FE-11 | Gallery CMS | PLANNED | BE-11 + BE-13 + FE-05 | TBD | Upload ownership/progress/failure and bounded collections. |
 | FE-12 | Events CMS | PLANNED | BE-07 + FE-05 | TBD | Lifecycle/configuration/audit/publication clarity. |
 | FE-13 | Partner / Sponsor CMS | PLANNED | BE-14 + FE-05 | TBD | Managed partner content/media. |
@@ -501,3 +501,29 @@ Implemented 71b94e6 from latest BE-13 main b6100da. Reuses partners/event_partne
 Validation: Partner41/41, full regression494/494, clean install/dependency graph, production build, standalone TypeScript and diff check PASS. Local fresh/001-014 upgrade/legacy retention/rerun/runtime grants/atomic rollback and offline15-migration plan PASS. No persistent migration. Local/deployed browser core each20/20 at320/1366px; zero page errors/overflow/targeted hydration warnings in these probes. Implementation deployment dpl_3V5THYH2CWjDDMEZfWoFNk2UEBUX READY, exact71b94e63028cb34b61b4d6b77e977ae513a16006, alias ussrunning-web-seven.vercel.app. Final documentation deployment is checked after push.
 
 FE-13 consumes typed canonical and event relationship contracts. Approved migration/grants staging, real admin sessions/independent Neon concurrency, persistent media delivery, legacy unsafe-content remediation and query-plan QA remain pending. No bulk operations, restore, automatic QR-branding selection or unrelated CMS writers. Known next lint and broader hydration audit remain open. Concurrent FE-10 worktree changes preserved. See PARTNER-SPONSOR-SERVICE.md and BE-14-VALIDATION.md.
+
+### FE-10 Stories CMS delivery — 2026-10-13
+
+DONE for the managed frontend foundation. `/admin?module=stories` reuses the existing
+CMS shell and trusted permission projection; create/edit/protected preview are query
+views of the same route. BE-12 `cms.content.manage` guards remain the write authority.
+The editor consumes active backend references, plain-text paragraphs, server-owned slugs,
+`expectedVersion` updates, publish/schedule/unpublish/archive, and explicit conflict
+reload. BE-11 MediaAsset selection is bounded and read-only; null delivery URLs are
+represented honestly. The frontend strips internal author account IDs from editor DTOs.
+
+Validation after forward-merging BE-13/BE-14: 524/524 integrated Node tests, including
+30 FE-10 tests; FE-10 browser 35 cases / 127 assertions at 320–1920px and 200% zoom,
+zero runtime/hydration errors. FE-07 browser 138/254, FE-08 128/386 with 16 QR decodes,
+and FE-09 118/644 passed; one FE-09 immediate focus assertion was transient and passed
+on repeat without scanner changes. Clean install, dependency graph, production build,
+standalone TypeScript and strict UI audit (zero findings) passed. Main deployment
+`dpl_MaRP7Hp3bURJjkoWVU5BCNn7Guvt` reached READY for implementation SHA `953e295`;
+the follow-up roadmap deployment is verified separately.
+
+The managed CMS does not migrate the legacy public Stories route. Persistent BE-11 media
+delivery/upload, BE-12 persistent migration, real authenticated Neon editorial writes,
+full FE-16 revision history/restore contract, search hardening and optional future rich
+text remain separate. `next lint` is still unsupported under Next.js 16. Manual product
+audit of the Vercel development build is pending. See FE-10-STORIES-CMS.md and
+fe-10-evidence. FE-09 and concurrent Gallery/Partner work were preserved forward-only.
