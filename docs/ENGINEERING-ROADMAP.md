@@ -20,10 +20,10 @@ USS Running comprises a public website, free membership, authentication, account
 
 | Phase | State | Delivery controls |
 | --- | --- | --- |
-| PHASE 1 — EARLY DEVELOPMENT | CURRENT | Auto-integrate validated main: allowed. Auto-push main: allowed. Vercel deployment after main: allowed. Manual product audit: expected. |
-| PHASE 2 — INTERNAL ALPHA | FUTURE | Reassess real users/data/operational reliance; establish stricter preview/staging/review gates before entry. |
-| PHASE 3 — CLOSED BETA | FUTURE | Controlled real-user releases through feature -> preview/staging -> review -> main -> production. |
-| PHASE 4 — PRODUCTION | FUTURE | Explicit release review, monitoring, migration/rollback and protected-environment controls. |
+| PHASE 1 â€” EARLY DEVELOPMENT | CURRENT | Auto-integrate validated main: allowed. Auto-push main: allowed. Vercel deployment after main: allowed. Manual product audit: expected. |
+| PHASE 2 â€” INTERNAL ALPHA | FUTURE | Reassess real users/data/operational reliance; establish stricter preview/staging/review gates before entry. |
+| PHASE 3 â€” CLOSED BETA | FUTURE | Controlled real-user releases through feature -> preview/staging -> review -> main -> production. |
+| PHASE 4 â€” PRODUCTION | FUTURE | Explicit release review, monitoring, migration/rollback and protected-environment controls. |
 
 USS Running is currently in **EARLY DEVELOPMENT FAST-FEEDBACK MODE**. As declared for this phase, there are no real production users or critical live business transactions. Priorities: rapid iteration, manual product review, continuous UI/UX feedback, early discovery of missing behavior and reduced backend/frontend integration lag. Security, data integrity, scalable architecture and relevant production-like discipline still apply.
 
@@ -71,7 +71,7 @@ Discovery date: 2026-10-09 (Asia/Jakarta).
 | Starting main and origin/main | Both `8eb9e394c2c6b7aa60221232d3f64b02394e7c84`; remote main independently checked. |
 | Original worktree | `feature/member-card-rbac-frontend`, starting HEAD `a91f910baf6d1b11e045a8fc69cf420287a9651b`; dirty unrelated work excluded. |
 | Main foundation/policy integration | `f4c6fcb2fcb32c5d3c6f916bd7d8cd4b3168b0a9` integrates all completed foundation rows below plus policy task `b00142baf5b59ea31a1b49c87d867bf46cf4857b`; main tree exactly matched the tested task tree. |
-| Verified integration baseline | `integration/pre-fe04-baseline` / `ffccaa0a75edce41595d8a8d376659d655b8de3f` — VERIFIED local integration with the documented lint/hydration/provider limits. |
+| Verified integration baseline | `integration/pre-fe04-baseline` / `ffccaa0a75edce41595d8a8d376659d655b8de3f` â€” VERIFIED local integration with the documented lint/hydration/provider limits. |
 | Isolated checkout | `C:\Users\ardid\Documents\ussrunning-web-pre-fe04-baseline`; only committed foundation sources. |
 | Root instructions | Historical foundation instruction commit `a91f910baf6d1b11e045a8fc69cf420287a9651b`; current early-development policy commit `b00142baf5b59ea31a1b49c87d867bf46cf4857b`, preserving unrelated rule bodies. |
 | Existing consolidation | `1670bae` has FE-03 `e80d3f2` as first parent and BE-06 `fc1c097` as second parent. |
@@ -143,14 +143,14 @@ Numbering is a planning baseline, may continue beyond BE-22, and can be combined
 | BE-04 | Profile / Account Lifecycle | DONE | BE-02 + BE-03 | feature/member-profile-service / `2077e177a8364ba2e5ebb9a34ab4c019c1193965` | Parent `f7dd0a4796eda94ac818dd6a6da2098d4e42c0c0`; profile tests; MEMBER-PROFILE-SERVICE, BE-04-VALIDATION. |
 | BE-05 | Member Card Service | DONE | BE-04 | feature/member-card-rbac-foundation / `fd0d955a56dc00fc1a13fca391a681eeba689192` | Parent `2077e177a8364ba2e5ebb9a34ab4c019c1193965`; separate BE-05 commit on shared branch; card tests; MEMBER-CARD-SERVICE. |
 | BE-06 | RBAC / Audit / Revision Foundation | DONE | BE-01 + BE-02 + BE-05 | feature/member-card-rbac-foundation / `fc1c097d3574154a120b0c76d3bc4aa8094e4e46` | Parent `fd0d955a56dc00fc1a13fca391a681eeba689192`; RBAC/history tests; RBAC-AUDIT-FOUNDATION, BE-05-BE-06-VALIDATION. |
-| BE-07 | Event Domain Foundation | DONE | BE-01 + BE-06 | feature/event-domain-foundation | Guarded event service/repository/actions, public projections, explicit lifecycle, optimistic updates and atomic revision/audit; 19 event tests + 125 regressions. EVENT-DOMAIN-FOUNDATION, BE-07-VALIDATION. Legacy public events unchanged; registration/pass/check-in remain BE-08–10. |
+| BE-07 | Event Domain Foundation | DONE | BE-01 + BE-06 | feature/event-domain-foundation | Guarded event service/repository/actions, public projections, explicit lifecycle, optimistic updates and atomic revision/audit; 19 event tests + 125 regressions. EVENT-DOMAIN-FOUNDATION, BE-07-VALIDATION. Legacy public events unchanged; registration/pass/check-in remain BE-08â€“10. |
 | BE-08 | Event Registration Service | DONE | BE-07 + BE-02 | feature/event-registration-service | Own/managed typed registration contracts, event-locked capacity/waitlist, cancellation/reapply, bounded history and atomic minimized audit. EVENT-REGISTRATION-SERVICE, BE-08-VALIDATION; real Neon concurrency and FE cutover pending; no passes/check-in. |
 | BE-09 | Event Pass / Ticket Service | DONE | BE-07 + BE-08 | feature/event-pass-service | Owner/managed issuance and read, hash-only opaque v1, idempotency, scoped resolution, atomic invalidation/audit; migration 010. EVENT-PASS-SERVICE, BE-09-VALIDATION. Persistent migration/keyring and real Neon concurrency pending; reissue/scanner excluded. |
 | BE-10 | Check-In / Scanner Service | DONE | BE-08 + BE-09 + BE-06 | feature/event-check-in-service / 3be4613 | Atomic event-scoped BE-09 resolver + attendance + audit; 35/35 scanner, 270/270 integrated regression. Migration 011 local validation only; independent Neon/device staging pending. See CHECK-IN-SERVICE.md and BE-10-VALIDATION.md. |
 | BE-11 | Media Storage Service | DONE | BE-01 + BE-06 | feature/media-storage-foundation | Typed media foundation, migration 012, raster validation and retention; [evidence](BE-11-VALIDATION.md). Persistent storage adapter/configuration pending. |
 | BE-12 | Stories / Editorial Service | DONE | BE-06 + BE-11 | feature/stories-editorial-service / 1771a33 | Guarded editorial lifecycle, scheduling, media references, atomic revision/audit; see BE-12-VALIDATION.md. |
 | BE-13 | Gallery Service | DONE | BE-11 + BE-06 | feature/gallery-service / 975be4a | Guarded bounded collections, publication, atomic item ordering/history; see BE-13-VALIDATION.md. |
-| BE-14 | Partner / Sponsor Service | PLANNED | BE-06 + BE-11 | TBD | Managed records/media and visibility. |
+| BE-14 | Partner / Sponsor Service | DONE | BE-06 + BE-11 | 71b94e6 | Guarded canonical Partner + event sponsorship, atomic history, MediaAsset references; staging limitations documented. |
 | BE-15 | Dynamic Site Content Service | PLANNED | BE-06 + BE-11 | TBD | Typed drafts and public published projections, separate from configuration. |
 | BE-16 | Notification Service | PLANNED | BE-03 + relevant domain events | TBD | Preferences, retries, deduplication and consent. |
 | BE-17 | Admin User Management | PLANNED | BE-02 + BE-04 + BE-06 | TBD | Audited lifecycle actions with least privilege. |
@@ -158,7 +158,7 @@ Numbering is a planning baseline, may continue beyond BE-22, and can be combined
 | BE-19 | Search / Filter / Pagination Hardening | PLANNED | Implemented collection domains | TBD | Bounded APIs and measured query plans/indexes. |
 | BE-20 | Security / Rate Limiting Hardening | PLANNED | SEC + mutation services | TBD | Threat/authorization/abuse review. |
 | BE-21 | Observability / Operational Logging | PLANNED | OBS + lifecycle services | TBD | Safe structured logs, trace IDs, operational diagnostics. |
-| BE-22 | Staging / Production Readiness | PLANNED | BE-19–21 + OPS + CI | TBD | Provider/cutover/migration/rollback rehearsal and reviewed release gates. |
+| BE-22 | Staging / Production Readiness | PLANNED | BE-19â€“21 + OPS + CI | TBD | Provider/cutover/migration/rollback rehearsal and reviewed release gates. |
 
 ## E. Frontend roadmap
 
@@ -203,7 +203,7 @@ Numbering may continue beyond FE-20. Final approved dependency repair heads and 
 | OPS | Deployment / staging / production | PLANNED | Safe staging provider, least-privilege grants, legacy crosswalk, migration/rollback rehearsal. |
 | DOC | Architecture documentation | DONE | Roadmap/evidence and task-contract updates. |
 
-### OPS-OWNERSHIP-MIGRATION — dedicated USS ownership
+### OPS-OWNERSHIP-MIGRATION â€” dedicated USS ownership
 
 Status **IN_PROGRESS (audit/plan only)**. See [USS-OWNERSHIP-MIGRATION-PLAN.md](USS-OWNERSHIP-MIGRATION-PLAN.md) for actual ownership/IDs, evidence gaps, backups, risk/rollback matrices, phased gates and cutover acceptance. No migration executed. Audit baseline main fb7fb116c7899a2ac663067dec6e151ee1b52217; refresh before execution.
 
@@ -212,7 +212,7 @@ Status **IN_PROGRESS (audit/plan only)**. See [USS-OWNERSHIP-MIGRATION-PLAN.md](
 | GitHub | BLOCKED | Target org/name/incoming permission/App grants; transfer existing ardidwi/ussrunning-web, preserve history |
 | Vercel | BLOCKED | USS team access/source Owner; existing project transfer preferred; unchanged-Neon bridge must be verified first |
 | Resend | BLOCKED | Team/sender/key-name inventory, DNS ownership and connected BE-03 flow; separate from Neon shared OTP mail |
-| Neon | BLOCKED | Phases 1–3 DONE + VERIFIED + ROLLBACK_READY; managed transfer/Auth continuity and tested backup recovery; highest risk |
+| Neon | BLOCKED | Phases 1â€“3 DONE + VERIFIED + ROLLBACK_READY; managed transfer/Auth continuity and tested backup recovery; highest risk |
 | Auth Cutover | BLOCKED | Trusted live session/crosswalk/roles/card/CMS acceptance and non-login/profile adapters |
 | DNS | BLOCKED | Authoritative zone/owner export and approved sender/web/origin mapping; no DNS writes in audit |
 | Decommission | NOT_STARTED | Full cutover + rollback window + explicit scoped cleanup approval |
@@ -245,14 +245,14 @@ Frontend must consume actual actions/DTOs/policies, never invent backend contrac
 
 | Checkpoint | Scope | State / Gate |
 | --- | --- | --- |
-| Pre-FE04 | BE-01–06, FE-01–03, AGENTS, roadmap, five Option A repairs | integration/pre-fe04-baseline = VERIFIED; see PRE-FE04-INTEGRATION-VALIDATION.md and fresh pre-fe04-evidence. |
-| Foundation | BE-01–06 + FE-01–05 | VERIFIED local integrated development candidate; see FE-04-05-MAIN-INTEGRATION.md. Explicit CMS writer/provider/scan/hydration/lint limits remain. |
-| Event platform | BE-07–10 + FE-07–09 | PLANNED; registration/pass/attendance concurrency and authorized scanning. |
-| CMS | BE-11–15 + FE-10–14 | PLANNED; ownership, drafts, atomic revision/publication/audit. |
-| Administration | BE-16–18 + FE-15–16 | PLANNED; elevated permissions, audited mutations, bounded history. |
+| Pre-FE04 | BE-01â€“06, FE-01â€“03, AGENTS, roadmap, five Option A repairs | integration/pre-fe04-baseline = VERIFIED; see PRE-FE04-INTEGRATION-VALIDATION.md and fresh pre-fe04-evidence. |
+| Foundation | BE-01â€“06 + FE-01â€“05 | VERIFIED local integrated development candidate; see FE-04-05-MAIN-INTEGRATION.md. Explicit CMS writer/provider/scan/hydration/lint limits remain. |
+| Event platform | BE-07â€“10 + FE-07â€“09 | PLANNED; registration/pass/attendance concurrency and authorized scanning. |
+| CMS | BE-11â€“15 + FE-10â€“14 | PLANNED; ownership, drafts, atomic revision/publication/audit. |
+| Administration | BE-16â€“18 + FE-15â€“16 | PLANNED; elevated permissions, audited mutations, bounded history. |
 | Production hardening | BE-19+ + FE-18+ + SEC/QA/OPS | PLANNED; staging provider/migration/rollback/scale evidence and release review. |
 
-Consolidate completed branches forward-only with normal merges or reviewed traceable cherry-picks/reconciliation. Preserve history, validate the combined manifest/lockfile, and rerun applicable regressions. During Phase 1, validated task/checkpoint integration into main and its Vercel Git deployment follow AGENTS.md sections 26–30; later phases use revised release gates. Checkpoint labels do not bypass validation or data safety.
+Consolidate completed branches forward-only with normal merges or reviewed traceable cherry-picks/reconciliation. Preserve history, validate the combined manifest/lockfile, and rerun applicable regressions. During Phase 1, validated task/checkpoint integration into main and its Vercel Git deployment follow AGENTS.md sections 26â€“30; later phases use revised release gates. Checkpoint labels do not bypass validation or data safety.
 
 ## I. Definition of done and future workflow
 
@@ -292,7 +292,7 @@ Agents still inspect Git state, dirty files, contracts and history. FE-04 and FE
 
 See [PRE-FE04-INTEGRATION-VALIDATION.md](PRE-FE04-INTEGRATION-VALIDATION.md) for the actual rerun matrix, graph resolutions, merge reconciliation, auth boundaries and original-worktree concurrency limitation. Install/graph/build/standalone TypeScript passed; domain tests 106/106, form 27 viewports, public shell 80 viewports, workspace 10, auth 53 responsive/35 flow groups, member 41 cases, both contract scripts and both visual scripts passed. Hydration: reproduced (8 console warnings across browser/visual audits); separate 12 fresh-page required-width probes had none. Existing next lint failed as documented. No live provider or production validation claimed.
 
-### Independent integration and live review verification — 2026-10-09
+### Independent integration and live review verification â€” 2026-10-09
 
 BE-05 (`fd0d955`) and BE-06 (`fc1c097`) are delivered in main ancestry. FE-04 / FE-05 source head `8961f0d187806adcde2e5a3aabd76b9771f181c3` is retained through normal integration `6cd80d2`. Main advanced independently to `6e3e8ca18c752a319e1a0e7ae361c5cdd63cfa44` during this verification; its documentation/evidence additions were preserved. No feature was reimplemented. The independently rerun application tree is identical to that main tree outside docs.
 
@@ -302,13 +302,13 @@ Vercel Git deployment `dpl_Hm9qVfLjuczDw8XxrZgNV7w3jfXw` was READY for main SHA 
 
 Explicit remaining limitations: real Neon authenticated role/session staging validation; physical barcode scanning; protected CMS writers; barcode reissue; revision restore (not implemented); hydration warning root-cause audit; unsupported next lint. Auth non-login and profile adapter cutovers remain separate roadmap work. No persistent migration, real email, credential/environment change or published history rewrite occurred.
 
-### Neon auth configuration cutover — 2026-10-09
+### Neon auth configuration cutover â€” 2026-10-09
 
 See [AUTH-CONFIGURATION-CUTOVER.md](AUTH-CONFIGURATION-CUTOVER.md). Reused existing Neon main Better Auth; supplied missing Vercel server cookie secrets for production/preview and production verification-link base origin. Existing nine USS migrations rehearsed in isolation then applied transactionally after empty-schema/legacy-data guards. Existing trusted review origin retained. Profile presentation now delegates to authorized BE-04 services; legacy admin compatibility uses current USS database roles/status, never provider role claims or an admin-email override. Member IDs/barcodes and existing data retained. Real provider/email checks are separately reported; Resend key and verified sender remain missing. Active role staging, scanning, CMS protected writers, barcode reissue, revision restore, hydration root-cause audit and next lint limitations remain open. No live flow success is inferred from fixtures or HTTP 200.
 
 Auth cutover live evidence: real Neon signup, shared-provider OTP request, confirmed mailbox receipt, successful OTP verification, sign-out/session removal and sign-in/session restore passed on d0ba3ab. Exactly one mapped USS account/profile with member only remains pending_verification; backend activation was not bypassed. Authenticated deployed profile/card/CMS fail closed with verification-required rather than AUTH_NOT_CONFIGURED. Real active role/card/CMS success remains blocked by missing Resend key/verified sender and the USS ownership-proof/UI cutover. Full integrated 148/148 tests and two Card/CMS browser suites passed; zero warnings in those targeted probes does not close the broader hydration audit.
 
-### FE-06 member dashboard foundation — 2026-10-09
+### FE-06 member dashboard foundation â€” 2026-10-09
 
 Delivered source `ee5fc70` on feature/member-dashboard-foundation. Normal merge `61cee44`
 preserved independently delivered BE-07 (`fb7fb11`), trusted auth/profile cutover (`2193a60`)
@@ -331,7 +331,7 @@ Real independent active role/session/device validation, CMS writers, physical sc
 root cause and unsupported lint remain open. Inherited Windows-encoded punctuation in the concurrently
 updated roadmap was normalized to UTF-8 without changing other tasks' content or policy.
 
-### FE-07 event registration delivery — 2026-10-12
+### FE-07 event registration delivery â€” 2026-10-12
 
 Resumed the preserved feature/event-registration-ui worktree after quota interruption.
 BE-09 e24222b is retained through a forward-only fast-forward; no backend semantics changed.
@@ -353,7 +353,7 @@ Private/unpublished/members-only detail is not exposed by public reads; an autho
 read/discovery contract remains a backend prerequisite for members-only detail expansion.
 FE-08 next consumes BE-09 after approved persistent migration 010/keyring setup and active
 session validation; pass UI, scanner/check-in and CMS protected writers remain future work.
-### BE-10 attendance foundation � 2026-10-12
+### BE-10 attendance foundation ï¿½ 2026-10-12
 
 Resumed existing worktree at e24222b without discarding source or concurrent FE-07 work.
 Task 3be4613, forward reconciliation b663568 preserves FE-07 main 6baf018. Uses BE-09
@@ -388,7 +388,7 @@ Neon/storage validation, malware scanning, streaming upload endpoints, physical 
 real authenticated roles and human audit remain pending. See MEDIA-STORAGE-FOUNDATION.md
 and BE-11-VALIDATION.md; BE-12 may build on protected typed media references.
 
-### FE-08 Event Pass UI delivery — 2026-10-12
+### FE-08 Event Pass UI delivery â€” 2026-10-12
 
 DONE within the BE-09 frontend contract: owner registration/pass detail at the PRD
 /dashboard/registrations/[id] route, explicit backend-idempotent issuance, controlled account/
@@ -416,7 +416,7 @@ through FE-09. Per-event QR branding is a rendering contract only: FE-12/backend
 validated persistent media configuration. Automatic confirmation issuance/email orchestration,
 pass reissue, CMS writers, payment and broader hydration root-cause work remain separate tasks.
 
-### BE-12 Stories / Editorial delivery — 2026-10-12
+### BE-12 Stories / Editorial delivery â€” 2026-10-12
 
 Resumed the preserved Stories worktree without restarting. Implementation 1771a33 retains
 FE-08 99f448f and BE-11. Reuses existing Stories/revision schema, plain-text paragraphs,
@@ -436,7 +436,7 @@ Legacy public pages are preserved; FE-10 must explicitly consume the new typed c
 Rich text, revision restore, taxonomy management and BE-19 search are deferred. See
 STORIES-EDITORIAL-SERVICE.md and BE-12-VALIDATION.md. No auth/pass/check-in/storage semantic changes.
 
-### FE-09 Scanner / Check-In UI delivery — 2026-10-12
+### FE-09 Scanner / Check-In UI delivery â€” 2026-10-12
 
 DONE for the frontend contract: `/dashboard/check-in` selects a bounded managed event,
 `/dashboard/check-in/[eventId]` confirms its context and calls BE-10 scanEventPass with
@@ -471,7 +471,7 @@ camera frames are not physical-device proof. FE-12 should consume trusted check-
 configuration/event administration; no auth, BE-09/BE-10 semantics, Event Pass behavior,
 member identity, Stories, payments, scanner override or CMS writers were changed.
 
-### BE-13 Gallery foundation delivery — 2026-10-13
+### BE-13 Gallery foundation delivery â€” 2026-10-13
 
 Delivered 975be4a from latest FE-09 main 43e0deb; BE-12/BE-11 and concurrent scanner work
 preserved. Reuses existing gallery_items and MediaAsset serializer; additive collection,
@@ -493,3 +493,11 @@ Persistent storage, approved migration/grants staging, real trusted admin sessio
 Neon concurrency, large-library query-plan QA, bulk upload and human audit remain pending.
 Collection cap1000/read pages100; no restore/scheduling/physical cleanup. Next lint and broader
 hydration root-cause audit remain open. See GALLERY-SERVICE.md and BE-13-VALIDATION.md.
+
+### BE-14 Partner / Sponsor delivery - 2026-10-13
+
+Implemented 71b94e6 from latest BE-13 main b6100da. Reuses partners/event_partners, existing partners.manage and BE-11 MediaAsset serializer. Additive migration015 preserves legacy rows and associations; explicit lifecycle, server slugs, optimistic versions, canonical/event-scoped presentation, exact-set atomic reorder and immutable revisions/minimized audit. No frontend or auth/storage/domain replacement.
+
+Validation: Partner41/41, full regression494/494, clean install/dependency graph, production build, standalone TypeScript and diff check PASS. Local fresh/001-014 upgrade/legacy retention/rerun/runtime grants/atomic rollback and offline15-migration plan PASS. No persistent migration. Local/deployed browser core each20/20 at320/1366px; zero page errors/overflow/targeted hydration warnings in these probes. Implementation deployment dpl_3V5THYH2CWjDDMEZfWoFNk2UEBUX READY, exact71b94e63028cb34b61b4d6b77e977ae513a16006, alias ussrunning-web-seven.vercel.app. Final documentation deployment is checked after push.
+
+FE-13 consumes typed canonical and event relationship contracts. Approved migration/grants staging, real admin sessions/independent Neon concurrency, persistent media delivery, legacy unsafe-content remediation and query-plan QA remain pending. No bulk operations, restore, automatic QR-branding selection or unrelated CMS writers. Known next lint and broader hydration audit remain open. Concurrent FE-10 worktree changes preserved. See PARTNER-SPONSOR-SERVICE.md and BE-14-VALIDATION.md.
