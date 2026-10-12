@@ -127,7 +127,14 @@ test('operational FK policy protects accounts/events/media referenced by history
   await rejected('DELETE FROM uss.events WHERE id=$1',[event.id],['23503','23001']);
   const media = (await query("INSERT INTO uss.media_assets(storage_provider,storage_key,mime_type,byte_size) VALUES('test','test-cover','image/png',10) RETURNING id"))[0];
   await query('UPDATE uss.events SET cover_media_id=$1 WHERE id=$2',[media.id,event.id]);
-  await rejected('DELETE FROM uss.media_assets WHERE id=$1',[media.id],['23503','23001']);
+  await rejected('DELETE FROM uss.media_assets WHERE id=$1',[media.id],'23514');
+  // The new retention guard fires first; independently retain the original FK proof.
+  // This isolated fixture transaction rolls back trigger disabling on FK failure.
+  await assert.rejects(pg.transaction(async tx => {
+    await tx.exec('ALTER TABLE uss.media_assets DISABLE TRIGGER media_no_delete');
+    await tx.query('DELETE FROM uss.media_assets WHERE id=$1',[media.id]);
+  }),e => ['23503','23001'].includes(e.code));
+  await rejected('DELETE FROM uss.media_assets WHERE id=$1',[media.id],'23514');
 });
 test('SQL lexer preserves semicolons in dollar bodies, comments and strings', () => {
   assert.equal(splitSql("SELECT ';'; /* nested /* ; */ comment */ DO $fn$ BEGIN RAISE NOTICE 'x;'; END $fn$; -- tail\nSELECT 1;").length,3);

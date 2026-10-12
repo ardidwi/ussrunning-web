@@ -147,7 +147,7 @@ Numbering is a planning baseline, may continue beyond BE-22, and can be combined
 | BE-08 | Event Registration Service | DONE | BE-07 + BE-02 | feature/event-registration-service | Own/managed typed registration contracts, event-locked capacity/waitlist, cancellation/reapply, bounded history and atomic minimized audit. EVENT-REGISTRATION-SERVICE, BE-08-VALIDATION; real Neon concurrency and FE cutover pending; no passes/check-in. |
 | BE-09 | Event Pass / Ticket Service | DONE | BE-07 + BE-08 | feature/event-pass-service | Owner/managed issuance and read, hash-only opaque v1, idempotency, scoped resolution, atomic invalidation/audit; migration 010. EVENT-PASS-SERVICE, BE-09-VALIDATION. Persistent migration/keyring and real Neon concurrency pending; reissue/scanner excluded. |
 | BE-10 | Check-In / Scanner Service | DONE | BE-08 + BE-09 + BE-06 | feature/event-check-in-service / 3be4613 | Atomic event-scoped BE-09 resolver + attendance + audit; 35/35 scanner, 270/270 integrated regression. Migration 011 local validation only; independent Neon/device staging pending. See CHECK-IN-SERVICE.md and BE-10-VALIDATION.md. |
-| BE-11 | Media Storage Service | PLANNED | BE-01 + BE-06 | TBD | Object storage + metadata; type/size/ownership validation. |
+| BE-11 | Media Storage Service | DONE | BE-01 + BE-06 | feature/media-storage-foundation | Typed media foundation, migration 012, raster validation and retention; [evidence](BE-11-VALIDATION.md). Persistent storage adapter/configuration pending. |
 | BE-12 | Stories / Editorial Service | PLANNED | BE-06 + BE-11 | TBD | Typed writes, drafts/publish, atomic revision/audit. |
 | BE-13 | Gallery Service | PLANNED | BE-11 + BE-06 | TBD | Bounded collections and publication. |
 | BE-14 | Partner / Sponsor Service | PLANNED | BE-06 + BE-11 | TBD | Managed records/media and visibility. |
@@ -371,3 +371,19 @@ Read-only Neon inventory has 10 branches and no task-owned isolated connection; 
 migration or branch deletion. Main/Vercel exact SHA and READY evidence are reported after push;
 HTTP smoke is not authenticated attendance proof. FE-09 consumes documented scanEventPass
 contract after approved isolated migration/keyring/role setup.
+
+### BE-11 media foundation validation
+
+Isolated media foundation: existing uss.media_assets metadata reused, additive migration 012,
+server-only typed validation/service/repository/provider boundary, existing cms.content.manage
+authorization, shared DB upload quota, immutable binary identity and retained referenced assets.
+BE-11 37/37, full regression 307/307, install/dependency graph/build/standalone TypeScript pass,
+local mobile/desktop core browser 20/20; offline plan and local fresh/upgrade/rerun pass.
+No frontend/auth/pass/check-in semantic change. Next lint remains unsupported.
+
+Neon storage inventory is enabled but has no bucket/configured adapter. Memory storage is
+explicit test/development only; deployed uploads fail closed until a real persistent adapter
+and credentials are configured. No persistent migrations/objects/buckets changed. Live
+Neon/storage validation, malware scanning, streaming upload endpoints, physical cleanup,
+real authenticated roles and human audit remain pending. See MEDIA-STORAGE-FOUNDATION.md
+and BE-11-VALIDATION.md; BE-12 may build on protected typed media references.
