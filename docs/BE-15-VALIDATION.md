@@ -25,3 +25,16 @@ Code quality:no new framework/provider, debug logging, duplicate auth or storage
 
 ## Limits / safety
 No persistent migration or database/storage/auth-provider configuration change. Real trusted CMS sessions and independent Neon concurrency/query-plan validation remain staging work. Storage URL may be null; no fabricated media/feature records. Localization/rich text/restore/cache invalidation/legacy adoption remain deferred. Existing Next lint and broader hydration audit open. Roadmap DONE/main and exact-SHA Vercel delivery evidence recorded only after successful deployment checks.
+
+
+## Integrated delivery evidence
+
+Task commit `06b1a912147d052644af933111faa8f8acdf133d` was normally pushed on
+feature/dynamic-site-content and fast-forward integrated into main after fetching
+FE-10 follow-up `0aeae57`. Vercel deployment
+`dpl_Bgz5iAtyUKgW4YxPyWgEdRihsmVg` verified READY, exact matching commit SHA,
+and review alias https://ussrunning-web-seven.vercel.app. Deployed browser smoke
+20/20 passed (320px/1366px), zero runtime or targeted hydration warnings, reference
+route 404. Roadmap BE-15 marked DONE after these gates. Final documentation commit
+and matching Vercel deployment are reported in the delivery handoff. No persistent
+migration, auth-provider change, work discard, force push or history rewrite.

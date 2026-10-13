@@ -151,7 +151,7 @@ Numbering is a planning baseline, may continue beyond BE-22, and can be combined
 | BE-12 | Stories / Editorial Service | DONE | BE-06 + BE-11 | feature/stories-editorial-service / 1771a33 | Guarded editorial lifecycle, scheduling, media references, atomic revision/audit; see BE-12-VALIDATION.md. |
 | BE-13 | Gallery Service | DONE | BE-11 + BE-06 | feature/gallery-service / 975be4a | Guarded bounded collections, publication, atomic item ordering/history; see BE-13-VALIDATION.md. |
 | BE-14 | Partner / Sponsor Service | DONE | BE-06 + BE-11 | 71b94e6 | Guarded canonical Partner + event sponsorship, atomic history, MediaAsset references; staging limitations documented. |
-| BE-15 | Dynamic Site Content Service | PLANNED | BE-06 + BE-11 | TBD | Typed drafts and public published projections, separate from configuration. |
+| BE-15 | Dynamic Site Content Service | DONE | BE-06 + BE-11 | `06b1a91` | Ten typed slots; atomic drafts/revisions/public snapshots, validated references and safe fallbacks. See DYNAMIC-SITE-CONTENT.md and BE-15-VALIDATION.md. |
 | BE-16 | Notification Service | PLANNED | BE-03 + relevant domain events | TBD | Preferences, retries, deduplication and consent. |
 | BE-17 | Admin User Management | PLANNED | BE-02 + BE-04 + BE-06 | TBD | Audited lifecycle actions with least privilege. |
 | BE-18 | Role & Permission Administration | PLANNED | BE-06 + BE-17 | TBD | Elevated-role ownership/bootstrap/revocation, narrow grants. |
@@ -527,3 +527,29 @@ full FE-16 revision history/restore contract, search hardening and optional futu
 text remain separate. `next lint` is still unsupported under Next.js 16. Manual product
 audit of the Vercel development build is pending. See FE-10-STORIES-CMS.md and
 fe-10-evidence. FE-09 and concurrent Gallery/Partner work were preserved forward-only.
+
+
+## BE-15 delivered foundation evidence
+
+Implementation `06b1a912147d052644af933111faa8f8acdf133d` on
+`feature/dynamic-site-content` was integrated forward into current main, preserving
+FE-10 follow-up `0aeae57`. Ten typed slots reuse uss.site_content and immutable
+revisions with additive migration 016; no persistent migration was executed.
+Public bundles validate published pointers and MediaAsset/domain references; approved
+code defaults and safe empty states handle missing/invalid/unavailable content.
+Managed contracts require cms.content.manage, trusted active/verified account,
+expectedVersion, atomic revision/audit, and DB authorization recheck.
+
+Validation: BE-15 44/44; full integrated regression 568/568; clean install, dependency
+graph, production build, standalone TypeScript, migration fresh/upgrade/rerun/offline
+dry-run and diff check passed. Local and deployed core browser smoke each passed
+20/20 at 320px/1366px, with zero page errors or targeted hydration warnings.
+Vercel `dpl_Bgz5iAtyUKgW4YxPyWgEdRihsmVg` reached READY for the exact implementation
+SHA and review alias https://ussrunning-web-seven.vercel.app.
+
+Existing frontend legacy content adapters remain unchanged: FE-14/public-surface
+wiring is still required. Persistent media delivery, authorized migration/runtime
+grants, real authenticated Neon CMS writes and independent Neon concurrency remain
+staging work. Localization, rich text, restore, legacy adoption and future cache
+invalidation remain deferred. Known Next.js 16 next lint and broader hydration audit
+remain open; manual product audit is pending. No auth/storage/domain semantic changes.
