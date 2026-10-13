@@ -4,9 +4,9 @@ import { Button, EmptyState, Modal } from "@/components/ui";
 import type { MediaAsset, MediaPage } from "@/lib/media/media-types";
 import { listPickerMedia } from "../api/actions";
 
-export function MediaAssetPicker({ open, onClose, onSelect, selectedId, loadMedia = listPickerMedia }: {
+export function MediaAssetPicker({ open, onClose, onSelect, selectedId, loadMedia = listPickerMedia, title = "Select cover media" }: {
   open: boolean; onClose: () => void; onSelect: (asset: MediaAsset) => void; selectedId: string | null;
-  loadMedia?: typeof listPickerMedia;
+  loadMedia?: typeof listPickerMedia; title?: string;
 }) {
   const [page, setPage] = useState<MediaPage>({ items: [], nextCursor: null });
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
@@ -26,7 +26,7 @@ export function MediaAssetPicker({ open, onClose, onSelect, selectedId, loadMedi
     if (open) void load();
     return () => { request.current++; };
   }, [open, loadMedia]);
-  return <Modal open={open} onClose={onClose} title="Select cover media" description="Choose an existing BE-11 MediaAsset. Upload is unavailable until persistent storage is configured." className="uss-media-picker" actions={<Button variant="secondary" onClick={onClose}>Close picker</Button>}>
+  return <Modal open={open} onClose={onClose} title={title} description="Choose an existing BE-11 MediaAsset. Upload is unavailable until persistent storage is configured." className="uss-media-picker" actions={<Button variant="secondary" onClick={onClose}>Close picker</Button>}>
     {state === "loading" && page.items.length === 0 && <p role="status">Loading media…</p>}
     {state === "error" && <div role="alert" className="uss-story-notice"><p>We couldn't load the media library.</p><Button variant="secondary" onClick={() => void load()}>Retry</Button></div>}
     {state !== "loading" && state !== "error" && page.items.length === 0 && <EmptyState title="No active media yet." description="The media library has no selectable assets. Persistent upload is not connected here." />}

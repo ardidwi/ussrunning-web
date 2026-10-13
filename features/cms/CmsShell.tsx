@@ -36,7 +36,7 @@ export function CmsShell({
       )}
     </nav>
   );
-  return <MemberNavigationGuard subject="Story">
+  return <MemberNavigationGuard subject={module === "gallery" ? "Gallery" : module === "stories" ? "Story" : "workspace"}>
     <div className="uss-member-shell uss-cms-foundation">
       <a className="uss-member-skip" href="#cms-content">
         Skip to content
