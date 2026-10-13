@@ -176,7 +176,7 @@ Numbering may continue beyond FE-20. Final approved dependency repair heads and 
 | FE-08 | Event Pass UI | DONE | BE-09 + FE-07 | FE-08-EVENT-PASS.md; feature/event-pass-ui | Owner-only read/explicit issuance, branded QR, guarded dashboard/history entries; live active-owner/device QA remains outstanding. |
 | FE-09 | Scanner / Check-In Workspace | DONE | BE-10 + FE-05 | feature/scanner-check-in-ui | Event-scoped staff scanner, native/worker QR decoding, manual fallback and authoritative result states. See FE-09-SCANNER.md. Live staff/Neon/device QA remains pending. |
 | FE-10 | Stories CMS | DONE | BE-12 + FE-05 + BE-11 | feature/stories-cms / `157d0e0` | Protected managed list/editor, plain-text preview, MediaAsset picker, versioned lifecycle and explicit Jakarta scheduling. See FE-10-STORIES-CMS.md. Public Stories migration, persistent media delivery and full revision workspace remain separate. |
-| FE-11 | Gallery CMS | PLANNED | BE-11 + BE-13 + FE-05 | TBD | Upload ownership/progress/failure and bounded collections. |
+| FE-11 | Gallery CMS | DONE | BE-11 + BE-13 + FE-05 | feature/gallery-cms / `2212553` | Protected managed collections, versioned metadata/items/lifecycle, exact-set keyboard reorder and BE-11 picker. Persistent upload/delivery and public Gallery migration remain separate. See FE-11-GALLERY-CMS.md. |
 | FE-12 | Events CMS | PLANNED | BE-07 + FE-05 | TBD | Lifecycle/configuration/audit/publication clarity. |
 | FE-13 | Partner / Sponsor CMS | PLANNED | BE-14 + FE-05 | TBD | Managed partner content/media. |
 | FE-14 | Dynamic Site Content Editor | PLANNED | BE-15 + FE-05 | TBD | Draft/preview/publish; no runtime secrets/configuration in editorial UI. |
@@ -553,3 +553,33 @@ grants, real authenticated Neon CMS writes and independent Neon concurrency rema
 staging work. Localization, rich text, restore, legacy adoption and future cache
 invalidation remain deferred. Known Next.js 16 next lint and broader hydration audit
 remain open; manual product audit is pending. No auth/storage/domain semantic changes.
+
+### FE-11 Gallery CMS delivery — 2026-10-13
+
+DONE for the managed frontend foundation. Implementation `2212553` was integrated
+forward into main after preserving BE-15 `f8e60c6`; FE-10 and FE-09 remain intact.
+`/admin?module=gallery` uses the existing CMS shell and trusted permission projection.
+BE-13 `cms.content.manage` guards remain authoritative for every managed operation.
+Create/edit/private preview use query views, server-owned slugs, `expectedVersion`,
+publish/unpublish/archive, explicit conflict reload and bounded revision metadata.
+Gallery items support caption/alt edits, reference removal and complete exact-set
+reorder with keyboard controls. BE-11 picker/cover selection is read-only; null
+delivery URLs are represented honestly. Optional event references use bounded BE-07
+reads with recovery, preserving existing links when options are unavailable.
+
+Final validation: Gallery 24/24; full integrated Node suite 592/592 including BE-15;
+Gallery browser 46 cases / 151 assertions at 320–1920px and 200% zoom; zero runtime
+exceptions/hydration warnings. Existing regression runs: Stories 40/137, Scanner
+118/644, Event Pass 128/386 (16 QR decodes), Registration 138/254 cases/assertions.
+Clean install, dependency graph, production build, standalone TypeScript, diff check
+and strict UI audit (zero findings) passed. Implementation deployment
+`dpl_GHzfBfjaVXA8aArNteFud5yoJkQQ` reached READY for exact main SHA
+`22125536c741af7c908406c85d5ca1b07a76013b`. The final roadmap deployment is
+verified separately after push; review alias is https://ussrunning-web-seven.vercel.app.
+
+Persistent media upload/delivery, authorized staging migrations/runtime grants,
+real authenticated Neon admin mutations/concurrency and physical-device/human
+product QA remain pending. Large-library search/bulk upload, public Gallery migration
+and revision restore remain future scope. Known unsupported `next lint` remains.
+See FE-11-GALLERY-CMS.md and fe-11-evidence. No auth, BE-11/BE-13 semantics or
+scanner behavior changed; no persistent migration was run.
