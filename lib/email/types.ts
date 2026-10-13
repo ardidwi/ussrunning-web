@@ -3,5 +3,5 @@ export type VerificationResult = { ok: boolean; code: VerificationCode; retryAft
 export type DeliveryResult = { ok: true; code: "EMAIL_SENT" } | { ok: false; code: "EMAIL_DELIVERY_FAILED" | "EMAIL_DELIVERY_UNCERTAIN" };
 export interface EmailContent { subject: string; html: string; text: string }
 export interface EmailMessage extends EmailContent { to: string; from: string; idempotencyKey: string }
-export type ProviderResult = { ok: true; messageId: string } | { ok: false; code: "EMAIL_DELIVERY_FAILED" | "EMAIL_PROVIDER_TIMEOUT" };
-export interface EmailProvider { readonly name: string; send(message: EmailMessage): Promise<ProviderResult> }
+export type ProviderResult = { ok: true; messageId: string } | { ok: false; code: "EMAIL_DELIVERY_FAILED" | "EMAIL_PROVIDER_TIMEOUT"; retryable?: boolean };
+export interface EmailProvider { readonly name: string; readonly idempotencyRetentionSeconds?: number; send(message: EmailMessage): Promise<ProviderResult> }

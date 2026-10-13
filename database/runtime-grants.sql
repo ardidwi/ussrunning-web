@@ -20,3 +20,6 @@ GRANT EXECUTE ON FUNCTION uss.mutate_partner(uuid,uuid,text,integer,jsonb,text),
 
 -- BE-15 invoker mutations retain append-only history privileges.
 GRANT EXECUTE ON FUNCTION uss.site_content_references_valid(jsonb,boolean),uss.mutate_site_content(uuid,text,text,integer,jsonb) TO :"app_role";
+
+-- BE-16 invoker claim; no provider/auth credential or history privileges.
+GRANT EXECUTE ON FUNCTION uss.claim_application_notification(uuid,uuid,text,text,integer) TO :"app_role";
