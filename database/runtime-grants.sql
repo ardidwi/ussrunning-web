@@ -17,3 +17,6 @@ GRANT EXECUTE ON FUNCTION uss.mutate_gallery(uuid,uuid,text,integer,jsonb,text) 
 
 -- BE-14 invoker writes use existing partner/event relation privileges, no DELETE.
 GRANT EXECUTE ON FUNCTION uss.mutate_partner(uuid,uuid,text,integer,jsonb,text),uss.mutate_sponsorship(uuid,uuid,text,jsonb) TO :"app_role";
+
+-- BE-15 invoker mutations retain append-only history privileges.
+GRANT EXECUTE ON FUNCTION uss.site_content_references_valid(jsonb,boolean),uss.mutate_site_content(uuid,text,text,integer,jsonb) TO :"app_role";

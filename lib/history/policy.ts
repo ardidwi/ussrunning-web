@@ -7,3 +7,5 @@ export const OPERATIONAL_AUDIT_ACTIONS = REVISION_ENTITIES.flatMap(entity => OPE
 
 // Partner/Sponsor lifecycle and sponsorship operations, additive to existing history policy.
 OPERATIONAL_AUDIT_ACTIONS.push('partner.activated','partner.deactivated',...['attach','update','detach','reorder'].map(action=>`partner.event.${action}`));
+
+OPERATIONAL_AUDIT_ACTIONS.push('site_content.unpublished');
