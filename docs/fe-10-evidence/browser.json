@@ -34,9 +34,14 @@
     "schedule confirms explicit Jakarta timestamp",
     "archive confirmation and terminal state",
     "restricted and unavailable feedback",
-    "unsaved navigation requires discard"
+    "unsaved navigation requires discard",
+    "invalid create stays in editor without request",
+    "create success and double-submit lock",
+    "publish now uses confirmation result",
+    "schedule submits reviewed timestamp",
+    "cover removal and failed save retain edits"
   ],
-  "assertions": 127,
+  "assertions": 137,
   "runtimeErrors": [],
   "hydrationWarnings": []
 }

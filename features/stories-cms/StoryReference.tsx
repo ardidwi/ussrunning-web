@@ -20,9 +20,14 @@ const base: EditorStory = { id, slug: "fictional-city-run", status: "draft", ver
 export default function StoryReference({ scenario = "draft", view = "edit" }: { scenario?: string; view?: string }) {
   if (process.env.NODE_ENV !== "development") return null;
   const [current, setCurrent] = useState<EditorStory>(() => ({ ...base, status: scenario === "published" ? "published" : scenario === "scheduled" ? "scheduled" : scenario === "archived" ? "archived" : "draft", publishAt: scenario === "scheduled" ? "2026-12-01T11:00:00Z" : null, publishedAt: scenario === "published" ? now : null, cover: scenario === "media-unavailable" ? unavailableMedia : scenario === "no-cover" ? null : media, coverMediaId: scenario === "no-cover" ? null : scenario === "media-unavailable" ? unavailableMedia.id : media.id }));
+  const [createRequests, setCreateRequests] = useState(0);
   const snapshot = { roles: ["admin" as const], permissions: ROLE_PERMISSIONS.admin, displayName: "Fictional CMS reviewer" };
   const operations = {
-    createEditorStory: async (input: unknown) => ({ ok: true as const, data: { ...current, ...(input as Partial<EditorStory>), status: "draft" as const, version: 1 } }),
+    createEditorStory: async (input: unknown) => {
+      setCreateRequests((count) => count + 1);
+      if (scenario === "slow-create") await new Promise((resolve) => setTimeout(resolve, 800));
+      return { ok: true as const, data: { ...current, ...(input as Partial<EditorStory>), status: "draft" as const, version: 1 } };
+    },
     updateEditorStory: async (input: unknown) => {
       if (scenario === "conflict") return { ok: false as const, code: "STORY_CONFLICT" as const };
       if (scenario === "save-error") return { ok: false as const, code: "STORY_UNAVAILABLE" as const };
@@ -39,7 +44,7 @@ export default function StoryReference({ scenario = "draft", view = "edit" }: { 
   };
   const { body: _body, ...summary } = current;
   return <PermissionsProvider snapshot={snapshot}><CmsShell module="stories" displayName={snapshot.displayName}>
-    <p className="uss-reference-disclosure">Development-only fictional Stories. No backend identity, media storage or publication authority.</p>
+    <p className="uss-reference-disclosure">Development-only fictional Stories. No backend identity, media storage or publication authority.</p><span data-testid="story-create-requests" className="uss-reference-disclosure">Fictional create requests: {createRequests}</span>
     {scenario === "forbidden" ? <ServiceFeedback code="INSUFFICIENT_PERMISSION" /> : scenario === "unavailable" ? <ServiceFeedback code="STORY_UNAVAILABLE" /> : view === "list" ? <StoryList items={scenario === "empty" ? [] : [summary]} nextCursor={scenario === "pagination" ? "fictional-cursor" : null} status="" /> : <StoryEditor key={scenario + view} initial={view === "create" ? null : current} references={refs} startPreview={view === "preview"} operations={operations} />}
   </CmsShell></PermissionsProvider>;
 }

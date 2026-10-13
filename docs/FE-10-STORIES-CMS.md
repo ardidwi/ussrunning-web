@@ -32,7 +32,7 @@ The reusable picker calls protected `listMediaAssets` through a read-only adapte
 
 Draft preview remains in the protected CMS and can include unsaved text. No draft is fetched from or sent to the public Stories API. BE-12 revision/audit writes are preserved; this task shows version/updated time only and offers no restore. Server-owned author account IDs, storage keys and raw exception messages are absent from the client editor DTO/UI.
 
-The browser fixture checks 320, 375, 768, 1024, 1366 and 1920px widths plus 200% CSS zoom; list, create, edit, preview and media picker; keyboard picker open/Escape/focus restoration; field error announcement; plain-text preview; conflict, unpublish, schedule, archive and unsaved navigation. FE-10 browser result: 35 cases / 127 assertions, zero runtime exceptions and hydration warnings. Strict UI audit: zero findings. The fixture is fictional and development-only; live authenticated editorial writes and persistent media delivery remain unvalidated.
+The browser fixture checks 320, 375, 768, 1024, 1366 and 1920px widths plus 200% CSS zoom; list, create, edit, preview and media picker; keyboard picker open/Escape/focus restoration; field error announcement; plain-text preview; conflict, unpublish, schedule, archive and unsaved navigation. A follow-up adds actual create validation/success and duplicate-submit assertions, publication and scheduling confirmation, and failed-save retention. FE-10 browser result: 40 cases / 137 assertions, zero runtime exceptions and hydration warnings. Strict UI audit: zero findings. The fixture is fictional and development-only; live authenticated editorial writes and persistent media delivery remain unvalidated.
 
 ## Validation and dependencies
 

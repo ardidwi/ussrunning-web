@@ -513,7 +513,7 @@ reload. BE-11 MediaAsset selection is bounded and read-only; null delivery URLs 
 represented honestly. The frontend strips internal author account IDs from editor DTOs.
 
 Validation after forward-merging BE-13/BE-14: 524/524 integrated Node tests, including
-30 FE-10 tests; FE-10 browser 35 cases / 127 assertions at 320–1920px and 200% zoom,
+30 FE-10 tests; FE-10 browser 40 cases / 137 assertions after the focused create/publication follow-up at 320–1920px and 200% zoom,
 zero runtime/hydration errors. FE-07 browser 138/254, FE-08 128/386 with 16 QR decodes,
 and FE-09 118/644 passed; one FE-09 immediate focus assertion was transient and passed
 on repeat without scanner changes. Clean install, dependency graph, production build,
