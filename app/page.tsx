@@ -12,10 +12,9 @@ import {
   getRuns,
   getStories,
 } from "@/lib/content";
+import { getPublicSiteContent } from "@/lib/site-content/site-service";
 
 export const dynamic = "force-dynamic";
-
-const tickerText = "RUNNING / COMMUNITY / CULTURE /";
 
 function objectContent(value: unknown) {
   return value && typeof value === "object"
@@ -31,21 +30,46 @@ function textValue(
   return typeof value[key] === "string" ? String(value[key]) : fallback;
 }
 
-export default async function HomePage() {
-  const [hero, runs, stories, partners, membershipRaw, storyRaw, gallery] =
-    await Promise.all([
-      getHomeHero(),
-      getRuns(),
-      getStories(),
-      getPartners(),
-      getCmsSection("home", "membership"),
-      getCmsSection("home", "story_feature"),
-      getMediaCollection("home-gallery"),
-    ]);
+function publicMediaUrl(
+  media: Array<{ deliveryAvailable: boolean; url: string | null }>,
+) {
+  const asset = media.find((item) => item.deliveryAvailable && item.url);
+  return asset?.url ?? null;
+}
 
-  const membership = objectContent(membershipRaw);
-  const storyFeature = objectContent(storyRaw);
+export default async function HomePage() {
+  const [
+    hero,
+    runs,
+    stories,
+    partners,
+    legacyStoryRaw,
+    gallery,
+    heroSlot,
+    marqueeSlot,
+    manifestoSlot,
+    membershipSlot,
+  ] = await Promise.all([
+    getHomeHero(),
+    getRuns(),
+    getStories(),
+    getPartners(),
+    getCmsSection("home", "story_feature"),
+    getMediaCollection("home-gallery"),
+    getPublicSiteContent("homepage.hero"),
+    getPublicSiteContent("homepage.marquee"),
+    getPublicSiteContent("homepage.manifesto"),
+    getPublicSiteContent("homepage.membership"),
+  ]);
+
+  const storyFeature = objectContent(legacyStoryRaw);
   const featuredStory = stories[0];
+  const heroContent = heroSlot.payload;
+  const marqueeContent = marqueeSlot.payload;
+  const manifestoContent = manifestoSlot.payload;
+  const membership = membershipSlot.payload;
+  const heroImage = publicMediaUrl(heroSlot.media) || hero.imageUrl;
+  const membershipImage = publicMediaUrl(membershipSlot.media);
 
   const collaborations = partners.length
     ? partners
@@ -60,32 +84,38 @@ export default async function HomePage() {
         "ATMOS",
       ];
 
+  const tickerText = marqueeContent?.enabled
+    ? marqueeContent.text
+    : "RUNNING / COMMUNITY / CULTURE /";
+
   return (
     <main>
       <HomeMotionExperience
-        imageUrl={hero.imageUrl}
-        established={hero.established}
-        eyebrow={hero.eyebrow}
-        headline={hero.headline}
-        description={hero.description}
-        ctaHref={hero.ctaHref}
-        ctaLabel={hero.ctaLabel}
+        imageUrl={heroImage}
+        established={heroContent?.enabled ? heroContent.established : hero.established}
+        eyebrow={heroContent?.enabled ? heroContent.eyebrow : hero.eyebrow}
+        headline={heroContent?.enabled ? heroContent.headline : hero.headline}
+        description={heroContent?.enabled ? heroContent.description : hero.description}
+        ctaHref={heroContent?.enabled ? heroContent.cta?.href || hero.ctaHref : hero.ctaHref}
+        ctaLabel={heroContent?.enabled ? heroContent.cta?.label || hero.ctaLabel : hero.ctaLabel}
       />
 
-      <section className="ticker" aria-label="Community message">
-        <div className="ticker-marquee">
-          <div className="ticker-group">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <span key={"a-" + index}>{tickerText}</span>
-            ))}
+      {marqueeContent?.enabled !== false ? (
+        <section className="ticker" aria-label="Community message">
+          <div className="ticker-marquee">
+            <div className="ticker-group">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <span key={"a-" + index}>{tickerText}</span>
+              ))}
+            </div>
+            <div className="ticker-group" aria-hidden="true">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <span key={"b-" + index}>{tickerText}</span>
+              ))}
+            </div>
           </div>
-          <div className="ticker-group" aria-hidden="true">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <span key={"b-" + index}>{tickerText}</span>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       <section className="section next-section" id="uss-next-runs">
         <div className="content-frame">
@@ -111,24 +141,38 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="manifesto section-invert">
-        <div className="content-frame">
-          <div className="manifesto-label">02 / OUR MOVEMENT</div>
-          <p className="manifesto-copy">
-            RUNNING BROUGHT US TOGETHER.
-            <br />
-            <strong>18 RUNNERS</strong> ON DAY ONE. AROUND <strong>500</strong>{" "}
-            ON DAY 365.
-            <br />
-            WE RUN, CHEER, EAT, CREATE AND{" "}
-            <strong>SHOW UP FOR EACH OTHER.</strong>
-          </p>
-          <div className="manifesto-foot">
-            <span>PEOPLE OVER PACE / JAKARTA SINCE 2024</span>
-            <Link href="/about">OUR STORY ↗</Link>
+      {manifestoContent?.enabled !== false ? (
+        <section className="manifesto section-invert">
+          <div className="content-frame">
+            <div className="manifesto-label">
+              {manifestoContent?.label || "02 / OUR MOVEMENT"}
+            </div>
+            <p className="manifesto-copy">
+              {(manifestoContent?.paragraphs?.length
+                ? manifestoContent.paragraphs
+                : [
+                    "RUNNING BROUGHT US TOGETHER.",
+                    "18 RUNNERS ON DAY ONE. AROUND 500 ON DAY 365.",
+                    "WE RUN, CHEER, EAT, CREATE AND SHOW UP FOR EACH OTHER.",
+                  ]
+              ).map((paragraph, index, values) => (
+                <span key={`${index}-${paragraph}`}>
+                  {paragraph}
+                  {index < values.length - 1 ? <br /> : null}
+                </span>
+              ))}
+            </p>
+            <div className="manifesto-foot">
+              <span>
+                {manifestoContent?.footnote || "PEOPLE OVER PACE / JAKARTA SINCE 2024"}
+              </span>
+              <Link href={manifestoContent?.cta?.href || "/about"}>
+                {manifestoContent?.cta?.label || "OUR STORY"} ↗
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       <CommunityStats />
 
@@ -165,44 +209,38 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="editorial-split section">
-        <div className="editorial-photo">
-          <img
-            src={textValue(
-              membership,
-              "imageUrl",
-              "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=1500&q=85",
-            )}
-            alt="USS membership"
-          />
-        </div>
+      {membership?.enabled !== false ? (
+        <section className="editorial-split section">
+          <div className="editorial-photo">
+            <img
+              src={
+                membershipImage ||
+                "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=1500&q=85"
+              }
+              alt="USS membership"
+            />
+          </div>
 
-        <div className="editorial-copy">
-          <span className="kicker">
-            {textValue(membership, "kicker", "04 / MEMBERSHIP / FREE")}
-          </span>
-          <h2 style={{ whiteSpace: "pre-line" }}>
-            {textValue(
-              membership,
-              "headline",
-              "ONE COMMUNITY.\nNO PAID TIER.\nONE ID.",
-            )}
-          </h2>
-          <p>
-            {textValue(
-              membership,
-              "description",
-              "USS membership is free. Create one community ID to RSVP to runs, keep your run pass and build your USS history as you keep showing up.",
-            )}
-          </p>
-          <LinkButton
-            className=""
-            href={textValue(membership, "ctaHref", "/membership")}
-          >
-            {textValue(membership, "ctaLabel", "JOIN USS — FREE")}
-          </LinkButton>
-        </div>
-      </section>
+          <div className="editorial-copy">
+            <span className="kicker">
+              {membership?.kicker || "04 / MEMBERSHIP / FREE"}
+            </span>
+            <h2 style={{ whiteSpace: "pre-line" }}>
+              {membership?.headline || "ONE COMMUNITY.\nNO PAID TIER.\nONE ID."}
+            </h2>
+            <p>
+              {membership?.description ||
+                "USS membership is free. Create one community ID to RSVP to runs, keep your run pass and build your USS history as you keep showing up."}
+            </p>
+            <LinkButton
+              className=""
+              href={membership?.cta?.href || "/membership"}
+            >
+              {membership?.cta?.label || "JOIN USS — FREE"}
+            </LinkButton>
+          </div>
+        </section>
+      ) : null}
 
       <section className="story-band">
         <div className="story-band-title">
