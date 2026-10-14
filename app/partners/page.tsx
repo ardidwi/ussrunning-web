@@ -95,36 +95,39 @@ export default async function PartnersPage() {
             </div>
 
             <div className="journey-grid">
-              {partners.map((partner, index) => (
-                <article className="journey-card" key={partner.slug}>
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  {partner.logo?.deliveryAvailable && partner.logo.url ? (
-                    <img
-                      src={partner.logo.url}
-                      alt={partner.logo.altText || `${partner.name} logo`}
-                      width={180}
-                      height={90}
-                      loading="lazy"
-                      style={{
-                        width: "min(180px, 100%)",
-                        height: "72px",
-                        objectFit: "contain",
-                        objectPosition: "left center",
-                        marginBottom: "1rem",
-                      }}
-                    />
-                  ) : null}
-                  <h3>{partner.name}</h3>
-                  <p>{partner.description || partnerMeta(partner.type, partner.tier)}</p>
-                  {partner.websiteUrl ? (
-                    <a href={partner.websiteUrl} target="_blank" rel="noreferrer">
-                      {partnerMeta(partner.type, partner.tier) || "VISIT PARTNER"} ↗
-                    </a>
-                  ) : (
-                    <p>{partnerMeta(partner.type, partner.tier)}</p>
-                  )}
-                </article>
-              ))}
+              {partners.map((partner, index) => {
+                const meta = partnerMeta(partner.type, partner.tier);
+                const summary = partner.description || meta;
+
+                return (
+                  <article className="journey-card" key={partner.slug}>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    {partner.logo?.deliveryAvailable && partner.logo.url ? (
+                      <img
+                        src={partner.logo.url}
+                        alt={partner.logo.altText || `${partner.name} logo`}
+                        width={180}
+                        height={90}
+                        loading="lazy"
+                        style={{
+                          width: "min(180px, 100%)",
+                          height: "72px",
+                          objectFit: "contain",
+                          objectPosition: "left center",
+                          marginBottom: "1rem",
+                        }}
+                      />
+                    ) : null}
+                    <h3>{partner.name}</h3>
+                    {summary ? <p>{summary}</p> : null}
+                    {partner.websiteUrl ? (
+                      <a href={partner.websiteUrl} target="_blank" rel="noreferrer">
+                        {meta || "VISIT PARTNER"} ↗
+                      </a>
+                    ) : null}
+                  </article>
+                );
+              })}
             </div>
           </div>
         </section>
