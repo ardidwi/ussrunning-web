@@ -4,31 +4,13 @@ import SiteFooter from "@/components/SiteFooter";
 import EventCard from "@/components/EventCard";
 import CommunityStats from "@/components/CommunityStats";
 import HomeMotionExperience from "@/components/HomeMotionExperience";
-import {
-  getCmsSection,
-  getHomeHero,
-  getMediaCollection,
-  getPartners,
-  getRuns,
-  getStories,
-} from "@/lib/content";
+import { getHomeHero, getRuns } from "@/lib/content";
 import { getPublicSiteContent } from "@/lib/site-content/site-service";
+import { listPublicStories } from "@/lib/stories/story-actions";
+import { listPublicPartners } from "@/lib/partners/partner-actions";
+import { listPublicGalleryItems } from "@/lib/gallery/gallery-actions";
 
 export const dynamic = "force-dynamic";
-
-function objectContent(value: unknown) {
-  return value && typeof value === "object"
-    ? (value as Record<string, unknown>)
-    : {};
-}
-
-function textValue(
-  value: Record<string, unknown>,
-  key: string,
-  fallback: string,
-) {
-  return typeof value[key] === "string" ? String(value[key]) : fallback;
-}
 
 function publicMediaUrl(
   media: Array<{ deliveryAvailable: boolean; url: string | null }>,
@@ -41,10 +23,9 @@ export default async function HomePage() {
   const [
     hero,
     runs,
-    stories,
-    partners,
-    legacyStoryRaw,
-    gallery,
+    storiesResult,
+    partnersResult,
+    galleryResult,
     heroSlot,
     marqueeSlot,
     manifestoSlot,
@@ -52,37 +33,34 @@ export default async function HomePage() {
   ] = await Promise.all([
     getHomeHero(),
     getRuns(),
-    getStories(),
-    getPartners(),
-    getCmsSection("home", "story_feature"),
-    getMediaCollection("home-gallery"),
+    listPublicStories({ limit: 1 }),
+    listPublicPartners({ limit: 20 }),
+    listPublicGalleryItems({ slug: "home-gallery", limit: 6 }),
     getPublicSiteContent("homepage.hero"),
     getPublicSiteContent("homepage.marquee"),
     getPublicSiteContent("homepage.manifesto"),
     getPublicSiteContent("homepage.membership"),
   ]);
 
-  const storyFeature = objectContent(legacyStoryRaw);
-  const featuredStory = stories[0];
+  const featuredStory = storiesResult.ok ? storiesResult.data.items[0] : null;
+  const collaborations = partnersResult.ok
+    ? partnersResult.data.items.map((partner) => partner.name)
+    : [];
+  const gallery = galleryResult.ok
+    ? galleryResult.data.items.filter(
+        (item) => item.media.deliveryAvailable && item.media.url,
+      )
+    : [];
   const heroContent = heroSlot.payload;
   const marqueeContent = marqueeSlot.payload;
   const manifestoContent = manifestoSlot.payload;
   const membership = membershipSlot.payload;
   const heroImage = publicMediaUrl(heroSlot.media) || hero.imageUrl;
   const membershipImage = publicMediaUrl(membershipSlot.media);
-
-  const collaborations = partners.length
-    ? partners
-    : [
-        "ASICS",
-        "NIKE",
-        "PUMA",
-        "NEW BALANCE",
-        "ON",
-        "ADIDAS",
-        "MIZUNO",
-        "ATMOS",
-      ];
+  const featuredStoryImage =
+    featuredStory?.cover?.deliveryAvailable && featuredStory.cover.url
+      ? featuredStory.cover.url
+      : null;
 
   const tickerText = marqueeContent?.enabled
     ? marqueeContent.text
@@ -176,50 +154,48 @@ export default async function HomePage() {
 
       <CommunityStats />
 
-      <section className="collaborations-section">
-        <div className="content-frame">
-          <div className="collaborations-head">
-            <span className="kicker">03 / SELECTED COLLABORATIONS</span>
-            <h2>
-              BRANDS WE&apos;VE
-              <br />
-              RUN WITH.
-            </h2>
-            <p>
-              A selection of brands, spaces and communities that have moved with
-              USS Running across events, campaigns and race-week moments.
-            </p>
-          </div>
+      {collaborations.length ? (
+        <section className="collaborations-section">
+          <div className="content-frame">
+            <div className="collaborations-head">
+              <span className="kicker">03 / SELECTED COLLABORATIONS</span>
+              <h2>
+                BRANDS WE&apos;VE
+                <br />
+                RUN WITH.
+              </h2>
+              <p>
+                A selection of brands, spaces and communities that have moved with
+                USS Running across events, campaigns and race-week moments.
+              </p>
+            </div>
 
-          <div
-            className="collaboration-grid"
-            aria-label="Selected collaborators"
-          >
-            {collaborations.map((brand) => (
-              <div className="collaboration-brand" key={brand}>
-                <span>{brand}</span>
-              </div>
-            ))}
-          </div>
+            <div
+              className="collaboration-grid"
+              aria-label="Selected collaborators"
+            >
+              {collaborations.map((brand) => (
+                <div className="collaboration-brand" key={brand}>
+                  <span>{brand}</span>
+                </div>
+              ))}
+            </div>
 
-          <div className="collaborations-foot">
-            <span>SELECTED WORK / MORE TO COME</span>
-            <Link href="/partners">EXPLORE PARTNERSHIPS ↗</Link>
+            <div className="collaborations-foot">
+              <span>SELECTED WORK / MORE TO COME</span>
+              <Link href="/partners">EXPLORE PARTNERSHIPS ↗</Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       {membership?.enabled !== false ? (
         <section className="editorial-split section">
-          <div className="editorial-photo">
-            <img
-              src={
-                membershipImage ||
-                "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=1500&q=85"
-              }
-              alt="USS membership"
-            />
-          </div>
+          {membershipImage ? (
+            <div className="editorial-photo">
+              <img src={membershipImage} alt="USS membership" />
+            </div>
+          ) : null}
 
           <div className="editorial-copy">
             <span className="kicker">
@@ -242,54 +218,34 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      <section className="story-band">
-        <div className="story-band-title">
-          <span className="kicker">05 / STORIES</span>
-          <h2>
-            THE PEOPLE.
-            <br />
-            THE CITY.
-            <br />
-            THE MILES.
-          </h2>
-        </div>
-
-        <Link
-          className="story-feature"
-          href={
-            featuredStory
-              ? "/stories"
-              : textValue(storyFeature, "ctaHref", "/stories")
-          }
-        >
-          <img
-            src={
-              featuredStory?.image ||
-              textValue(
-                storyFeature,
-                "imageUrl",
-                "https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=1600&q=85",
-              )
-            }
-            alt=""
-          />
-          <div className="story-overlay">
-            <span>
-              {featuredStory?.eyebrow ||
-                textValue(storyFeature, "eyebrow", "ORIGIN / 001")}
-            </span>
-            <h3>
-              {featuredStory?.title ||
-                textValue(
-                  storyFeature,
-                  "headline",
-                  "18 RUNNERS. DAY ONE. THE START OF USS.",
-                )}
-            </h3>
-            <span>READ THE STORY ↗</span>
+      {featuredStory ? (
+        <section className="story-band">
+          <div className="story-band-title">
+            <span className="kicker">05 / STORIES</span>
+            <h2>
+              THE PEOPLE.
+              <br />
+              THE CITY.
+              <br />
+              THE MILES.
+            </h2>
           </div>
-        </Link>
-      </section>
+
+          <Link className="story-feature" href={`/stories/${featuredStory.slug}`}>
+            {featuredStoryImage ? (
+              <img
+                src={featuredStoryImage}
+                alt={featuredStory.cover?.altText || ""}
+              />
+            ) : null}
+            <div className="story-overlay">
+              <span>{featuredStory.contentType || "USS JOURNAL"}</span>
+              <h3>{featuredStory.title}</h3>
+              <span>READ THE STORY ↗</span>
+            </div>
+          </Link>
+        </section>
+      ) : null}
 
       {gallery.length ? (
         <section className="home-gallery-section">
@@ -311,15 +267,16 @@ export default async function HomePage() {
             </div>
 
             <div className="home-gallery-grid">
-              {gallery.slice(0, 6).map((item, index) => (
+              {gallery.map((item, index) => (
                 <figure
                   key={item.id}
                   className={index === 0 ? "is-featured" : ""}
                 >
-                  <img src={item.url} alt={item.alt} />
-                  {item.caption ? (
-                    <figcaption>{item.caption}</figcaption>
-                  ) : null}
+                  <img
+                    src={item.media.url!}
+                    alt={item.altTextOverride || item.media.altText || ""}
+                  />
+                  {item.caption ? <figcaption>{item.caption}</figcaption> : null}
                 </figure>
               ))}
             </div>
