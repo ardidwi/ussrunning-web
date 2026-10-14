@@ -1,5 +1,9 @@
 # USS workspace UX contract
 
+## FE-12 managed Event contract
+
+Events CMS reuses the protected CMS shell, shared fields/buttons/modals and MemberNavigationGuard. Its typed date variant uses explicit-offset absolute timestamps and a separate IANA display timezone; changing timezone does not reinterpret the instant. Native browser-local parsing is not used. Create collects BE-07's explicit slug once; edit keeps it immutable. Save remains in the editor with authoritative feedback. Lifecycle actions use EVENT_TRANSITIONS, require saved work and explicit confirmation; failures keep dialog/input context. Opaque expectedVersion conflicts require reviewed reload, never blind retry. Server guards remain authority; no registration, pass or check-in mutations belong to this editor.
+
 Business source: docs/CMS-FOUNDATION.md, current user decisions 2026-10-02. Roles and account barcode are user requested; production authorization remains deferred.
 
 ## Canonical UI Map

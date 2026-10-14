@@ -16,6 +16,7 @@ import {
 import { getAuditHistory } from "@/lib/audit/audit-actions";
 import { StoriesWorkspace } from "@/features/stories-cms/StoriesWorkspace";
 import { GalleryWorkspace } from "@/features/gallery-cms/GalleryWorkspace";
+import { EventWorkspace } from "@/features/events-cms/EventWorkspace";
 import {
   getRevisionHistory,
   getHistorySnapshot,
@@ -51,6 +52,8 @@ export default async function AdminPage({
     content = <StoriesWorkspace query={query} />;
   } else if (module === "gallery") {
     content = <GalleryWorkspace query={query} />;
+  } else if (module === "events") {
+    content = <EventWorkspace query={query} />;
   } else if (module === "activity") {
     const input = auditQuery(query);
     content = (

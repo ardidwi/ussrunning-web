@@ -16,7 +16,7 @@ export const CMS_MODULES = [
     ],
   },
   { id: "content", label: "Website", permissions: ["cms.content.manage"] },
-  { id: "events", label: "Runs", permissions: ["events.manage"] },
+  { id: "events", label: "Events", permissions: ["events.manage"] },
   { id: "stories", label: "Stories", permissions: ["cms.content.manage"] },
   { id: "gallery", label: "Gallery", permissions: ["cms.content.manage"] },
   { id: "media", label: "Media", permissions: ["cms.content.manage"] },
