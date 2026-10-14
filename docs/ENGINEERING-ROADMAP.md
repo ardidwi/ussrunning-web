@@ -6,6 +6,25 @@ This living document records product sequence, backend/frontend contracts, depen
 
 USS Running comprises a public website, free membership, authentication, account identity, member profiles, permanent member IDs and barcodes, CMS, Stories, media/gallery, events, registration, event passes, barcode/QR scanning, check-in, partners/sponsors, notifications, admin operations, RBAC, audit/revision history, dynamic site content, and staging/production infrastructure. Planned scope is not evidence of implementation.
 
+### Critical integration cutovers / resume checkpoints
+
+| Task | Status | Source commit | Verified main = origin/main | Deployment | Tests / blockers / next |
+| --- | --- | --- | --- | --- | --- |
+| INT-01 Auth frontend cutover | DONE (source integration) | `b3e74d3` | `b3e74d3c3f0367c9af380da820dd43ab5d81b1e7` | `dpl_KAX2bMrkdAFrQXMDCHd6YK9vA2pA`, READY, same SHA | 758/758 Node; 28 focused; browser 38/66; live read-only 18/54; zero final runtime/hydration findings. Real provider/email/crosswalk/Neon QA BLOCKED externally. Next INT-02. |
+| INT-02 Profile frontend cutover | PLANNED (existing six-field adapter connected) | TBD | TBD | TBD | BE-04 completion is recommended guidance, not an authentication gate. Non-blocking for controlled auth/email configuration QA; consent/full contract presentation audit remains. |
+
+2026-10-14: **READY_FOR_EMAIL_CONFIGURATION** after INT-01 source build/tests and exact
+main development deployment. Existing BE-04 profile read/update integration is non-blocking
+for this auth test; completion does not change account lifecycle. No production secrets or
+email sends are authorized by this checkpoint. Manual environment names/origin/sender gates
+are documented in AUTH-FRONTEND-CUTOVER.md; live readiness remains BLOCKED until controlled
+provider/session/email and staging QA. This table records the validated source deployment;
+documentation-only checkpoint commits are inspected/verified separately before the next task.
+
+Resume: fetch current origin/main, inspect actual ancestry and task docs; do not reset to
+checkpoint SHAs. Public Stories, Partners, footer and homepage remote branches remain
+independently owned, unmerged and unvalidated here. Do not bundle or delete them.
+
 ### Domain boundaries
 
 - Account identity != authentication: USS account identity/lifecycle is separate from provider credentials/session.
