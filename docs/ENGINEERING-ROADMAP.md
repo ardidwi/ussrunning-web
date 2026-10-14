@@ -132,9 +132,9 @@ Preserve approved overrides, BE-03 resend 6.13.0, server-only, and PGlite test d
 
 ### Completion and cutover boundaries
 
-FE-03 delivered a dashboard shell/profile UI with provisional adapters. Its production loader/save still return PROFILE_UNAVAILABLE for authenticated sessions; reference fixtures are development-only. BE-04 is available after integration, but merge alone does not translate the provisional DTO or connect trusted profile reads/writes. Scope that cutover explicitly before claiming real profile flows.
+Historical FE-03 began with provisional adapters. The current production own-profile loader/save delegate to BE-04; INT-02 validates the projection, consent/optional-field presentation and conflict recovery. PROFILE_UNAVAILABLE now represents a real controlled service/data failure. Development references remain isolated; live authenticated profile QA is a separate external gate. See PROFILE-FRONTEND-CUTOVER.md.
 
-FE-02 production connects existing provider login only; registration, verification/resend, recovery and reset retain AUTH_UNAVAILABLE adapter branches. BE-02/03 availability does not automatically wire those flows. Plan and validate that cutover separately; fixture authentication outcomes are not provider authentication evidence.
+Historical FE-02 supplied flow UI before all production adapters existed. INT-01 now wires those flows through BE-02/03 and the installed provider contract. AUTH_UNAVAILABLE remains honest unavailable/provider feedback; fixture outcomes are not live provider authentication evidence. See AUTH-FRONTEND-CUTOVER.md and the critical-cutover checkpoint above.
 
 BE-06 supplies permission guards and bounded read-only history. CMS writes/publish/restore, role mutations, and legacy CMS authorization cutover remain future work. Permanent identity crosswalk, deployment grants, real independent Neon sessions/provider cookies and query plans at scale remain staging gates.
 

@@ -1,15 +1,15 @@
 import "server-only";
 import { normalizeAuthCode } from "@/lib/auth/auth-errors";
-import { profileFields, type MemberResult, type ProfileField } from "./contract";
+import { profileFields, type MemberResult, type ProfileField, type ProfileIssueField } from "./contract";
 import { PROFILE_POLICY } from "./profile-policy";
 import type { MemberProfileDTO, ProfileResult } from "./profile-types";
 /** Presentation projection only. BE-04 owns authorization, validation and identity. */
 export function projectProfile(result: ProfileResult<MemberProfileDTO>): MemberResult {
   if (!result.ok) {
-    const fields: Partial<Record<ProfileField, string>> = {};
-    for (const [key, value] of Object.entries(result.fieldErrors ?? {})) {
+    const fields: Partial<Record<ProfileIssueField, string>> = {};
+    for (const key of Object.keys(result.fieldErrors ?? {})) {
       const field = key === "instagramHandle" ? "instagram" : key;
-      if (profileFields.includes(field as ProfileField)) fields[field as ProfileField] = value;
+      if (profileFields.includes(field as ProfileField) || ["birthDate","gender","jerseySize","runningPreferences","marketingConsent","privacyConsent"].includes(field)) fields[field as ProfileIssueField] = `Please check ${field.replace(/([A-Z])/g," $1").toLowerCase()} and try again.`;
     }
     const code = result.code === "CONFLICT" ? "PROFILE_CONFLICT"
       : result.code === "PROFILE_VALIDATION_ERROR" ? "VALIDATION_ERROR"
@@ -31,8 +31,9 @@ export function projectProfile(result: ProfileResult<MemberProfileDTO>): MemberR
       instagram: profile.instagramHandle ?? "", emergencyContactName: profile.emergencyContactName ?? "",
       emergencyContactPhone: profile.emergencyContactPhone ?? "" },
     completion: { percentage: completion.percentage, missingFields },
-    policy: { required: ["fullName"], minimumPhoneDigits: 7, maximumPhoneDigits: 15,
+    details: { birthDate: profile.birthDate ?? "", gender: profile.gender ?? "", jerseySize: profile.jerseySize ?? "", runningPreferences: profile.runningPreferences ?? {}, marketingConsent: profile.marketingConsent === true, privacyAccepted: Boolean(profile.privacyConsentAt) },
+    policy: { required: ["fullName"], minimumPhoneDigits: 7, maximumPhoneDigits: 15, maximumBirthDate: new Date().toISOString().slice(0,10),
       maxLengths: { fullName: PROFILE_POLICY.maxName, city: PROFILE_POLICY.maxCity, phone: 40,
-        instagram: 30, emergencyContactName: PROFILE_POLICY.maxName, emergencyContactPhone: 40 } },
+        instagram: 31, emergencyContactName: PROFILE_POLICY.maxName, emergencyContactPhone: 40 } },
   } };
 }
