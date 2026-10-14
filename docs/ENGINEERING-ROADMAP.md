@@ -177,7 +177,7 @@ Numbering may continue beyond FE-20. Final approved dependency repair heads and 
 | FE-09 | Scanner / Check-In Workspace | DONE | BE-10 + FE-05 | feature/scanner-check-in-ui | Event-scoped staff scanner, native/worker QR decoding, manual fallback and authoritative result states. See FE-09-SCANNER.md. Live staff/Neon/device QA remains pending. |
 | FE-10 | Stories CMS | DONE | BE-12 + FE-05 + BE-11 | feature/stories-cms / `157d0e0` | Protected managed list/editor, plain-text preview, MediaAsset picker, versioned lifecycle and explicit Jakarta scheduling. See FE-10-STORIES-CMS.md. Public Stories migration, persistent media delivery and full revision workspace remain separate. |
 | FE-11 | Gallery CMS | DONE | BE-11 + BE-13 + FE-05 | feature/gallery-cms / `2212553` | Protected managed collections, versioned metadata/items/lifecycle, exact-set keyboard reorder and BE-11 picker. Persistent upload/delivery and public Gallery migration remain separate. See FE-11-GALLERY-CMS.md. |
-| FE-12 | Events CMS | PLANNED | BE-07 + FE-05 | TBD | Lifecycle/configuration/audit/publication clarity. |
+| FE-12 | Events CMS | DONE | BE-07 + FE-05 | feature/events-cms / `04ca13d` | Protected event metadata/configuration, versioned lifecycle, explicit-offset timing, private preview and BE-11 cover picker. Registration/pass/check-in operations remain separate. See FE-12-EVENTS-CMS.md. |
 | FE-13 | Partner / Sponsor CMS | PLANNED | BE-14 + FE-05 | TBD | Managed partner content/media. |
 | FE-14 | Dynamic Site Content Editor | PLANNED | BE-15 + FE-05 | TBD | Draft/preview/publish; no runtime secrets/configuration in editorial UI. |
 | FE-15 | Users / Roles Administration UI | PLANNED | BE-17 + BE-18 + FE-05 | TBD | Narrow permissions and audited operations. |
@@ -609,3 +609,42 @@ Durable intents require explicit managed dispatch/retry: no automatic worker, re
 bounce webhook, marketing or notification UI. Provider acceptance is not inbox proof.
 Next lint remains unsupported; broader hydration and human product audit remain open.
 See NOTIFICATION-SERVICE.md and BE-16-VALIDATION.md. BE-17 is next; not implemented here.
+
+### FE-12 Events CMS delivery — 2026-10-14
+
+DONE for managed Event content/configuration. Task `04ca13d` was integrated forward
+from BE-16 delivery `113dc4d`, preserving FE-11 and notification work. Existing
+`/admin?module=events` owns list/create/edit/detail/private preview, with trusted
+`events.manage` presentation and backend guards on every read/write. Uses the actual
+BE-07 lifecycle graph, opaque expectedVersion, explicit conflict reload, bounded
+status/event-type listing and immutable existing slugs. Creation requires BE-07's
+explicit slug input; no title-derived slug or client identity generation.
+
+Absolute timestamp controls require seconds and an explicit offset; normalized
+summaries show the selected IANA timezone without browser-local reinterpretation.
+Capacity/waitlist/visibility/location remain configuration only. BE-11 cover picker
+is read-only, with honest null/unavailable delivery. Draft preview stays protected;
+public links retain canonical/legacy-compatible `/runs/[slug]`. Existing scanner
+navigation remains independently authorized. No registration, pass or check-in UI
+or backend semantics were duplicated or changed.
+
+Validation: FE-12 31/31, integrated Node 675/675 after BE-16; Events browser 57 cases /
+121 assertions at 320–1920px, short height/200% zoom, keyboard/focus/Escape, touch
+targets and lifecycle/conflict/media states. Zero final runtime/hydration errors;
+strict UI audit zero findings. Gallery 46/151, Stories 40/137, Scanner 118/644 (three
+QR decodes), Event Pass 128/386 (16 decodes), Registration 138/254 passed. Clean
+install, dependency graph, production build, standalone TypeScript and diff checks
+passed without dependency/lockfile drift. Next.js 16 next lint remains unsupported.
+
+Vercel `dpl_6KoW516sM4geyR6GnNcpqqjw81Zu` READY for exact implementation main SHA
+`04ca13d2d0546fc91357151782f9baed5343089a`; deployed anonymous desktop/mobile smoke
+17 cases / 59 assertions passed with zero runtime/hydration errors and fixture 404.
+Review: https://ussrunning-web-seven.vercel.app/admin?module=events. Final roadmap
+deployment is verified separately after push; this is development product review.
+
+Real authenticated Neon admin writes/concurrency, staging migration/runtime grants,
+persistent media delivery and human/physical-device QA remain pending. Public route
+cleanup, check-in-window configuration, persisted per-event QR branding, richer
+relationships and full revision workspace require separate contracts/tasks. No auth
+provider/configuration, permanent barcode, BE-07/08/09/10 semantics or persistent DB
+changes were made. See FE-12-EVENTS-CMS.md and fe-12-evidence.
