@@ -28,6 +28,16 @@ Required integration order:
 
 Each branch must pass local build, standalone TypeScript, route-specific browser regression, latest-main conflict review, and runtime/hydration checks before merge.
 
+## Current divergence snapshot
+
+Against `main` at `c1e78d6f6a2776765bcc75439b49483a2c6acc96`:
+
+- `feature/public-stories-cutover`: diverged, 2 commits ahead / 2 behind; touches only `app/stories/page.tsx` and `app/stories/[slug]/page.tsx`.
+- `feature/public-partners-cutover`: diverged, 1 commit ahead / 3 behind; touches only `app/partners/page.tsx`.
+- `feature/footer-site-content-cutover`: diverged, 1 commit ahead / 2 behind; touches only `components/SiteFooter.tsx`.
+
+Treat these as expected early-development divergence, not as permission to force/rebase published history. Codex should fetch latest main, inspect overlap, preserve both histories, and integrate forward-only after each branch passes its own gates.
+
 ## Legacy `lib/content.ts` retirement candidates
 
 `lib/content.ts` currently contains direct-table/public-schema reads and presentation fallbacks that predate the newer backend contracts. These are candidates for retirement only after all consumers are proven migrated.
@@ -130,6 +140,22 @@ Public UI may consume only delivery-safe media DTOs. Do not expose or infer:
 
 A public image should render only when the authoritative DTO says delivery is available and provides a usable public URL. `url: null` must remain an honest unavailable state.
 
+## Public navigation audit
+
+`components/SiteHeader.tsx` currently keeps the public IA as a small code-owned navigation list: Runs, About, Membership, Stories, Partners, plus `MY USS` -> `/login`.
+
+No unsafe external URLs or storage/media fields are present in the header. Active-route semantics use exact-or-descendant path matching and mobile navigation reuses the same route set.
+
+Do not move this navigation into BE-15 merely to eliminate constants. These entries are application information architecture, not routine campaign copy. A future dynamic-navigation requirement should be an explicit product/architecture decision rather than an incidental CMS expansion.
+
+## Auth-surface overlap guard
+
+`app/login/page.tsx` and `app/join/page.tsx` still contain hardcoded presentation copy. BE-15 already defines `auth.login`, `login.visual`, and `auth.register`, so these are legitimate future dynamic-content targets.
+
+However INT-01 currently owns auth production cutover. Remote cleanup must not edit those auth files while INT-01 is active.
+
+Important lifecycle wording guard: the current login verification presentation says email verification occurs before the account becomes active. Codex must not turn that sentence into authority. Verification state and account lifecycle must remain authoritative to BE-02/BE-04; frontend copy may need adjustment if another backend gate can keep the account non-active after verification.
+
 ## Hardcoded public copy audit
 
 ### About page
@@ -144,6 +170,55 @@ This content is CMS-eligible conceptually, but BE-15 currently defines only home
 
 BE-15 has `homepage.membership`, but that slot is not a general Membership-page document contract. Do not silently reuse it for `/membership`. Dynamic Membership-page content requires an explicit backend contract expansion.
 
+## Remote integration gates by branch
+
+### Stories
+
+Required before merge:
+- build + standalone TypeScript;
+- public `/stories` listing browser regression;
+- `/stories/[slug]` valid, not-found and media-null states;
+- no direct `public.stories` query remains in public route files;
+- no seeded/demo Story appears on backend failure or intentional empty state;
+- zero runtime/hydration warnings.
+
+### Partners
+
+Required before merge:
+- build + standalone TypeScript;
+- `/partners` empty/list/media-null states;
+- BE-14 lifecycle/visibility is authoritative;
+- no storage key or provider field reaches the UI;
+- existing non-data narrative sections remain visually stable.
+
+### Footer
+
+Required before merge:
+- build + standalone TypeScript;
+- render with published/default/unavailable BE-15 states;
+- external links remain valid anchors with safe behavior;
+- no layout jump or horizontal overflow on mobile;
+- no regression in pages that share `SiteFooter`.
+
+### Homepage
+
+Required before merge:
+- build + standalone TypeScript;
+- home motion experience remains intact;
+- BE-12/13/14/15 empty states do not revive fake production content;
+- media renders only when delivery-safe;
+- section order and CTA behavior remain coherent;
+- zero hydration/runtime warnings at key breakpoints.
+
+### Events listing
+
+Required before merge:
+- build + standalone TypeScript;
+- `/runs` does not duplicate BE-07 events with legacy sessions;
+- `/runs/[slug]` and registration links remain compatible;
+- BE-07 timing/visibility remains authoritative;
+- legacy fallback retirement is deferred until real data coverage is proven.
+
 ## Branch safety / cleanup
 
 Do not delete remote review/validation branches based only on naming.
@@ -156,6 +231,8 @@ Before deletion verify:
 4. current main contains the intended code if the branch was already integrated.
 
 No force push, reset, history rewrite, or blind branch deletion.
+
+Duplicate review branches observed remotely should remain untouched until this evidence is checked. Identical head SHA alone is useful evidence but not sufficient when an open PR/reference may still exist.
 
 ## Final retirement gate
 
