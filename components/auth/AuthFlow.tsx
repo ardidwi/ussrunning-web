@@ -32,6 +32,7 @@ import {
   emailError,
 } from "@/lib/auth/validation";
 import { safeReturnPath } from "@/lib/auth/return-path";
+import { authMessages } from "@/lib/auth/auth-errors";
 import { AuthStatus } from "./AuthStatus";
 import ResendVerification from "./ResendVerification";
 import { useAuthRequest } from "./useAuthRequest";
@@ -69,6 +70,18 @@ function FlowContent({
     ? "/login?returnTo=" + encodeURIComponent(safeReturnPath(returnTo))
     : "/login";
   const request = useAuthRequest(adapter);
+  const [proof, setProof] = useState(token);
+  const [proofReady, setProofReady] = useState(Boolean(token) || (flow !== "verify" && flow !== "reset"));
+  useEffect(() => {
+    if (flow !== "verify" && flow !== "reset") return;
+    const fragment = new URLSearchParams(window.location.hash.slice(1));
+    const query = new URLSearchParams(window.location.search);
+    const incoming = fragment.get("token") ?? (flow === "reset" ? query.get("token") : null);
+    if (incoming && incoming.length <= 512) setProof(incoming);
+    query.delete("token");
+    window.history.replaceState(null, "", window.location.pathname + (query.size ? "?" + query.toString() : ""));
+    setProofReady(true);
+  }, [flow]);
   const [values, setValues] = useState<AuthInput>({
     email: initialEmail ?? "",
     fullName: "",
@@ -125,7 +138,7 @@ function FlowContent({
       ...values,
       email: values.email?.trim(),
       fullName: values.fullName?.trim(),
-      token,
+      token: proof,
       returnTo: safeReturnPath(returnTo),
     });
     if (response?.state === "error" && response.code === "ACCOUNT_CONFLICT") {
@@ -141,6 +154,7 @@ function FlowContent({
       // Remove consumed bearer material from the address bar; never persist it.
       if (response.state !== "verification_required")
         window.history.replaceState(null, "", "/login?flow=" + flow);
+      if (response.state !== "verification_required") setProof(undefined);
       setValues((current) => ({
         ...current,
         password: "",
@@ -198,12 +212,13 @@ function FlowContent({
           <h3 ref={heading} tabIndex={-1}>
             VERIFY YOUR EMAIL.
           </h3>
+          {result?.state === "verification_required" && result.verificationError && <p role="alert">{authMessages[result.verificationError]}</p>}
           <p>
             Your email needs to be verified before your USS account becomes
             active.
           </p>
           <p>
-            Check for verification instructions at{" "}
+            {result?.state === "verification_required" && result.requiresSignIn ? "Sign in to request USS verification for " : "Verification is required for "}
             {maskEmail(
               result?.state === "verification_required"
                 ? (result.email ?? values.email)
@@ -249,7 +264,8 @@ function FlowContent({
         )}
       </div>
     );
-  if (flow === "reset" && !token)
+  if ((flow === "reset" || flow === "verify") && !proofReady) return <div className="uss-auth-flow" role="status">Reading secure link…</div>;
+  if (flow === "reset" && !proof)
     return (
       <div className="uss-auth-flow">
         <AuthStatus
@@ -347,7 +363,7 @@ function FlowContent({
         )}
         {flow === "verify" && verificationMode === "link" && (
           <p>
-            {token
+            {proof
               ? "Confirm your email using this verification link. Its validity will be checked securely."
               : "Open the verification link from your email to continue. You can request another email below."}
           </p>
@@ -493,7 +509,7 @@ function FlowContent({
           loadingLabel={labels[flow][1]}
           disabled={
             result?.state === "signed_in" ||
-            (flow === "verify" && verificationMode === "link" && !token)
+            (flow === "verify" && verificationMode === "link" && !proof)
           }
         >
           {labels[flow][0]}

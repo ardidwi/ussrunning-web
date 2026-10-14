@@ -1,14 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Field, Input, Button, useToast } from "@/components/ui";
+import { Button, useToast } from "@/components/ui";
 import type { AuthAdapter, AuthPolicy } from "@/lib/auth/contract";
 import { authMessages } from "@/lib/auth/auth-errors";
-import { validateAuth } from "@/lib/auth/validation";
 import { useAuthRequest } from "./useAuthRequest";
 export default function ResendVerification({
-  email,
   adapter,
-  policy,
   initialRetryAfterSeconds,
 }: {
   email?: string;
@@ -16,8 +13,6 @@ export default function ResendVerification({
   policy: AuthPolicy;
   initialRetryAfterSeconds?: number;
 }) {
-  const [destination, setDestination] = useState(email ?? "");
-  const [error, setError] = useState<string>();
   const [deadline, setDeadline] = useState<number | null>(() =>
     initialRetryAfterSeconds
       ? Date.now() + initialRetryAfterSeconds * 1000
@@ -40,26 +35,14 @@ export default function ResendVerification({
   return (
     <div className="uss-auth-resend">
       <h3>Didn't receive the email?</h3>
-      <p>Check your spam folder, or request another verification email.</p>
+      <p>Requests go only to your signed-in account email. Sign in again if your session has expired.</p>
       <form
         method="post"
         noValidate
         onSubmit={async (event) => {
           event.preventDefault();
           if (pending || remaining > 0) return;
-          const errors = validateAuth("resend", { email: destination }, policy);
-          setError(errors.email);
-          if (errors.email) {
-            (
-              event.currentTarget.elements.namedItem(
-                "resendEmail",
-              ) as HTMLElement
-            )?.focus();
-            return;
-          }
-          const response = await request.submit("resend", {
-            email: destination.trim(),
-          });
+          const response = await request.submit("resend", {});
           if (
             response &&
             "retryAfterSeconds" in response &&
@@ -75,28 +58,6 @@ export default function ResendVerification({
             );
         }}
       >
-        {!email && (
-          <Field
-            label="Email address"
-            required
-            hint="Use the email you registered with."
-            error={error}
-          >
-            <Input
-              name="resendEmail"
-              type="email"
-              autoComplete="email"
-              value={destination}
-              onChange={(event) => {
-                setDestination(event.target.value);
-                setError(undefined);
-              }}
-              placeholder="you@example.com"
-              disabled={pending}
-              required
-            />
-          </Field>
-        )}
         <Button
           type="submit"
           variant="secondary"
@@ -112,6 +73,7 @@ export default function ResendVerification({
           role={result?.state === "error" ? "alert" : "status"}
         >
           {result?.state === "error" && <p>{authMessages[result.code]}</p>}
+          {result?.state === "already_verified" && <p>Your signed-in account email is already verified. Refresh your account to continue.</p>}
           {result?.state === "resend_sent" && (
             <p>Verification email requested. Check your inbox.</p>
           )}

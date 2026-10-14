@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, useTransition, type ReactNode } from "react";
+import { useEffect, useRef, useState, useTransition, type ReactNode } from "react";
 import { Button, Modal, ToastProvider } from "@/components/ui";
 import { PermissionGate } from "@/features/permissions/Permissions";
 import { CMS_ACCESS } from "@/features/permissions/model";
@@ -16,7 +16,10 @@ const navigation = [
 function MemberSignOut({ action }: { action: () => Promise<void> }) {
   const leave = useMemberLeave();
   const [pending, startTransition] = useTransition();
+  const [error, setError] = useState("");
+  const lock = useRef(false);
   return (
+    <>
     <Button
       variant="text"
       loading={pending}
@@ -24,13 +27,18 @@ function MemberSignOut({ action }: { action: () => Promise<void> }) {
       onClick={() =>
         leave(() =>
           startTransition(async () => {
-            await action();
+            if (lock.current) return;
+            lock.current = true; setError("");
+            try { await action(); } catch { setError("We couldn't sign you out. Please try again."); }
+            finally { lock.current = false; }
           }),
         )
       }
     >
       Sign out
     </Button>
+    {error && <p role="alert">{error}</p>}
+    </>
   );
 }
 export default function MemberDashboardShell({

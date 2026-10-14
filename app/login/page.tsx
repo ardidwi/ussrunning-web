@@ -54,7 +54,6 @@ export default async function LoginPage({
           key={flow}
           flow={flow}
           policy={getClientAuthPolicy()}
-          token={typeof params.token === "string" ? params.token : undefined}
           returnTo={safeReturnPath(params.returnTo)}
           sessionExpired={params.reason === "session-expired"}
         />

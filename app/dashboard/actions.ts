@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { getAuth } from "@/lib/auth/server";
+import { signOutAccount } from "@/lib/auth/flow-actions";
 import { getSql, query } from "@/lib/db";
 import { requireUser } from "@/lib/session";
 
@@ -197,9 +197,7 @@ export async function cancelRegistration(formData: FormData) {
 }
 
 export async function signOut() {
-  try {
-    await getAuth().signOut();
-  } finally {
-    redirect("/");
-  }
+  const result = await signOutAccount();
+  if (!result.ok) throw new Error("Sign out is unavailable. Try again.");
+  redirect("/");
 }
