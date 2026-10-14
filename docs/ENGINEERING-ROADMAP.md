@@ -153,7 +153,7 @@ Numbering is a planning baseline, may continue beyond BE-22, and can be combined
 | BE-14 | Partner / Sponsor Service | DONE | BE-06 + BE-11 | 71b94e6 | Guarded canonical Partner + event sponsorship, atomic history, MediaAsset references; staging limitations documented. |
 | BE-15 | Dynamic Site Content Service | DONE | BE-06 + BE-11 | `06b1a91` | Ten typed slots; atomic drafts/revisions/public snapshots, validated references and safe fallbacks. See DYNAMIC-SITE-CONTENT.md and BE-15-VALIDATION.md. |
 | BE-16 | Notification Service | DONE | BE-03 + relevant domain events | 24b7db1 | Durable operational intents, typed templates, idempotent claims and bounded explicit retry; staging delivery/worker pending. |
-| BE-17 | Admin User Management | PLANNED | BE-02 + BE-04 + BE-06 | TBD | Audited lifecycle actions with least privilege. |
+| BE-17 | Admin User Management | DONE | BE-02 + BE-04 + BE-06 | 2801930 | Super-admin-only managed reads/lifecycle, protected owner paths, optimistic concurrency and atomic audit; staging/session limits documented. |
 | BE-18 | Role & Permission Administration | PLANNED | BE-06 + BE-17 | TBD | Elevated-role ownership/bootstrap/revocation, narrow grants. |
 | BE-19 | Search / Filter / Pagination Hardening | PLANNED | Implemented collection domains | TBD | Bounded APIs and measured query plans/indexes. |
 | BE-20 | Security / Rate Limiting Hardening | PLANNED | SEC + mutation services | TBD | Threat/authorization/abuse review. |
@@ -648,3 +648,31 @@ cleanup, check-in-window configuration, persisted per-event QR branding, richer
 relationships and full revision workspace require separate contracts/tasks. No auth
 provider/configuration, permanent barcode, BE-07/08/09/10 semantics or persistent DB
 changes were made. See FE-12-EVENTS-CMS.md and fe-12-evidence.
+
+
+### BE-17 Admin User Management delivery — 2026-10-14
+
+Implementation `2801930f67dbcc82496e1420b4f6fe15f2e9b5d7` on feature/admin-user-management
+was integrated forward after FE-12 implementation04ca13d and delivery077aff1. Existing
+users.manage remains super_admin-only; no permission/role hierarchy change. Safe bounded
+list/detail/search and audited optimistic lifecycle actions reuse accounts/profile/RBAC.
+All super_admin targets and own destructive actions are protected; pending verification
+cannot be bypassed. Migration018 adds account version/status time and two access indexes.
+No persistent migration, provider/session reset, identity rotation or frontend change.
+
+Validation: BE-17 55/55, integrated regression730/730 including FE-12, clean install
+(262 audited/zero vulnerabilities), dependency graph, production build, standalone
+TypeScript and diff check PASS. Local fresh/001–017 upgrade/legacy retention/rerun/
+failed-migration rollback+recovery/runtime grants and offline18-migration plan PASS.
+Local/deployed core browser each20/20 at320/1366px, zero page errors/targeted hydration
+warnings/horizontal overflow and reference404 guard. Implementation Vercel deployment
+`dpl_E3erqyZgsPGG9c72jp4JttgsN6mq` READY for exact implementation SHA; review alias
+https://ussrunning-web-seven.vercel.app. Final documentation deployment is checked after push.
+
+Provider cookies are not revoked: existing trusted DB lifecycle guards block protected
+USS operations. Real authenticated super_admin/stale-session QA, isolated Neon migration/
+independent concurrency, large-data query plans and human audit remain pending.
+BE-18 role ownership/bootstrap/revocation is separate; all elevated target lifecycle
+changes require a future explicit security workflow. No resend/verification override,
+bulk actions or arbitrary profile edits. Known next lint and broader hydration audit
+remain open. See ADMIN-USER-MANAGEMENT.md and BE-17-VALIDATION.md.
