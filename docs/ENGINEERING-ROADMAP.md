@@ -152,7 +152,7 @@ Numbering is a planning baseline, may continue beyond BE-22, and can be combined
 | BE-13 | Gallery Service | DONE | BE-11 + BE-06 | feature/gallery-service / 975be4a | Guarded bounded collections, publication, atomic item ordering/history; see BE-13-VALIDATION.md. |
 | BE-14 | Partner / Sponsor Service | DONE | BE-06 + BE-11 | 71b94e6 | Guarded canonical Partner + event sponsorship, atomic history, MediaAsset references; staging limitations documented. |
 | BE-15 | Dynamic Site Content Service | DONE | BE-06 + BE-11 | `06b1a91` | Ten typed slots; atomic drafts/revisions/public snapshots, validated references and safe fallbacks. See DYNAMIC-SITE-CONTENT.md and BE-15-VALIDATION.md. |
-| BE-16 | Notification Service | PLANNED | BE-03 + relevant domain events | TBD | Preferences, retries, deduplication and consent. |
+| BE-16 | Notification Service | DONE | BE-03 + relevant domain events | 24b7db1 | Durable operational intents, typed templates, idempotent claims and bounded explicit retry; staging delivery/worker pending. |
 | BE-17 | Admin User Management | PLANNED | BE-02 + BE-04 + BE-06 | TBD | Audited lifecycle actions with least privilege. |
 | BE-18 | Role & Permission Administration | PLANNED | BE-06 + BE-17 | TBD | Elevated-role ownership/bootstrap/revocation, narrow grants. |
 | BE-19 | Search / Filter / Pagination Hardening | PLANNED | Implemented collection domains | TBD | Bounded APIs and measured query plans/indexes. |
@@ -583,3 +583,29 @@ product QA remain pending. Large-library search/bulk upload, public Gallery migr
 and revision restore remain future scope. Known unsupported `next lint` remains.
 See FE-11-GALLERY-CMS.md and fe-11-evidence. No auth, BE-11/BE-13 semantics or
 scanner behavior changed; no persistent migration was run.
+
+
+### BE-16 Notification Service delivery — 2026-10-14
+
+Implementation `24b7db11b21c1ca26aa9683907889ba57b869c6f` on feature/notification-service
+was integrated forward after FE-11 delivery `88c3acf`. Registration confirmed/waitlisted/
+cancelled and pass-available intents are atomic with authoritative mutations. Existing
+BE-03 EmailProvider/Resend is reused; Neon Better Auth mail remains separate. Migration
+017 is additive and was not applied to any persistent environment. Existing domain
+semantics, frontend work and dependencies are preserved.
+
+Validation: BE-16 52/52, full integrated regression 644/644; clean install (262 audited,
+zero vulnerabilities), dependency graph, production build, standalone TypeScript and
+diff check pass. Local migration fresh/001–016 upgrade/legacy retention/rerun/rollback/
+runtime grants and offline dry-run pass. Local and deployed core browser each20/20
+at320/1366px, zero page errors/targeted hydration warnings and reference404 guard.
+Implementation deployment `dpl_AFkEHcEvo2tWzffhC6z8138w5ALQ` READY at exact implementation
+SHA, review alias https://ussrunning-web-seven.vercel.app. Final docs deployment is
+verified separately after push.
+
+No real email or production migration/config/credential change. Real isolated Neon
+concurrency/authenticated roles and controlled verified-sender delivery remain pending.
+Durable intents require explicit managed dispatch/retry: no automatic worker, receipt/
+bounce webhook, marketing or notification UI. Provider acceptance is not inbox proof.
+Next lint remains unsupported; broader hydration and human product audit remain open.
+See NOTIFICATION-SERVICE.md and BE-16-VALIDATION.md. BE-17 is next; not implemented here.
