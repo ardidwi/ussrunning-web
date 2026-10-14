@@ -50,6 +50,21 @@ Recommended future presentation split:
 - `auth.register` -> join/register intro and form-heading presentation only;
 - no CMS slot may control auth policy, return URLs, account state, verification tokens, resend eligibility, password rules, provider authority or session behavior.
 
+## INT-02 remote pre-audit
+
+Current main already has the BE-04-backed own-profile read path wired through `loadMember()` -> `getOwnMemberProfile()` -> `projectProfile()`, and `/dashboard/profile` renders `MemberProfileForm` when the projection is ready. This confirms the roadmap note that the six-field adapter is connected, but it does not complete the full BE-04 presentation contract.
+
+Observed gaps that INT-02 should inspect rather than blindly rewrite:
+
+- The presentation contract currently exposes only six editable fields: full name, phone, city, Instagram, emergency contact name, emergency contact phone.
+- BE-04 policy vocabulary also contains birth date, gender, jersey size, running preferences, avatar media, marketing consent and privacy consent. INT-02 should decide which are in approved V1 UI scope and which remain intentionally deferred; do not silently drop backend fields or add new UX without scope evidence.
+- `profile-adapter.ts` projects frontend validation limits (`minimumPhoneDigits: 7`, `maximumPhoneDigits: 15`, plus per-field max lengths). INT-02 should verify these values come from an authoritative shared policy/contract and are not presentation-only drift.
+- The adapter maps backend optimistic `profile.version` to frontend `revision`; preserve this expectedVersion/conflict behavior exactly.
+- The adapter blocks suspended/deactivated and non-active/unverified accounts in presentation. Backend lifecycle remains authoritative; frontend state mapping must not mutate or infer activation.
+- `MemberProfileForm` already has loading/disabled/error/conflict/dirty-state behavior. INT-02 should extend/repair contract coverage without regressing layout stability, unsaved-change protection, mobile behavior or field-level validation.
+
+Remote branch-name search did not expose a dedicated `int-02` or profile-cutover branch at this checkpoint. That does not prove Codex has not started unpublished/local work; always inspect the agent worktree and current remote refs before creating any overlapping branch.
+
 ## Legacy adapter dependency map
 
 `lib/content.ts` currently contains the legacy adapters that remain relevant to public surfaces:
