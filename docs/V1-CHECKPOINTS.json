@@ -1,0 +1,15 @@
+{
+  "INT-01": {
+    "status": "DONE_SOURCE_INTEGRATION",
+    "taskCommit": "b3e74d3c3f0367c9af380da820dd43ab5d81b1e7",
+    "finalMainSha": "e0b4d292ee7e29863eadc52fb259ecd284310d78",
+    "originMainSha": "e0b4d292ee7e29863eadc52fb259ecd284310d78",
+    "deploymentId": "dpl_BEdxqYoXMr5XBzv2gywwgiCohduG",
+    "deploymentSha": "e0b4d292ee7e29863eadc52fb259ecd284310d78",
+    "deploymentStatus": "READY",
+    "tests": {"node": 758, "focused": 28, "browserCases": 38, "browserAssertions": 66, "liveCases": 18, "liveAssertions": 54},
+    "blockers": ["Live provider/session QA", "Approved sender/email configuration", "Staging migrations/runtime grants", "Legacy crosswalk where applicable", "Independent Neon concurrency"],
+    "nextTask": "INT-02",
+    "emailGate": "READY_FOR_EMAIL_CONFIGURATION"
+  }
+}

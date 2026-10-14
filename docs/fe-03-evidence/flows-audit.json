@@ -61,7 +61,7 @@
       "passed": true
     },
     {
-      "name": "actual route session expiry and safe intended profile target",
+      "name": "actual route fails closed with session or service feedback",
       "passed": true
     },
     {

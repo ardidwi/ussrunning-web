@@ -87,7 +87,7 @@ export default function MemberReference({
     unavailable: { state: "error", code: "PROFILE_UNAVAILABLE" },
     failure: { state: "error", code: "NETWORK_ERROR" },
   };
-  const adapter: ProfileAdapter = async (values) => {
+  const adapter: ProfileAdapter = async (values, _revision, details) => {
     if (process.env.NODE_ENV !== "development")
       return { state: "error", code: "PROFILE_UNAVAILABLE" };
     setRequests((count) => count + 1);
@@ -112,6 +112,7 @@ export default function MemberReference({
       profile: {
         ...profile,
         values,
+        details: details ? { ...details, privacyAccepted: details.privacyAccepted || details.privacyConsent === true, privacyConsent: undefined } : undefined,
         revision: "preview-2",
         completion: {
           percentage: 70,
@@ -141,7 +142,7 @@ export default function MemberReference({
           retry={() => window.location.reload()}
         />
       ) : view === "profile" ? (
-        <MemberProfileForm profile={profile} adapter={adapter} />
+        <MemberProfileForm profile={profile} adapter={adapter} reloadAdapter={async () => ({state:"ready",profile:{...profile,revision:"preview-latest",values:{...profile.values,city:"Latest fixture city"}}})} />
       ) : (
         <MemberOverview result={{ state: "ready", profile }} />
       )}
