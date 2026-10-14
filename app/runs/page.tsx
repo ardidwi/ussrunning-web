@@ -15,13 +15,11 @@ export default async function RunsPage({
   searchParams: Promise<{ cursor?: string }>;
 }) {
   const { cursor } = await searchParams;
-  const [runs, events] = await Promise.all([
-    getRuns(),
-    getPublicEventList({
-      limit: 20,
-      ...(cursor ? { cursor } : {}),
-    }),
-  ]);
+  const events = await getPublicEventList({
+    limit: 20,
+    ...(cursor ? { cursor } : {}),
+  });
+  const legacyRuns = events.ok ? [] : await getRuns();
 
   return (
     <main className="page-black">
@@ -51,7 +49,7 @@ export default async function RunsPage({
 
       <section className="section event-list-section">
         <div className="content-frame">
-          {events.ok && events.data.items.length > 0 && (
+          {events.ok && events.data.items.length > 0 ? (
             <section aria-label="USS events">
               <h2>USS EVENTS</h2>
               <ul className="uss-registration-list">
@@ -70,39 +68,46 @@ export default async function RunsPage({
                 ))}
               </ul>
             </section>
-          )}
-          {!events.ok && (
-            <p role="status">
-              USS event listings are temporarily unavailable. Existing sessions
-              remain below.
-            </p>
-          )}
-          {events.ok && events.data.nextCursor && (
+          ) : null}
+
+          {events.ok && events.data.items.length === 0 ? (
+            <p role="status">No public USS events are available right now.</p>
+          ) : null}
+
+          {!events.ok ? (
+            <>
+              <p role="status">
+                USS event listings are temporarily unavailable. Existing sessions
+                remain below.
+              </p>
+              <div className="filter-row" aria-label="Existing session categories">
+                <button className="filter-active">ALL</button>
+                <button>COMMUNITY RUN</button>
+                <button>TRAINING</button>
+                <button>RACE WEEK</button>
+                <button>COLLAB</button>
+              </div>
+              <div className="event-grid event-grid-three">
+                {legacyRuns.map((run) => (
+                  <EventCard run={run} key={run.slug} editorialListing />
+                ))}
+              </div>
+            </>
+          ) : null}
+
+          {events.ok && events.data.nextCursor ? (
             <LinkButton
               href={`/runs?cursor=${encodeURIComponent(events.data.nextCursor)}`}
               variant="secondary"
             >
               More USS events ↗
             </LinkButton>
-          )}
-          {cursor && (
+          ) : null}
+          {cursor ? (
             <LinkButton href="/runs" variant="text">
               First event page ↗
             </LinkButton>
-          )}
-          <div className="filter-row">
-            <button className="filter-active">ALL</button>
-            <button>COMMUNITY RUN</button>
-            <button>TRAINING</button>
-            <button>RACE WEEK</button>
-            <button>COLLAB</button>
-          </div>
-
-          <div className="event-grid event-grid-three">
-            {runs.map((run) => (
-              <EventCard run={run} key={run.slug} editorialListing />
-            ))}
-          </div>
+          ) : null}
         </div>
       </section>
 
