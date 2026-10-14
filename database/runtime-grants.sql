@@ -23,3 +23,6 @@ GRANT EXECUTE ON FUNCTION uss.site_content_references_valid(jsonb,boolean),uss.m
 
 -- BE-16 invoker claim; no provider/auth credential or history privileges.
 GRANT EXECUTE ON FUNCTION uss.claim_application_notification(uuid,uuid,text,text,integer) TO :"app_role";
+
+-- BE-17 invoker account lifecycle; no role grants or provider/session privileges.
+GRANT EXECUTE ON FUNCTION uss.manage_account(uuid,uuid,text,integer,text) TO :"app_role";
