@@ -2,11 +2,13 @@
 
 Status: remote integration handoff. No production merge authority is implied by this document.
 
-Latest observed `main`: `b3e74d3c3f0367c9af380da820dd43ab5d81b1e7` (`feat(auth): connect trusted frontend account and verification flows`). This means INT-01 advanced `main` after the first public cutover branches were created. Every public branch must therefore re-audit current `origin/main` immediately before validation/integration.
+Latest observed `main`: `e0b4d292ee7e29863eadc52fb259ecd284310d78` (`docs: record INT-01 delivery and email configuration gate`), with INT-01 source integration at `b3e74d3c3f0367c9af380da820dd43ab5d81b1e7`. INT-01 is DONE for source integration and the repository marks controlled Preview/Development email configuration as ready, while real provider/email/crosswalk/Neon QA remains blocked externally. INT-02 is still recorded as PLANNED; do not infer it is complete from the existing six-field BE-04 adapter.
 
-## Integration order
+Every public branch must re-audit current `origin/main` immediately before validation/integration.
 
-Integrate one candidate at a time so regressions remain attributable:
+## Safest integration order after INT-02
+
+Do not combine public candidates into one mega-merge. After INT-02 reaches a documented DONE checkpoint on current main, integrate one candidate at a time:
 
 1. PR #8 / `feature/public-stories-cutover`
 2. PR #9 / `feature/public-partners-cutover`
@@ -15,7 +17,38 @@ Integrate one candidate at a time so regressions remain attributable:
 5. PR #12 / `feature/public-events-primary-listing`
 6. PR #13 / `feature/public-content-retirement-audit`
 
-Do not combine these into one mega-merge.
+Why this order:
+- Stories and Partners are isolated route-level migrations with the smallest blast radius.
+- Footer is shared globally, so it should follow after two lower-risk public cutovers have proven the merge/deploy path.
+- Homepage aggregates BE-12/13/14/15 and should only land after Stories/Partners/Footer are stable.
+- Events keeps an intentional compatibility fallback and therefore belongs after the lower-risk content migrations.
+- Retirement/audit docs come last so dead-adapter decisions are based on the actually integrated tree, not candidate assumptions.
+
+Email/provider configuration QA does not need to wait for FE-13/FE-14/BE-18, and current INT-01 docs explicitly mark INT-02 completion as non-blocking for controlled auth/email configuration. However public cutover integration should still wait for INT-02 if the goal is to minimize concurrent-main churn during profile contract completion.
+
+## INT-01 fallout / BE-15 auth content overlap
+
+Current auth source behavior and BE-15 content contracts are not fully aligned yet:
+
+- `app/login/page.tsx` still owns hardcoded presentation copy for login/forgot/reset/verify.
+- `components/auth/AuthShell.tsx` still reads legacy `getLoginHero()` and `getRuns()` from `lib/content` for the login visual and next-run presentation.
+- `app/join/page.tsx` still owns hardcoded register presentation copy.
+- BE-15 already defines `login.visual`, `auth.login`, and `auth.register` typed public slots with approved defaults.
+
+This is not an INT-01 correctness failure: INT-01 correctly owns authentication orchestration/security, while BE-15 owns editorial presentation. Do not reopen INT-01 merely to move copy. FE-14 / a later explicit public auth-content cutover should migrate these presentation surfaces without changing auth lifecycle, provider session, verification proof, resend, recovery, or account-state semantics.
+
+Lifecycle copy guard:
+- the current verify description says verification happens before the account becomes active;
+- frontend wording must never become lifecycle authority;
+- BE-02/BE-04 remain authoritative for post-verification account status;
+- any future CMS copy should avoid promising automatic activation when another backend gate may apply.
+
+Recommended future presentation split:
+- `login.visual` -> AuthShell left-side visual/copy/media only;
+- `auth.login` -> normal login heading/description only;
+- forgot/reset/verify flow copy remains code-owned until explicit typed slots exist; do not overload `auth.login` for all auth states;
+- `auth.register` -> join/register intro and form-heading presentation only;
+- no CMS slot may control auth policy, return URLs, account state, verification tokens, resend eligibility, password rules, provider authority or session behavior.
 
 ## Legacy adapter dependency map
 
@@ -26,6 +59,7 @@ Do not combine these into one mega-merge.
 - `getSiteSettings()` -> old footer social/contact read; target BE-15 `footer.global`.
 - `getMediaCollection()` -> old gallery/public_url read; target BE-13 + BE-11 safe MediaAsset DTOs.
 - `getHomeHero()` / `getCmsSection()` -> old CMS tables; target BE-15 homepage/auth slots.
+- `getLoginHero()` -> old auth visual CMS path; target BE-15 `login.visual` after auth orchestration is stable.
 - `getRuns()` / `getRunBySlug()` -> old public Events/session compatibility; target BE-07 while preserving proven fallback until retirement is safe.
 
 Retirement is allowed only after all consumers are proven migrated on latest `main`, build/TypeScript/browser checks pass, and no demo/fake production data returns on backend empty/unavailable states.
@@ -34,11 +68,11 @@ Retirement is allowed only after all consumers are proven migrated on latest `ma
 
 Observed duplicate/review branches:
 
-- `feature/public-stories-cutover-review` points to the same head SHA as the canonical Stories cutover at the time inspected: `9ec70370ad812f7bab4ecfa5a137fc6a2e150dee`.
-- `feature/public-partners-cutover-review` points to the original canonical Partners implementation SHA `3c78c77057b225ba968ac58b176ea52c2a12ab33`. The canonical Partners branch has since advanced with follow-up cleanup, so the review branch must not become the merge source.
-- `feature/footer-site-content-cutover-review` points to the same inspected footer implementation SHA `37b72e39542571e9ec511de192674c382fccdc2a`.
-- `feature/public-home-site-content-review` points to `3a2a13fe156bbbf0e6ba66b47c171bf5b8b8a10c`, which is an ancestor of canonical homepage head `4b53f61f89e011962ff6e99b07f83a3fa9358b64`; it is stale, not canonical.
-- `feature/public-cutover-validation` and `feature/public-cutover-validation-bundle` both pointed to old `main` `c1e78d6f6a2776765bcc75439b49483a2c6acc96` and contained no public cutover implementation at inspection time.
+- `feature/public-stories-cutover-review` pointed to the same inspected head SHA as the canonical Stories cutover: `9ec70370ad812f7bab4ecfa5a137fc6a2e150dee`.
+- `feature/public-partners-cutover-review` points to the original Partners implementation SHA `3c78c77057b225ba968ac58b176ea52c2a12ab33`; canonical Partners has since advanced to include follow-up cleanup, so the review branch must not become the merge source.
+- `feature/footer-site-content-cutover-review` pointed to the same inspected footer implementation SHA `37b72e39542571e9ec511de192674c382fccdc2a`.
+- `feature/public-home-site-content-review` points to `3a2a13fe156bbbf0e6ba66b47c171bf5b8b8a10c`, an ancestor of canonical homepage head `4b53f61f89e011962ff6e99b07f83a3fa9358b64`; it is stale, not canonical.
+- `feature/public-cutover-validation` and `feature/public-cutover-validation-bundle` both pointed to old main `c1e78d6f6a2776765bcc75439b49483a2c6acc96` and contained no public cutover implementation at inspection time.
 
 Cleanup rule: do not delete by name alone. Before deletion verify no unique commits, no open PR/reference, and canonical implementation history remains preserved. Review/validation branches above are cleanup candidates only after that final check.
 
@@ -120,7 +154,9 @@ Validation focus:
 
 ## Current main overlap note
 
-The observed INT-01 main commit modifies auth/join/dashboard verification flows and does not directly modify the isolated Stories, Partners, Footer, Homepage or `/runs` files in these public cutover PRs. That reduces immediate textual-conflict risk, but every branch is now behind `main`; validation must use latest `origin/main` and integration must be forward-only.
+INT-01 modified auth/join/dashboard verification flows and does not directly modify the isolated Stories, Partners, Footer, Homepage or `/runs` files in these public cutover PRs. Current documentation checkpoint `e0b4d292` advances main again without changing those public candidate files. Textual conflict risk remains low, but semantic revalidation is still required because shared contracts, layout, auth shell state and deployment baseline moved forward.
+
+INT-02 status at this observation point: PLANNED in the roadmap; no dedicated `int-02` or profile cutover branch was discoverable remotely by branch-name search. This is only a remote observation, not proof that an agent has not started unpublished/local work.
 
 ## Merge acceptance checklist
 
