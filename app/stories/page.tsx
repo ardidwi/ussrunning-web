@@ -1,12 +1,14 @@
+import Link from "next/link";
 import { PageHero } from "@/components/layout/PageHero";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import { getStories } from "@/lib/content";
+import { listPublicStories } from "@/lib/stories/story-actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function StoriesPage() {
-  const stories = await getStories();
+  const result = await listPublicStories({ limit: 20 });
+  const stories = result.ok ? result.data.items : [];
 
   return (
     <main className="page-black">
@@ -30,15 +32,30 @@ export default async function StoriesPage() {
       ></PageHero>
 
       <section className="stories-grid stories-grid-expanded section">
-        {stories.map((story) => (
-          <article className="story-card" key={story.slug}>
-            {story.image ? <img src={story.image} alt="" /> : null}
-            <span className="kicker">{story.eyebrow}</span>
-            <h2>{story.title}</h2>
-            <p>{story.excerpt}</p>
-            <span className="cms-sample-label">USS Journal</span>
-          </article>
-        ))}
+        {stories.map((story) => {
+          const cover =
+            story.cover?.deliveryAvailable && story.cover.url
+              ? story.cover.url
+              : null;
+
+          return (
+            <article className="story-card" key={story.slug}>
+              {cover ? <img src={cover} alt={story.cover?.altText || ""} /> : null}
+              <span className="kicker">{story.contentType || "USS JOURNAL"}</span>
+              <h2>{story.title}</h2>
+              {story.excerpt ? <p>{story.excerpt}</p> : null}
+              <Link href={`/stories/${story.slug}`} className="arrow-link">
+                READ STORY ↗
+              </Link>
+            </article>
+          );
+        })}
+
+        {!stories.length ? (
+          <div className="cms-empty-state">
+            <p>Stories are being prepared. Check back soon.</p>
+          </div>
+        ) : null}
       </section>
 
       <SiteFooter />
