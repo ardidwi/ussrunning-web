@@ -3,13 +3,15 @@ import { PageHero } from "@/components/layout/PageHero";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { listPublicStories } from "@/lib/stories/story-actions";
+import { STARTER_STORIES } from "@/lib/stories/story-starter";
 
 export const dynamic = "force-dynamic";
 
 export default async function StoriesPage() {
   const result = await listPublicStories({ limit: 20 });
-  const stories = result.ok ? result.data.items : [];
   const unavailable = !result.ok;
+  const cmsStories = result.ok ? result.data.items : [];
+  const useStarterStories = result.ok && cmsStories.length === 0;
 
   return (
     <main className="page-black">
@@ -33,7 +35,7 @@ export default async function StoriesPage() {
       ></PageHero>
 
       <section className="stories-grid stories-grid-expanded section">
-        {stories.map((story) => {
+        {cmsStories.map((story) => {
           const cover =
             story.cover?.deliveryAvailable && story.cover.url
               ? story.cover.url
@@ -52,13 +54,22 @@ export default async function StoriesPage() {
           );
         })}
 
+        {useStarterStories
+          ? STARTER_STORIES.map((story) => (
+              <article className="story-card" key={story.slug}>
+                <span className="kicker">{story.contentType}</span>
+                <h2>{story.title}</h2>
+                <p>{story.excerpt}</p>
+                <Link href={`/stories/${story.slug}`} className="arrow-link">
+                  READ STORY ↗
+                </Link>
+              </article>
+            ))
+          : null}
+
         {unavailable ? (
           <div className="cms-empty-state" role="status">
             <p>Stories are temporarily unavailable. Please try again soon.</p>
-          </div>
-        ) : !stories.length ? (
-          <div className="cms-empty-state">
-            <p>Stories are being prepared. Check back soon.</p>
           </div>
         ) : null}
       </section>
