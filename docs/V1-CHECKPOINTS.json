@@ -57,6 +57,52 @@
     "emailGate": "READY_FOR_EMAIL_CONFIGURATION",
     "originMainSha": "ec8db2f6975efc82609e4e338d41868720c996e3",
     "status": "DONE_SOURCE_INTEGRATION",
-    "taskCommit": "ec8db2f6975efc82609e4e338d41868720c996e3"
+    "taskCommit": "ec8db2f6975efc82609e4e338d41868720c996e3",
+    "documentationClosure": {
+      "deploymentId": "dpl_8qWwakkf8tdPN3ZiXhoVohfYH6Et",
+      "commit": "d60360293bef578a2fff67f6508aa1b27c798a51",
+      "deploymentSha": "d60360293bef578a2fff67f6508aa1b27c798a51",
+      "status": "READY",
+      "originMainSha": "d60360293bef578a2fff67f6508aa1b27c798a51",
+      "mainSha": "d60360293bef578a2fff67f6508aa1b27c798a51"
+    }
+  },
+  "FE-13": {
+    "blockers": [
+      "Live authenticated admin mutation QA",
+      "Persistent media delivery",
+      "Staging migrations/runtime grants",
+      "Independent Neon concurrency"
+    ],
+    "status": "VALIDATED_PENDING_CI_AND_DEPLOYMENT",
+    "branch": "feature/partners-cms",
+    "next": "Exact-candidate CI, main integration and deployment; stop after FE-13",
+    "startingMain": "d60360293bef578a2fff67f6508aa1b27c798a51",
+    "reconciledMain": "4d7ad0f596465c4f557a8eac9960b6258be4996a",
+    "tests": {
+      "newUiAuditFindings": 0,
+      "galleryAssertions": 151,
+      "storiesAssertions": 137,
+      "productionSmokeAssertions": 75,
+      "reconciledTargetedNode": 109,
+      "preservedIntegratedNode": 794,
+      "typescript": "PASS",
+      "longTextCases": 1,
+      "inheritedUiAuditFindings": 1,
+      "productionSmokeCases": 21,
+      "focused": 24,
+      "galleryCases": 46,
+      "eventsCases": 57,
+      "eventsAssertions": 121,
+      "storiesCases": 40,
+      "hydration": 0,
+      "browserCases": 42,
+      "affectedBrowserCases": 11,
+      "build": "PASS",
+      "affectedBrowserAssertions": 25,
+      "longTextAssertions": 5,
+      "runtime": 0,
+      "browserAssertions": 90
+    }
   }
 }

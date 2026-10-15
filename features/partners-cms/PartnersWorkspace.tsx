@@ -1,0 +1,8 @@
+import { LinkButton } from "@/components/ui";
+import { text,type Query } from "@/features/history/query";
+import { getManagedPartner,listManagedPartners } from "@/lib/partners/partner-actions";
+import { PartnerEditor } from "./PartnerEditor";
+import { PartnerList } from "./PartnerList";
+import { PARTNER_STATUSES,PARTNER_TYPES,partnerHref,partnerMessage } from "./model";
+function Failure({code}:{code:string}){return <div className="uss-member-panel" role="alert"><h1>PARTNERS UNAVAILABLE.</h1><p>{partnerMessage(code)}</p><LinkButton href={partnerHref()} variant="secondary">Back to partners</LinkButton></div>;}
+export async function PartnersWorkspace({query}:{query:Query}){const view=text(query,"view");if(view==="create")return <PartnerEditor initial={null}/>;if(view==="edit"||view==="preview"){const id=text(query,"id");if(!/^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(id))return <Failure code="PARTNER_NOT_FOUND"/>;const r=await getManagedPartner({id});return r.ok?<PartnerEditor key={id} initial={r.data} startPreview={view==="preview"}/>:<Failure code={r.code}/>;}const status=text(query,"status"),type=text(query,"type"),cursor=text(query,"cursor");if(view||cursor.length>1024||(status&&!(PARTNER_STATUSES as readonly string[]).includes(status))||(type&&!(PARTNER_TYPES as readonly string[]).includes(type)))return <Failure code="PARTNER_INVALID_INPUT"/>;const r=await listManagedPartners({limit:20,...(status?{status}:{}),...(type?{type}:{}),...(cursor?{cursor}:{})});return r.ok?<PartnerList items={r.data.items} nextCursor={r.data.nextCursor} status={status} type={type}/>:<Failure code={r.code}/>;}

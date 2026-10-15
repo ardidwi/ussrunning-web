@@ -1,0 +1,18 @@
+{
+  "cases": [
+    "event scope and versioned sponsorship update",
+    "saving one sponsorship preserves another unsaved tier",
+    "paginated sponsorship save retains later-page unsaved tier",
+    "keyboard exact-set reorder and duplicate mutation protection",
+    "partial set cannot reorder",
+    "event order conflict retains unsaved order",
+    "detach keeps canonical partner and media",
+    "attach is event scoped",
+    "backend permission revocation clears canonical editor",
+    "backend relationship permission revocation clears workspace",
+    "320px relationship workspace and touch targets"
+  ],
+  "assertions": 25,
+  "runtime": [],
+  "hydration": []
+}

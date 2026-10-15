@@ -1,0 +1,8 @@
+{
+  "cases": [
+    "long text at 320px remains editable and preview wraps"
+  ],
+  "assertions": 5,
+  "runtime": [],
+  "hydration": []
+}
