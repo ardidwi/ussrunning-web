@@ -101,3 +101,19 @@ upload are deferred. Existing Next 16 `next lint` limitation remains documented 
 separate approved CI hardening integration. No auth/provider, BE-11/14, barcode/pass or
 scanner semantics changed. Per the latest instruction, stop after FE-13 delivery; do not
 start another roadmap item or modify active parallel branches.
+
+## Design QA review
+
+Applied the newly registered repository design-review skill on reconciliation. Source
+review covers canonical/event domain separation, shared form/feedback owners, versioned
+mutations and scoped CSS. Rendered review uses the already captured hydrated 320px editor
+and 1366px list, plus the recorded phone/tablet/desktop, zoom, dialog and keyboard probes;
+instruction-only merges do not invalidate those application-rendering observations.
+
+No P0/P1 visual findings were observed in those reviewed FE-13 states. USS black/red surfaces,
+strong type hierarchy, rectangular actions and restrained borders match the existing CMS.
+The inherited FE-14 textarea resize finding is a source-audit P2 item outside FE-13; it is
+not claimed as a rendered FE-14 review. No P3 redesign churn is introduced. The functional
+pagination defect was fixed and re-rendered through the 101-row browser probe. Reduced
+motion and keyboard/focus checks are recorded above. These are automated/rendered fixture
+checks, not human product approval or real authenticated admin QA.

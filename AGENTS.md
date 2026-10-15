@@ -227,6 +227,16 @@ For new user-facing UI, major visual redesigns, landing pages, campaign pages, a
 
 Use that skill together with this repository's existing design-system, accessibility, responsiveness, product, security, architecture, and CMS-operability rules. Repository-specific requirements and explicit product briefs take precedence over generic frontend-design guidance. For admin/CMS surfaces, operational clarity remains more important than decorative complexity.
 
+### Design QA skill
+
+For visual QA, design audit, UI polish, or before declaring a meaningful frontend surface visually complete, read and apply [`.agents/skills/design-review/SKILL.md`](.agents/skills/design-review/SKILL.md). The review must distinguish source-code review from rendered/browser review, prioritize P0/P1 issues before polish, and use before/after rendered evidence when the environment supports it.
+
+### Motion skills
+
+For substantial motion design, animated hero treatments, branded motion systems, or motion-led campaign/UI work, read [`.agents/skills/motion-graphics/SKILL.md`](.agents/skills/motion-graphics/SKILL.md). For deterministic motion mechanics such as GSAP/CSS/WAAPI keyframes, FLIP, path motion, masks, SVG morph/draw, camera moves, or 3D transforms, also read [`.agents/skills/hyperframes-keyframes/SKILL.md`](.agents/skills/hyperframes-keyframes/SKILL.md).
+
+These HyperFrames skills are vendored references. Their upstream workflow mentions supporting HyperFrames files, commands, plugins, and runtimes that are not automatically part of USS Running. Reuse the design and motion principles against the existing USS web stack by default; do not install HyperFrames, GSAP, animation libraries, or other dependencies solely because a vendored skill mentions them. Any new dependency must still satisfy section 31 and the explicit task scope. Motion must preserve accessibility, performance, responsive behavior, final-state correctness, and `prefers-reduced-motion` behavior where applicable.
+
 ## 36. Admin/CMS usability
 
 Prioritize operational clarity. Admin users should easily understand current status, what is editable/published, what changed, who changed it, whether changes are saved, and whether they affect public users. Avoid decorative complexity that slows daily operation.
