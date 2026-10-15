@@ -1,8 +1,6 @@
 import { PageHero } from "@/components/layout/PageHero";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import EventCard from "@/components/EventCard";
-import { getRuns } from "@/lib/content";
 import { getPublicEventList } from "@/lib/events/event-actions";
 import { eventDate } from "@/features/event-registration/model";
 import { LinkButton } from "@/components/ui";
@@ -19,7 +17,6 @@ export default async function RunsPage({
     limit: 20,
     ...(cursor ? { cursor } : {}),
   });
-  const legacyRuns = events.ok ? [] : await getRuns();
 
   return (
     <main className="page-black">
@@ -71,28 +68,15 @@ export default async function RunsPage({
           ) : null}
 
           {events.ok && events.data.items.length === 0 ? (
-            <p role="status">No public USS events are available right now.</p>
+            <div className="cms-empty-state" role="status">
+              <p>No public USS events are available right now. New sessions will appear here once they are published.</p>
+            </div>
           ) : null}
 
           {!events.ok ? (
-            <>
-              <p role="status">
-                USS event listings are temporarily unavailable. Existing sessions
-                remain below.
-              </p>
-              <div className="filter-row" aria-label="Existing session categories">
-                <button className="filter-active">ALL</button>
-                <button>COMMUNITY RUN</button>
-                <button>TRAINING</button>
-                <button>RACE WEEK</button>
-                <button>COLLAB</button>
-              </div>
-              <div className="event-grid event-grid-three">
-                {legacyRuns.map((run) => (
-                  <EventCard run={run} key={run.slug} editorialListing />
-                ))}
-              </div>
-            </>
+            <div className="cms-empty-state" role="status">
+              <p>USS event listings are temporarily unavailable. Please try again soon.</p>
+            </div>
           ) : null}
 
           {events.ok && events.data.nextCursor ? (
