@@ -1,0 +1,62 @@
+{
+  "INT-01": {
+    "status": "DONE_SOURCE_INTEGRATION",
+    "taskCommit": "b3e74d3c3f0367c9af380da820dd43ab5d81b1e7",
+    "finalMainSha": "e0b4d292ee7e29863eadc52fb259ecd284310d78",
+    "originMainSha": "e0b4d292ee7e29863eadc52fb259ecd284310d78",
+    "deploymentId": "dpl_BEdxqYoXMr5XBzv2gywwgiCohduG",
+    "deploymentSha": "e0b4d292ee7e29863eadc52fb259ecd284310d78",
+    "deploymentStatus": "READY",
+    "tests": {
+      "node": 758,
+      "focused": 28,
+      "browserCases": 38,
+      "browserAssertions": 66,
+      "liveCases": 18,
+      "liveAssertions": 54
+    },
+    "blockers": [
+      "Live provider/session QA",
+      "Approved sender/email configuration",
+      "Staging migrations/runtime grants",
+      "Legacy crosswalk where applicable",
+      "Independent Neon concurrency"
+    ],
+    "nextTask": "INT-02",
+    "emailGate": "READY_FOR_EMAIL_CONFIGURATION"
+  },
+  "INT-02": {
+    "finalMainSha": "ec8db2f6975efc82609e4e338d41868720c996e3",
+    "tests": {
+      "typescript": "PASS",
+      "browserCases": 22,
+      "browserAssertions": 53,
+      "dashboardCases": 43,
+      "dashboardAssertions": 154,
+      "strictUiFindings": 0,
+      "build": "PASS",
+      "cleanInstall": "PASS",
+      "runtimeFindings": 0,
+      "node": 770,
+      "profileRegressionCases": 17,
+      "focused": 16,
+      "hydrationFindings": 0,
+      "dependencies": "PASS"
+    },
+    "verifiedDate": "2026-10-15",
+    "blockers": [
+      "Live authenticated profile-save QA",
+      "Approved staging/provider environment",
+      "Staging migrations/runtime grants",
+      "Independent Neon concurrency"
+    ],
+    "deploymentId": "dpl_Eoo8rUxjbpsxrdjmfPstN6JtDXjo",
+    "nextTask": "FE-13",
+    "deploymentSha": "ec8db2f6975efc82609e4e338d41868720c996e3",
+    "deploymentStatus": "READY",
+    "emailGate": "READY_FOR_EMAIL_CONFIGURATION",
+    "originMainSha": "ec8db2f6975efc82609e4e338d41868720c996e3",
+    "status": "DONE_SOURCE_INTEGRATION",
+    "taskCommit": "ec8db2f6975efc82609e4e338d41868720c996e3"
+  }
+}

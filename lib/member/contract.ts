@@ -1,7 +1,10 @@
 import { normalizeAuthCode, type AuthErrorCode } from "@/lib/auth/auth-errors";
-// Provisional presentation contract, not a production API or schema.
-// "ready" may only be issued after server-authorized active/verified own-profile access.
-// Limit editable fields to those already present in the legacy profile scaffold.
+import { readProfileDetails } from "./details";
+import type { RunningPreferences } from "./profile-types";
+// Presentation projection of BE-04; ready requires trusted active/verified owner access.
+export type ProfileDetails = { birthDate: string; gender: string; jerseySize: string; runningPreferences: RunningPreferences; marketingConsent: boolean; privacyAccepted: boolean; privacyConsent?: boolean };
+export type ProfileDetailField = "birthDate" | "gender" | "jerseySize" | "runningPreferences" | "marketingConsent" | "privacyConsent";
+export type ProfileIssueField = ProfileField | ProfileDetailField;
 export type ProfileValues = {
   fullName: string;
   phone: string;
@@ -16,6 +19,7 @@ export type ProfilePolicy = {
   maxLengths: Record<ProfileField, number>;
   minimumPhoneDigits: number;
   maximumPhoneDigits: number;
+  maximumBirthDate?: string;
 };
 export type MemberProfile = {
   values: ProfileValues;
@@ -23,6 +27,7 @@ export type MemberProfile = {
   revision: string;
   completion: { percentage: number; missingFields: ProfileField[] };
   policy: ProfilePolicy;
+  details?: ProfileDetails;
 };
 export type MemberErrorCode =
   AuthErrorCode | "PROFILE_UNAVAILABLE" | "PROFILE_CONFLICT";
@@ -31,11 +36,12 @@ export type MemberResult =
   | {
       state: "error";
       code: MemberErrorCode;
-      fields?: Partial<Record<ProfileField, string>>;
+      fields?: Partial<Record<ProfileIssueField, string>>;
     };
 export type ProfileAdapter = (
   values: ProfileValues,
   revision: string,
+  details?: ProfileDetails,
 ) => Promise<MemberResult>;
 export const profileLabels: Record<ProfileField, string> = {
   fullName: "Full name",
@@ -46,18 +52,19 @@ export const profileLabels: Record<ProfileField, string> = {
   emergencyContactPhone: "Emergency contact phone",
 };
 export const profileFields = Object.keys(profileLabels) as ProfileField[];
+export const profileIssueLabels: Record<ProfileIssueField,string> = { ...profileLabels, birthDate:"Birth date", gender:"Gender", jerseySize:"Jersey size", runningPreferences:"Running preferences", marketingConsent:"Communication consent", privacyConsent:"Privacy acknowledgment" };
 const record = (value: unknown): value is Record<string, unknown> =>
   Boolean(value) && typeof value === "object" && !Array.isArray(value);
 export function decodeMemberResult(raw: unknown): MemberResult {
   if (!record(raw)) return { state: "error", code: "UNKNOWN_ERROR" };
   if (raw.state === "error") {
     // Field messages are owned here: raw upstream text is never shown.
-    const fields: Partial<Record<ProfileField, string>> = {};
+    const fields: Partial<Record<ProfileIssueField, string>> = {};
     if (record(raw.fields))
-      for (const field of profileFields)
+      for (const field of Object.keys(profileIssueLabels) as ProfileIssueField[])
         if (raw.fields[field])
           fields[field] =
-            `Please check ${profileLabels[field].toLowerCase()} and try again.`;
+            `Please check ${profileIssueLabels[field].toLowerCase()} and try again.`;
     return {
       state: "error",
       code:
@@ -81,6 +88,8 @@ export function decodeMemberResult(raw: unknown): MemberResult {
     c = p.completion,
     policy = p.policy,
     max = policy.maxLengths as Record<string, unknown>;
+  const details = readProfileDetails(p.details);
+  if (!details) return { state: "error", code: "UNKNOWN_ERROR" };
   if (
     typeof p.memberId !== "string" ||
     !p.memberId ||
@@ -121,6 +130,7 @@ export function decodeMemberResult(raw: unknown): MemberResult {
     profile: {
       memberId: p.memberId,
       revision: p.revision,
+      details,
       values: Object.fromEntries(
         profileFields.map((f) => [f, v[f]]),
       ) as ProfileValues,
@@ -132,6 +142,7 @@ export function decodeMemberResult(raw: unknown): MemberResult {
         ) as Record<ProfileField, number>,
         minimumPhoneDigits: policy.minimumPhoneDigits,
         maximumPhoneDigits: policy.maximumPhoneDigits,
+        maximumBirthDate: typeof policy.maximumBirthDate === "string" && /^\d{4}-\d{2}-\d{2}$/.test(policy.maximumBirthDate) ? policy.maximumBirthDate : undefined,
       },
     },
   };

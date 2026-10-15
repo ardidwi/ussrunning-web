@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit --pretty false",
+    "test:ci": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/*.test.mjs",
     "db:migrate": "node --env-file-if-exists=.env.local scripts/database/migrate.mjs",
     "db:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/database-foundation.test.mjs",
     "auth:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/auth-account-lifecycle.test.mjs",
