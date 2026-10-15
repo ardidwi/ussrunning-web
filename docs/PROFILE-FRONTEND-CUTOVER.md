@@ -1,5 +1,19 @@
 # INT-02 — Profile frontend cutover
 
+## Delivery checkpoint — 2026-10-15
+
+DONE (source integration). Implementation `ec8db2f6975efc82609e4e338d41868720c996e3`
+was fast-forwarded and pushed to main. On resume main and origin/main still exactly match
+that SHA and both worktrees are clean. Vercel `dpl_Eoo8rUxjbpsxrdjmfPstN6JtDXjo` is
+READY for project ussrunning-web, Git branch main and exactly that commit. Review alias:
+https://ussrunning-web-seven.vercel.app. Local validation below was already completed;
+resume did not rerun or recreate the implementation. A following documentation-only
+closure commit is deployed/verified independently before proceeding to FE-13.
+
+Live authenticated profile-save QA remains **BLOCKED** until the approved staging/provider
+environment, migrations/runtime grants and independent Neon sessions are available. READY
+deployment is development review evidence, not production readiness or a human QA claim.
+
 ## Source integration
 
 `/dashboard/profile` and the member overview use the existing trusted BE-04 own-profile
