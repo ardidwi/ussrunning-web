@@ -77,8 +77,13 @@ BEGIN
     DELETE FROM uss.account_roles WHERE account_id=target AND role_id=managed_role.id;
   END IF;
 
-  -- Advance optimistic account version using the existing BE-17 trigger without changing identity/lifecycle.
-  UPDATE uss.accounts SET updated_at=clock_timestamp() WHERE id=target RETURNING version INTO next_version;
+  -- Explicitly request the optimistic version advance. BE-17's BEFORE UPDATE trigger also
+  -- normalizes NEW.version to OLD.version+1, so this remains exactly one increment on current
+  -- schemas while preserving the intended version change on compatible upgrade paths.
+  UPDATE uss.accounts
+    SET version=version+1, updated_at=clock_timestamp()
+    WHERE id=target
+    RETURNING version INTO next_version;
   INSERT INTO uss.audit_logs(actor_account_id,action,entity_type,entity_id,change_summary)
     VALUES(
       actor,
@@ -125,7 +130,10 @@ BEGIN
     RETURN QUERY SELECT 'ROLE_BOOTSTRAP_CLOSED'::text; RETURN;
   END IF;
   INSERT INTO uss.account_roles(account_id,role_id,granted_by) VALUES(target,super_role.id,NULL);
-  UPDATE uss.accounts SET updated_at=clock_timestamp() WHERE id=target RETURNING version INTO next_version;
+  UPDATE uss.accounts
+    SET version=version+1, updated_at=clock_timestamp()
+    WHERE id=target
+    RETURNING version INTO next_version;
   INSERT INTO uss.audit_logs(actor_account_id,action,entity_type,entity_id,change_summary)
     VALUES(NULL,'role.bootstrap','account',target,jsonb_build_object(
       'changedFields',ARRAY['roles'],'role','super_admin','operation','bootstrap',
