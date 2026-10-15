@@ -74,9 +74,9 @@
       "Staging migrations/runtime grants",
       "Independent Neon concurrency"
     ],
-    "status": "VALIDATED_PENDING_CI_AND_DEPLOYMENT",
+    "status": "DONE_SOURCE_INTEGRATION",
     "branch": "feature/partners-cms",
-    "next": "Exact-candidate CI, main integration and deployment; stop after FE-13",
+    "next": "STOP after FE-13; await coordination before any later roadmap item",
     "startingMain": "d60360293bef578a2fff67f6508aa1b27c798a51",
     "reconciledMain": "4d7ad0f596465c4f557a8eac9960b6258be4996a",
     "tests": {
@@ -102,7 +102,31 @@
       "affectedBrowserAssertions": 25,
       "longTextAssertions": 5,
       "runtime": 0,
-      "browserAssertions": 90
-    }
+      "browserAssertions": 90,
+      "ciIntegratedNode": 794,
+      "deployedSmokeCases": 21,
+      "deployedSmokeAssertions": 75
+    },
+    "implementationSha": "26acafbd25eadd5b21a0aeccb9ebbe927b151d4f",
+    "candidateSha": "1afef53598e2354011948e916d0f580303b80504",
+    "integratedMainSha": "1afef53598e2354011948e916d0f580303b80504",
+    "originMainSha": "1afef53598e2354011948e916d0f580303b80504",
+    "deploymentId": "dpl_4zAgrqyEpymt9x6yrZtoXUPGpNPg",
+    "deploymentSha": "1afef53598e2354011948e916d0f580303b80504",
+    "deploymentStatus": "READY",
+    "reviewUrl": "https://ussrunning-web-seven.vercel.app/admin?module=partners",
+    "ciRunId": 38692009490,
+    "ciStatus": "SUCCESS",
+    "verifiedDate": "2026-10-15",
+    "sourcePr": "https://github.com/ardidwi/ussrunning-web/pull/17",
+    "limitations": [
+      "Live authenticated admin mutations unvalidated",
+      "Persistent media delivery unvalidated",
+      "Staging migration/runtime grants and independent Neon concurrency pending",
+      "Inherited FE-14 textarea resize audit finding",
+      "Unsupported Next 16 next lint",
+      "Global reorder, bulk upload and restore outside BE-14 contract"
+    ],
+    "documentationClosure": "Documentation-only publication is separately verified; exact final SHA and deployment are recorded in closure PR/delivery report."
   }
 }

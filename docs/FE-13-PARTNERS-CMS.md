@@ -1,5 +1,30 @@
 # FE-13 — Partner / Sponsor CMS
 
+## Delivered development checkpoint — 2026-10-15
+
+**DONE (source integration; external operational QA remains blocked).**
+
+- Implementation: `26acafbd25eadd5b21a0aeccb9ebbe927b151d4f`.
+- Validated source candidate / integrated main / origin-main:
+  `1afef53598e2354011948e916d0f580303b80504`.
+- Exact-candidate CI run `38692009490`: SUCCESS; locked installation, dependency graph,
+  TypeScript, 794/794 tests (zero failures/skips) and production build passed.
+- Vercel `dpl_4zAgrqyEpymt9x6yrZtoXUPGpNPg`: READY, project ussrunning-web, branch main,
+  exact deployed SHA `1afef53598e2354011948e916d0f580303b80504`.
+- Deployed read-only smoke: 21 cases / 75 assertions, zero runtime/hydration findings.
+- Review: https://ussrunning-web-seven.vercel.app/admin?module=partners.
+- Source delivery PR: https://github.com/ardidwi/ussrunning-web/pull/17.
+
+Normal main push initially lost a race to concurrent policy/skill commits and was rejected.
+All subsequent history was merged forward and exact-head CI rerun before a successful
+fast-forward main push. No reset, force push or published-history rewrite. Concurrent
+FE-14/public cutovers and later design-skill policy commits remain present. The scoped
+recovery stash is retained. The source and linked main worktrees were clean at verification.
+
+This record describes the verified source delivery. The following documentation-only
+publishing commit has its own exact-head CI/deployment verification and final SHA recorded
+in the delivery report/closure PR; it changes no application behavior. Stop after closure.
+
 ## Workspace and boundaries
 
 Routes follow the established CMS query modules: `/admin?module=partners`,

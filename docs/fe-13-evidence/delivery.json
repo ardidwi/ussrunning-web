@@ -1,0 +1,33 @@
+{
+  "task": "FE-13",
+  "status": "DONE_SOURCE_INTEGRATION",
+  "implementationSha": "26acafbd25eadd5b21a0aeccb9ebbe927b151d4f",
+  "validatedCandidateSha": "1afef53598e2354011948e916d0f580303b80504",
+  "integratedMainSha": "1afef53598e2354011948e916d0f580303b80504",
+  "originMainSha": "1afef53598e2354011948e916d0f580303b80504",
+  "ci": {
+    "runId": 38692009490,
+    "jobId": 116279838082,
+    "conclusion": "success",
+    "tests": 794,
+    "passed": 794,
+    "failed": 0,
+    "skipped": 0,
+    "install": "PASS",
+    "dependencies": "PASS",
+    "typescript": "PASS",
+    "build": "PASS"
+  },
+  "vercel": {
+    "id": "dpl_4zAgrqyEpymt9x6yrZtoXUPGpNPg",
+    "project": "ussrunning-web",
+    "branch": "main",
+    "sha": "1afef53598e2354011948e916d0f580303b80504",
+    "state": "READY",
+    "url": "https://ussrunning-web-seven.vercel.app"
+  },
+  "deployedSmoke": { "cases": 21, "assertions": 75, "runtimeErrors": 0, "hydrationWarnings": 0 },
+  "externalQa": "Live authenticated admin mutations, persistent media delivery, staging grants/migrations and independent Neon concurrency remain unvalidated.",
+  "inheritedFinding": "FE-14 SiteContentEditor.tsx textarea resize contract; outside FE-13 and unchanged.",
+  "next": "STOP after FE-13 documentation publication and exact deployment verification."
+}
