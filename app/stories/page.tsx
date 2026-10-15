@@ -9,6 +9,7 @@ export const dynamic = "force-dynamic";
 export default async function StoriesPage() {
   const result = await listPublicStories({ limit: 20 });
   const stories = result.ok ? result.data.items : [];
+  const unavailable = !result.ok;
 
   return (
     <main className="page-black">
@@ -51,7 +52,11 @@ export default async function StoriesPage() {
           );
         })}
 
-        {!stories.length ? (
+        {unavailable ? (
+          <div className="cms-empty-state" role="status">
+            <p>Stories are temporarily unavailable. Please try again soon.</p>
+          </div>
+        ) : !stories.length ? (
           <div className="cms-empty-state">
             <p>Stories are being prepared. Check back soon.</p>
           </div>
