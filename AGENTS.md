@@ -221,6 +221,12 @@ Consider obvious pitfalls: repeated API calls, N+1 queries, giant client bundles
 
 Inspect existing typography, buttons, cards, inputs, spacing, radius, shadows, icons, layout containers, dialogs, and tables before creating new visual patterns. Reuse existing components where appropriate. The product should feel like one system.
 
+### Frontend design skill
+
+For new user-facing UI, major visual redesigns, landing pages, campaign pages, and substantial UI reshaping, read and apply [`.agents/skills/frontend-design/SKILL.md`](.agents/skills/frontend-design/SKILL.md).
+
+Use that skill together with this repository's existing design-system, accessibility, responsiveness, product, security, architecture, and CMS-operability rules. Repository-specific requirements and explicit product briefs take precedence over generic frontend-design guidance. For admin/CMS surfaces, operational clarity remains more important than decorative complexity.
+
 ## 36. Admin/CMS usability
 
 Prioritize operational clarity. Admin users should easily understand current status, what is editable/published, what changed, who changed it, whether changes are saved, and whether they affect public users. Avoid decorative complexity that slows daily operation.
