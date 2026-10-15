@@ -4,7 +4,7 @@ import { authMessages } from "@/lib/auth/auth-errors";
 import type { AuthResult } from "@/lib/auth/contract";
 import { LinkButton } from "@/components/ui";
 const successCopy = {
-  verified: ["EMAIL VERIFIED.", "Account verified. You can now sign in."],
+  verified: ["EMAIL VERIFIED.", "Email verification completed. Sign in to check your account status."],
   already_verified: [
     "ALREADY VERIFIED.",
     "Your email is already verified. You can sign in.",
@@ -67,6 +67,7 @@ export function AuthStatus({
           {title}
         </h3>
         <p>{message}</p>
+        {(result.state === "verified" || result.state === "already_verified") && result.accountStatus && <p role="status">{result.accountStatus === "active" ? "Your signed-in account is active. Any profile requirements still apply." : result.accountStatus === "unknown" ? "Account status could not be confirmed here. Sign in to refresh your account." : result.accountStatus === "pending_verification" ? "Your signed-in account is still pending verification. Follow its current account guidance." : result.accountStatus === "suspended" ? authMessages.ACCOUNT_SUSPENDED : authMessages.ACCOUNT_DEACTIVATED}</p>}
         <LinkButton href={loginHref}>Sign in ↗</LinkButton>
         {result.state === "recovery_sent" && (
           <p>

@@ -36,6 +36,9 @@ export default function AuthReference({
         };
       if (scenario === "rate" && operation === "resend")
         return { state: "error", code: "RATE_LIMITED", retryAfterSeconds: 3 };
+      if (scenario === "verified-pending" && operation === "verify") return { state: "verified", accountStatus: "pending_verification" };
+      if (scenario === "verified-unknown" && operation === "verify") return { state: "verified", accountStatus: "unknown" };
+      if (scenario === "delivery-unavailable" && operation === "register") return { state: "verification_required", email: input.email, verificationError: "EMAIL_NOT_CONFIGURED" };
       if (
         scenario !== "success" &&
         scenario !== "cooldown" &&

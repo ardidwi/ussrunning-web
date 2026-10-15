@@ -1,8 +1,6 @@
 import { PageHero } from "@/components/layout/PageHero";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import EventCard from "@/components/EventCard";
-import { getRuns } from "@/lib/content";
 import { getPublicEventList } from "@/lib/events/event-actions";
 import { eventDate } from "@/features/event-registration/model";
 import { LinkButton } from "@/components/ui";
@@ -15,13 +13,10 @@ export default async function RunsPage({
   searchParams: Promise<{ cursor?: string }>;
 }) {
   const { cursor } = await searchParams;
-  const [runs, events] = await Promise.all([
-    getRuns(),
-    getPublicEventList({
-      limit: 20,
-      ...(cursor ? { cursor } : {}),
-    }),
-  ]);
+  const events = await getPublicEventList({
+    limit: 20,
+    ...(cursor ? { cursor } : {}),
+  });
 
   return (
     <main className="page-black">
@@ -51,7 +46,7 @@ export default async function RunsPage({
 
       <section className="section event-list-section">
         <div className="content-frame">
-          {events.ok && events.data.items.length > 0 && (
+          {events.ok && events.data.items.length > 0 ? (
             <section aria-label="USS events">
               <h2>USS EVENTS</h2>
               <ul className="uss-registration-list">
@@ -70,39 +65,33 @@ export default async function RunsPage({
                 ))}
               </ul>
             </section>
-          )}
-          {!events.ok && (
-            <p role="status">
-              USS event listings are temporarily unavailable. Existing sessions
-              remain below.
-            </p>
-          )}
-          {events.ok && events.data.nextCursor && (
+          ) : null}
+
+          {events.ok && events.data.items.length === 0 ? (
+            <div className="cms-empty-state" role="status">
+              <p>No public USS events are available right now. New sessions will appear here once they are published.</p>
+            </div>
+          ) : null}
+
+          {!events.ok ? (
+            <div className="cms-empty-state" role="status">
+              <p>USS event listings are temporarily unavailable. Please try again soon.</p>
+            </div>
+          ) : null}
+
+          {events.ok && events.data.nextCursor ? (
             <LinkButton
               href={`/runs?cursor=${encodeURIComponent(events.data.nextCursor)}`}
               variant="secondary"
             >
               More USS events ↗
             </LinkButton>
-          )}
-          {cursor && (
+          ) : null}
+          {cursor ? (
             <LinkButton href="/runs" variant="text">
               First event page ↗
             </LinkButton>
-          )}
-          <div className="filter-row">
-            <button className="filter-active">ALL</button>
-            <button>COMMUNITY RUN</button>
-            <button>TRAINING</button>
-            <button>RACE WEEK</button>
-            <button>COLLAB</button>
-          </div>
-
-          <div className="event-grid event-grid-three">
-            {runs.map((run) => (
-              <EventCard run={run} key={run.slug} editorialListing />
-            ))}
-          </div>
+          ) : null}
         </div>
       </section>
 
