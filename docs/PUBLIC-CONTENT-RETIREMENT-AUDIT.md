@@ -1,249 +1,81 @@
 # Public Content Retirement Audit
 
-Status: remote audit candidate. This document does not authorize destructive cleanup by itself.
+Status: post-cutover retirement checkpoint. This document records what is integrated and what still requires proof before removal. It does not authorize destructive cleanup by branch name or guesswork.
 
-Starting main: `c1e78d6f6a2776765bcc75439b49483a2c6acc96`.
+## Integrated public cutovers
 
-## Purpose
+The required public sequence was completed atomically and each source candidate passed the strengthened remote CI gate (`npm ci --ignore-scripts`, dependency graph, TypeScript, full Node domain/integration suite, production build) before integration.
 
-Retire legacy public-content adapters only after the corresponding contract cutovers have been locally validated and integrated one-by-one. Do not bundle all public cutovers into one merge.
+| Surface | Authoritative contract | Main commit | Exact Vercel development deployment |
+| --- | --- | --- | --- |
+| Stories | BE-12 | `615a02573197abf392ea1d373005a22b72cf23af` | `dpl_FxYuoQC7j8jhvXtvvT254iYh1gRT` READY |
+| Partners | BE-14 | `ca5c1d5b18f71ab0bd1540352ee6f4b740feb509` | `dpl_GW84qNMYPSvEAnQexM3MriiguHj8` READY |
+| Footer | BE-15 `footer.global` | `015fc9ffe5419ea4b140c79940d209c2a9c87f39` | `dpl_4k4in8q7aKUruZcPmZmjndEMTK1v` READY |
+| Homepage | BE-12/13/14/15 | `6a086e14255b7660a6525dc7892e44ebef3d08f8` | `dpl_5im1quCmz6kCNEdD8hPNHkC8e4FH` READY |
+| Events listing | BE-07 | `a976cb1fdff22eface4a3ba104da5b46acf620b9` | `dpl_283agacJpyy5K6ju7tH4Zsmt2oXH` READY |
 
-Required integration order:
+Browser/manual product smoke remains a separate evidence category. Automated access to protected Vercel deployment URLs is currently blocked by connector authorization/protection, so no browser pass is inferred from deployment readiness.
 
-1. Stories -> validate -> merge
-2. Partners -> validate -> merge
-3. Footer -> validate -> merge
-4. Homepage -> validate -> merge
-5. Events listing -> validate -> merge
-6. Re-audit `lib/content.ts` usage
-7. Remove only adapters proven dead
+## Fallback policy now enforced
 
-## Existing remote cutover candidates
+Editorial/presentation defaults are allowed only where they cannot masquerade as authoritative domain state.
 
-- `feature/public-stories-cutover` -> BE-12 public Stories contract
-- `feature/public-partners-cutover` -> BE-14 public Partners contract
-- `feature/footer-site-content-cutover` -> BE-15 `footer.global`
-- `feature/public-home-site-content-cutover` -> BE-12/13/14/15 public contracts
-- `feature/public-events-primary-listing` -> BE-07 public Events list
+- Stories: BE-12 success with zero published items may show the centralized `story-starter` presentation content. BE-12 failure shows unavailable feedback instead.
+- Partners: BE-14 supplies the partner records. A valid empty catalog retains only the partnership editorial presentation; service failure is explicitly unavailable. No fake partner records are injected.
+- Footer and typed site-content slots: BE-15 owns approved typed defaults. Defaults contain presentation copy only and never runtime secrets or domain records.
+- Homepage: CMS/site-content presentation remains visible when safe; empty/failure handling is distinct for Stories, Partners and Gallery. Fake brand records were removed.
+- Events: BE-07 is authoritative for `/runs`. A valid empty set and service failure are distinct; unavailable authoritative event data is never replaced with demo event records.
 
-Each branch must pass local build, standalone TypeScript, route-specific browser regression, latest-main conflict review, and runtime/hydration checks before merge.
+Never use fallback content for registration state, capacity/remaining slots, price, role/permission, account lifecycle, attendance, event pass/QR, payment state, sponsorship relationships or any other authoritative operational record.
 
-## Current divergence snapshot
+## Legacy `lib/content.ts` candidates
 
-Against `main` at `c1e78d6f6a2776765bcc75439b49483a2c6acc96`:
+Legacy helpers remain until every consumer is proven migrated. Do not remove an export solely because the primary route moved.
 
-- `feature/public-stories-cutover`: diverged, 2 commits ahead / 2 behind; touches only `app/stories/page.tsx` and `app/stories/[slug]/page.tsx`.
-- `feature/public-partners-cutover`: diverged, 1 commit ahead / 3 behind; touches only `app/partners/page.tsx`.
-- `feature/footer-site-content-cutover`: diverged, 1 commit ahead / 2 behind; touches only `components/SiteFooter.tsx`.
+### `getStories()`
 
-Treat these as expected early-development divergence, not as permission to force/rebase published history. Codex should fetch latest main, inspect overlap, preserve both histories, and integrate forward-only after each branch passes its own gates.
+Primary public Stories and homepage Stories no longer depend on this legacy query. Removal still requires repository-wide consumer proof. If no consumer remains, retire the direct `public.stories`/media join and its old seed path in one focused cleanup.
 
-## Legacy `lib/content.ts` retirement candidates
+### `getPartners()`
 
-`lib/content.ts` currently contains direct-table/public-schema reads and presentation fallbacks that predate the newer backend contracts. These are candidates for retirement only after all consumers are proven migrated.
+Primary Partners and homepage partner data now use BE-14. Removal requires proof that no other consumer imports the legacy name-only adapter.
 
-### Candidate: `getStories()`
+### `getMediaCollection()`
 
-Legacy behavior:
-- reads `public.stories` directly;
-- joins `public.media_assets.public_url` directly;
-- falls back to a seeded presentation Story when the query fails or returns empty.
+Homepage Gallery now uses BE-13 delivery-safe DTOs. Remove the direct media-collection query only after all remaining consumers are enumerated and migrated.
 
-Target:
-- BE-12 public Stories service is authoritative.
-- No demo Story should appear in production because backend data is unavailable or intentionally empty.
+### `getRuns()` / `getRunBySlug()`
 
-Removal gate:
-- `/stories`, `/stories/[slug]`, homepage Stories, and any other callers no longer import `getStories()`.
+`/runs` listing now uses BE-07 and no longer falls back to demo records on service failure. These helpers must not be removed yet: homepage/event-detail/auth surfaces may still contain compatibility or presentation dependencies. `/runs/[slug]` compatibility remains an explicit gate. Retire only after route crosswalk, inbound-link coverage and registration behavior are proven.
 
-### Candidate: `getPartners()`
+### `getHomeHero()` / `getLoginHero()` / `getCmsSection()`
 
-Legacy behavior:
-- reads `public.partners` directly;
-- exposes only names;
-- bypasses BE-14 public visibility/lifecycle/media mapping.
+Homepage is partially migrated to BE-15 but still retains compatibility presentation helpers. Login/auth visual migration belongs to FE-14 and must not alter auth policy, return URLs, verification tokens, provider/session behavior or account lifecycle. Retire legacy CMS table access only after those exact consumers are migrated.
 
-Target:
-- BE-14 public partner contract is authoritative.
+### `getSiteSettings()`
 
-Removal gate:
-- `/partners`, homepage partners, and all other public consumers use BE-14.
-
-### Candidate: `getRuns()` / `getRunBySlug()`
-
-Legacy behavior:
-- reads legacy `public.events` fields directly;
-- hardcodes Jakarta timezone formatting and status mapping;
-- uses presentation fallback runs when DB is not configured;
-- directly reads `media_assets.public_url`.
-
-Target:
-- BE-07 public event list/detail is authoritative.
-
-Removal gate:
-- `/runs` and `/runs/[slug]` no longer depend on legacy fallback for production behavior;
-- existing canonical `/runs/[slug]` compatibility is preserved;
-- registration behavior remains FE-07/BE-08 owned.
-
-Do not remove event fallback until local regression proves current production/staging data exists in the BE-07 path and removing fallback will not blank existing public event content unintentionally.
-
-### Candidate: `getHomeHero()` / `getLoginHero()` / `getCmsSection()`
-
-Legacy behavior:
-- accesses older `public.cms_pages` / `public.cms_sections` tables;
-- embeds hardcoded presentation fallback copy and Unsplash URLs.
-
-Target:
-- BE-15 typed site-content slots.
-
-Removal gate:
-- homepage hero uses `homepage.hero`;
-- login visual/copy use `login.visual` and `auth.login`;
-- register copy uses `auth.register`;
-- no remaining caller depends on legacy CMS tables.
-
-Do not retire login/register helpers while INT-01 auth cutover is active unless the auth agent has already migrated those exact imports.
-
-### Candidate: `getSiteSettings()`
-
-Legacy behavior:
-- reads `public.site_settings` directly;
-- hardcodes Instagram, Strava and contact email fallbacks.
-
-Target:
-- BE-15 `footer.global`.
-
-Removal gate:
-- footer and any other social/contact consumers use BE-15.
-
-### Candidate: `getMediaCollection()`
-
-Legacy behavior:
-- reads media collection tables and `public_url` directly.
-
-Target:
-- BE-13 public Gallery contract / BE-11 delivery-safe MediaAsset mapping.
-
-Removal gate:
-- all public gallery/media consumers use backend public DTOs rather than DB storage fields.
+Footer now uses BE-15 `footer.global`. Remove only after proving no other social/contact consumer still imports it.
 
 ## Media exposure rule
 
-Public UI may consume only delivery-safe media DTOs. Do not expose or infer:
+Public UI may render media only when the authoritative DTO reports delivery availability and provides a usable URL. Storage keys, private origins, provider credentials, upload inputs and unavailable media must never be exposed as public delivery URLs.
 
-- storage keys/object keys as public URLs;
-- provider credentials;
-- internal bucket/container identifiers;
-- private origin URLs;
-- signed upload inputs;
-- media records whose delivery state is unavailable.
+## Branch cleanup gate
 
-A public image should render only when the authoritative DTO says delivery is available and provides a usable public URL. `url: null` must remain an honest unavailable state.
+A merged or `review`-named branch is not automatically deletable. Before cleanup verify all of the following:
 
-## Public navigation audit
+1. canonical implementation is integrated in current main;
+2. branch has no unique required commit;
+3. no open PR or active workflow references it;
+4. no roadmap/checkpoint requires the branch as the only preserved evidence.
 
-`components/SiteHeader.tsx` currently keeps the public IA as a small code-owned navigation list: Runs, About, Membership, Stories, Partners, plus `MY USS` -> `/login`.
+Only then delete the local/remote branch and prune refs.
 
-No unsafe external URLs or storage/media fields are present in the header. Active-route semantics use exact-or-descendant path matching and mobile navigation reuses the same route set.
+## Remaining public-content work
 
-Do not move this navigation into BE-15 merely to eliminate constants. These entries are application information architecture, not routine campaign copy. A future dynamic-navigation requirement should be an explicit product/architecture decision rather than an incidental CMS expansion.
+- FE-13 Partner/Sponsor CMS: local Codex work exists but was not yet present on the remote repository at this checkpoint; do not reconstruct or overwrite it from this audit.
+- FE-14 Dynamic Site Content Editor: still required for managed homepage/login/register/footer editorial updates.
+- `/runs/[slug]` and other legacy event compatibility consumers require a separate exact audit before legacy event adapters are removed.
+- Manual/browser Vercel product audit remains outstanding where connector protection prevents automated access.
 
-## Auth-surface overlap guard
-
-`app/login/page.tsx` and `app/join/page.tsx` still contain hardcoded presentation copy. BE-15 already defines `auth.login`, `login.visual`, and `auth.register`, so these are legitimate future dynamic-content targets.
-
-However INT-01 currently owns auth production cutover. Remote cleanup must not edit those auth files while INT-01 is active.
-
-Important lifecycle wording guard: the current login verification presentation says email verification occurs before the account becomes active. Codex must not turn that sentence into authority. Verification state and account lifecycle must remain authoritative to BE-02/BE-04; frontend copy may need adjustment if another backend gate can keep the account non-active after verification.
-
-## Hardcoded public copy audit
-
-### About page
-
-`app/about/page.tsx` currently hardcodes mission, timeline, hero, story, and CTA copy.
-
-This content is CMS-eligible conceptually, but BE-15 currently defines only homepage, login/register, and global footer slots. Do not invent `about.*` keys inside FE code and do not overload unrelated homepage slots. If dynamic About content is desired, add a separately approved backend slot/schema expansion after FE-14 is stable.
-
-### Membership page
-
-`app/membership/page.tsx` currently hardcodes benefits, steps, hero, and CTA copy.
-
-BE-15 has `homepage.membership`, but that slot is not a general Membership-page document contract. Do not silently reuse it for `/membership`. Dynamic Membership-page content requires an explicit backend contract expansion.
-
-## Remote integration gates by branch
-
-### Stories
-
-Required before merge:
-- build + standalone TypeScript;
-- public `/stories` listing browser regression;
-- `/stories/[slug]` valid, not-found and media-null states;
-- no direct `public.stories` query remains in public route files;
-- no seeded/demo Story appears on backend failure or intentional empty state;
-- zero runtime/hydration warnings.
-
-### Partners
-
-Required before merge:
-- build + standalone TypeScript;
-- `/partners` empty/list/media-null states;
-- BE-14 lifecycle/visibility is authoritative;
-- no storage key or provider field reaches the UI;
-- existing non-data narrative sections remain visually stable.
-
-### Footer
-
-Required before merge:
-- build + standalone TypeScript;
-- render with published/default/unavailable BE-15 states;
-- external links remain valid anchors with safe behavior;
-- no layout jump or horizontal overflow on mobile;
-- no regression in pages that share `SiteFooter`.
-
-### Homepage
-
-Required before merge:
-- build + standalone TypeScript;
-- home motion experience remains intact;
-- BE-12/13/14/15 empty states do not revive fake production content;
-- media renders only when delivery-safe;
-- section order and CTA behavior remain coherent;
-- zero hydration/runtime warnings at key breakpoints.
-
-### Events listing
-
-Required before merge:
-- build + standalone TypeScript;
-- `/runs` does not duplicate BE-07 events with legacy sessions;
-- `/runs/[slug]` and registration links remain compatible;
-- BE-07 timing/visibility remains authoritative;
-- legacy fallback retirement is deferred until real data coverage is proven.
-
-## Branch safety / cleanup
-
-Do not delete remote review/validation branches based only on naming.
-
-Before deletion verify:
-
-1. branch has no commits absent from the canonical implementation branch or `main`;
-2. no open PR or documentation references the branch;
-3. implementation commits are preserved;
-4. current main contains the intended code if the branch was already integrated.
-
-No force push, reset, history rewrite, or blind branch deletion.
-
-Duplicate review branches observed remotely should remain untouched until this evidence is checked. Identical head SHA alone is useful evidence but not sufficient when an open PR/reference may still exist.
-
-## Final retirement gate
-
-Only remove legacy adapters when all of the following are true:
-
-- all known public consumers are migrated;
-- build and standalone TypeScript pass;
-- public route browser regressions pass;
-- no hydration/runtime warnings are introduced;
-- media unavailable/null states remain honest;
-- public empty data remains empty instead of showing demo records;
-- latest `origin/main` was re-audited immediately before integration.
-
-If any consumer remains uncertain, keep the adapter and mark it deprecated instead of deleting it.
+This checkpoint closes the atomic public listing/content cutover sequence, not the wider engineering roadmap or staging/production readiness program.
