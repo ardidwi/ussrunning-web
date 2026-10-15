@@ -84,7 +84,9 @@ test('self mutation is rejected before repository and by DB',async()=>{
 });
 
 test('member baseline cannot be managed through BE-18',async()=>{
-  const a=await account();assert.throws(()=>validation.roleMutation({...(await input(a,'admin')),role:'member'}),code('ROLE_INVALID_INPUT'));
+  const a=await account(),base=await input(a,'admin');
+  assert.throws(()=>validation.roleMutation({...base,role:'member'}),code('ROLE_INVALID_INPUT'));
+  assert.equal((await query('SELECT * FROM uss.manage_role($1,$2,$3,$4,$5,$6)',[root.id,a.id,'grant','member',base.expectedVersion,base.reason]))[0].code,'ROLE_INVALID_INPUT');
 });
 
 test('unverified or non-active target cannot receive elevation',async()=>{
@@ -105,17 +107,11 @@ test('super_admin can delegate then revoke super_admin while another usable owne
   const after=await row(a.id);await service.revokeRole({...(await input(a,'super_admin')),expectedVersion:after.version});assert.ok(!(await roles(a.id)).includes('super_admin'));
 });
 
-test('last super_admin assignment cannot be revoked',async()=>{
+test('the only remaining super_admin cannot remove its own authority',async()=>{
   const others=await query("SELECT ar.account_id FROM uss.account_roles ar JOIN uss.roles r ON r.id=ar.role_id WHERE r.code='super_admin' AND ar.account_id<>$1",[root.id]);
   for(const other of others)await query("DELETE FROM uss.account_roles ar USING uss.roles r WHERE ar.role_id=r.id AND r.code='super_admin' AND ar.account_id=$1",[other.account_id]);
-  const target=await account();await service.grantRole(await input(target,'super_admin'));
-  const rootRole=await query("SELECT r.id FROM uss.roles r WHERE r.code='super_admin'");
-  await query('DELETE FROM uss.account_roles WHERE account_id=$1 AND role_id=$2',[root.id,rootRole[0].id]);
-  as(target);target.email_verified_at=(await row(target.id)).email_verified_at;
-  await assert.rejects(service.revokeRole(await input(target,'super_admin')),code('ROLE_SELF_ACTION_FORBIDDEN'));
+  await assert.rejects(service.revokeRole(await input(root,'super_admin')),code('ROLE_SELF_ACTION_FORBIDDEN'));
   assert.equal((await query("SELECT count(*)::int n FROM uss.account_roles ar JOIN uss.roles r ON r.id=ar.role_id WHERE r.code='super_admin'"))[0].n,1);
-  await query('INSERT INTO uss.account_roles(account_id,role_id) VALUES($1,$2)',[root.id,rootRole[0].id]);as(await row(root.id));
-  await query('DELETE FROM uss.account_roles WHERE account_id=$1 AND role_id=$2',[target.id,rootRole[0].id]);
 });
 
 test('concurrent reciprocal super_admin revokes leave at least one usable super_admin',async()=>{
