@@ -6,6 +6,9 @@ export type StarterStory = {
   body: readonly string[];
 };
 
+// Presentation-only starter content. It is used only when the authoritative
+// public Stories contract succeeds with zero published items. It must never
+// mask a service failure and disappears automatically once CMS content exists.
 export const STARTER_STORIES: readonly StarterStory[] = [
   {
     slug: "18-runners-day-one",
