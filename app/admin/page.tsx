@@ -17,6 +17,7 @@ import { getAuditHistory } from "@/lib/audit/audit-actions";
 import { StoriesWorkspace } from "@/features/stories-cms/StoriesWorkspace";
 import { GalleryWorkspace } from "@/features/gallery-cms/GalleryWorkspace";
 import { EventWorkspace } from "@/features/events-cms/EventWorkspace";
+import { SiteContentWorkspace } from "@/features/site-content-cms/SiteContentWorkspace";
 import {
   getRevisionHistory,
   getHistorySnapshot,
@@ -48,7 +49,9 @@ export default async function AdminPage({
     content = (
       <ServiceFeedback code="INSUFFICIENT_PERMISSION" returnTo="/admin" />
     );
-  else if (module === "stories") {
+  else if (module === "content") {
+    content = <SiteContentWorkspace />;
+  } else if (module === "stories") {
     content = <StoriesWorkspace query={query} />;
   } else if (module === "gallery") {
     content = <GalleryWorkspace query={query} />;
