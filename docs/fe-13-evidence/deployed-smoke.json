@@ -1,0 +1,28 @@
+{
+  "cases": [
+    "/admin?module=partners/320",
+    "/admin?module=partners&view=create/320",
+    "/admin?module=content/320",
+    "/admin?module=stories/320",
+    "/admin?module=gallery/320",
+    "/admin?module=events/320",
+    "/partners/320",
+    "/dashboard/check-in/320",
+    "/dashboard/member-card/320",
+    "/dashboard/events/320",
+    "/admin?module=partners/1366",
+    "/admin?module=partners&view=create/1366",
+    "/admin?module=content/1366",
+    "/admin?module=stories/1366",
+    "/admin?module=gallery/1366",
+    "/admin?module=events/1366",
+    "/partners/1366",
+    "/dashboard/check-in/1366",
+    "/dashboard/member-card/1366",
+    "/dashboard/events/1366",
+    "production fixture guard"
+  ],
+  "assertions": 75,
+  "runtime": [],
+  "hydration": []
+}
