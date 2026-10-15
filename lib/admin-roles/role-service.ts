@@ -1,6 +1,6 @@
 import 'server-only';
 import { requirePermission } from '@/lib/authz/guards';
-import { roleOperation } from './role-errors';
+import { RoleError, roleOperation } from './role-errors';
 import { roleMutation } from './role-validation';
 import * as repo from './role-repository';
 import { MANAGED_ELEVATED_ROLES, type RoleMutationResult, type RoleOperation, type RolePolicyDTO } from './role-types';
@@ -17,10 +17,7 @@ async function change(input: unknown, operation: RoleOperation): Promise<RoleMut
   return roleOperation(async () => {
     const { account } = await requirePermission('roles.manage');
     const mutation = roleMutation(input);
-    if (mutation.id === account.id) {
-      const { RoleError } = await import('./role-errors');
-      throw new RoleError('ROLE_SELF_ACTION_FORBIDDEN');
-    }
+    if (mutation.id === account.id) throw new RoleError('ROLE_SELF_ACTION_FORBIDDEN');
     await repo.mutateRole(account.id, mutation.id, operation, mutation.role, mutation.expectedVersion, mutation.reason);
     return { id: mutation.id, role: mutation.role, operation, code: 'ROLE_UPDATED' };
   });
