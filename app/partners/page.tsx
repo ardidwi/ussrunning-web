@@ -1,3 +1,4 @@
+import { listPublicPartners } from "@/lib/partners/partner-actions";
 import { LinkButton } from "@/components/ui/Button";
 import { PageHero } from "@/components/layout/PageHero";
 import SiteHeader from "@/components/SiteHeader";
@@ -45,7 +46,17 @@ const opportunities = [
   ["05", "MONETARY", "Contribution toward community-led race-week activities."],
 ];
 
-export default function PartnersPage() {
+function partnerMeta(type: string, tier: string | null) {
+  return [type.replaceAll("_", " ").toUpperCase(), tier?.toUpperCase()]
+    .filter(Boolean)
+    .join(" / ");
+}
+
+export default async function PartnersPage() {
+  const partnerResult = await listPublicPartners({ limit: 24 });
+  const partners = partnerResult.ok ? partnerResult.data.items : [];
+  const unavailable = !partnerResult.ok;
+
   return (
     <main className="page-black">
       <SiteHeader />
@@ -66,6 +77,70 @@ export default function PartnersPage() {
           </>
         }
       ></PageHero>
+
+      {partners.length > 0 ? (
+        <section className="partner-journey" aria-labelledby="current-partners-title">
+          <div className="content-frame">
+            <div className="section-heading compact-heading">
+              <div>
+                <span className="kicker">CURRENT PARTNERS</span>
+                <h2 id="current-partners-title">
+                  BUILT WITH
+                  <br />
+                  THE COMMUNITY.
+                </h2>
+              </div>
+              <p className="section-side-copy">
+                Active partners published through the USS Running partnership system.
+              </p>
+            </div>
+
+            <div className="journey-grid">
+              {partners.map((partner, index) => {
+                const meta = partnerMeta(partner.type, partner.tier);
+                const summary = partner.description || meta;
+
+                return (
+                  <article className="journey-card" key={partner.slug}>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    {partner.logo?.deliveryAvailable && partner.logo.url ? (
+                      <img
+                        src={partner.logo.url}
+                        alt={partner.logo.altText || `${partner.name} logo`}
+                        width={180}
+                        height={90}
+                        loading="lazy"
+                        style={{
+                          width: "min(180px, 100%)",
+                          height: "72px",
+                          objectFit: "contain",
+                          objectPosition: "left center",
+                          marginBottom: "1rem",
+                        }}
+                      />
+                    ) : null}
+                    <h3>{partner.name}</h3>
+                    {summary ? <p>{summary}</p> : null}
+                    {partner.websiteUrl ? (
+                      <a href={partner.websiteUrl} target="_blank" rel="noreferrer">
+                        {meta || "VISIT PARTNER"} ↗
+                      </a>
+                    ) : null}
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      ) : unavailable ? (
+        <section className="partner-journey" aria-label="Partner availability">
+          <div className="content-frame">
+            <div className="cms-empty-state" role="status">
+              <p>Partner information is temporarily unavailable. Please try again soon.</p>
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="partner-journey">
         <div className="content-frame">

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import NewsletterForm from "@/components/NewsletterForm";
-import { getSiteSettings } from "@/lib/content";
+import { SITE_DEFAULTS } from "@/lib/site-content/site-defaults";
+import { getPublicSiteContent } from "@/lib/site-content/site-service";
 
 function InstagramIcon() {
   return (
@@ -41,19 +42,17 @@ function StravaIcon() {
 }
 
 export default async function SiteFooter() {
-  const settings = await getSiteSettings();
+  const footerSlot = await getPublicSiteContent("footer.global");
+  const footer = footerSlot.payload ?? SITE_DEFAULTS["footer.global"];
 
   return (
     <footer className="uss-footer">
       <div className="uss-footer-inner">
         <section className="uss-newsletter" aria-labelledby="newsletter-title">
           <div>
-            <span className="kicker">USS DISPATCH</span>
-            <h2 id="newsletter-title">STAY IN THE LOOP.</h2>
-            <p>
-              Runs, community stories, race-week moments and selected USS
-              updates. No noise.
-            </p>
+            <span className="kicker">{footer.newsletterKicker}</span>
+            <h2 id="newsletter-title">{footer.newsletterTitle}</h2>
+            <p>{footer.newsletterDescription}</p>
           </div>
 
           <NewsletterForm />
@@ -62,14 +61,14 @@ export default async function SiteFooter() {
         <div className="uss-footer-main">
           <div className="uss-footer-brand">
             <img src="/uss-logo.png" alt="USS" className="uss-footer-logo" />
-            <p>Built in Jakarta. Made to move together.</p>
+            <p>{footer.tagline}</p>
 
             <div
               className="uss-footer-socials"
               aria-label="USS Running social links"
             >
               <a
-                href={settings.instagram}
+                href={footer.instagram}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="USS Running on Instagram"
@@ -79,7 +78,7 @@ export default async function SiteFooter() {
               </a>
 
               <a
-                href={settings.strava}
+                href={footer.strava}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="USS Running on Strava"
@@ -102,13 +101,13 @@ export default async function SiteFooter() {
           <div className="uss-footer-column">
             <span className="uss-footer-heading">CONNECT</span>
             <Link href="/partners">Partners</Link>
-            <a href={settings.instagram} target="_blank" rel="noreferrer">
+            <a href={footer.instagram} target="_blank" rel="noreferrer">
               Instagram
             </a>
-            <a href={settings.strava} target="_blank" rel="noreferrer">
+            <a href={footer.strava} target="_blank" rel="noreferrer">
               Strava
             </a>
-            <a href={`mailto:${settings.contactEmail}`}>Contact</a>
+            <a href={`mailto:${footer.contactEmail}`}>Contact</a>
           </div>
 
           <div className="uss-footer-column uss-footer-legal">
@@ -120,7 +119,7 @@ export default async function SiteFooter() {
         </div>
 
         <div className="uss-footer-bottom">
-          <span>© 2026 USS Running. All rights reserved.</span>
+          <span>© 2026 {footer.copyright}</span>
           <span>RUNNING / COMMUNITY / CULTURE</span>
         </div>
       </div>

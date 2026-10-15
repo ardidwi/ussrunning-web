@@ -1,0 +1,29 @@
+{
+  "cases": [
+    "profile layout 320",
+    "profile layout 375",
+    "profile layout 390",
+    "profile layout 768",
+    "profile layout 1024",
+    "profile layout 1366",
+    "optional consent separate and unselected",
+    "save optional details and duplicate suppression",
+    "future date inline error and keyboard focus",
+    "recoverable save-failure",
+    "recoverable stale",
+    "recoverable server-validation",
+    "recoverable malformed",
+    "conflict reload requires discard, escape restores focus",
+    "member state pending",
+    "member state suspended",
+    "member state deactivated",
+    "member state expired",
+    "member state unavailable",
+    "member state failure",
+    "member state loading",
+    "short screen, zoom and reduced motion"
+  ],
+  "assertions": 53,
+  "runtime": [],
+  "hydration": []
+}

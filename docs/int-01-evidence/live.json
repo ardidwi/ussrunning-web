@@ -1,0 +1,25 @@
+{
+  "cases": [
+    "/login/320",
+    "/join/320",
+    "/login?flow=forgot/320",
+    "/login?flow=reset/320",
+    "/login?flow=verify/320",
+    "/dashboard/320",
+    "/dashboard/profile/320",
+    "/admin/320",
+    "/login/1366",
+    "/join/1366",
+    "/login?flow=forgot/1366",
+    "/login?flow=reset/1366",
+    "/login?flow=verify/1366",
+    "/dashboard/1366",
+    "/dashboard/profile/1366",
+    "/admin/1366",
+    "fixture guard",
+    "verification fragment routing"
+  ],
+  "assertions": 54,
+  "runtime": [],
+  "hydration": []
+}
