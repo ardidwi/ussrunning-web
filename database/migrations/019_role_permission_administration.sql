@@ -11,6 +11,7 @@ CREATE FUNCTION uss.manage_role(
   reason text
 ) RETURNS TABLE(code text)
 LANGUAGE plpgsql
+SECURITY DEFINER
 SET search_path=pg_catalog,uss AS $$
 DECLARE
   actor_account uss.accounts;
