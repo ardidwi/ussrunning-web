@@ -19,7 +19,7 @@ const report = { cases: [], errors: [] };
   const context = await browser.newContext();
   await context.route("**/*", (route) => {
     const url = new URL(route.request().url());
-    return url.hostname === "127.0.0.1" || url.protocol === "data:"
+    return url.hostname === new URL(base).hostname || url.protocol === "data:"
       ? route.continue()
       : route.abort();
   });

@@ -1,5 +1,5 @@
 {
-  "base": "http://localhost:3126",
+  "base": "http://localhost:3171",
   "assertions": 154,
   "cases": [
     "success 320x640",
