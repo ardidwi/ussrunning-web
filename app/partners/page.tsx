@@ -55,6 +55,7 @@ function partnerMeta(type: string, tier: string | null) {
 export default async function PartnersPage() {
   const partnerResult = await listPublicPartners({ limit: 24 });
   const partners = partnerResult.ok ? partnerResult.data.items : [];
+  const unavailable = !partnerResult.ok;
 
   return (
     <main className="page-black">
@@ -128,6 +129,14 @@ export default async function PartnersPage() {
                   </article>
                 );
               })}
+            </div>
+          </div>
+        </section>
+      ) : unavailable ? (
+        <section className="partner-journey" aria-labelledby="current-partners-title">
+          <div className="content-frame">
+            <div className="cms-empty-state" role="status">
+              <p>Partner information is temporarily unavailable. Please try again soon.</p>
             </div>
           </div>
         </section>
