@@ -7,6 +7,7 @@ import HomeMotionExperience from "@/components/HomeMotionExperience";
 import { getHomeHero, getRuns } from "@/lib/content";
 import { getPublicSiteContent } from "@/lib/site-content/site-service";
 import { listPublicStories } from "@/lib/stories/story-actions";
+import { STARTER_STORIES } from "@/lib/stories/story-starter";
 import { listPublicPartners } from "@/lib/partners/partner-actions";
 import { listPublicGalleryItems } from "@/lib/gallery/gallery-actions";
 
@@ -42,15 +43,27 @@ export default async function HomePage() {
     getPublicSiteContent("homepage.membership"),
   ]);
 
-  const featuredStory = storiesResult.ok ? storiesResult.data.items[0] : null;
+  const cmsFeaturedStory = storiesResult.ok ? storiesResult.data.items[0] : null;
+  const starterFeaturedStory =
+    storiesResult.ok && !cmsFeaturedStory ? STARTER_STORIES[0] : null;
+  const featuredStorySlug = cmsFeaturedStory?.slug ?? starterFeaturedStory?.slug ?? null;
+  const featuredStoryType =
+    cmsFeaturedStory?.contentType ?? starterFeaturedStory?.contentType ?? "USS JOURNAL";
+  const featuredStoryTitle =
+    cmsFeaturedStory?.title ?? starterFeaturedStory?.title ?? null;
+
   const collaborations = partnersResult.ok
     ? partnersResult.data.items.map((partner) => partner.name)
     : [];
+  const partnersUnavailable = !partnersResult.ok;
+
   const gallery = galleryResult.ok
     ? galleryResult.data.items.filter(
         (item) => item.media.deliveryAvailable && item.media.url,
       )
     : [];
+  const galleryUnavailable = !galleryResult.ok;
+
   const heroContent = heroSlot.payload;
   const marqueeContent = marqueeSlot.payload;
   const manifestoContent = manifestoSlot.payload;
@@ -58,9 +71,10 @@ export default async function HomePage() {
   const heroImage = publicMediaUrl(heroSlot.media) || hero.imageUrl;
   const membershipImage = publicMediaUrl(membershipSlot.media);
   const featuredStoryImage =
-    featuredStory?.cover?.deliveryAvailable && featuredStory.cover.url
-      ? featuredStory.cover.url
+    cmsFeaturedStory?.cover?.deliveryAvailable && cmsFeaturedStory.cover.url
+      ? cmsFeaturedStory.cover.url
       : null;
+  const featuredStoryAlt = cmsFeaturedStory?.cover?.altText || "";
 
   const tickerText = marqueeContent?.enabled
     ? marqueeContent.text
@@ -154,22 +168,22 @@ export default async function HomePage() {
 
       <CommunityStats />
 
-      {collaborations.length ? (
-        <section className="collaborations-section">
-          <div className="content-frame">
-            <div className="collaborations-head">
-              <span className="kicker">03 / SELECTED COLLABORATIONS</span>
-              <h2>
-                BRANDS WE&apos;VE
-                <br />
-                RUN WITH.
-              </h2>
-              <p>
-                A selection of brands, spaces and communities that have moved with
-                USS Running across events, campaigns and race-week moments.
-              </p>
-            </div>
+      <section className="collaborations-section">
+        <div className="content-frame">
+          <div className="collaborations-head">
+            <span className="kicker">03 / SELECTED COLLABORATIONS</span>
+            <h2>
+              BRANDS WE&apos;VE
+              <br />
+              RUN WITH.
+            </h2>
+            <p>
+              A selection of brands, spaces and communities that have moved with
+              USS Running across events, campaigns and race-week moments.
+            </p>
+          </div>
 
+          {collaborations.length ? (
             <div
               className="collaboration-grid"
               aria-label="Selected collaborators"
@@ -180,14 +194,22 @@ export default async function HomePage() {
                 </div>
               ))}
             </div>
-
-            <div className="collaborations-foot">
-              <span>SELECTED WORK / MORE TO COME</span>
-              <Link href="/partners">EXPLORE PARTNERSHIPS ↗</Link>
+          ) : (
+            <div className="cms-empty-state" role="status">
+              <p>
+                {partnersUnavailable
+                  ? "Partner highlights are temporarily unavailable."
+                  : "Partnership highlights are being prepared."}
+              </p>
             </div>
+          )}
+
+          <div className="collaborations-foot">
+            <span>SELECTED WORK / MORE TO COME</span>
+            <Link href="/partners">EXPLORE PARTNERSHIPS ↗</Link>
           </div>
-        </section>
-      ) : null}
+        </div>
+      </section>
 
       {membership?.enabled !== false ? (
         <section className="editorial-split section">
@@ -218,7 +240,7 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      {featuredStory ? (
+      {featuredStorySlug && featuredStoryTitle ? (
         <section className="story-band">
           <div className="story-band-title">
             <span className="kicker">05 / STORIES</span>
@@ -231,41 +253,38 @@ export default async function HomePage() {
             </h2>
           </div>
 
-          <Link className="story-feature" href={`/stories/${featuredStory.slug}`}>
+          <Link className="story-feature" href={`/stories/${featuredStorySlug}`}>
             {featuredStoryImage ? (
-              <img
-                src={featuredStoryImage}
-                alt={featuredStory.cover?.altText || ""}
-              />
+              <img src={featuredStoryImage} alt={featuredStoryAlt} />
             ) : null}
             <div className="story-overlay">
-              <span>{featuredStory.contentType || "USS JOURNAL"}</span>
-              <h3>{featuredStory.title}</h3>
+              <span>{featuredStoryType}</span>
+              <h3>{featuredStoryTitle}</h3>
               <span>READ THE STORY ↗</span>
             </div>
           </Link>
         </section>
       ) : null}
 
-      {gallery.length ? (
-        <section className="home-gallery-section">
-          <div className="content-frame">
-            <div className="home-gallery-head">
-              <div>
-                <span className="kicker">06 / COMMUNITY GALLERY</span>
-                <h2>
-                  SEEN ON
-                  <br />
-                  THE ROAD.
-                </h2>
-              </div>
-              <p>
-                Selected USS moments. The CMS controls which images appear here,
-                so official photography can replace presentation placeholders
-                without another code deploy.
-              </p>
+      <section className="home-gallery-section">
+        <div className="content-frame">
+          <div className="home-gallery-head">
+            <div>
+              <span className="kicker">06 / COMMUNITY GALLERY</span>
+              <h2>
+                SEEN ON
+                <br />
+                THE ROAD.
+              </h2>
             </div>
+            <p>
+              Selected USS moments. The CMS controls which images appear here,
+              so official photography can replace presentation placeholders
+              without another code deploy.
+            </p>
+          </div>
 
+          {gallery.length ? (
             <div className="home-gallery-grid">
               {gallery.map((item, index) => (
                 <figure
@@ -280,9 +299,17 @@ export default async function HomePage() {
                 </figure>
               ))}
             </div>
-          </div>
-        </section>
-      ) : null}
+          ) : (
+            <div className="cms-empty-state" role="status">
+              <p>
+                {galleryUnavailable
+                  ? "Community gallery is temporarily unavailable."
+                  : "Community photos are being prepared."}
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
 
       <section className="partner-strip">
         <div className="partner-strip-inner">
