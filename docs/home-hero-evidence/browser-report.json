@@ -1,0 +1,70 @@
+{
+  "cases": [
+    {
+      "name": "responsive chapters/navigation",
+      "width": 320,
+      "height": 568,
+      "result": "PASS"
+    },
+    {
+      "name": "responsive chapters/navigation",
+      "width": 375,
+      "height": 812,
+      "result": "PASS"
+    },
+    {
+      "name": "responsive chapters/navigation",
+      "width": 768,
+      "height": 1024,
+      "result": "PASS"
+    },
+    {
+      "name": "responsive chapters/navigation",
+      "width": 1024,
+      "height": 768,
+      "result": "PASS"
+    },
+    {
+      "name": "responsive chapters/navigation",
+      "width": 1440,
+      "height": 900,
+      "result": "PASS"
+    },
+    {
+      "name": "responsive chapters/navigation",
+      "width": 1920,
+      "height": 1080,
+      "result": "PASS"
+    },
+    {
+      "name": "responsive chapters/navigation",
+      "width": 1366,
+      "height": 500,
+      "result": "PASS"
+    },
+    {
+      "name": "200% CSS zoom/reflow",
+      "result": "PASS"
+    },
+    {
+      "name": "Live reduced-motion preference",
+      "result": "PASS"
+    },
+    {
+      "name": "Keyboard/skip handoff",
+      "result": "PASS"
+    },
+    {
+      "name": "/about scoped regression",
+      "result": "PASS"
+    },
+    {
+      "name": "/login scoped regression",
+      "result": "PASS"
+    }
+  ],
+  "assertions": 194,
+  "runtime": [],
+  "hydration": [],
+  "result": "PASS"
+}
