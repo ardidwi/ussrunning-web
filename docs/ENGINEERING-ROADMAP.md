@@ -11,7 +11,14 @@ USS Running comprises a public website, free membership, authentication, account
 | Task | Status | Source commit | Verified main = origin/main | Deployment | Tests / blockers / next |
 | --- | --- | --- | --- | --- | --- |
 | INT-01 Auth frontend cutover | DONE (source integration) | `b3e74d3` | `b3e74d3c3f0367c9af380da820dd43ab5d81b1e7` | `dpl_KAX2bMrkdAFrQXMDCHd6YK9vA2pA`, READY, same SHA | 758/758 Node; 28 focused; browser 38/66; live read-only 18/54; zero final runtime/hydration findings. Real provider/email/crosswalk/Neon QA BLOCKED externally. Next INT-02. |
-| INT-02 Profile frontend cutover | PLANNED (existing six-field adapter connected) | TBD | TBD | TBD | BE-04 completion is recommended guidance, not an authentication gate. Non-blocking for controlled auth/email configuration QA; consent/full contract presentation audit remains. |
+| INT-02 Profile frontend cutover | DONE (source integration) | `ec8db2f6975efc82609e4e338d41868720c996e3` | `ec8db2f6975efc82609e4e338d41868720c996e3` | `dpl_Eoo8rUxjbpsxrdjmfPstN6JtDXjo`, READY, same SHA | 770/770 Node; 16 focused; browser 22/53; profile regression 17 cases; dashboard 43/154; build/TypeScript/clean install/deps PASS; strict UI audit zero. Live authenticated profile saves, staging/grants/provider and independent Neon concurrency BLOCKED externally. Next FE-13. |
+
+2026-10-15 resume closure: fetched main; the integrated INT-02 source remains the exact
+main/origin checkpoint above. Verified Vercel project, branch, READY state, SHA and review
+alias https://ussrunning-web-seven.vercel.app. No implementation or local validation was
+restarted. BE-04 completion stays backend-owned guidance; no client lifecycle transition.
+See PROFILE-FRONTEND-CUTOVER.md and V1-CHECKPOINTS.json. Documentation-only closure commits
+are verified separately; they do not replace or erase the source deployment evidence.
 
 2026-10-14: **READY_FOR_EMAIL_CONFIGURATION** after INT-01 source build/tests and exact
 main development deployment. Existing BE-04 profile read/update integration is non-blocking
