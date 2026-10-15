@@ -19,16 +19,21 @@ import {
   type ProfileField,
   type ProfileAdapter,
   type MemberResult,
+  type ProfileDetails,
+  type ProfileIssueField,
 } from "@/lib/member/contract";
 import { validateProfile } from "@/lib/member/validation";
-import { saveProfile } from "@/lib/member/profile-action";
-import { useMemberDirty } from "./MemberNavigationGuard";
+import { saveProfile, reloadProfile } from "@/lib/member/profile-action";
+import { emptyProfileDetails, validateProfileDetails } from "@/lib/member/details";
+import { MemberProfileDetailsFields } from "./MemberProfileDetailsFields";
+import { useMemberDirty, useMemberLeave } from "./MemberNavigationGuard";
 import ProfileCompletion from "./ProfileCompletion";
 import MemberFeedback from "./MemberFeedback";
 type SaveState =
   | { phase: "idle" }
   | { phase: "saving" }
-  | { phase: "settled"; result: MemberResult };
+  | { phase: "reloading" }
+  | { phase: "settled"; result: MemberResult; operation?: "save" | "reload" };
 const hints: Record<ProfileField, string> = {
   fullName: "Use your real name for your USS Running membership profile.",
   phone: "Used only when needed for account or event communication.",
@@ -41,13 +46,16 @@ const hints: Record<ProfileField, string> = {
 export default function MemberProfileForm({
   profile: initial,
   adapter = saveProfile,
+  reloadAdapter = reloadProfile,
 }: {
   profile: MemberProfile;
   adapter?: ProfileAdapter;
+  reloadAdapter?: () => Promise<MemberResult>;
 }) {
   const [profile, setProfile] = useState(initial),
     [values, setValues] = useState(initial.values);
-  const [errors, setErrors] = useState<Partial<Record<ProfileField, string>>>(
+  const [details,setDetails]=useState<ProfileDetails>(()=>initial.details??emptyProfileDetails());
+  const [errors, setErrors] = useState<Partial<Record<ProfileIssueField, string>>>(
     {},
   );
   const [state, setState] = useState<SaveState>({ phase: "idle" });
@@ -56,7 +64,8 @@ export default function MemberProfileForm({
     form = useRef<HTMLFormElement>(null);
   const setDirty = useMemberDirty(),
     toast = useToast();
-  const dirty = profileFields.some((f) => values[f] !== profile.values[f]);
+  const leave = useMemberLeave();
+  const dirty = profileFields.some((f) => values[f] !== profile.values[f]) || JSON.stringify(details)!==JSON.stringify(profile.details??emptyProfileDetails());
   useEffect(() => {
     setDirty(dirty);
     return () => setDirty(false);
@@ -67,7 +76,7 @@ export default function MemberProfileForm({
       mounted.current = false;
     };
   }, []);
-  const saving = state.phase === "saving";
+  const saving = state.phase === "saving" || state.phase === "reloading";
   const result = state.phase === "settled" ? state.result : undefined;
   const restricted =
     result?.state === "error" &&
@@ -80,6 +89,13 @@ export default function MemberProfileForm({
     ].includes(result.code);
   if (restricted && result?.state === "error")
     return <MemberFeedback code={result.code} returnTo="/dashboard/profile" />;
+  async function loadLatest() {
+    if (busy.current) return; busy.current=true;setState({phase:"reloading"});
+    let response:MemberResult;
+    try {response=decodeMemberResult(await reloadAdapter());}catch{response={state:"error",code:"NETWORK_ERROR"};}finally{busy.current=false;}
+    if(!mounted.current)return;setState({phase:"settled",result:response,operation:"reload"});
+    if(response.state==="ready"){setProfile(response.profile);setValues(response.profile.values);setDetails(response.profile.details??emptyProfileDetails());setErrors({});setDirty(false);toast("Latest profile loaded. Review before saving.","info");}
+  }
   const control = (field: ProfileField) => (
     <Field
       key={field}
@@ -159,12 +175,12 @@ export default function MemberProfileForm({
         onSubmit={(event) => {
           event.preventDefault();
           if (busy.current) return;
-          const validation = validateProfile(values, profile.policy);
+          const validation = { ...validateProfile(values, profile.policy), ...validateProfileDetails(details) };
           setErrors(validation);
           if (Object.keys(validation).length) {
             form.current
               ?.querySelector<HTMLInputElement>(
-                `[name="${profileFields.find((f) => validation[f])}"]`,
+                `[name="${Object.keys(validation)[0]}"], #profile-${Object.keys(validation)[0]}`,
               )
               ?.focus();
             return;
@@ -175,7 +191,7 @@ export default function MemberProfileForm({
             let response: MemberResult;
             try {
               response = decodeMemberResult(
-                await adapter(values, profile.revision),
+                await adapter(values, profile.revision, details),
               );
             } catch {
               response = { state: "error", code: "NETWORK_ERROR" };
@@ -187,14 +203,15 @@ export default function MemberProfileForm({
             if (response.state === "ready") {
               setProfile(response.profile);
               setValues(response.profile.values);
+              setDetails(response.profile.details??emptyProfileDetails());
               setDirty(false);
               toast("Profile updated.", "success");
             } else if (response.fields) {
               setErrors(response.fields);
-              const first = profileFields.find((f) => response.fields?.[f]);
+              const first = Object.keys(response.fields)[0];
               if (first)
                 form.current
-                  ?.querySelector<HTMLInputElement>(`[name="${first}"]`)
+                  ?.querySelector<HTMLInputElement>(`[name="${first}"], #profile-${first}`)
                   ?.focus();
             }
           });
@@ -225,6 +242,7 @@ export default function MemberProfileForm({
             {control("emergencyContactPhone")}
           </div>
         </FormSection>
+        <MemberProfileDetailsFields details={details} disabled={saving} errors={errors} maximumBirthDate={profile.policy.maximumBirthDate} onChange={next=>{setDetails(next);if(state.phase==="settled")setState({phase:"idle"});setErrors(current=>({...current,birthDate:undefined,gender:undefined,jerseySize:undefined,runningPreferences:undefined,marketingConsent:undefined,privacyConsent:undefined,...validateProfileDetails(next)}));}} />
         <div
           className="uss-member-save-feedback"
           role={result?.state === "error" ? "alert" : "status"}
@@ -232,12 +250,12 @@ export default function MemberProfileForm({
           tabIndex={result?.state === "error" ? 0 : undefined}
         >
           {saving
-            ? "Saving your profile…"
+            ? state.phase === "reloading" ? "Loading latest profile…" : "Saving your profile…"
             : result?.state === "ready"
-              ? "Profile updated."
+              ? state.phase === "settled" && state.operation === "reload" ? "Latest profile loaded. Review before saving." : "Profile updated."
               : result?.state === "error"
                 ? result.code === "PROFILE_CONFLICT"
-                  ? "Your profile changed since you opened it. Your edits are still here. Return to the overview and reopen your profile to load the latest details."
+                  ? "Your profile changed since you opened it. Your edits are still here. Reload the latest details before retrying."
                   : result.code === "PROFILE_UNAVAILABLE"
                     ? "We couldn't save your profile right now. Your edits are still here. Try again later."
                     : authMessages[result.code as keyof typeof authMessages]
@@ -245,6 +263,7 @@ export default function MemberProfileForm({
                   ? "You have unsaved changes."
                   : "Your changes will be saved when you choose Save changes."}
         </div>
+        {result?.state === "error" && result.code === "PROFILE_CONFLICT" && <Button variant="secondary" loading={saving} onClick={()=>leave(()=>void loadLatest())}>Reload latest profile</Button>}
         <FormActions
           cancel={
             <LinkButton href="/dashboard" variant="secondary">

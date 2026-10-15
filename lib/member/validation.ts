@@ -26,6 +26,10 @@ export function validateProfile(values: ProfileValues, policy: ProfilePolicy) {
       errors[field] =
         "Enter a valid phone number, including the country code when needed.";
   }
+  if (values.fullName.trim().length < 2) errors.fullName = "Use at least two characters for your full name.";
+  if (values.emergencyContactName.trim() && values.emergencyContactName.trim().length < 2) errors.emergencyContactName = "Use at least two characters for the contact name.";
+  for (const field of profileFields) if (/[<>\x00-\x1f\x7f]/.test(values[field])) errors[field] = "Use plain text without markup or control characters.";
+  if (values.instagram.trim() && !/^@?[A-Za-z0-9_.]{1,30}$/.test(values.instagram.trim())) errors.instagram = "Use a valid Instagram handle, with an optional @ prefix.";
   if (
     Boolean(values.emergencyContactName.trim()) !==
     Boolean(values.emergencyContactPhone.trim())
