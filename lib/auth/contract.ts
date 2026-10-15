@@ -26,6 +26,8 @@ export type AuthResult =
       email?: string;
       verificationMode?: "link" | "code";
       retryAfterSeconds?: number;
+      verificationError?: AuthErrorCode;
+      requiresSignIn?: boolean;
     }
   | {
       state:
@@ -35,6 +37,7 @@ export type AuthResult =
         | "password_reset"
         | "resend_sent";
       retryAfterSeconds?: number;
+      accountStatus?: "active" | "pending_verification" | "suspended" | "deactivated" | "unknown";
     };
 export type AuthAdapter = (
   operation: AuthOperation,
@@ -42,11 +45,11 @@ export type AuthAdapter = (
 ) => Promise<AuthResult>;
 const successes: Record<AuthOperation, readonly string[]> = {
   login: ["signed_in", "verification_required"],
-  register: ["verification_required"],
+  register: ["verification_required", "already_verified"],
   verify: ["verified", "already_verified"],
   forgot: ["recovery_sent"],
   reset: ["password_reset"],
-  resend: ["resend_sent"],
+  resend: ["resend_sent", "already_verified"],
 };
 // Only this boundary interprets backend codes. Never render an upstream message.
 export function decodeAuthResult(
@@ -82,6 +85,9 @@ export function decodeAuthResult(
       email: typeof value.email === "string" ? value.email : undefined,
       verificationMode: value.verificationMode === "code" ? "code" : "link",
       retryAfterSeconds,
+      verificationError: value.verificationError ? normalizeAuthCode(value.verificationError) : undefined,
+      requiresSignIn: value.requiresSignIn === true,
     };
-  return { state: value.state, retryAfterSeconds } as AuthResult;
+  const accountStatus = ["active","pending_verification","suspended","deactivated","unknown"].includes(String(value.accountStatus)) ? value.accountStatus as "active" | "pending_verification" | "suspended" | "deactivated" | "unknown" : undefined;
+  return { state: value.state, retryAfterSeconds, accountStatus } as AuthResult;
 }

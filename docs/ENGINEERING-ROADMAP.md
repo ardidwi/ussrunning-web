@@ -6,6 +6,32 @@ This living document records product sequence, backend/frontend contracts, depen
 
 USS Running comprises a public website, free membership, authentication, account identity, member profiles, permanent member IDs and barcodes, CMS, Stories, media/gallery, events, registration, event passes, barcode/QR scanning, check-in, partners/sponsors, notifications, admin operations, RBAC, audit/revision history, dynamic site content, and staging/production infrastructure. Planned scope is not evidence of implementation.
 
+### Critical integration cutovers / resume checkpoints
+
+| Task | Status | Source commit | Verified main = origin/main | Deployment | Tests / blockers / next |
+| --- | --- | --- | --- | --- | --- |
+| INT-01 Auth frontend cutover | DONE (source integration) | `b3e74d3` | `b3e74d3c3f0367c9af380da820dd43ab5d81b1e7` | `dpl_KAX2bMrkdAFrQXMDCHd6YK9vA2pA`, READY, same SHA | 758/758 Node; 28 focused; browser 38/66; live read-only 18/54; zero final runtime/hydration findings. Real provider/email/crosswalk/Neon QA BLOCKED externally. Next INT-02. |
+| INT-02 Profile frontend cutover | DONE (source integration) | `ec8db2f6975efc82609e4e338d41868720c996e3` | `ec8db2f6975efc82609e4e338d41868720c996e3` | `dpl_Eoo8rUxjbpsxrdjmfPstN6JtDXjo`, READY, same SHA | 770/770 Node; 16 focused; browser 22/53; profile regression 17 cases; dashboard 43/154; build/TypeScript/clean install/deps PASS; strict UI audit zero. Live authenticated profile saves, staging/grants/provider and independent Neon concurrency BLOCKED externally. Next FE-13. |
+
+2026-10-15 resume closure: fetched main; the integrated INT-02 source remains the exact
+main/origin checkpoint above. Verified Vercel project, branch, READY state, SHA and review
+alias https://ussrunning-web-seven.vercel.app. No implementation or local validation was
+restarted. BE-04 completion stays backend-owned guidance; no client lifecycle transition.
+See PROFILE-FRONTEND-CUTOVER.md and V1-CHECKPOINTS.json. Documentation-only closure commits
+are verified separately; they do not replace or erase the source deployment evidence.
+
+2026-10-14: **READY_FOR_EMAIL_CONFIGURATION** after INT-01 source build/tests and exact
+main development deployment. Existing BE-04 profile read/update integration is non-blocking
+for this auth test; completion does not change account lifecycle. No production secrets or
+email sends are authorized by this checkpoint. Manual environment names/origin/sender gates
+are documented in AUTH-FRONTEND-CUTOVER.md; live readiness remains BLOCKED until controlled
+provider/session/email and staging QA. This table records the validated source deployment;
+documentation-only checkpoint commits are inspected/verified separately before the next task.
+
+Resume: fetch current origin/main, inspect actual ancestry and task docs; do not reset to
+checkpoint SHAs. Public Stories, Partners, footer and homepage remote branches remain
+independently owned, unmerged and unvalidated here. Do not bundle or delete them.
+
 ### Domain boundaries
 
 - Account identity != authentication: USS account identity/lifecycle is separate from provider credentials/session.
@@ -113,9 +139,9 @@ Preserve approved overrides, BE-03 resend 6.13.0, server-only, and PGlite test d
 
 ### Completion and cutover boundaries
 
-FE-03 delivered a dashboard shell/profile UI with provisional adapters. Its production loader/save still return PROFILE_UNAVAILABLE for authenticated sessions; reference fixtures are development-only. BE-04 is available after integration, but merge alone does not translate the provisional DTO or connect trusted profile reads/writes. Scope that cutover explicitly before claiming real profile flows.
+Historical FE-03 began with provisional adapters. The current production own-profile loader/save delegate to BE-04; INT-02 validates the projection, consent/optional-field presentation and conflict recovery. PROFILE_UNAVAILABLE now represents a real controlled service/data failure. Development references remain isolated; live authenticated profile QA is a separate external gate. See PROFILE-FRONTEND-CUTOVER.md.
 
-FE-02 production connects existing provider login only; registration, verification/resend, recovery and reset retain AUTH_UNAVAILABLE adapter branches. BE-02/03 availability does not automatically wire those flows. Plan and validate that cutover separately; fixture authentication outcomes are not provider authentication evidence.
+Historical FE-02 supplied flow UI before all production adapters existed. INT-01 now wires those flows through BE-02/03 and the installed provider contract. AUTH_UNAVAILABLE remains honest unavailable/provider feedback; fixture outcomes are not live provider authentication evidence. See AUTH-FRONTEND-CUTOVER.md and the critical-cutover checkpoint above.
 
 BE-06 supplies permission guards and bounded read-only history. CMS writes/publish/restore, role mutations, and legacy CMS authorization cutover remain future work. Permanent identity crosswalk, deployment grants, real independent Neon sessions/provider cookies and query plans at scale remain staging gates.
 
@@ -153,7 +179,7 @@ Numbering is a planning baseline, may continue beyond BE-22, and can be combined
 | BE-14 | Partner / Sponsor Service | DONE | BE-06 + BE-11 | 71b94e6 | Guarded canonical Partner + event sponsorship, atomic history, MediaAsset references; staging limitations documented. |
 | BE-15 | Dynamic Site Content Service | DONE | BE-06 + BE-11 | `06b1a91` | Ten typed slots; atomic drafts/revisions/public snapshots, validated references and safe fallbacks. See DYNAMIC-SITE-CONTENT.md and BE-15-VALIDATION.md. |
 | BE-16 | Notification Service | DONE | BE-03 + relevant domain events | 24b7db1 | Durable operational intents, typed templates, idempotent claims and bounded explicit retry; staging delivery/worker pending. |
-| BE-17 | Admin User Management | PLANNED | BE-02 + BE-04 + BE-06 | TBD | Audited lifecycle actions with least privilege. |
+| BE-17 | Admin User Management | DONE | BE-02 + BE-04 + BE-06 | 2801930 | Super-admin-only managed reads/lifecycle, protected owner paths, optimistic concurrency and atomic audit; staging/session limits documented. |
 | BE-18 | Role & Permission Administration | PLANNED | BE-06 + BE-17 | TBD | Elevated-role ownership/bootstrap/revocation, narrow grants. |
 | BE-19 | Search / Filter / Pagination Hardening | PLANNED | Implemented collection domains | TBD | Bounded APIs and measured query plans/indexes. |
 | BE-20 | Security / Rate Limiting Hardening | PLANNED | SEC + mutation services | TBD | Threat/authorization/abuse review. |
@@ -177,7 +203,7 @@ Numbering may continue beyond FE-20. Final approved dependency repair heads and 
 | FE-09 | Scanner / Check-In Workspace | DONE | BE-10 + FE-05 | feature/scanner-check-in-ui | Event-scoped staff scanner, native/worker QR decoding, manual fallback and authoritative result states. See FE-09-SCANNER.md. Live staff/Neon/device QA remains pending. |
 | FE-10 | Stories CMS | DONE | BE-12 + FE-05 + BE-11 | feature/stories-cms / `157d0e0` | Protected managed list/editor, plain-text preview, MediaAsset picker, versioned lifecycle and explicit Jakarta scheduling. See FE-10-STORIES-CMS.md. Public Stories migration, persistent media delivery and full revision workspace remain separate. |
 | FE-11 | Gallery CMS | DONE | BE-11 + BE-13 + FE-05 | feature/gallery-cms / `2212553` | Protected managed collections, versioned metadata/items/lifecycle, exact-set keyboard reorder and BE-11 picker. Persistent upload/delivery and public Gallery migration remain separate. See FE-11-GALLERY-CMS.md. |
-| FE-12 | Events CMS | PLANNED | BE-07 + FE-05 | TBD | Lifecycle/configuration/audit/publication clarity. |
+| FE-12 | Events CMS | DONE | BE-07 + FE-05 | feature/events-cms / `04ca13d` | Protected event metadata/configuration, versioned lifecycle, explicit-offset timing, private preview and BE-11 cover picker. Registration/pass/check-in operations remain separate. See FE-12-EVENTS-CMS.md. |
 | FE-13 | Partner / Sponsor CMS | PLANNED | BE-14 + FE-05 | TBD | Managed partner content/media. |
 | FE-14 | Dynamic Site Content Editor | PLANNED | BE-15 + FE-05 | TBD | Draft/preview/publish; no runtime secrets/configuration in editorial UI. |
 | FE-15 | Users / Roles Administration UI | PLANNED | BE-17 + BE-18 + FE-05 | TBD | Narrow permissions and audited operations. |
@@ -609,3 +635,70 @@ Durable intents require explicit managed dispatch/retry: no automatic worker, re
 bounce webhook, marketing or notification UI. Provider acceptance is not inbox proof.
 Next lint remains unsupported; broader hydration and human product audit remain open.
 See NOTIFICATION-SERVICE.md and BE-16-VALIDATION.md. BE-17 is next; not implemented here.
+
+### FE-12 Events CMS delivery — 2026-10-14
+
+DONE for managed Event content/configuration. Task `04ca13d` was integrated forward
+from BE-16 delivery `113dc4d`, preserving FE-11 and notification work. Existing
+`/admin?module=events` owns list/create/edit/detail/private preview, with trusted
+`events.manage` presentation and backend guards on every read/write. Uses the actual
+BE-07 lifecycle graph, opaque expectedVersion, explicit conflict reload, bounded
+status/event-type listing and immutable existing slugs. Creation requires BE-07's
+explicit slug input; no title-derived slug or client identity generation.
+
+Absolute timestamp controls require seconds and an explicit offset; normalized
+summaries show the selected IANA timezone without browser-local reinterpretation.
+Capacity/waitlist/visibility/location remain configuration only. BE-11 cover picker
+is read-only, with honest null/unavailable delivery. Draft preview stays protected;
+public links retain canonical/legacy-compatible `/runs/[slug]`. Existing scanner
+navigation remains independently authorized. No registration, pass or check-in UI
+or backend semantics were duplicated or changed.
+
+Validation: FE-12 31/31, integrated Node 675/675 after BE-16; Events browser 57 cases /
+121 assertions at 320–1920px, short height/200% zoom, keyboard/focus/Escape, touch
+targets and lifecycle/conflict/media states. Zero final runtime/hydration errors;
+strict UI audit zero findings. Gallery 46/151, Stories 40/137, Scanner 118/644 (three
+QR decodes), Event Pass 128/386 (16 decodes), Registration 138/254 passed. Clean
+install, dependency graph, production build, standalone TypeScript and diff checks
+passed without dependency/lockfile drift. Next.js 16 next lint remains unsupported.
+
+Vercel `dpl_6KoW516sM4geyR6GnNcpqqjw81Zu` READY for exact implementation main SHA
+`04ca13d2d0546fc91357151782f9baed5343089a`; deployed anonymous desktop/mobile smoke
+17 cases / 59 assertions passed with zero runtime/hydration errors and fixture 404.
+Review: https://ussrunning-web-seven.vercel.app/admin?module=events. Final roadmap
+deployment is verified separately after push; this is development product review.
+
+Real authenticated Neon admin writes/concurrency, staging migration/runtime grants,
+persistent media delivery and human/physical-device QA remain pending. Public route
+cleanup, check-in-window configuration, persisted per-event QR branding, richer
+relationships and full revision workspace require separate contracts/tasks. No auth
+provider/configuration, permanent barcode, BE-07/08/09/10 semantics or persistent DB
+changes were made. See FE-12-EVENTS-CMS.md and fe-12-evidence.
+
+
+### BE-17 Admin User Management delivery — 2026-10-14
+
+Implementation `2801930f67dbcc82496e1420b4f6fe15f2e9b5d7` on feature/admin-user-management
+was integrated forward after FE-12 implementation04ca13d and delivery077aff1. Existing
+users.manage remains super_admin-only; no permission/role hierarchy change. Safe bounded
+list/detail/search and audited optimistic lifecycle actions reuse accounts/profile/RBAC.
+All super_admin targets and own destructive actions are protected; pending verification
+cannot be bypassed. Migration018 adds account version/status time and two access indexes.
+No persistent migration, provider/session reset, identity rotation or frontend change.
+
+Validation: BE-17 55/55, integrated regression730/730 including FE-12, clean install
+(262 audited/zero vulnerabilities), dependency graph, production build, standalone
+TypeScript and diff check PASS. Local fresh/001–017 upgrade/legacy retention/rerun/
+failed-migration rollback+recovery/runtime grants and offline18-migration plan PASS.
+Local/deployed core browser each20/20 at320/1366px, zero page errors/targeted hydration
+warnings/horizontal overflow and reference404 guard. Implementation Vercel deployment
+`dpl_E3erqyZgsPGG9c72jp4JttgsN6mq` READY for exact implementation SHA; review alias
+https://ussrunning-web-seven.vercel.app. Final documentation deployment is checked after push.
+
+Provider cookies are not revoked: existing trusted DB lifecycle guards block protected
+USS operations. Real authenticated super_admin/stale-session QA, isolated Neon migration/
+independent concurrency, large-data query plans and human audit remain pending.
+BE-18 role ownership/bootstrap/revocation is separate; all elevated target lifecycle
+changes require a future explicit security workflow. No resend/verification override,
+bulk actions or arbitrary profile edits. Known next lint and broader hydration audit
+remain open. See ADMIN-USER-MANAGEMENT.md and BE-17-VALIDATION.md.

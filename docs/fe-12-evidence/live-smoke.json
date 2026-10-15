@@ -1,0 +1,25 @@
+{
+  "base": "https://ussrunning-web-seven.vercel.app",
+  "cases": [
+    "/admin?module=events/320",
+    "/admin?module=events&view=create/320",
+    "/runs/320",
+    "/dashboard/check-in/320",
+    "/admin?module=events/375",
+    "/admin?module=events&view=create/375",
+    "/runs/375",
+    "/dashboard/check-in/375",
+    "/admin?module=events/768",
+    "/admin?module=events&view=create/768",
+    "/runs/768",
+    "/dashboard/check-in/768",
+    "/admin?module=events/1366",
+    "/admin?module=events&view=create/1366",
+    "/runs/1366",
+    "/dashboard/check-in/1366",
+    "fixture production guard"
+  ],
+  "assertions": 59,
+  "runtimeErrors": [],
+  "hydrationWarnings": []
+}

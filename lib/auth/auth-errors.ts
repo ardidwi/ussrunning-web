@@ -25,6 +25,10 @@ export const authMessages = {
     "This account service is temporarily unavailable. Please try again later or contact USS Running support.",
   RESET_EXPIRED: "This password reset link has expired. Request a new link.",
   RESET_INVALID: "This password reset link isn't valid. Request a new link.",
+  VERIFICATION_ALREADY_USED: "This verification link has already been used. Sign in or request a new email.",
+  EMAIL_NOT_CONFIGURED: "Your account is pending verification, but verification email is not available yet. Contact USS support.",
+  EMAIL_DELIVERY_FAILED: "We couldn't send the verification email. Your account remains pending. Try resend later.",
+  EMAIL_DELIVERY_UNCERTAIN: "We couldn't confirm email delivery. Your account remains pending. Check your inbox before requesting another email.",
 } as const;
 export type AuthErrorCode = keyof typeof authMessages;
 const aliases: Record<string, AuthErrorCode> = {
@@ -37,6 +41,10 @@ const aliases: Record<string, AuthErrorCode> = {
   INVALID_TOKEN: "VERIFICATION_INVALID",
   TOKEN_EXPIRED: "VERIFICATION_EXPIRED",
   TOO_MANY_REQUESTS: "RATE_LIMITED",
+  AUTH_NOT_CONFIGURED: "AUTH_UNAVAILABLE",
+  PROVISIONING_FAILED: "ACCOUNT_NOT_PROVISIONED",
+  VERIFICATION_RATE_LIMITED: "RATE_LIMITED",
+  VERIFICATION_UNAVAILABLE: "AUTH_UNAVAILABLE",
 };
 export function normalizeAuthCode(
   value: unknown,

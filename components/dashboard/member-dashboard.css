@@ -217,6 +217,18 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-6);
 }
+.uss-member-day-choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2) var(--space-4);
+}
+.uss-member-day-choices .uss-field-error:empty {
+  display: none;
+}
+.uss-member-day-choices .uss-choice label {
+  min-height: 44px;
+  flex: 1;
+}
 .uss-member-save-feedback {
   height: 9em;
   overflow: auto;
