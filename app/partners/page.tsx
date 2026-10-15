@@ -133,7 +133,7 @@ export default async function PartnersPage() {
           </div>
         </section>
       ) : unavailable ? (
-        <section className="partner-journey" aria-labelledby="current-partners-title">
+        <section className="partner-journey" aria-label="Partner availability">
           <div className="content-frame">
             <div className="cms-empty-state" role="status">
               <p>Partner information is temporarily unavailable. Please try again soon.</p>
