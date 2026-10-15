@@ -1,0 +1,45 @@
+{
+  "cases": [
+    {
+      "name": "Orbit planes, energy and dimensional core move at rest",
+      "result": "PASS"
+    },
+    {
+      "name": "Eased desktop pointer depth with stable text",
+      "result": "PASS"
+    },
+    {
+      "name": "Orbit retreats continuously across the old chapter boundary",
+      "result": "PASS"
+    },
+    {
+      "name": "Monas readable hold and rising energy",
+      "result": "PASS"
+    },
+    {
+      "name": "Distance follows native scroll without per-frame React rendering",
+      "result": "PASS"
+    },
+    {
+      "name": "Final scene fades before the runs handoff",
+      "result": "PASS"
+    },
+    {
+      "name": "Offscreen canvas and CSS animations pause",
+      "result": "PASS"
+    },
+    {
+      "name": "Live reduced-motion switch stops ambient, energy and pointer motion",
+      "result": "PASS"
+    },
+    {
+      "name": "Touch uses ambient animation without cursor parallax",
+      "result": "PASS"
+    }
+  ],
+  "assertions": 36,
+  "runtime": [],
+  "hydration": [],
+  "animation": [],
+  "result": "PASS"
+}

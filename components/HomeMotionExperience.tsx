@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import SiteHeader from "@/components/SiteHeader";
+import { heroMotionPose, motionEase, smoothRange } from "@/components/home/hero-motion";
 
 type Point3 = { x: number; y: number; z: number };
 
@@ -155,7 +156,7 @@ export default function HomeMotionExperience({
 }: Props) {
   const sectionRef = useRef<HTMLElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [progress, setProgress] = useState(0);
+  const distanceRef = useRef<HTMLSpanElement | null>(null);
   const [activeChapter, setActiveChapter] = useState(0);
   const [storyActive, setStoryActive] = useState(true);
 
@@ -200,6 +201,7 @@ export default function HomeMotionExperience({
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     let reduceMotion = motionQuery.matches;
     let visible = true;
+    let storyInView = true;
     let width = 1;
     let height = 1;
     let dpr = 1;
@@ -209,7 +211,15 @@ export default function HomeMotionExperience({
     let frame = 0;
     let disposed = false;
     let latestProgress = 0;
+    let displayedProgress = 0;
+    let displayedMeters = -1;
     let loadToken = 0;
+    let previousTime = 0;
+    let scrollTop = 0;
+    let scrollRange = 1;
+    let viewportHeight = window.innerHeight;
+    let articleBounds: Array<{ element: HTMLElement; top: number; height: number }> = [];
+    const hoverQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
 
     const pointer = { x: 0, y: 0, nx: 0, ny: 0, active: false, smoothX: 0, smoothY: 0 };
     const clickPulse = { x: 0, y: 0, startedAt: -10000 };
@@ -224,6 +234,13 @@ export default function HomeMotionExperience({
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
       requestDraw();
 
+      const sectionBounds = section.getBoundingClientRect();
+      viewportHeight = window.innerHeight;
+      scrollTop = sectionBounds.top + window.scrollY;
+      scrollRange = Math.max(1, section.offsetHeight - viewportHeight);
+      articleBounds = Array.from(section.querySelectorAll<HTMLElement>(".uss-motion-chapter")).map(element => ({
+        element, top: element.getBoundingClientRect().top + window.scrollY, height: element.offsetHeight,
+      }));
       particleCount = width < 760 ? 760 : 3000;
       const token = ++loadToken;
       monas = [];
@@ -241,15 +258,23 @@ export default function HomeMotionExperience({
     };
 
     const updateProgress = () => {
-      const rect = section.getBoundingClientRect();
-      const total = Math.max(1, section.offsetHeight - window.innerHeight);
-      latestProgress = clamp(-rect.top, 0, total) / total;
-      requestDraw();
-      setProgress(latestProgress);
-      const articles = Array.from(section.querySelectorAll(".uss-motion-chapter"));
-      const current = articles.findIndex(article => article.getBoundingClientRect().bottom > window.innerHeight * 0.5);
+      const offset = window.scrollY - scrollTop;
+      latestProgress = clamp(offset / scrollRange);
+      section.style.setProperty("--hero-stage-opacity", String(reduceMotion ? 1
+        : 1 - smoothRange(0, viewportHeight * 0.5, Math.max(0, offset - scrollRange))));
+      const middle = window.scrollY + viewportHeight * 0.5;
+      const current = articleBounds.findIndex(article => article.top + article.height > middle);
       setActiveChapter(current < 0 ? 3 : current);
-      setStoryActive(rect.top <= 4 && rect.bottom >= window.innerHeight * 0.5);
+      for (const article of articleBounds) {
+        const distance = Math.abs(middle - (article.top + article.height * 0.5));
+        const presence = 1 - smoothRange(0.1, 1, distance / ((article.height + viewportHeight) * 0.5));
+        article.element.style.setProperty("--copy-presence", String(reduceMotion ? 1 : 0.25 + presence * 0.75));
+        article.element.style.setProperty("--copy-shift", `${reduceMotion ? 0 : (1 - presence) * 12}px`);
+      }
+      storyInView = offset >= -4 && offset <= scrollRange + viewportHeight * 0.5;
+      visible = storyInView;
+      syncPlayback();
+      setStoryActive(storyInView);
     };
 
     const shapePoint = (shape: number, index: number, time: number): Point3 => {
@@ -294,8 +319,26 @@ export default function HomeMotionExperience({
         return;
       }
 
-      pointer.smoothX += (pointer.nx - pointer.smoothX) * 0.05;
-      pointer.smoothY += (pointer.ny - pointer.smoothY) * 0.05;
+      const ease = motionEase(previousTime ? time - previousTime : 16);
+      previousTime = time;
+      displayedProgress = reduceMotion ? latestProgress : displayedProgress + (latestProgress - displayedProgress) * ease;
+      section.style.setProperty("--hero-travel", String(displayedProgress));
+      const meters = Math.round(displayedProgress * 5000);
+      if (meters !== displayedMeters && distanceRef.current) {
+        distanceRef.current.textContent = `${String(meters).padStart(4, "0")} M`;
+        displayedMeters = meters;
+      }
+      pointer.smoothX += (pointer.nx - pointer.smoothX) * ease;
+      pointer.smoothY += (pointer.ny - pointer.smoothY) * ease;
+      const pose = heroMotionPose(latestProgress, reduceMotion);
+      // Only transform/opacity consumers use these variables; no layout reads in the frame loop.
+      section.style.setProperty("--hero-x", `${pointer.smoothX * 9}px`);
+      section.style.setProperty("--hero-y", `${pointer.smoothY * 6}px`);
+      section.style.setProperty("--hero-yaw", `${pointer.smoothX * 4}deg`);
+      section.style.setProperty("--hero-pitch", `${pointer.smoothY * -3}deg`);
+      section.style.setProperty("--hero-orbit-opacity", String(pose.orbitOpacity));
+      section.style.setProperty("--hero-orbit-scale", String(pose.orbitScale));
+      section.style.setProperty("--hero-monas-opacity", String(pose.monasOpacity));
 
       // Hold the architectural silhouette before the final brand transformation.
       const step = latestProgress < 0.36 ? latestProgress / 0.36
@@ -320,11 +363,30 @@ export default function HomeMotionExperience({
       const pulseAge = (time - clickPulse.startedAt) / 1000;
 
       drawOrbit(reduceMotion ? 0 : time, centerX, centerY, clamp((latestProgress - 0.44) / 0.18) * 0.5);
+      // Running-lane sparks retain a coherent direction as the opening recedes into the route.
+      if (pose.routeOpacity > 0.01 && width > 860) {
+        const routeRadius = Math.min(width * 0.17, height * 0.31) * (1 - pose.routeFlatten * 0.18);
+        context.save();
+        context.translate(centerX + pointer.smoothX * 5, centerY + pointer.smoothY * 3);
+        context.rotate(-0.55 + pose.routeFlatten * 0.35);
+        for (let spark = 0; spark < 36; spark++) {
+          const angle = spark / 36 * Math.PI * 2 + (reduceMotion ? 0 : time * 0.00014);
+          const x = Math.cos(angle) * routeRadius;
+          const y = Math.sin(angle) * routeRadius * (0.46 - pose.routeFlatten * 0.22);
+          const red = spark % 9 === 0;
+          context.beginPath();
+          context.arc(x, y, red ? 2 : 0.85, 0, Math.PI * 2);
+          context.fillStyle = red ? `rgba(255,59,33,${pose.routeOpacity})` : `rgba(255,255,255,${pose.routeOpacity * 0.5})`;
+          context.fill();
+        }
+        context.restore();
+      }
 
       context.save();
       // The opening core owns precise rings; particles emerge as the track evolves.
       context.globalAlpha = clamp(latestProgress / 0.2);
       context.globalCompositeOperation = "lighter";
+      const energyHeight = 2.2 - ((reduceMotion ? 0.5 : (time % 6200) / 6200) * 4.4);
 
       for (let index = 0; latestProgress > 0 && index < particleCount; index += 1) {
         const a = shapePoint(fromIndex, index, time);
@@ -353,8 +415,9 @@ export default function HomeMotionExperience({
           const radius = width < 760 ? 90 : 145;
           if (dist < radius) {
             const force = 1 - dist / radius;
-            sx += (dx / dist) * force * force * 34;
-            sy += (dy / dist) * force * force * 34;
+            const displacement = scene >= 2 ? 6 : 12;
+            sx += (dx / dist) * force * force * displacement;
+            sy += (dy / dist) * force * force * displacement;
           }
         }
 
@@ -365,13 +428,14 @@ export default function HomeMotionExperience({
           const wave = pulseAge * Math.max(width, height) * 0.68;
           const delta = Math.abs(dist - wave);
           if (delta < 88) {
-            const strength = (1 - delta / 88) * (1 - pulseAge / 1.15) * 42;
+            const strength = (1 - delta / 88) * (1 - pulseAge / 1.15) * 18;
             sx += (dx / dist) * strength;
             sy += (dy / dist) * strength;
           }
         }
 
-        const accent = scene >= 2 && (index % (scene === 3 ? 37 : 29) === 0);
+        const energy = scene === 2 && Math.abs(point.y - energyHeight) < 0.12 && index % 3 === 0;
+        const accent = energy || (scene >= 2 && index % (scene === 3 ? 37 : 59) === 0);
         const alpha = accent ? 0.9 : scene === 2 ? 0.65 : scene === 3 ? 0.78 : 0.5 + clamp((point.z + 2.2) / 4.4) * 0.42;
         const radius = accent ? 1.6 : scene === 2 ? 0.35 + perspective * 0.4 : scene === 3 ? 0.82 + perspective * 0.9 : 0.66 + perspective * 0.88;
 
@@ -383,7 +447,7 @@ export default function HomeMotionExperience({
 
       context.restore();
       frame = 0;
-      if (!reduceMotion && visible && !document.hidden && latestProgress > 0) frame = requestAnimationFrame(draw);
+      if (!reduceMotion && visible && !document.hidden) frame = requestAnimationFrame(draw);
     };
 
     function requestDraw() {
@@ -393,31 +457,35 @@ export default function HomeMotionExperience({
       reduceMotion = motionQuery.matches;
       pointer.active = false;
       pointer.nx = pointer.ny = pointer.smoothX = pointer.smoothY = 0;
+      updateProgress();
       requestDraw();
     };
-    const onVisibility = () => {
-      if (document.hidden) { cancelAnimationFrame(frame); frame = 0; }
+    const syncPlayback = () => {
+      section.dataset.motionVisible = String(visible && !document.hidden);
+      if (!visible || document.hidden) { cancelAnimationFrame(frame); frame = 0; }
       else requestDraw();
     };
+    const onVisibility = () => syncPlayback();
     const observer = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-      if (!visible) { cancelAnimationFrame(frame); frame = 0; }
-      else requestDraw();
+      visible = entry.isIntersecting && storyInView;
+      syncPlayback();
     });
 
     const onPointerMove = (event: PointerEvent) => {
-      if (event.pointerType === "touch") return;
-      const rect = canvas.getBoundingClientRect();
-      const inside = event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom;
-      pointer.active = inside;
-      if (!inside) return;
-      pointer.x = event.clientX - rect.left;
-      pointer.y = event.clientY - rect.top;
+      if (event.pointerType !== "mouse" || !hoverQuery.matches) { resetPointer(); return; }
+      if (reduceMotion || !visible) return;
+      pointer.active = event.clientX >= 0 && event.clientX <= width && event.clientY >= 0 && event.clientY <= height;
+      if (!pointer.active) return;
+      pointer.x = event.clientX;
+      pointer.y = event.clientY;
       pointer.nx = clamp((pointer.x / width - 0.5) * 2, -1, 1);
       pointer.ny = clamp((pointer.y / height - 0.5) * 2, -1, 1);
     };
 
+    const resetPointer = () => { pointer.active = false; pointer.nx = pointer.ny = 0; };
+    const onResize = () => { resize(); updateProgress(); };
     const onClick = (event: MouseEvent) => {
+      if (reduceMotion || !hoverQuery.matches || !visible) return;
       const target = event.target as HTMLElement | null;
       if (target?.closest("a,button,input,label")) return;
       const rect = canvas.getBoundingClientRect();
@@ -431,10 +499,14 @@ export default function HomeMotionExperience({
     updateProgress();
     requestDraw();
     observer.observe(section);
+    const layoutObserver = new ResizeObserver(onResize);
+    layoutObserver.observe(section);
     motionQuery.addEventListener("change", onMotionChange);
     document.addEventListener("visibilitychange", onVisibility);
     window.addEventListener("scroll", updateProgress, { passive: true });
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", onResize);
+    window.addEventListener("blur", resetPointer);
+    document.addEventListener("pointerleave", resetPointer);
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("click", onClick);
 
@@ -443,16 +515,18 @@ export default function HomeMotionExperience({
       loadToken += 1;
       cancelAnimationFrame(frame);
       observer.disconnect();
+      layoutObserver.disconnect();
       motionQuery.removeEventListener("change", onMotionChange);
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("scroll", updateProgress);
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("blur", resetPointer);
+      document.removeEventListener("pointerleave", resetPointer);
       window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("click", onClick);
     };
   }, []);
 
-  const meters = Math.round(progress * 5000);
   const hud = activeChapter === 2
     ? ["JAKARTA", "6.1754° S", "106.8272° E", "PEOPLE", "ROUTES", "CULTURE"]
     : activeChapter === 3
@@ -495,11 +569,11 @@ export default function HomeMotionExperience({
 
       <nav className={`uss-motion-scrubber ${storyActive ? "is-on" : ""}`} aria-label="USS introduction progress">
         <div className="uss-motion-track" aria-hidden="true">
-          <span className="uss-motion-fill" style={{ transform: `scaleX(${progress})` }} />
-          <span className="uss-motion-head" style={{ left: `${progress * 100}%` }} />
+          <span className="uss-motion-fill" />
+          <span className="uss-motion-head" />
           {[0, 1, 2, 3].map((item) => <i key={item} style={{ left: `${(item / 3) * 100}%` }} />)}
         </div>
-        <span className="uss-motion-distance">{String(meters).padStart(4, "0")} M</span>
+        <span ref={distanceRef} className="uss-motion-distance">0000 M</span>
         <span className="uss-motion-divider" aria-hidden="true" />
         <a href="#uss-next-runs">SKIP TO RUNS →</a>
       </nav>

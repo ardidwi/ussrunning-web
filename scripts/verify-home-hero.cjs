@@ -41,7 +41,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || path.join(
     await page.waitForTimeout(450);
   }
   try {
-    for (const [width, height] of [[320,568],[375,812],[768,1024],[1024,768],[1440,900],[1920,1080],[1366,500]]) {
+    for (const [width, height] of [[320,568],[375,812],[430,932],[768,1024],[1024,768],[1440,900],[1920,1080],[1366,500]]) {
       await page.setViewportSize({ width, height });
       await home();
       await noOverflow();
