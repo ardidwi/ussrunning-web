@@ -26,3 +26,6 @@ GRANT EXECUTE ON FUNCTION uss.claim_application_notification(uuid,uuid,text,text
 
 -- BE-17 invoker account lifecycle; no role grants or provider/session privileges.
 GRANT EXECUTE ON FUNCTION uss.manage_account(uuid,uuid,text,integer,text) TO :"app_role";
+
+-- BE-18 runtime role management is intentionally narrow. Bootstrap remains DB-owner-only.
+GRANT EXECUTE ON FUNCTION uss.manage_role(uuid,uuid,text,text,integer,text) TO :"app_role";
