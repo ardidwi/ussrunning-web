@@ -31,6 +31,20 @@ jobs:
       - name: BE-18 focused role administration tests
         run: node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/role-permission-administration.test.mjs
 
+      # Diagnostic guard: prove the pre-BE-18 aggregate remains healthy on this
+      # exact branch before combining it with the new PGlite-heavy suite.
+      - name: Existing domain and integration tests without BE-18
+        shell: bash
+        run: |
+          mapfile -d '' test_files < <(find tests -maxdepth 1 -name '*.test.mjs' ! -name 'role-permission-administration.test.mjs' -print0 | sort -z)
+          node --liftoff-only --wasm-num-compilation-tasks=1 --test "${test_files[@]}"
+
+      # Run the complete set serially to distinguish a test correctness failure
+      # from runner resource/concurrency pressure. The normal aggregate gate below
+      # is intentionally preserved and still blocks the PR if it fails.
+      - name: Complete suite serial diagnostic
+        run: node --liftoff-only --wasm-num-compilation-tasks=1 --test --test-concurrency=1 tests/*.test.mjs
+
       - name: Domain and integration tests
         run: npm run test:ci
 
