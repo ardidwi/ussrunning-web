@@ -132,18 +132,6 @@ function rotatePoint(point: Point3, yaw: number, pitch: number): Point3 {
   return { x: x1, y: point.y * cp - z1 * sp, z: point.y * sp + z1 * cp };
 }
 
-function HeroOrbit() {
-  return (
-    <div className="uss-hero-orbit" aria-hidden="true">
-      <div className="uss-hero-orbit-halo" />
-      <div className="uss-hero-orbit-rim" />
-      <div className="uss-hero-orbit-path uss-hero-orbit-path-back" />
-      <div className="uss-hero-orbit-core"><img src="/uss-logo.png" alt="" width="320" height="120" /></div>
-      <div className="uss-hero-orbit-path uss-hero-orbit-path-front" />
-    </div>
-  );
-}
-
 export default function HomeMotionExperience({
   imageUrl,
   established,
@@ -197,9 +185,7 @@ export default function HomeMotionExperience({
     const context = canvas.getContext("2d");
     if (!context) return;
 
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let reduceMotion = motionQuery.matches;
-    let visible = true;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let width = 1;
     let height = 1;
     let dpr = 1;
@@ -207,7 +193,6 @@ export default function HomeMotionExperience({
     let monas: Point3[] = [];
     let logo: Point3[] = [];
     let frame = 0;
-    let disposed = false;
     let latestProgress = 0;
     let loadToken = 0;
 
@@ -222,7 +207,6 @@ export default function HomeMotionExperience({
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
-      requestDraw();
 
       particleCount = width < 760 ? 760 : 3000;
       const token = ++loadToken;
@@ -230,13 +214,12 @@ export default function HomeMotionExperience({
       logo = fallbackLogoTargets(particleCount);
 
       Promise.all([
-        sampleImageTargets("/monas-hero.svg", particleCount, 600, 900, 600, 900, 3.0, 4.5, 0, 0, 3),
+        sampleImageTargets("/monas-mask.svg", particleCount, 600, 900, 520, 830, 2.45, 4.5, 0.45, 0, 4),
         sampleImageTargets("/uss-logo.png", particleCount, 1200, 440, 1020, 340, 6.1, 2.2, 0.25, 0, 4),
       ]).then(([monasPoints, logoPoints]) => {
-        if (disposed || token !== loadToken) return;
+        if (token !== loadToken) return;
         if (monasPoints.length) monas = monasPoints;
         if (logoPoints.length) logo = logoPoints;
-        requestDraw();
       });
     };
 
@@ -244,11 +227,8 @@ export default function HomeMotionExperience({
       const rect = section.getBoundingClientRect();
       const total = Math.max(1, section.offsetHeight - window.innerHeight);
       latestProgress = clamp(-rect.top, 0, total) / total;
-      requestDraw();
       setProgress(latestProgress);
-      const articles = Array.from(section.querySelectorAll(".uss-motion-chapter"));
-      const current = articles.findIndex(article => article.getBoundingClientRect().bottom > window.innerHeight * 0.5);
-      setActiveChapter(current < 0 ? 3 : current);
+      setActiveChapter(Math.min(3, Math.floor(latestProgress * 3.999)));
       setStoryActive(rect.top <= 4 && rect.bottom >= window.innerHeight * 0.5);
     };
 
@@ -258,13 +238,13 @@ export default function HomeMotionExperience({
       return logo[index] || fallbackLogoTargets(particleCount)[index];
     };
 
-    const drawOrbit = (time: number, centerX: number, centerY: number, strength: number) => {
+    const drawOrbit = (time: number, centerX: number, centerY: number, strength: number, scene: number) => {
       if (strength <= 0.02) return;
-      const base = Math.min(width * 0.18, height * 0.23);
+      const base = Math.min(width, height) * (scene === 3 ? 0.31 : 0.27);
       context.save();
       context.lineWidth = 0.8;
-      for (let orbit = 0; orbit < 3; orbit += 1) {
-        const phase = -0.38 + orbit * 0.28 + Math.sin(time * 0.00008) * 0.12;
+      for (let orbit = 0; orbit < 5; orbit += 1) {
+        const phase = time * (0.000045 + orbit * 0.000007) + orbit * 0.62;
         const rx = base * (1.15 + orbit * 0.16);
         const ry = base * (0.32 + orbit * 0.055);
         context.beginPath();
@@ -274,9 +254,9 @@ export default function HomeMotionExperience({
           : `rgba(245,243,238,${0.26 * strength})`;
         context.stroke();
 
-        const nodeAngle = time * 0.00012 + orbit * 2.1;
-        const nodeX = centerX + Math.cos(nodeAngle) * rx * Math.cos(phase) - Math.sin(nodeAngle) * ry * Math.sin(phase);
-        const nodeY = centerY + Math.cos(nodeAngle) * rx * Math.sin(phase) + Math.sin(nodeAngle) * ry * Math.cos(phase);
+        const nodeAngle = phase * 2.6 + orbit * 0.8;
+        const nodeX = centerX + Math.cos(nodeAngle) * rx;
+        const nodeY = centerY + Math.sin(nodeAngle) * ry;
         context.beginPath();
         context.arc(nodeX, nodeY, orbit % 2 === 0 ? 3 : 2.1, 0, Math.PI * 2);
         context.fillStyle = orbit % 2 === 0
@@ -297,36 +277,28 @@ export default function HomeMotionExperience({
       pointer.smoothX += (pointer.nx - pointer.smoothX) * 0.05;
       pointer.smoothY += (pointer.ny - pointer.smoothY) * 0.05;
 
-      // Hold the architectural silhouette before the final brand transformation.
-      const step = latestProgress < 0.36 ? latestProgress / 0.36
-        : latestProgress < 0.52 ? 1 + (latestProgress - 0.36) / 0.16
-        : latestProgress < 0.72 ? 2
-        : 2 + clamp((latestProgress - 0.72) / 0.2);
+      const step = latestProgress * 3;
       const fromIndex = Math.min(2, Math.floor(step));
       const toIndex = Math.min(3, fromIndex + 1);
       const rawMix = clamp(step - fromIndex);
       const mix = rawMix * rawMix * (3 - 2 * rawMix);
       const scene = latestProgress >= 0.72 ? 3 : latestProgress >= 0.48 ? 2 : 1;
 
-      const compact = width <= 860;
-      const centerX = compact ? width * 0.5 : width * 0.73;
-      const centerY = compact ? Math.min(height * 0.3, 240) : height * 0.5;
+      const centerX = width < 760 ? width * 0.54 : scene === 2 ? width * 0.72 : scene === 3 ? width * 0.73 : width * 0.7;
+      const centerY = scene === 2 ? height * 0.52 : height * 0.53;
       const yawStrength = scene >= 2 ? 0.42 : 1;
       const yaw = ((reduceMotion ? 0 : Math.sin(time * 0.0001) * 0.04) + pointer.smoothX * 0.16) * yawStrength;
       const pitch = (-0.045 + pointer.smoothY * 0.08) * yawStrength;
-      const baseScale = compact ? Math.min(width * 0.1, height * 0.07, 52)
-        : Math.min(width * 0.066, height * 0.155);
+      const baseScale = Math.min(width, height) * (width < 760 ? 0.14 : scene === 2 ? 0.19 : scene === 3 ? 0.185 : 0.155);
       const camera = 7.8;
       const pulseAge = (time - clickPulse.startedAt) / 1000;
 
-      drawOrbit(reduceMotion ? 0 : time, centerX, centerY, clamp((latestProgress - 0.44) / 0.18) * 0.5);
+      drawOrbit(time, centerX, centerY, clamp((latestProgress - 0.44) / 0.18), scene);
 
       context.save();
-      // The opening core owns precise rings; particles emerge as the track evolves.
-      context.globalAlpha = clamp(latestProgress / 0.2);
       context.globalCompositeOperation = "lighter";
 
-      for (let index = 0; latestProgress > 0 && index < particleCount; index += 1) {
+      for (let index = 0; index < particleCount; index += 1) {
         const a = shapePoint(fromIndex, index, time);
         const b = shapePoint(toIndex, index, time);
         let point: Point3 = {
@@ -372,8 +344,8 @@ export default function HomeMotionExperience({
         }
 
         const accent = scene >= 2 && (index % (scene === 3 ? 37 : 29) === 0);
-        const alpha = accent ? 0.9 : scene === 2 ? 0.65 : scene === 3 ? 0.78 : 0.5 + clamp((point.z + 2.2) / 4.4) * 0.42;
-        const radius = accent ? 1.6 : scene === 2 ? 0.35 + perspective * 0.4 : scene === 3 ? 0.82 + perspective * 0.9 : 0.66 + perspective * 0.88;
+        const alpha = accent ? 0.98 : scene === 3 ? 0.78 : 0.5 + clamp((point.z + 2.2) / 4.4) * 0.42;
+        const radius = accent ? 2.15 : scene === 3 ? 0.82 + perspective * 0.9 : 0.66 + perspective * 0.88;
 
         context.beginPath();
         context.arc(sx, sy, radius, 0, Math.PI * 2);
@@ -382,28 +354,8 @@ export default function HomeMotionExperience({
       }
 
       context.restore();
-      frame = 0;
-      if (!reduceMotion && visible && !document.hidden && latestProgress > 0) frame = requestAnimationFrame(draw);
+      frame = requestAnimationFrame(draw);
     };
-
-    function requestDraw() {
-      if (!disposed && !frame && visible && !document.hidden) frame = requestAnimationFrame(draw);
-    }
-    const onMotionChange = () => {
-      reduceMotion = motionQuery.matches;
-      pointer.active = false;
-      pointer.nx = pointer.ny = pointer.smoothX = pointer.smoothY = 0;
-      requestDraw();
-    };
-    const onVisibility = () => {
-      if (document.hidden) { cancelAnimationFrame(frame); frame = 0; }
-      else requestDraw();
-    };
-    const observer = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-      if (!visible) { cancelAnimationFrame(frame); frame = 0; }
-      else requestDraw();
-    });
 
     const onPointerMove = (event: PointerEvent) => {
       if (event.pointerType === "touch") return;
@@ -429,22 +381,14 @@ export default function HomeMotionExperience({
 
     resize();
     updateProgress();
-    requestDraw();
-    observer.observe(section);
-    motionQuery.addEventListener("change", onMotionChange);
-    document.addEventListener("visibilitychange", onVisibility);
+    frame = requestAnimationFrame(draw);
     window.addEventListener("scroll", updateProgress, { passive: true });
     window.addEventListener("resize", resize);
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("click", onClick);
 
     return () => {
-      disposed = true;
-      loadToken += 1;
       cancelAnimationFrame(frame);
-      observer.disconnect();
-      motionQuery.removeEventListener("change", onMotionChange);
-      document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("scroll", updateProgress);
       window.removeEventListener("resize", resize);
       window.removeEventListener("pointermove", onPointerMove);
@@ -465,9 +409,8 @@ export default function HomeMotionExperience({
 
       <div className="uss-motion-stage">
         <div className="uss-motion-background" aria-hidden="true"><img src={imageUrl} alt="" /></div>
-        <div className="uss-motion-monas-photo" aria-hidden="true"><img src="/monas-hero.svg" alt="" /></div>
+        <div className="uss-motion-monas-photo" aria-hidden="true"><img src="/monas-mask.svg" alt="" /></div>
         <div className="uss-motion-scrim" aria-hidden="true" />
-        <HeroOrbit />
         <canvas ref={canvasRef} className="uss-motion-canvas" aria-hidden="true" />
         <div className="uss-motion-hud" aria-hidden="true">{hud.map((item) => <span key={item}>{item}</span>)}</div>
         <div className="uss-motion-est" aria-hidden="true">{established || "EST. 2024"}</div>
@@ -476,16 +419,9 @@ export default function HomeMotionExperience({
       <div className="uss-motion-chapters">
         {chapters.map((chapter, index) => (
           <article className={`uss-motion-chapter ${activeChapter === index ? "is-active" : ""}`} key={chapter.kicker}>
-            {(index === 0 || index === 2) && (
-              <div className="uss-hero-mobile-art" aria-hidden="true">
-                {index === 0 ? <HeroOrbit /> : <img src="/monas-hero.svg" alt="" width="600" height="900" />}
-              </div>
-            )}
             <div className="uss-motion-copy">
               <span className="uss-motion-kicker"><b>{String(index + 1).padStart(2, "0")}</b><i />{chapter.kicker}</span>
-              {index === 0
-                ? <h1>{chapter.headline}</h1>
-                : <h2>{chapter.headline}</h2>}
+              <h1 style={{ whiteSpace: "pre-line" }}>{chapter.headline}</h1>
               <p>{chapter.description}</p>
               <Link href={chapter.href}>{chapter.action} ↗</Link>
             </div>
