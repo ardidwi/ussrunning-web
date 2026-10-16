@@ -1,3 +1,4 @@
+import { pathToFileURL } from 'node:url';
 import { neon } from '@neondatabase/serverless';
 import { loadMigrations, migrate } from '../database/migrations.mjs';
 
@@ -19,10 +20,10 @@ function required(env, name, errors) {
   return value || '';
 }
 
-function validUrl(value, protocols) {
+function validUrl(value, protocols, { allowCredentials = false } = {}) {
   try {
     const url = new URL(value);
-    return protocols.includes(url.protocol) && !url.username && !url.password && !url.hash;
+    return protocols.includes(url.protocol) && (allowCredentials || (!url.username && !url.password)) && !url.hash;
   } catch { return false; }
 }
 
@@ -35,8 +36,8 @@ export function validateProductionEnv(env = process.env) {
   for (const name of REQUIRED) required(env, name, errors);
   if (errors.length) return errors;
 
-  if (!validUrl(env.DATABASE_URL.trim(), ['postgres:', 'postgresql:'])) errors.push('DATABASE_URL must be a PostgreSQL URL.');
-  if (env.DATABASE_URL_UNPOOLED?.trim() && !validUrl(env.DATABASE_URL_UNPOOLED.trim(), ['postgres:', 'postgresql:'])) errors.push('DATABASE_URL_UNPOOLED must be a PostgreSQL URL when set.');
+  if (!validUrl(env.DATABASE_URL.trim(), ['postgres:', 'postgresql:'], { allowCredentials: true })) errors.push('DATABASE_URL must be a PostgreSQL URL.');
+  if (env.DATABASE_URL_UNPOOLED?.trim() && !validUrl(env.DATABASE_URL_UNPOOLED.trim(), ['postgres:', 'postgresql:'], { allowCredentials: true })) errors.push('DATABASE_URL_UNPOOLED must be a PostgreSQL URL when set.');
   if (!validUrl(env.NEON_AUTH_BASE_URL.trim(), ['https:'])) errors.push('NEON_AUTH_BASE_URL must be an HTTPS URL without credentials or fragments.');
   if (!validUrl(env.APP_BASE_URL.trim(), ['https:'])) errors.push('APP_BASE_URL must be an HTTPS URL without credentials or fragments.');
   else {
@@ -51,7 +52,7 @@ export function validateProductionEnv(env = process.env) {
   try { keys = JSON.parse(env.EVENT_PASS_TOKEN_KEYS); }
   catch { errors.push('EVENT_PASS_TOKEN_KEYS must be valid JSON.'); }
   if (keys) {
-    if (!keys || Array.isArray(keys) || typeof keys !== 'object') errors.push('EVENT_PASS_TOKEN_KEYS must be a JSON object.');
+    if (Array.isArray(keys) || typeof keys !== 'object') errors.push('EVENT_PASS_TOKEN_KEYS must be a JSON object.');
     else {
       for (const [id, key] of Object.entries(keys)) {
         if (!id || typeof key !== 'string' || !/^[0-9a-fA-F]{64}$/.test(key)) errors.push(`EVENT_PASS_TOKEN_KEYS contains an invalid key for ${id || '<empty>'}.`);
@@ -63,8 +64,8 @@ export function validateProductionEnv(env = process.env) {
 }
 
 async function databaseReadiness(env) {
-  const url = env.DATABASE_URL_UNPOOLED?.trim() || env.DATABASE_URL.trim();
-  const sql = neon(url);
+  const migrationUrl = env.DATABASE_URL_UNPOOLED?.trim() || env.DATABASE_URL.trim();
+  const sql = neon(migrationUrl);
   const db = {
     query: (text, params = []) => sql.query(text, params),
     transaction: statements => sql.transaction(statements.map(statement => sql.query(statement.text, statement.params)), { isolationLevel: 'ReadCommitted', readOnly: false })
@@ -86,7 +87,7 @@ async function databaseReadiness(env) {
     'uss.manage_role(uuid,uuid,text,text,integer,text)'
   ];
   for (const signature of probes) {
-    const rows = await runtime.query('SELECT to_regprocedure($1) IS NOT NULL AS exists, has_function_privilege(current_user,$1,\'EXECUTE\') AS executable', [signature]);
+    const rows = await runtime.query("SELECT to_regprocedure($1) IS NOT NULL AS exists, has_function_privilege(current_user,$1,'EXECUTE') AS executable", [signature]);
     if (!rows[0]?.exists) throw new Error(`Required database function is missing: ${signature}`);
     if (!rows[0]?.executable) throw new Error(`Runtime database role lacks EXECUTE: ${signature}`);
   }
@@ -100,7 +101,7 @@ export async function runReadiness(env = process.env) {
   return { ok: true };
 }
 
-const isCli = process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href;
+const isCli = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
 if (isCli) {
   runReadiness().then(() => console.info('Production readiness PASS: configuration, migration history, runtime grants and database connectivity are ready.')).catch(error => {
     console.error(error instanceof Error ? error.message : 'Production readiness failed.');
