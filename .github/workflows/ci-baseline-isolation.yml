@@ -57,3 +57,35 @@ jobs:
         env:
           TEST_FILE: ${{ matrix.file }}
         run: node --liftoff-only --wasm-num-compilation-tasks=1 --test "$TEST_FILE"
+
+  aggregate:
+    name: Aggregate · concurrency ${{ matrix.concurrency }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        concurrency: [1, 2, 4, default]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Run aggregate baseline suite
+        shell: bash
+        env:
+          TEST_CONCURRENCY: ${{ matrix.concurrency }}
+        run: |
+          if [[ "$TEST_CONCURRENCY" == "default" ]]; then
+            node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/*.test.mjs
+          else
+            node --liftoff-only --wasm-num-compilation-tasks=1 --test --test-concurrency="$TEST_CONCURRENCY" tests/*.test.mjs
+          fi
