@@ -45,9 +45,10 @@ BEGIN
   IF target_account.id IS NULL THEN RETURN QUERY SELECT 'ROLE_TARGET_NOT_FOUND'::text; RETURN; END IF;
   IF target_account.version<>expected_version THEN RETURN QUERY SELECT 'ROLE_CONFLICT'::text; RETURN; END IF;
 
-  -- Locking the code-owned role row serializes all operations on that role. In particular,
-  -- concurrent super_admin revokes cannot both pass the invariant check.
-  SELECT * INTO managed_role FROM uss.roles WHERE code=role_code FOR UPDATE;
+  -- Qualify the role-code column because RETURNS TABLE(code text) creates an output variable named
+  -- code inside PL/pgSQL. Leaving the column unqualified makes PostgreSQL treat the reference as
+  -- ambiguous and fails the function at runtime.
+  SELECT r.* INTO managed_role FROM uss.roles AS r WHERE r.code=role_code FOR UPDATE;
   IF managed_role.id IS NULL OR managed_role.system_locked IS DISTINCT FROM true THEN
     RETURN QUERY SELECT 'ROLE_UNAVAILABLE'::text; RETURN;
   END IF;
@@ -122,7 +123,9 @@ BEGIN
   IF target_account.status<>'active' OR target_account.email_verified_at IS NULL THEN
     RETURN QUERY SELECT 'ROLE_TARGET_INELIGIBLE'::text; RETURN;
   END IF;
-  SELECT * INTO super_role FROM uss.roles WHERE code='super_admin' FOR UPDATE;
+
+  -- Same output-variable ambiguity applies here because this function also RETURNS TABLE(code text).
+  SELECT r.* INTO super_role FROM uss.roles AS r WHERE r.code='super_admin' FOR UPDATE;
   IF super_role.id IS NULL THEN RETURN QUERY SELECT 'ROLE_UNAVAILABLE'::text; RETURN; END IF;
   IF EXISTS(
     SELECT 1 FROM uss.account_roles ar JOIN uss.roles r ON r.id=ar.role_id WHERE r.code='super_admin'
