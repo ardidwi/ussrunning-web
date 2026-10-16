@@ -28,6 +28,9 @@ jobs:
       - name: TypeScript
         run: npm run typecheck
 
+      - name: BE-18 focused role administration tests
+        run: node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/role-permission-administration.test.mjs
+
       - name: Domain and integration tests
         run: npm run test:ci
 
