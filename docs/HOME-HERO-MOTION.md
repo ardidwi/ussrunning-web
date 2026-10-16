@@ -1,5 +1,8 @@
 # Homepage motion refinement — second pass
 
+> Historical second-pass checkpoint. [Particle choreography](HOME-PARTICLE-CHOREOGRAPHY.md)
+> supersedes its ring/solid-art visual language; earlier evidence remains unchanged.
+
 Branch: `feature/home-hero-motion-refinement`, based on integrated first-pass
 main `3f91007f9382599723cefbb987706d387029cbd3`. Its tree was verified identical to
 first-pass feature commit `40640b1`. Composition, copy, navigation, CTA destinations,

@@ -34,7 +34,7 @@ html:has(.uss-motion-story) {
   visibility:visible;
   opacity:var(--hero-stage-opacity,1);
 }
-.uss-motion-background,.uss-motion-scrim,.uss-motion-canvas,.uss-motion-monas-photo {
+.uss-motion-background,.uss-motion-scrim,.uss-motion-canvas {
   position:absolute;
   inset:0;
 }
@@ -48,29 +48,6 @@ html:has(.uss-motion-story) {
 .uss-motion-scrim {
   z-index:1;
   background:linear-gradient(90deg,#040404 0%,rgba(4,4,4,.93) 34%,rgba(4,4,4,.25) 70%,rgba(4,4,4,.5)),linear-gradient(0deg,#040404,transparent 35%);
-}
-.uss-motion-monas-photo {
-  z-index:2;
-  opacity:var(--hero-monas-opacity,0);
-  transition:opacity .15s linear;
-}
-.uss-motion-monas-photo img,.uss-motion-monas-photo::after {
-  position:absolute;
-  left:73%;
-  top:50%;
-  width:min(19.8vw,46.5svh);
-  height:min(29.7vw,69.75svh);
-  transform:translate(-50%,-50%) translate3d(calc(var(--hero-x,0px) * -.4),calc(var(--hero-y,0px) * -.4),0);
-  object-fit:contain;
-  filter:drop-shadow(0 0 20px rgba(255,255,255,.12));
-}
-.uss-motion-monas-photo::after,.uss-hero-mobile-art:has(>img)::after {
-  content:"";
-  pointer-events:none;
-  background:linear-gradient(0deg,transparent 42%,rgba(255,59,33,.65) 49%,transparent 55%);
-  background-size:100% 300%;
-  mask:url('/monas-hero.svg') center / contain no-repeat;
-  animation:uss-monas-energy 6.2s linear infinite;
 }
 .uss-motion-canvas {
   z-index:3;
@@ -111,128 +88,6 @@ html:has(.uss-motion-story) {
   width:1px;
   height:20px;
   background:var(--red);
-}
-/* A lit, machined rim and two inclined orbital planes supply depth without WebGL. */
-.uss-hero-orbit {
-  position:absolute;
-  z-index:2;
-  left:73%;
-  top:50%;
-  width:min(34vw,62svh);
-  aspect-ratio:1;
-  transform:translate(-50%,-50%) translate3d(var(--hero-x,0px),var(--hero-y,0px),0) rotateX(var(--hero-pitch,0deg)) rotateY(var(--hero-yaw,0deg)) scale(var(--hero-orbit-scale,1));
-  opacity:var(--hero-orbit-opacity,1);
-  transition:opacity .15s linear;
-  perspective:900px;
-  transform-style:preserve-3d;
-}
-.uss-hero-orbit-halo {
-  position:absolute;
-  inset:-20%;
-  border-radius:50%;
-  background:radial-gradient(ellipse,rgba(255,255,255,.055),transparent 60%);
-}
-.uss-hero-orbit-rim {
-  position:absolute;
-  inset:8%;
-  border-radius:50%;
-  transform:rotateY(-18deg) rotateX(12deg);
-  background:radial-gradient(circle at 50% 50%,transparent 55%,#080808 56%,#333 60%,#999 61%,#1b1b1b 62%,#090909 67%,#626262 68%,#151515 69%,transparent 70%);
-  box-shadow:inset 2px 2px 2px rgba(255,255,255,.15);
-  filter:drop-shadow(12px 22px 22px #000);
-}
-.uss-hero-orbit-core {
-  position:absolute;
-  inset:22%;
-  display:grid;
-  place-items:center;
-  border-radius:50%;
-  background:radial-gradient(ellipse at 35% 20%,#292929,#0a0a0a 50%,#030303 75%);
-  box-shadow:inset 1px 1px 1px #777,inset -3px -8px 15px #000,0 20px 35px #000;
-  transform:rotateY(-12deg) rotateX(8deg);
-  overflow:hidden;
-  animation:uss-core-float 7s ease-in-out infinite alternate;
-}
-.uss-hero-orbit-core::after {
-  content:"";
-  position:absolute;
-  inset:-20%;
-  background:linear-gradient(110deg,transparent 38%,rgba(255,255,255,.15) 50%,transparent 62%);
-  transform:translateX(-110%);
-  animation:uss-mark-light 12s ease-in-out infinite;
-}
-.uss-hero-orbit-core img {
-  width:77%;
-  height:auto;
-  filter:drop-shadow(0 3px 0 #555) drop-shadow(0 8px 5px #000);
-  transform:translateY(-2%);
-}
-.uss-hero-orbit-path {
-  position:absolute;
-  inset:0;
-  border:1px solid rgba(255,255,255,.5);
-  border-radius:50%;
-  transform:rotate(-32deg) scaleY(.46);
-  box-shadow:0 1px 0 rgba(255,255,255,.15);
-  animation:uss-orbit-drift 24s ease-in-out infinite alternate;
-}
-.uss-motion-story[data-motion-visible="false"] :is(.uss-hero-orbit-path,.uss-hero-orbit-core),
-.uss-motion-story[data-motion-visible="false"] :is(.uss-hero-orbit-path,.uss-hero-orbit-core,.uss-motion-monas-photo,.uss-hero-mobile-art)::after {
-  animation-play-state:paused;
-}
-.uss-hero-orbit-path:after {
-  content:"";
-  position:absolute;
-  left:0;
-  top:0;
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:var(--red);
-  box-shadow:0 0 14px var(--red);
-  offset-path:ellipse(50% 50% at 50% 50%);
-  animation:uss-orbit-energy 13s linear infinite;
-}
-.uss-hero-orbit-path-back {
-  inset:-5%;
-  border-color:rgba(255,255,255,.18);
-  transform:rotate(48deg) scaleY(.58);
-  animation-direction:alternate-reverse;
-}
-.uss-hero-orbit-path-back::after {
-  width:4px;
-  height:4px;
-  background:#fff;
-  box-shadow:none;
-  animation-duration:19s;
-  animation-direction:reverse;
-}
-.uss-hero-orbit-path-front {
-  clip-path:inset(48% -10% -10%);
-  border-bottom-color:var(--red);
-}
-@keyframes uss-orbit-drift {
-  from {
-    rotate:-9deg;
-  }
-  to {
-    rotate:18deg;
-  }
-}
-@keyframes uss-orbit-energy { to { offset-distance:100%; } }
-@keyframes uss-core-float {
-  from { transform:rotateY(-12deg) rotateX(8deg) translate3d(0,2px,0); }
-  to { transform:rotateY(-8deg) rotateX(10deg) translate3d(0,-4px,10px); }
-}
-@keyframes uss-mark-light {
-  0%,25% { transform:translateX(-110%); opacity:0; }
-  35% { opacity:1; }
-  65%,100% { transform:translateX(110%); opacity:0; }
-}
-@keyframes uss-monas-energy {
-  from { background-position:0 0; opacity:.2; }
-  50% { opacity:.75; }
-  to { background-position:0 100%; opacity:.2; }
 }
 .uss-motion-chapters {
   position:relative;
@@ -418,15 +273,6 @@ html:has(.uss-motion-story) {
   .uss-motion-scrim {
     background:linear-gradient(0deg,#040404 5%,rgba(4,4,4,.65) 50%,rgba(4,4,4,.2));
   }
-  .uss-motion-stage :is(.uss-hero-orbit,.uss-motion-monas-photo) {
-    display:none;
-  }
-  .uss-motion-canvas {
-    opacity:.12;
-  }
-  .uss-motion-story:is(.is-chapter-1,.is-chapter-3) .uss-motion-canvas {
-    opacity:0;
-  }
   .uss-hero-mobile-art {
     position:relative;
     display:grid;
@@ -435,24 +281,6 @@ html:has(.uss-motion-story) {
     width:100%;
     height:min(64vw,260px);
     margin-bottom:32px;
-  }
-  .uss-hero-mobile-art .uss-hero-orbit {
-    position:relative;
-    left:auto;
-    top:auto;
-    width:min(58vw,230px);
-    transform:none;
-    opacity:1;
-  }
-  .uss-hero-mobile-art>img {
-    width:100%;
-    height:100%;
-    min-height:0;
-    object-fit:contain;
-  }
-  .uss-hero-mobile-art:has(>img)::after {
-    position:absolute;
-    inset:0;
   }
   .uss-motion-chapter {
     min-height:100svh;
@@ -500,18 +328,5 @@ html:has(.uss-motion-story) {
   }
 }
 @media(prefers-reduced-motion:reduce) {
-  .uss-motion-copy,.uss-motion-scrubber,.uss-motion-monas-photo,.uss-hero-orbit {
-    transition:none;
-    transform:none;
-  }
-  .uss-hero-orbit {
-    transform:translate(-50%,-50%);
-  }
-  .uss-motion-story :is(.uss-hero-orbit-path,.uss-hero-orbit-core),
-  .uss-motion-story :is(.uss-hero-orbit-path,.uss-hero-orbit-core,.uss-motion-monas-photo,.uss-hero-mobile-art)::after {
-    animation:none;
-  }
-  .uss-motion-monas-photo::after,.uss-hero-mobile-art::after,.uss-hero-orbit-core::after {
-    display:none;
-  }
+  .uss-motion-copy,.uss-motion-scrubber { transition:none; transform:none; }
 }
