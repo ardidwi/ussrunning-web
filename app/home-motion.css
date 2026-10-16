@@ -32,9 +32,9 @@ html:has(.uss-motion-story) {
 }
 .uss-motion-story:has(.uss-motion-scrubber.is-on) .uss-motion-stage {
   visibility:visible;
-  opacity:1;
+  opacity:var(--hero-stage-opacity,1);
 }
-.uss-motion-background,.uss-motion-scrim,.uss-motion-canvas,.uss-motion-monas-photo {
+.uss-motion-background,.uss-motion-scrim,.uss-motion-canvas {
   position:absolute;
   inset:0;
 }
@@ -48,24 +48,6 @@ html:has(.uss-motion-story) {
 .uss-motion-scrim {
   z-index:1;
   background:linear-gradient(90deg,#040404 0%,rgba(4,4,4,.93) 34%,rgba(4,4,4,.25) 70%,rgba(4,4,4,.5)),linear-gradient(0deg,#040404,transparent 35%);
-}
-.uss-motion-monas-photo {
-  z-index:2;
-  opacity:0;
-  transition:opacity .4s ease;
-}
-.uss-motion-monas-photo img {
-  position:absolute;
-  left:73%;
-  top:50%;
-  width:min(19.8vw,46.5svh);
-  height:min(29.7vw,69.75svh);
-  transform:translate(-50%,-50%);
-  object-fit:contain;
-  filter:drop-shadow(0 0 20px rgba(255,255,255,.12));
-}
-.uss-motion-story.is-chapter-3 .uss-motion-monas-photo {
-  opacity:.8;
 }
 .uss-motion-canvas {
   z-index:3;
@@ -107,91 +89,6 @@ html:has(.uss-motion-story) {
   height:20px;
   background:var(--red);
 }
-/* A lit, machined rim and two inclined orbital planes supply depth without WebGL. */
-.uss-hero-orbit {
-  position:absolute;
-  z-index:2;
-  left:73%;
-  top:50%;
-  width:min(34vw,62svh);
-  aspect-ratio:1;
-  transform:translate(-50%,-50%);
-  opacity:0;
-  transition:opacity .45s ease;
-  perspective:900px;
-}
-.is-chapter-1 .uss-hero-orbit {
-  opacity:1;
-}
-.uss-hero-orbit-halo {
-  position:absolute;
-  inset:-20%;
-  border-radius:50%;
-  background:radial-gradient(ellipse,rgba(255,255,255,.055),transparent 60%);
-}
-.uss-hero-orbit-rim {
-  position:absolute;
-  inset:8%;
-  border-radius:50%;
-  transform:rotateY(-18deg) rotateX(12deg);
-  background:radial-gradient(circle at 50% 50%,transparent 55%,#080808 56%,#333 60%,#999 61%,#1b1b1b 62%,#090909 67%,#626262 68%,#151515 69%,transparent 70%);
-  box-shadow:inset 2px 2px 2px rgba(255,255,255,.15);
-  filter:drop-shadow(12px 22px 22px #000);
-}
-.uss-hero-orbit-core {
-  position:absolute;
-  inset:22%;
-  display:grid;
-  place-items:center;
-  border-radius:50%;
-  background:radial-gradient(ellipse at 35% 20%,#292929,#0a0a0a 50%,#030303 75%);
-  box-shadow:inset 1px 1px 1px #777,inset -3px -8px 15px #000,0 20px 35px #000;
-  transform:rotateY(-12deg) rotateX(8deg);
-}
-.uss-hero-orbit-core img {
-  width:77%;
-  height:auto;
-  filter:drop-shadow(0 3px 0 #555) drop-shadow(0 8px 5px #000);
-  transform:translateY(-2%);
-}
-.uss-hero-orbit-path {
-  position:absolute;
-  inset:0;
-  border:1px solid rgba(255,255,255,.5);
-  border-radius:50%;
-  transform:rotate(-32deg) scaleY(.46);
-  box-shadow:0 1px 0 rgba(255,255,255,.15);
-  animation:uss-orbit-drift 22s ease-in-out infinite alternate paused;
-}
-.is-chapter-1 .uss-hero-orbit-path {
-  animation-play-state:running;
-}
-.uss-hero-orbit-path:after {
-  content:"";
-  position:absolute;
-  left:15%;
-  top:13%;
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:var(--red);
-  box-shadow:0 0 14px var(--red);
-}
-.uss-hero-orbit-path-back {
-  inset:-5%;
-  border-color:rgba(255,255,255,.18);
-  transform:rotate(48deg) scaleY(.58);
-  animation-direction:alternate-reverse;
-}
-.uss-hero-orbit-path-front {
-  clip-path:inset(48% -10% -10%);
-  border-bottom-color:var(--red);
-}
-@keyframes uss-orbit-drift {
-  to {
-    rotate:12deg;
-  }
-}
 .uss-motion-chapters {
   position:relative;
   z-index:4;
@@ -212,13 +109,9 @@ html:has(.uss-motion-story) {
   z-index:6;
   width:min(40vw,650px);
   pointer-events:auto;
-  opacity:.1;
-  transform:translateY(12px);
-  transition:opacity .3s ease,transform .3s ease;
-}
-.uss-motion-chapter.is-active .uss-motion-copy {
-  opacity:1;
-  transform:none;
+  opacity:var(--copy-presence,1);
+  transform:translateY(var(--copy-shift,0px));
+  transition:opacity .15s linear,transform .15s linear;
 }
 .uss-motion-kicker {
   display:flex;
@@ -320,15 +213,18 @@ html:has(.uss-motion-story) {
   height:2px;
   background:var(--red);
   transform-origin:left;
+  transform:scaleX(var(--hero-travel,0));
 }
 .uss-motion-head {
   position:absolute;
   top:50%;
+  left:calc(var(--hero-travel,0) * 100%);
   width:10px;
   height:10px;
   margin:-5px 0 0 -5px;
   border-radius:50%;
   background:#fff;
+  box-shadow:0 0 8px rgba(255,59,33,.25);
 }
 .uss-motion-track>i {
   display:none;
@@ -377,35 +273,14 @@ html:has(.uss-motion-story) {
   .uss-motion-scrim {
     background:linear-gradient(0deg,#040404 5%,rgba(4,4,4,.65) 50%,rgba(4,4,4,.2));
   }
-  .uss-motion-stage :is(.uss-hero-orbit,.uss-motion-monas-photo) {
-    display:none;
-  }
-  .uss-motion-canvas {
-    opacity:.12;
-  }
-  .uss-motion-story:is(.is-chapter-1,.is-chapter-3) .uss-motion-canvas {
-    opacity:0;
-  }
   .uss-hero-mobile-art {
+    position:relative;
     display:grid;
     grid-template-rows:minmax(0,1fr);
     place-items:center;
     width:100%;
     height:min(64vw,260px);
     margin-bottom:32px;
-  }
-  .uss-hero-mobile-art .uss-hero-orbit {
-    position:relative;
-    left:auto;
-    top:auto;
-    width:min(58vw,230px);
-    transform:none;
-  }
-  .uss-hero-mobile-art>img {
-    width:100%;
-    height:100%;
-    min-height:0;
-    object-fit:contain;
   }
   .uss-motion-chapter {
     min-height:100svh;
@@ -453,14 +328,5 @@ html:has(.uss-motion-story) {
   }
 }
 @media(prefers-reduced-motion:reduce) {
-  .uss-motion-copy,.uss-motion-scrubber,.uss-motion-monas-photo,.uss-hero-orbit {
-    transition:none;
-    transform:none;
-  }
-  .uss-hero-orbit {
-    transform:translate(-50%,-50%);
-  }
-  .uss-hero-orbit-path {
-    animation:none;
-  }
+  .uss-motion-copy,.uss-motion-scrubber { transition:none; transform:none; }
 }

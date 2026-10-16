@@ -1,0 +1,60 @@
+{
+  "cases": [
+    {
+      "name": "One particle world with no visible mask or ring overlays",
+      "result": "PASS"
+    },
+    {
+      "name": "Particles enter and converge into USS while idle",
+      "result": "PASS"
+    },
+    {
+      "name": "Formed logo remains alive, and pointer disturbance stays readable",
+      "result": "PASS"
+    },
+    {
+      "name": "USS particles disperse and stream instead of crossfading",
+      "result": "PASS"
+    },
+    {
+      "name": "The same particles gather into readable Monas and hold alive",
+      "result": "PASS"
+    },
+    {
+      "name": "Release, reverse scroll, distance and native exit handoff",
+      "result": "PASS"
+    },
+    {
+      "name": "Live reduced motion holds particle forms and disables pointer movement",
+      "result": "PASS"
+    },
+    {
+      "name": "Mobile preserves particle formation with a smaller population",
+      "result": "PASS"
+    },
+    {
+      "name": "Mask failure degrades to atmosphere without runtime failure",
+      "result": "PASS"
+    },
+    {
+      "name": "Document visibility events pause and resume the renderer",
+      "result": "PASS"
+    },
+    {
+      "name": "App Router unmount/remount cleans animation and observers",
+      "result": "PASS"
+    }
+  ],
+  "assertions": 53,
+  "runtime": [],
+  "hydration": [],
+  "canvas": [],
+  "silhouettes": {
+    "logo": {
+      "initial": 0,
+      "formed": 0.9996125532739248
+    },
+    "monas": 1
+  },
+  "result": "PASS"
+}

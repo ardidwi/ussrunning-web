@@ -41,37 +41,35 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || path.join(
     await page.waitForTimeout(450);
   }
   try {
-    for (const [width, height] of [[320,568],[375,812],[768,1024],[1024,768],[1440,900],[1920,1080],[1366,500]]) {
+    for (const [width, height] of [[320,568],[375,812],[430,932],[768,1024],[860,900],[861,900],[1024,768],[1440,900],[1920,1080],[1366,500]]) {
       await page.setViewportSize({ width, height });
       await home();
       await noOverflow();
       ok(await page.locator(".uss-public-brand").isVisible(), "Visible shared logo");
-      ok(await page.locator(".uss-hero-orbit-core img").first().evaluate(img => img.complete && img.naturalWidth > 0), "USS core asset loaded");
-      const ring = await page.locator(".uss-hero-orbit:visible").first().boundingBox();
-      ok(ring.x >= 0 && ring.x + ring.width <= width, "Orbit fits viewport");
+      await page.waitForFunction(() => document.querySelector(".uss-motion-canvas").dataset.particleTargets === "ready");
+      ok(await page.locator(".uss-motion-canvas").count() === 1, "One shared particle canvas");
+      ok(await page.locator(".uss-hero-orbit,.uss-motion-monas-photo,.uss-hero-mobile-art img").count() === 0, "No solid logo/Monas or orbital artwork overlays");
       for (let index = 0; index < 4; index++) {
         await chapter(index);
         await noOverflow();
         const copy = page.locator(".uss-motion-copy").nth(index);
-        if (width <= 768 && [0,2].includes(index)) {
+        if (width <= 860 && [0,2].includes(index)) {
           const art = await page.locator(".uss-motion-chapter").nth(index).locator(".uss-hero-mobile-art").boundingBox();
           const text = await copy.boundingBox();
           ok(art.y + art.height <= text.y, "Mobile artwork has its own space above copy");
-          if (index === 2) {
-            const image = await page.locator(".uss-hero-mobile-art>img").boundingBox();
-            ok(image.height <= art.height + 1, "Monas image fits its reserved grid track");
-          }
+
         }
         ok(await copy.evaluate(el => Array.from(el.children).every(child => child.scrollWidth <= child.clientWidth + 1)), "Text wraps within copy column");
         const action = copy.locator("a");
         // Native scrolling respects the hero's fixed-header/progress safe areas.
         await action.evaluate(el => el.scrollIntoView({ block: "nearest", behavior: "instant" }));
         const box = await action.boundingBox();
-        ok(box.height >= 44, "CTA touch target");
+        // Translated DOMRects can differ by ~0.00003px; retain the intrinsic 44px requirement.
+        ok(box.height >= 43.999 && await action.evaluate(el => el.offsetHeight >= 44), "CTA touch target");
         ok(box.y >= 0 && box.y + box.height <= height - 64, `CTA reachable above progress UI: ${width}, chapter ${index + 1}, ${JSON.stringify(box)}`);
       }
       ok(await page.locator(".uss-motion-story h1").count() === 1, "Single introduction H1");
-      if (width <= 768) {
+      if (width <= 1000) {
         await page.evaluate(() => scrollTo({ top: 0, behavior: "instant" }));
         await page.waitForTimeout(250);
         await page.getByRole("button", { name: "MENU +", exact: true }).click();
@@ -106,7 +104,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || path.join(
 
     await page.emulateMedia({ reducedMotion: "reduce" });
     await home();
-    ok(await page.locator(".uss-hero-orbit-path").first().evaluate(el => getComputedStyle(el).animationName === "none"), "Reduced motion stops CSS orbit");
+    ok(await page.locator(".uss-hero-orbit-path").count() === 0, "No decorative rings in calm mode");
     await chapter(2);
     // A calm canvas must not continue changing between frames after assets settle.
     await page.waitForTimeout(700);

@@ -1,5 +1,8 @@
 # Homepage hero refinement
 
+> First-pass checkpoint. [Second-pass motion refinement](HOME-HERO-MOTION.md)
+> supersedes its ambient/scroll motion behavior; the original validation evidence remains preserved below.
+
 Scope: homepage introduction only. Branch: `feature/home-hero-refinement`, based on
 `c72788050de7081180d7058d0a2e469fa1ba0333`. Main integration is deliberately excluded
 by the current request. No backend, auth, CMS, route, dependency or lockfile changes.
