@@ -11,7 +11,14 @@ const REQUIRED = [
   'EMAIL_FROM_ADDRESS',
   'APP_BASE_URL',
   'EVENT_PASS_TOKEN_KEYS',
-  'EVENT_PASS_TOKEN_KEY_ID'
+  'EVENT_PASS_TOKEN_KEY_ID',
+  'AWS_ENDPOINT_URL_S3',
+  'AWS_REGION',
+  'AWS_ACCESS_KEY_ID',
+  'AWS_SECRET_ACCESS_KEY',
+  'MEDIA_PUBLIC_BUCKET_NAME',
+  'MEDIA_PRIVATE_BUCKET_NAME',
+  'MEDIA_PRIVATE_URL_TTL_SECONDS'
 ];
 
 function required(env, name, errors) {
@@ -27,9 +34,8 @@ function validUrl(value, protocols, { allowCredentials = false } = {}) {
   } catch { return false; }
 }
 
-function validEmail(value) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-}
+function validEmail(value) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value); }
+function validBucket(value) { return /^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$/.test(value); }
 
 export function validateProductionEnv(env = process.env) {
   const errors = [];
@@ -40,13 +46,18 @@ export function validateProductionEnv(env = process.env) {
   if (env.DATABASE_URL_UNPOOLED?.trim() && !validUrl(env.DATABASE_URL_UNPOOLED.trim(), ['postgres:', 'postgresql:'], { allowCredentials: true })) errors.push('DATABASE_URL_UNPOOLED must be a PostgreSQL URL when set.');
   if (!validUrl(env.NEON_AUTH_BASE_URL.trim(), ['https:'])) errors.push('NEON_AUTH_BASE_URL must be an HTTPS URL without credentials or fragments.');
   if (!validUrl(env.APP_BASE_URL.trim(), ['https:'])) errors.push('APP_BASE_URL must be an HTTPS URL without credentials or fragments.');
-  else {
-    const app = new URL(env.APP_BASE_URL.trim());
-    if (app.pathname !== '/' || app.search) errors.push('APP_BASE_URL must be an origin only, without path or query.');
-  }
+  else { const app = new URL(env.APP_BASE_URL.trim()); if (app.pathname !== '/' || app.search) errors.push('APP_BASE_URL must be an origin only, without path or query.'); }
   if (!validEmail(env.USS_SUPER_ADMIN_EMAIL.trim())) errors.push('USS_SUPER_ADMIN_EMAIL must be a valid email address.');
   if (!validEmail(env.EMAIL_FROM_ADDRESS.trim())) errors.push('EMAIL_FROM_ADDRESS must be a valid email address.');
   if (env.NEON_AUTH_COOKIE_SECRET.trim().length < 32) errors.push('NEON_AUTH_COOKIE_SECRET must be at least 32 characters.');
+
+  const s3Url = validUrl(env.AWS_ENDPOINT_URL_S3.trim(), ['https:']) ? new URL(env.AWS_ENDPOINT_URL_S3.trim()) : null;
+  if (!s3Url || s3Url.pathname !== '/' || s3Url.search) errors.push('AWS_ENDPOINT_URL_S3 must be an HTTPS origin only.');
+  if (!/^[a-z0-9-]{3,32}$/.test(env.AWS_REGION.trim())) errors.push('AWS_REGION is invalid.');
+  if (!validBucket(env.MEDIA_PUBLIC_BUCKET_NAME.trim()) || !validBucket(env.MEDIA_PRIVATE_BUCKET_NAME.trim())) errors.push('Media bucket names are invalid.');
+  if (env.MEDIA_PUBLIC_BUCKET_NAME.trim() === env.MEDIA_PRIVATE_BUCKET_NAME.trim()) errors.push('Public and private media buckets must differ.');
+  const mediaTtl = Number(env.MEDIA_PRIVATE_URL_TTL_SECONDS);
+  if (!Number.isInteger(mediaTtl) || mediaTtl < 60 || mediaTtl > 900) errors.push('MEDIA_PRIVATE_URL_TTL_SECONDS must be an integer from 60 to 900.');
 
   let keys;
   try { keys = JSON.parse(env.EVENT_PASS_TOKEN_KEYS); }
@@ -54,9 +65,7 @@ export function validateProductionEnv(env = process.env) {
   if (keys) {
     if (Array.isArray(keys) || typeof keys !== 'object') errors.push('EVENT_PASS_TOKEN_KEYS must be a JSON object.');
     else {
-      for (const [id, key] of Object.entries(keys)) {
-        if (!id || typeof key !== 'string' || !/^[0-9a-fA-F]{64}$/.test(key)) errors.push(`EVENT_PASS_TOKEN_KEYS contains an invalid key for ${id || '<empty>'}.`);
-      }
+      for (const [id, key] of Object.entries(keys)) if (!id || typeof key !== 'string' || !/^[0-9a-fA-F]{64}$/.test(key)) errors.push(`EVENT_PASS_TOKEN_KEYS contains an invalid key for ${id || '<empty>'}.`);
       if (!(env.EVENT_PASS_TOKEN_KEY_ID.trim() in keys)) errors.push('EVENT_PASS_TOKEN_KEY_ID must reference a configured key.');
     }
   }
@@ -66,10 +75,7 @@ export function validateProductionEnv(env = process.env) {
 async function databaseReadiness(env) {
   const migrationUrl = env.DATABASE_URL_UNPOOLED?.trim() || env.DATABASE_URL.trim();
   const sql = neon(migrationUrl);
-  const db = {
-    query: (text, params = []) => sql.query(text, params),
-    transaction: statements => sql.transaction(statements.map(statement => sql.query(statement.text, statement.params)), { isolationLevel: 'ReadCommitted', readOnly: false })
-  };
+  const db = { query: (text, params = []) => sql.query(text, params), transaction: statements => sql.transaction(statements.map(statement => sql.query(statement.text, statement.params)), { isolationLevel: 'ReadCommitted', readOnly: false }) };
   const migrations = await loadMigrations(new URL('../../database/migrations/', import.meta.url));
   const status = await migrate(db, migrations, { statusOnly: true });
   if (status.pending.length) throw new Error(`Database has ${status.pending.length} pending migration(s): ${status.pending.map(m => m.filename).join(', ')}`);
@@ -103,7 +109,7 @@ export async function runReadiness(env = process.env) {
 
 const isCli = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
 if (isCli) {
-  runReadiness().then(() => console.info('Production readiness PASS: configuration, migration history, runtime grants and database connectivity are ready.')).catch(error => {
+  runReadiness().then(() => console.info('Production readiness PASS: configuration, migration history, runtime grants, storage configuration and database connectivity are ready.')).catch(error => {
     console.error(error instanceof Error ? error.message : 'Production readiness failed.');
     process.exitCode = 1;
   });

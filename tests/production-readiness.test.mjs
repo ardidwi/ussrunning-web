@@ -14,6 +14,13 @@ function env(overrides = {}) {
     APP_BASE_URL: 'https://www.example.test',
     EVENT_PASS_TOKEN_KEYS: JSON.stringify({ primary: 'a'.repeat(64) }),
     EVENT_PASS_TOKEN_KEY_ID: 'primary',
+    AWS_ENDPOINT_URL_S3: 'https://storage.example.test',
+    AWS_REGION: 'us-east-1',
+    AWS_ACCESS_KEY_ID: 'test_access_id',
+    AWS_SECRET_ACCESS_KEY: 'test_secret_only',
+    MEDIA_PUBLIC_BUCKET_NAME: 'uss-media',
+    MEDIA_PRIVATE_BUCKET_NAME: 'uss-media-private',
+    MEDIA_PRIVATE_URL_TTL_SECONDS: '300',
     ...overrides
   };
 }
@@ -47,4 +54,29 @@ test('rejects weak auth cookie secret and malformed operator email', () => {
   const errors = validateProductionEnv(env({ NEON_AUTH_COOKIE_SECRET: 'short', USS_SUPER_ADMIN_EMAIL: 'not-an-email' }));
   assert.ok(errors.some(value => value.includes('at least 32')));
   assert.ok(errors.some(value => value.includes('USS_SUPER_ADMIN_EMAIL')));
+});
+
+
+test('rejects invalid or insecure media storage configuration', () => {
+  const cases = [
+    [{ AWS_ENDPOINT_URL_S3: 'http://storage.example.test' }, 'AWS_ENDPOINT_URL_S3'],
+    [{ AWS_ENDPOINT_URL_S3: 'https://storage.example.test/path' }, 'HTTPS origin only'],
+    [{ AWS_REGION: 'INVALID REGION!' }, 'AWS_REGION'],
+    [{ MEDIA_PUBLIC_BUCKET_NAME: 'Not_Valid' }, 'Media bucket names'],
+    [{ MEDIA_PRIVATE_BUCKET_NAME: 'uss-media' }, 'must differ'],
+    [{ MEDIA_PRIVATE_URL_TTL_SECONDS: '59' }, 'MEDIA_PRIVATE_URL_TTL_SECONDS'],
+    [{ MEDIA_PRIVATE_URL_TTL_SECONDS: '901' }, 'MEDIA_PRIVATE_URL_TTL_SECONDS'],
+    [{ MEDIA_PRIVATE_URL_TTL_SECONDS: 'not-a-number' }, 'MEDIA_PRIVATE_URL_TTL_SECONDS']
+  ];
+  for (const [overrides, expected] of cases) {
+    assert.ok(validateProductionEnv(env(overrides)).some(message => message.includes(expected)), expected);
+  }
+});
+
+test('reports missing storage settings without leaking storage credentials', () => {
+  const invalid = env({ AWS_ACCESS_KEY_ID: '', AWS_SECRET_ACCESS_KEY: '' });
+  const errors = validateProductionEnv(invalid);
+  assert.ok(errors.some(message => message.includes('AWS_ACCESS_KEY_ID')));
+  assert.ok(errors.some(message => message.includes('AWS_SECRET_ACCESS_KEY')));
+  assert.ok(!JSON.stringify(errors).includes('test_secret_only'));
 });
