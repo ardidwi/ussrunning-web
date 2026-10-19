@@ -19,6 +19,7 @@ import { GalleryWorkspace } from "@/features/gallery-cms/GalleryWorkspace";
 import { EventWorkspace } from "@/features/events-cms/EventWorkspace";
 import { SiteContentWorkspace } from "@/features/site-content-cms/SiteContentWorkspace";
 import { PartnersWorkspace } from "@/features/partners-cms/PartnersWorkspace";
+import { MembersWorkspace } from "@/features/members-cms/MembersWorkspace";
 import {
   getRevisionHistory,
   getHistorySnapshot,
@@ -60,6 +61,8 @@ export default async function AdminPage({
     content = <EventWorkspace query={query} />;
   } else if (module === "partners") {
     content = <PartnersWorkspace query={query} />;
+  } else if (module === "members") {
+    content = <MembersWorkspace query={query} />;
   } else if (module === "activity") {
     const input = auditQuery(query);
     content = (
