@@ -13,7 +13,10 @@ import type {MediaAsset,MediaRecord,MediaPage} from './media-types';
 function check(code:string){if(code!=='OK')throw new MediaError(code as MediaCode);}
 function safeUrl(value:string|null){if(!value)return null;try{const u=new URL(value);if(u.username||u.password||u.hash)return null;if(u.protocol!=='https:'&&!(process.env.NODE_ENV!=='production'&&u.protocol==='http:'&&['localhost','127.0.0.1'].includes(u.hostname)))return null;return u.toString();}catch{return null;}}
 const deployedStorage=createConfiguredStorage()??unconfiguredStorage;
-async function present(storage:StorageProvider,record:MediaRecord):Promise<MediaAsset>{const {storageKey,storageProvider,publicUrl,...safe}=record;let url:string|null=null;try{url=safeUrl(storageProvider===storage.id?await storage.deliveryUrl(storageKey,record.visibility):record.visibility==='public'?publicUrl:null);}catch{/* Metadata remains usable; never invent a delivery URL or expose provider errors. */}return{...safe,url,deliveryAvailable:url!==null};}
+async function present(storage:StorageProvider,record:MediaRecord):Promise<MediaAsset>{const {storageKey,storageProvider,publicUrl,purpose,...safe}=record;let url:string|null=null;
+ // Defense in depth: member avatars are signed only by lib/member/avatar-storage.ts; anything not provably CMS media gets no URL.
+ if(purpose!=='cms'||storageKey.startsWith('member-avatars/'))return{...safe,url:null,deliveryAvailable:false};
+ try{url=safeUrl(storageProvider===storage.id?await storage.deliveryUrl(storageKey,record.visibility):record.visibility==='public'?publicUrl:null);}catch{/* Metadata remains usable; never invent a delivery URL or expose provider errors. */}return{...safe,url,deliveryAvailable:url!==null};}
 
 /** Serialize repository-validated records without another DB lookup. */
 export async function resolveMediaAsset(record:MediaRecord){return present(deployedStorage,record);}

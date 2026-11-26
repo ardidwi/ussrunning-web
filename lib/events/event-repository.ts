@@ -45,7 +45,7 @@ export async function writeEvent(actorId: string, content: EventContent | null, 
  FROM input,decision WHERE e.id=$4 AND decision.code='OK' RETURNING e.*` :
         `INSERT INTO uss.events(${columns.map(([, col]) => col).join(',')},created_by) SELECT ${values.join(',')},$1 FROM input,decision WHERE decision.code='OK' RETURNING *`;
     const statement = `WITH input AS (SELECT $3::jsonb AS patch), authority AS MATERIALIZED (${authority}), current AS MATERIALIZED(SELECT e.*,${hash} AS token FROM uss.events e WHERE e.id=$4),
- media AS MATERIALIZED(SELECT id FROM uss.media_assets WHERE id=($3::jsonb->>'coverMediaId')::uuid AND status='active' FOR SHARE),
+ media AS MATERIALIZED(SELECT id FROM uss.media_assets WHERE id=($3::jsonb->>'coverMediaId')::uuid AND status='active' AND purpose='cms' FOR SHARE),
  decision AS MATERIALIZED(SELECT CASE WHEN NOT EXISTS(SELECT 1 FROM authority) THEN 'INSUFFICIENT_PERMISSION'
  WHEN $4::uuid IS NOT NULL AND NOT EXISTS(SELECT 1 FROM current) THEN 'EVENT_NOT_FOUND'
  WHEN $4::uuid IS NOT NULL AND (SELECT token FROM current)<>$5 THEN 'EVENT_CONFLICT'

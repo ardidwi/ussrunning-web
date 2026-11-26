@@ -6,7 +6,7 @@ import type {LibraryFilter} from './media-validation';
 const roles=rolesForPermission('cms.content.manage');
 const authority=`SELECT a.id FROM uss.accounts a WHERE a.id=$1 AND a.status='active' AND a.email_verified_at IS NOT NULL AND EXISTS(SELECT 1 FROM uss.account_roles ar JOIN uss.roles role ON ar.role_id=role.id WHERE ar.account_id=a.id AND role.code=ANY($2::text[]))`;
 const utc=(c:string)=>`to_char(${c} AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"')`;
-const projection=`jsonb_build_object('id',m.id,'storageKey',m.storage_key,'storageProvider',m.storage_provider,'publicUrl',m.public_url,'mimeType',m.mime_type,'sizeBytes',m.byte_size,'width',m.width,'height',m.height,'altText',m.alt_text,'caption',m.caption,'status',m.status,'visibility',m.visibility,'version',m.version,'createdAt',${utc('m.created_at')},'updatedAt',${utc('m.updated_at')})`;
+const projection=`jsonb_build_object('id',m.id,'storageKey',m.storage_key,'storageProvider',m.storage_provider,'publicUrl',m.public_url,'mimeType',m.mime_type,'sizeBytes',m.byte_size,'width',m.width,'height',m.height,'altText',m.alt_text,'caption',m.caption,'status',m.status,'visibility',m.visibility,'purpose',m.purpose,'version',m.version,'createdAt',${utc('m.created_at')},'updatedAt',${utc('m.updated_at')})`;
 async function transaction<T>(actor:string,id:string|null,text:string,params:unknown[]):Promise<T>{const sql=getSql();const result=await sql.transaction([
  sql.query("SELECT set_config('lock_timeout','15s',true)"),
  sql.query('SELECT id FROM uss.accounts WHERE id=$1 FOR UPDATE',[actor]),
