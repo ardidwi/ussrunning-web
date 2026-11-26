@@ -22,8 +22,7 @@ export default function JoinPage() {
             CREW.
           </h1>
           <p>
-            Create one USS ID for community runs, RSVPs, run passes and your
-            participation history.
+            Verify your email, then add a clear profile photo and contact details. Your free membership includes a permanent USS Member ID and a Member Card with a barcode for staff identity checks.
           </p>
         </div>
 

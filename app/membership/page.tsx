@@ -13,7 +13,7 @@ const benefits = [
   [
     "02",
     "BELONG",
-    "Keep one USS ID for the community. No paid tier, no subscription and no performance requirement.",
+    "Keep your permanent USS Member ID and download your Member Card. Authorized USS staff can scan the barcode to confirm your identity and account status.",
   ],
   [
     "03",
@@ -23,7 +23,7 @@ const benefits = [
 ];
 
 const steps = [
-  ["01", "CREATE YOUR USS ID", "Set up one profile. Membership is free."],
+  ["01", "CREATE YOUR USS ID", "Verify your email, then add a clear profile photo and contact details. Staff use your photo to confirm your identity. A complete profile unlocks your Member Card and RSVPs."],
   [
     "02",
     "FIND THE NEXT RUN",

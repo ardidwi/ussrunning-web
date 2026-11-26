@@ -3,7 +3,7 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
 const dataRows = [
-  ["ACCOUNT & PROFILE", "Name, email, mobile number, city, optional social handle and account credentials.", "Create and manage your USS ID, identify you at events and support member features."],
+  ["ACCOUNT & PROFILE", "Name, email, mobile number, emergency contact name and number, profile photo, USS Member ID and member barcode.", "Create and manage your USS ID, identify you at events and support member features."],
   ["EVENT PARTICIPATION", "RSVP status, selected event, check-in, run-pass or QR information, attendance history and event-related preferences.", "Manage capacity, registration, check-in, event operations and your participation history."],
   ["COMMUNICATION", "Messages, support requests, feedback and communication preferences.", "Respond to you, provide event updates and manage community support."],
   ["NEWSLETTER", "Email address and newsletter consent status.", "Send USS updates only when you have separately chosen to receive them."],
@@ -152,7 +152,7 @@ export default function PrivacyPage() {
                 <h2>WHY WE USE PERSONAL DATA</h2>
                 <p>USS Running may use personal data to:</p>
                 <ul>
-                  <li>Create and manage your USS ID.</li>
+                  <li>Issue your permanent USS Member ID and a barcode that lets authorized USS staff confirm your name, photo and account status. The barcode contains no contact details.</li>
                   <li>Process event registrations, RSVPs and capacity limits.</li>
                   <li>Issue run passes or QR codes and support event check-in.</li>
                   <li>Send operational messages such as event changes, reminders or safety information.</li>
@@ -177,8 +177,8 @@ export default function PrivacyPage() {
                   Indonesian data protection law.
                 </p>
                 <p>
-                  Where we rely on consent, you may withdraw that consent at any time.
-                  Withdrawal does not affect processing that was lawful before the
+                  We require a profile photo for your Member Card and RSVPs so authorized USS staff can visually confirm your identity. We store the photo privately and limit access to you and authorized USS staff. Staff can reject a photo and ask you to replace it.
+                  Where we rely on consent, you may withdraw it at any time. Withdrawal does not affect processing that was lawful before the
                   withdrawal and may affect features that require the relevant data.
                 </p>
               </div>
