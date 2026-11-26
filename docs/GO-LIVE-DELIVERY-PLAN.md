@@ -255,3 +255,26 @@ Baca AGENTS.md, docs/GO-LIVE-DELIVERY-PLAN.md dan docs/ARCHITECTURE-TARGET.md.
 Jalankan rencana go-live mulai Fase 0 dengan pembagian jalur di §9, memakai keputusan K-01..K-07 yang sudah diputuskan.
 Kirim langsung ke main setelah gerbang §2 lulus; jangan push branch.
 ```
+
+---
+
+## 10. Status deliverable
+
+Diperbarui 2026-11-26 oleh agent lead setelah integrasi jalur Identitas member dan Public & SEO. "Kode di `main`" berarti lulus gerbang §2 secara lokal dan sudah ter-deploy; deliverable baru dianggap **selesai** bila kriteria selesai di §4 terpenuhi di lingkungan live. Bukti lengkap ada di [ENGINEERING-ROADMAP.md](ENGINEERING-ROADMAP.md#lead-integration-log--go-live-lanes).
+
+| ID | Status | Catatan |
+| --- | --- | --- |
+| D0.1–D0.4 | Menunggu Owner | Resend/DNS, migration 010–020 di Neon, bucket storage + env, kunci event pass. Tidak ada migration atau perubahan env yang dijalankan agent. |
+| D0.5 | Kode di `main` | `npm run admin:bootstrap`; test PGlite termasuk penolakan saat super_admin aktif sudah ada. Butuh migration 020 + operator untuk dijalankan. |
+| D0.6 | Kode di `main` | Kode lama dihapus termasuk `lib/session.ts` dan `app/dashboard/actions.ts`; `signOut` pindah ke `lib/auth/flow-actions.ts`. Sisa referensi `public.*` hanya guard baca di `lib/auth/legacy-cutover.ts`. Drop tabel `public.*` tetap migration terpisah dengan persetujuan. |
+| D0.7 | Kode di `main` | Redirect tanpa sesi via `proxy.ts`, shell `/admin` bermerek, format tahun. |
+| D0.8–D0.10 | Belum dimulai | |
+| D1.1–D1.5 | Kode di `main`, menunggu D0.2/D0.3 | Avatar private + URL bertanda tangan, K-01, K-02, guard `PROFILE_INCOMPLETE`, `members.lookup` admin/super admin. Fitur menampilkan state "unavailable" sampai migration 020 dan storage aktif. |
+| D1.6 | Belum dimulai | |
+| D1.7–D1.9, D1.11 | Kode di `main`, QA HP fisik tertunda | QA browser Chromium 320–1440px lulus; uji kamera/unduh di iOS Safari & Android Chrome masih gerbang launch. |
+| D1.10 | Menunggu persetujuan Owner | Copy Join, Membership, Privacy. |
+| D2.x | Belum dimulai | D2.4 dapat memakai `moderateMemberAvatar`. |
+| D3.1–D3.5, D3.8 | Belum dimulai | |
+| D3.6 | Kode di `main`, menunggu D0.2 | Halaman publik dari CMS tanpa data dummy; konten nyata tampil setelah migration diterapkan. |
+| D3.7 | Kode di `main` | Metadata per halaman (termasuk `/join`, `/membership`, `/privacy`), OG image, sitemap, robots, ikon, 404, redirect `/events`. Uji preview share WhatsApp/IG tertunda. |
+| D4.x, D5.x | Belum dimulai | |
