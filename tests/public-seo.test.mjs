@@ -205,3 +205,11 @@ test("SEO routes exist and /events redirects to /runs", () => {
   for (const page of ["app/page.tsx", "app/stories/page.tsx", "app/stories/[slug]/page.tsx", "app/runs/page.tsx", "app/runs/[slug]/page.tsx", "app/gallery/page.tsx", "app/gallery/[slug]/page.tsx", "app/partners/page.tsx", "app/about/page.tsx"])
     assert.match(readFileSync(page, "utf8"), /pageMetadata\(/, page);
 });
+
+test("join, membership and privacy declare canonical page metadata", () => {
+  for (const page of ["join", "membership", "privacy"]) {
+    const code = readFileSync(`app/${page}/page.tsx`, "utf8");
+    assert.match(code, /export const metadata: Metadata = pageMetadata\(\{/, page);
+    assert.match(code, new RegExp(`path: "/${page}"`), page);
+  }
+});

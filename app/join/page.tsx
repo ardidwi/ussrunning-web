@@ -1,6 +1,14 @@
 import Link from "next/link";
 import JoinForm from "@/components/JoinForm";
 import { getClientAuthPolicy } from "@/lib/auth/policy";
+import type { Metadata } from "next";
+import { pageMetadata } from "@/features/seo/metadata";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/join",
+  title: "Join USS",
+  description: "Create your free USS ID: one permanent USS Member ID, a personal member barcode and a profile photo for community runs in Jakarta.",
+});
 
 export default function JoinPage() {
   return (

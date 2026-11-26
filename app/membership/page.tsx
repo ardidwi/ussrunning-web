@@ -3,6 +3,14 @@ import { PageHero } from "@/components/layout/PageHero";
 
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import type { Metadata } from "next";
+import { pageMetadata } from "@/features/seo/metadata";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/membership",
+  title: "Membership",
+  description: "What a free USS Running membership includes: your USS Member ID, personal barcode, member card and access to community runs.",
+});
 
 const benefits = [
   [

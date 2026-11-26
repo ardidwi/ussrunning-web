@@ -1,6 +1,14 @@
 import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import type { Metadata } from "next";
+import { pageMetadata } from "@/features/seo/metadata";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/privacy",
+  title: "Privacy",
+  description: "How USS Running collects, uses and protects member data, including your profile photo, USS Member ID and member barcode.",
+});
 
 const dataRows = [
   ["ACCOUNT & PROFILE", "Name, email, mobile number, emergency contact name and number, profile photo, USS Member ID and member barcode.", "Create and manage your USS ID, identify you at events and support member features."],
