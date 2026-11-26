@@ -333,7 +333,9 @@ Sebelum go-live: backup/restore teruji, migration dijalankan lewat `npm run db:m
 
 ---
 
-## 11. Keputusan arsitektur yang menunggu konfirmasi
+## 11. Keputusan arsitektur
+
+Semua keputusan di bawah **diputuskan pemilik pada 2026-11-26** sesuai rekomendasi.
 
 | ID | Keputusan | Rekomendasi |
 | --- | --- | --- |

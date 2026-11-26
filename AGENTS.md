@@ -161,6 +161,8 @@ Use an isolated branch for authentication, authorization, schema/migrations, reg
 
 After required validation, integrate completed work forward into main under section 30; do not leave validated work isolated indefinitely. Later phases require explicitly revised release gates.
 
+**Owner decision K-07 (2026-11-26), valid until public go-live:** do not push task branches to origin. All work, including the isolated-branch categories above, is delivered directly to `main` once the gates in [docs/GO-LIVE-DELIVERY-PLAN.md §2](docs/GO-LIVE-DELIVERY-PLAN.md#2-cara-delivery) pass: reviewed diff, `npm run typecheck`, `npm run test:ci`, `npm run build`, and browser checks for UI work. Parallel agents may use temporary local worktrees that are merged into local `main` and never pushed as branches. Persistent database migrations, production environment changes and destructive data operations still require backup plus explicit owner approval. Deliverable D5.10 revokes this exception before beta.
+
 ## 27. Commit policy
 
 Create commits by logical units of work with descriptive messages, such as `feat: add member card API integration`, `feat: add member card responsive UI`, or `feat: add frontend permission foundation`.

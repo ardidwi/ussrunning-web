@@ -214,16 +214,44 @@ flowchart LR
 
 ---
 
-## 8. Keputusan yang dibutuhkan sebelum Fase 1
+## 8. Keputusan
 
-Lihat [ARCHITECTURE-TARGET.md §11](ARCHITECTURE-TARGET.md#11-keputusan-arsitektur-yang-menunggu-konfirmasi). Ringkas:
+Lihat [ARCHITECTURE-TARGET.md §11](ARCHITECTURE-TARGET.md#11-keputusan-arsitektur). Ringkas:
 
 | ID | Keputusan | Rekomendasi | Status |
 | --- | --- | --- | --- |
-| K-01 | Aturan & moderasi foto profil | Wajib sebelum kartu/RSVP; auto-approve, admin bisa menolak | Menunggu |
-| K-02 | Format Member ID | `USS-000123` dari sequence | Menunggu |
-| K-03 | Admin melihat daftar member | Ya, read-only terbatas | Menunggu |
-| K-04 | Bahasa situs | Publik Inggris, bantuan CMS Indonesia, i18n pasca go-live | Menunggu |
-| K-05 | Data & tabel lama `public.*` | Dipensiunkan | Menunggu |
-| K-06 | Metode verifikasi email | Link USS via Resend saja | Menunggu |
+| K-01 | Aturan & moderasi foto profil | Wajib sebelum kartu/RSVP; auto-approve, admin bisa menolak | **Diputuskan 2026-11-26 (rekomendasi)** |
+| K-02 | Format Member ID | `USS-000123` dari sequence | **Diputuskan 2026-11-26 (rekomendasi)** |
+| K-03 | Admin melihat daftar member | Ya, read-only terbatas | **Diputuskan 2026-11-26 (rekomendasi)** |
+| K-04 | Bahasa situs | Publik Inggris, bantuan CMS Indonesia, i18n pasca go-live | **Diputuskan 2026-11-26 (rekomendasi)** |
+| K-05 | Data & tabel lama `public.*` | Dipensiunkan | **Diputuskan 2026-11-26 (rekomendasi)** |
+| K-06 | Metode verifikasi email | Link USS via Resend saja | **Diputuskan 2026-11-26 (rekomendasi)** |
 | K-07 | Alur delivery | Langsung ke `main` sampai go-live | **Diputuskan 2026-11-26** |
+
+---
+
+## 9. Eksekusi paralel & cara melanjutkan
+
+Eksekusi dibagi ke beberapa jalur kerja (agent) yang berjalan paralel di salinan kerja lokal terpisah. Agent lead meninjau setiap hasil, menggabungkannya ke `main` lokal, menjalankan gerbang §2 pada hasil gabungan, lalu push `main` dan memverifikasi deployment Vercel. Tidak ada branch yang di-push ke origin (K-07).
+
+| Jalur | Cakupan | Deliverable | Area file utama |
+| --- | --- | --- | --- |
+| Identitas member | Foto wajib, Member ID, onboarding, kartu v2, lookup barcode, bootstrap super admin | D0.5, D1.1–D1.11 | `lib/member`, `lib/media`, `lib/authz`, `features/member-card`, `features/member-dashboard`, `app/dashboard`, `scripts/admin`, migration baru |
+| Admin UI | Members, Roles, Overview, scanner di `/admin` | D2.1–D2.4, D2.8, D2.10 | `features/members-cms`, `features/cms`, `app/admin` |
+| Notifikasi & event ops | Job email terjadwal, peserta per event + CSV, antrian notifikasi, pass otomatis | D2.5–D2.7, D4.1 | `lib/notifications`, `lib/registrations`, `app/api/jobs`, konfigurasi schedule |
+| CMS media | Media library, upload admin, Story berbasis blok, kategori/tag, revalidasi cache | D3.1–D3.5, D3.8 | `lib/media`, `lib/stories`, `features/media`, `features/stories-cms` |
+| Public & SEO | Pensiun kode lama/dummy, perbaikan UI cepat, halaman publik dari CMS, paket SEO | D0.6, D0.7, D3.6, D3.7 | `app/(public pages)`, `components/*`, `lib/content.ts` |
+| Lead | Koordinasi, review, integrasi, AGENTS/roadmap, verifikasi deploy | D0.9, integrasi | dokumen, `AGENTS.md` |
+| Owner | Resend & DNS, bucket storage, env key, persetujuan migration | D0.1–D0.4 | Vercel, Neon, Resend, DNS |
+
+File yang disentuh lebih dari satu jalur (`app/admin/page.tsx`, `features/cms/navigation.ts`, `lib/authz/permissions.ts`, nomor migration baru) diintegrasikan oleh lead; setiap jalur mengambil nomor migration berikutnya hanya setelah lead mengalokasikannya (urutan: Identitas member mulai `020`).
+
+**Prasyarat eksekusi:** lingkungan kerja harus bisa menjalankan `npm ci`. Pada 2026-11-26 sesi kerja awal tidak memiliki akses network untuk install package, sehingga eksekusi kode menunggu akses tersebut aktif.
+
+**Prompt untuk melanjutkan di sesi baru:**
+
+```text
+Baca AGENTS.md, docs/GO-LIVE-DELIVERY-PLAN.md dan docs/ARCHITECTURE-TARGET.md.
+Jalankan rencana go-live mulai Fase 0 dengan pembagian jalur di §9, memakai keputusan K-01..K-07 yang sudah diputuskan.
+Kirim langsung ke main setelah gerbang §2 lulus; jangan push branch.
+```
