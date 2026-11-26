@@ -9,7 +9,7 @@ import { ParticleField } from "@/components/home/ParticleField";
 import { mobileParticleProgress } from "@/components/home/particle-motion";
 
 type Props = {
-  imageUrl: string;
+  imageUrl: string | null;
   established?: string | null;
   eyebrow?: string | null;
   headline: string;
@@ -164,7 +164,7 @@ export default function HomeMotionExperience({
       <SiteHeader />
 
       <div className="uss-motion-stage">
-        <div className="uss-motion-background" aria-hidden="true"><img src={imageUrl} alt="" /></div>
+        {imageUrl ? <div className="uss-motion-background" aria-hidden="true"><img src={imageUrl} alt="" /></div> : null}
         <div className="uss-motion-scrim" aria-hidden="true" />
         <canvas ref={canvasRef} className="uss-motion-canvas" aria-hidden="true" />
         <div className="uss-motion-hud" aria-hidden="true">{hud.map((item) => <span key={item}>{item}</span>)}</div>

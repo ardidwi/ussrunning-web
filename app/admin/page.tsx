@@ -3,6 +3,7 @@ import { PermissionsProvider } from "@/features/permissions/Permissions";
 import { permissionView } from "@/features/permissions/model";
 import { CmsShell } from "@/features/cms/CmsShell";
 import { CmsModuleBoundary } from "@/features/cms/CmsModuleBoundary";
+import { CmsStatusShell } from "@/features/cms/CmsStatusShell";
 import { CMS_MODULES, cmsModule } from "@/features/cms/navigation";
 import { ServiceFeedback } from "@/features/shared/ServiceFeedback";
 import { AuditHistory } from "@/features/history/AuditHistory";
@@ -26,7 +27,10 @@ import {
   getHistorySnapshot,
 } from "@/lib/revisions/revision-actions";
 export const dynamic = "force-dynamic";
-export const metadata = { title: "USS CMS — USS Running" };
+export const metadata = {
+  title: "USS CMS — USS Running",
+  robots: { index: false, follow: false },
+};
 export default async function AdminPage({
   searchParams,
 }: {
@@ -38,11 +42,9 @@ export default async function AdminPage({
   ]);
   if (!context.ok)
     return (
-      <div className="uss-member-shell">
-        <main className="uss-member-content">
-          <ServiceFeedback code={context.code} returnTo="/admin" />
-        </main>
-      </div>
+      <CmsStatusShell>
+        <ServiceFeedback code={context.code} returnTo="/admin" />
+      </CmsStatusShell>
     );
   const module = cmsModule(text(query, "module")),
     access = permissionView(context.data),

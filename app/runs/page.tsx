@@ -2,17 +2,27 @@ import { PageHero } from "@/components/layout/PageHero";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { getPublicEventList } from "@/lib/events/event-actions";
-import { eventDate } from "@/features/event-registration/model";
 import { LinkButton } from "@/components/ui";
+import EventCard from "@/components/EventCard";
+import type { Metadata } from "next";
+import { pageMetadata } from "@/features/seo/metadata";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/runs",
+  title: "Runs",
+  description:
+    "Upcoming USS Running community runs, training sessions, shakeouts and race-week moments in Jakarta. Membership is free; RSVP with one USS ID.",
+});
 
 export default async function RunsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ cursor?: string }>;
+  searchParams: Promise<{ cursor?: string | string[] }>;
 }) {
-  const { cursor } = await searchParams;
+  const { cursor: rawCursor } = await searchParams;
+  const cursor = typeof rawCursor === "string" ? rawCursor : undefined;
   const events = await getPublicEventList({
     limit: 20,
     ...(cursor ? { cursor } : {}),
@@ -48,22 +58,12 @@ export default async function RunsPage({
         <div className="content-frame">
           {events.ok && events.data.items.length > 0 ? (
             <section aria-label="USS events">
-              <h2>USS EVENTS</h2>
-              <ul className="uss-registration-list">
+              <h2 className="uss-sr-only">USS EVENTS</h2>
+              <div className="event-grid event-grid-three">
                 {events.data.items.map((event) => (
-                  <li key={event.id}>
-                    <h3>{event.title}</h3>
-                    <p>{eventDate(event.startsAt, event.timezone)}</p>
-                    <p>{event.status.replaceAll("_", " ")}</p>
-                    <LinkButton
-                      href={`/runs/${encodeURIComponent(event.slug)}`}
-                      variant="secondary"
-                    >
-                      View event ↗
-                    </LinkButton>
-                  </li>
+                  <EventCard event={event} key={event.id} />
                 ))}
-              </ul>
+              </div>
             </section>
           ) : null}
 

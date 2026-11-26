@@ -1,76 +1,114 @@
+import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import {
-  getPublicStoryBySlug,
-  listPublicStories,
-} from "@/lib/stories/story-actions";
-import { getStarterStoryBySlug } from "@/lib/stories/story-starter";
+import { getPublicStoryBySlug } from "@/lib/stories/story-actions";
+import { deliverableUrl } from "@/features/public-site/media";
+import { publicDate } from "@/features/public-site/format";
+import { PublicUnavailable } from "@/features/public-site/PublicUnavailable";
+import { JsonLd } from "@/features/seo/JsonLd";
+import { pageMetadata, SITE_NAME, siteUrl } from "@/features/seo/metadata";
 
 export const dynamic = "force-dynamic";
 
-export default async function StoryPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+/** One BE-12 read per request, shared by metadata and the page. */
+const readStory = cache((slug: string) => getPublicStoryBySlug(slug));
+
+type Params = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
-  const result = await getPublicStoryBySlug(slug);
+  const result = await readStory(slug);
+  if (!result.ok) return pageMetadata({ path: `/stories/${encodeURIComponent(slug)}`, title: "Story", noIndex: true });
+  const story = result.data;
+  const cover = story.cover && deliverableUrl(story.cover) ? story.cover : null;
+  return pageMetadata({
+    path: `/stories/${encodeURIComponent(story.slug)}`,
+    title: story.title,
+    description: story.excerpt || story.body[0],
+    type: "article",
+    publishedTime: story.publishedAt,
+    image: cover
+      ? { url: cover.url!, alt: cover.altText || story.title, width: cover.width, height: cover.height }
+      : undefined,
+  });
+}
+
+export default async function StoryPage({ params }: Params) {
+  const { slug } = await params;
+  const result = await readStory(slug);
 
   if (!result.ok) {
-    if (result.code !== "STORY_NOT_FOUND") {
-      throw new Error("Story is temporarily unavailable.");
-    }
-
-    const starter = getStarterStoryBySlug(slug);
-    if (!starter) notFound();
-
-    const listing = await listPublicStories({ limit: 1 });
-    if (!listing.ok) {
-      throw new Error("Story is temporarily unavailable.");
-    }
-    if (listing.data.items.length) notFound();
-
+    if (result.code === "STORY_NOT_FOUND" || result.code === "STORY_INVALID_INPUT") notFound();
     return (
       <main className="page-black">
         <SiteHeader />
-
-        <article className="cms-article">
-          <span className="kicker">{starter.contentType}</span>
-          <h1>{starter.title}</h1>
-          <p>{starter.excerpt}</p>
-          <div>
-            {starter.body.map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-            ))}
-          </div>
-        </article>
-
+        <PublicUnavailable
+          kicker="USS JOURNAL"
+          message="This story is temporarily unavailable. Please try again soon."
+          backHref="/stories"
+          backLabel="All stories"
+        />
         <SiteFooter />
       </main>
     );
   }
 
   const story = result.data;
-  const cover =
-    story.cover?.deliveryAvailable && story.cover.url ? story.cover.url : null;
+  const cover = deliverableUrl(story.cover);
+  const canonical = new URL(`/stories/${encodeURIComponent(story.slug)}`, siteUrl()).toString();
 
   return (
     <main className="page-black">
       <SiteHeader />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: story.title,
+          description: story.excerpt ?? undefined,
+          datePublished: story.publishedAt,
+          image: cover ? [cover] : undefined,
+          author: story.author.displayName
+            ? { "@type": "Person", name: story.author.displayName }
+            : { "@type": "Organization", name: SITE_NAME },
+          publisher: { "@type": "Organization", name: SITE_NAME },
+          mainEntityOfPage: canonical,
+        }}
+      />
 
-      <article className="cms-article">
+      <article className="cms-article uss-article">
+        <nav aria-label="Breadcrumb" className="uss-article-breadcrumb">
+          <Link href="/stories">STORIES ↖</Link>
+        </nav>
         <span className="kicker">{story.contentType || "USS JOURNAL"}</span>
         <h1>{story.title}</h1>
-        {story.excerpt ? <p>{story.excerpt}</p> : null}
-        {cover ? <img src={cover} alt={story.cover?.altText || ""} /> : null}
-        <div>
-          {story.body.length ? (
-            story.body.map((paragraph, index) => <p key={index}>{paragraph}</p>)
-          ) : (
-            <p>Full story coming soon.</p>
-          )}
+        <p className="uss-article-byline">
+          <time dateTime={story.publishedAt}>{publicDate(story.publishedAt)}</time>
+          {story.author.displayName ? <span>BY {story.author.displayName.toUpperCase()}</span> : null}
+        </p>
+        {story.excerpt ? <p className="uss-article-excerpt">{story.excerpt}</p> : null}
+        {cover ? (
+          <figure className="uss-article-cover">
+            <img
+              src={cover}
+              alt={story.cover?.altText || ""}
+              width={story.cover?.width ?? undefined}
+              height={story.cover?.height ?? undefined}
+            />
+            {story.cover?.caption ? <figcaption>{story.cover.caption}</figcaption> : null}
+          </figure>
+        ) : null}
+        <div className="uss-article-body">
+          {story.body.map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
+          ))}
         </div>
+        <Link href="/stories" className="arrow-link">
+          MORE STORIES ↗
+        </Link>
       </article>
 
       <SiteFooter />

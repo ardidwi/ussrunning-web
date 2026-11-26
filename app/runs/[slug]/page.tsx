@@ -1,114 +1,89 @@
-import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cache } from "react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-import { getRunBySlug } from "@/lib/content";
 import { getPublicEventDetail } from "@/lib/events/event-actions";
 import { loadRegistrationHistory } from "@/features/event-registration/api/server";
 import { PublicEventDetail } from "@/features/event-registration/components/PublicEventDetail";
-import { ServiceFeedback } from "@/features/shared/ServiceFeedback";
+import { PublicUnavailable } from "@/features/public-site/PublicUnavailable";
+import { JsonLd } from "@/features/seo/JsonLd";
+import { pageMetadata, SITE_NAME, siteUrl } from "@/features/seo/metadata";
+import { eventCardDate } from "@/features/public-events/presentation";
 
 export const dynamic = "force-dynamic";
 
-export default async function RunDetailPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+const readEvent = cache((slug: string) => getPublicEventDetail(slug));
+
+type Params = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
-  const event = await getPublicEventDetail(slug);
-  if (event.ok)
+  const path = `/runs/${encodeURIComponent(slug)}`;
+  const result = await readEvent(slug);
+  if (!result.ok) return pageMetadata({ path, title: "Run", noIndex: true });
+  const event = result.data;
+  const date = eventCardDate(event.startsAt, event.timezone);
+  const place = event.venueName || event.locationText;
+  return pageMetadata({
+    path,
+    title: event.title,
+    description:
+      event.summary ||
+      [`${date.full} · ${date.time}`, place].filter(Boolean).join(" · ") ||
+      undefined,
+  });
+}
+
+const EVENT_STATUS_SCHEMA: Partial<Record<string, string>> = {
+  cancelled: "https://schema.org/EventCancelled",
+};
+
+export default async function RunDetailPage({ params }: Params) {
+  const { slug } = await params;
+  const event = await readEvent(slug);
+
+  if (!event.ok) {
+    if (event.code === "EVENT_NOT_FOUND" || event.code === "EVENT_VALIDATION_ERROR") notFound();
     return (
       <main className="page-black">
         <SiteHeader />
-        <PublicEventDetail
-          event={event.data}
-          registration={await loadRegistrationHistory(event.data.id)}
+        <PublicUnavailable
+          kicker="USS RUNS"
+          message="This run is temporarily unavailable. Please try again soon."
+          backHref="/runs"
+          backLabel="All runs"
         />
-        <SiteFooter />
-      </main>
-    );
-  const run = await getRunBySlug(slug);
-  if (!run) {
-    if (
-      event.code === "EVENT_NOT_FOUND" ||
-      event.code === "EVENT_VALIDATION_ERROR"
-    )
-      notFound();
-    return (
-      <main className="page-black">
-        <SiteHeader />
-        <div className="uss-event-detail">
-          <ServiceFeedback code={event.code} />
-        </div>
         <SiteFooter />
       </main>
     );
   }
 
+  const place = event.data.venueName || event.data.locationText;
   return (
     <main className="page-black">
       <SiteHeader />
-      <section className="run-detail-hero">
-        <img src={run.image} alt="" />
-        <div className="run-detail-scrim" />
-        <div className="run-detail-copy">
-          <span className="kicker">{run.eyebrow}</span>
-          <h1>{run.title}</h1>
-          <div className="run-detail-meta">
-            <span>{run.date}</span>
-            <span>{run.time}</span>
-            <span>{run.distance}</span>
-            <span>{run.location}</span>
-          </div>
-        </div>
-      </section>
-
-      <section className="run-info-grid">
-        <div>
-          <span className="kicker">ABOUT THE SESSION</span>
-          <h2>
-            COME AS YOU ARE.
-            <br />
-            MOVE WITH THE CITY.
-          </h2>
-        </div>
-        <div className="run-info-copy">
-          <p>
-            A social community session built around easy movement, good energy
-            and meeting people on the road. Pace is secondary. Showing up is the
-            point.
-          </p>
-          <div className="detail-table">
-            <div>
-              <span>MEET UP</span>
-              <b>{run.time}</b>
-            </div>
-            <div>
-              <span>LOCATION</span>
-              <b>{run.location}</b>
-            </div>
-            <div>
-              <span>DISTANCE</span>
-              <b>{run.distance}</b>
-            </div>
-            <div>
-              <span>REGISTRATION</span>
-              <b>NOT CONNECTED</b>
-            </div>
-          </div>
-          <p>
-            Online registration is not connected for this listed session. Your
-            Member Card does not reserve a place.
-          </p>
-          <Link
-            className="button button-light full-button"
-            href="/dashboard/events"
-          >
-            YOUR REGISTRATIONS
-          </Link>
-        </div>
-      </section>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Event",
+          name: event.data.title,
+          description: event.data.summary ?? undefined,
+          startDate: event.data.startsAt,
+          endDate: event.data.endsAt ?? undefined,
+          eventStatus: EVENT_STATUS_SCHEMA[event.data.status] ?? "https://schema.org/EventScheduled",
+          eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+          location: place
+            ? { "@type": "Place", name: place, address: event.data.locationText ?? place }
+            : undefined,
+          organizer: { "@type": "Organization", name: SITE_NAME, url: siteUrl().origin },
+          url: new URL(`/runs/${encodeURIComponent(event.data.slug)}`, siteUrl()).toString(),
+        }}
+      />
+      <PublicEventDetail
+        event={event.data}
+        registration={await loadRegistrationHistory(event.data.id)}
+      />
       <SiteFooter />
     </main>
   );

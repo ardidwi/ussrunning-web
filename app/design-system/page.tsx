@@ -16,7 +16,6 @@ import { getClientAuthPolicy } from "@/lib/auth/policy";
 import type { AuthFlow } from "@/lib/auth/contract";
 import { notFound } from "next/navigation";
 import FormReference from "@/components/ui/FormReference";
-import WorkspaceReference from "@/components/ui/WorkspaceReference";
 export default async function DesignSystemPage({
   searchParams,
 }: {
@@ -90,6 +89,5 @@ export default async function DesignSystemPage({
   }
   if (surface === "member")
     return <MemberReference view={requested} scenario={scenario} />;
-  if (surface === "admin") return <WorkspaceReference />;
   return <FormReference />;
 }

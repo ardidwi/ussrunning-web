@@ -1,6 +1,10 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { getLoginHero, getRuns } from "@/lib/content";
+import { getPublicSiteContent } from "@/lib/site-content/site-service";
+import { SITE_DEFAULTS } from "@/lib/site-content/site-defaults";
+import { loadUpcomingPublicEvents } from "@/features/public-events/server";
+import { eventCardDate } from "@/features/public-events/presentation";
+import { deliverableUrl, firstDeliverable } from "@/features/public-site/media";
 export default async function AuthShell({
   children,
   eyebrow,
@@ -12,13 +16,21 @@ export default async function AuthShell({
   heading: string;
   description: string;
 }) {
-  const [hero, runs] = await Promise.all([getLoginHero(), getRuns()]);
-  const nextRun = runs[0];
+  const [visual, upcoming] = await Promise.all([
+    getPublicSiteContent("login.visual"),
+    loadUpcomingPublicEvents(1),
+  ]);
+  const hero = visual.payload ?? SITE_DEFAULTS["login.visual"];
+  const heroImage = deliverableUrl(firstDeliverable(visual.media, hero.desktopMediaId));
+  // Same BE-07 public events as the homepage and /runs.
+  const nextRun = upcoming.ok ? upcoming.items[0] ?? null : null;
+  const nextRunDate = nextRun ? eventCardDate(nextRun.startsAt, nextRun.timezone) : null;
+  const nextRunPlace = nextRun ? nextRun.venueName || nextRun.locationText : null;
 
   return (
     <main className="login-page-v3">
       <section className="login-visual login-visual-v3">
-        <img src={hero.imageUrl} alt="" className="login-visual-image" />
+        {heroImage ? <img src={heroImage} alt="" className="login-visual-image" /> : null}
         <div className="login-visual-scrim" />
 
         <div className="login-visual-top">
@@ -38,22 +50,22 @@ export default async function AuthShell({
           <span className="kicker">
             {hero.kicker || "MY USS / COMMUNITY ACCESS"}
           </span>
-          <h1 style={{ whiteSpace: "pre-line" }}>{hero.headline}</h1>
+          <h1 className="pre-line">{hero.headline}</h1>
           <p>{hero.description}</p>
         </div>
 
-        {nextRun ? (
+        {nextRun && nextRunDate ? (
           <div className="login-next-run login-next-run-v3">
             <div>
               <span className="login-next-label">NEXT UP</span>
               <strong>{nextRun.title}</strong>
             </div>
             <div className="login-next-meta">
-              <span>{nextRun.date}</span>
-              <span>{nextRun.time}</span>
-              <span>{nextRun.location}</span>
+              <span>{nextRunDate.full}</span>
+              <span>{nextRunDate.time}</span>
+              {nextRunPlace ? <span>{nextRunPlace.toUpperCase()}</span> : null}
             </div>
-            <Link href={"/runs/" + nextRun.slug}>VIEW RUN ↗</Link>
+            <Link href={`/runs/${encodeURIComponent(nextRun.slug)}`}>VIEW RUN ↗</Link>
           </div>
         ) : null}
       </section>
@@ -68,7 +80,7 @@ export default async function AuthShell({
 
           <div className="login-panel-head login-panel-head-v3">
             <span className="kicker">{eyebrow}</span>
-            <h2 style={{ whiteSpace: "pre-line" }}>{heading}</h2>
+            <h2 className="pre-line">{heading}</h2>
             <p>{description}</p>
           </div>
 

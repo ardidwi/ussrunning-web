@@ -4,6 +4,15 @@ import type { AuthFlow as Flow } from "@/lib/auth/contract";
 import { getClientAuthPolicy } from "@/lib/auth/policy";
 import { safeReturnPath } from "@/lib/auth/return-path";
 import AuthShell from "@/components/auth/AuthShell";
+import type { Metadata } from "next";
+import { pageMetadata } from "@/features/seo/metadata";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/login",
+  title: "Log in",
+  description: "Sign in to MY USS to manage your RSVPs, run passes and member card.",
+  noIndex: true,
+});
 
 export const dynamic = "force-dynamic";
 

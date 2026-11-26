@@ -1,22 +1,29 @@
 import Link from "next/link";
-import type { Run } from "@/data/site";
+import type { PublicEventDTO } from "@/lib/events/event-types";
+import { eventStatusLabel, eventCardDate } from "@/features/public-events/presentation";
 
-export default function EventCard({ run, editorialListing = false }: { run: Run; editorialListing?: boolean }) {
+/** Public teaser card for a BE-07 public event. Uses only the published DTO. */
+export default function EventCard({ event }: { event: PublicEventDTO }) {
+  const date = eventCardDate(event.startsAt, event.timezone);
+  const place = event.venueName || event.locationText;
   return (
-    <Link href={"/runs/" + run.slug} className="event-card">
-      <div className="event-image-wrap">
-        <img src={run.image} alt="" className="event-image" />
-        <div className="event-status">{editorialListing ? "SESSION LISTING" : run.status}</div>
+    <Link
+      href={`/runs/${encodeURIComponent(event.slug)}`}
+      className="event-card event-card-typographic"
+    >
+      <div className="event-date-block">
+        <span className="event-date-day">{date.day}</span>
+        <span className="event-date-month">{date.month}</span>
+        <div className="event-status">{eventStatusLabel(event.status)}</div>
       </div>
       <div className="event-card-topline">
-        <span>{run.eyebrow}</span>
-        <span>{run.date}</span>
+        <span>{event.eventType ? event.eventType.replaceAll("-", " ").toUpperCase() : "USS RUN"}</span>
+        <span>{date.full}</span>
       </div>
-      <h3>{run.title}</h3>
+      <h3>{event.title}</h3>
       <div className="event-meta">
-        <span>{run.time}</span>
-        <span>{run.distance}</span>
-        <span>{run.location}</span>
+        <span>{date.time}</span>
+        {place ? <span>{place.toUpperCase()}</span> : null}
       </div>
     </Link>
   );
