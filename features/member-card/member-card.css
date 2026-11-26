@@ -74,32 +74,20 @@
   color: #070707;
   margin: auto;
 }
-.uss-card-code-frame > img {
-  display: block;
+.uss-card-code-frame .uss-branded-qr {
+  margin: 0;
   width: 100%;
-  height: 100%;
-}
-.uss-card-code-frame > div {
-  min-height: 100%;
-  display: grid;
-  place-content: center;
   text-align: center;
-  padding: var(--space-4);
 }
-.uss-card-code p,
 .uss-card-disclaimer {
   font-size: var(--uss-type-small);
   color: var(--uss-muted);
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
-.uss-card-code .uss-button {
+.uss-member-card > .uss-button {
   width: 100%;
-}
-.uss-card-download-feedback {
-  min-height: 3em;
-  color: var(--uss-danger);
-  font-size: var(--uss-type-small);
+  margin-block: var(--space-4);
 }
 .uss-card-disclaimer {
   margin: 0;

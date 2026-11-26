@@ -6,9 +6,11 @@ import { cameraFailure } from "../model";
 export default function CameraScanner({
   enabled,
   onDecode,
+  subject = "Event Pass",
 }: {
   enabled: boolean;
   onDecode: (value: string) => void;
+  subject?: string;
 }) {
   const video = useRef<HTMLVideoElement>(null),
     callback = useRef(onDecode);
@@ -66,11 +68,11 @@ export default function CameraScanner({
   const copy = {
     idle: "Camera is off. Start it when you are ready.",
     loading: "Opening camera…",
-    active: "Scanning. Hold an Event Pass inside the frame.",
+    active: `Scanning. Hold the ${subject} inside the frame.`,
     denied:
-      "Camera access was denied. Allow it in browser settings, or enter the pass below.",
+      "Camera access was denied. Allow it in browser settings, or enter the code below.",
     unavailable:
-      "Camera is unavailable or in use. Try again, or enter the pass below.",
+      "Camera is unavailable or in use. Try again, or enter the code below.",
     paused: "Camera paused. Start it again when ready.",
   };
   return (

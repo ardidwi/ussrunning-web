@@ -104,7 +104,7 @@ MemberDashboardShell owns a 240px desktop sidebar and a modal menu below 768px, 
 
 ## FE-04 / FE-05 runtime ownership
 
-features/member-card owns private card composition. It reuses the existing qrcode dependency and the BE-05 protocol validator, with high correction and four-module white quiet zones. The centered USS logo sits in the card's separate brand area, never over required code modules. Member ID is human-readable; the full opaque payload is not noisy text. SVG export renders the same backend-issued value and does not create an identity or credential.
+features/member-card owns private card composition. The card leads with the member photo, name, status and human-readable Member ID. BrandedQrCode owns the centered USS logo, high error correction and four-module quiet zone, with reserved QR modules protected. The PNG export uses the same backend-issued barcode and current authorized photo.
 
 features/cms reuses MemberDashboardShell's functional grammar and FE-01 controls. Permission-aware navigation uses links to existing /admin query views. Audit/revision entries use wrapping bordered lists on all widths, with native platform selects/date inputs. Dates filter UTC calendar days; displayed history timestamps explicitly use Asia/Jakarta (WIB). No new colors/fonts/library or homepage-style marketing hero in CMS. Legacy AdminWorkspace remains a clearly separate development reference pending the backend-documented legacy crosswalk.
 
@@ -132,8 +132,7 @@ features/qr owns rendering configuration and centered branding, independent of p
 The existing USS white logo uses a small black patch within a bounded white pad. Logos may
 occupy at most 12% of the symbol width (including padding); reserved QR patterns are never
 covered. Four-module quiet zones, high correction and dark/light contrast take precedence
-over branding. Failed event artwork falls back to USS, then a plain QR. Permanent member
-barcode presentation and the public motion engine are unchanged.
+over branding. Failed event artwork falls back to USS, then a plain QR. The public motion engine is unchanged.
 
 ## FE-09 crew operations
 

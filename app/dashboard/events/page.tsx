@@ -1,7 +1,9 @@
+import { redirectIncompleteMember } from "@/features/member-onboarding/server";
 import { loadRegistrationHistory } from "@/features/event-registration/api/server";
 import { RegistrationHistory } from "@/features/event-registration/components/RegistrationHistory";
 export const metadata = { title: "Registrations — USS Running" };
 export default async function Page() {
+  await redirectIncompleteMember();
   const initial = await loadRegistrationHistory();
   return (
     <>

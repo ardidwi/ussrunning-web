@@ -1,8 +1,10 @@
+import { redirectIncompleteMember } from "@/features/member-onboarding/server";
 import { EmptyState, LinkButton } from "@/components/ui";
 import MemberFeedback from "@/components/dashboard/MemberFeedback";
 import { loadMember } from "@/lib/member/server";
 export const metadata = { title: "Settings — USS Running" };
 export default async function Page() {
+  await redirectIncompleteMember();
   const result = await loadMember();
   if (result.state === "error")
     return <MemberFeedback code={result.code} returnTo="/dashboard/settings" />;

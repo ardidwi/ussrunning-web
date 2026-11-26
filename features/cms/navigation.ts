@@ -22,6 +22,7 @@ export const CMS_MODULES = [
   { id: "partners", label: "Partners", permissions: ["partners.manage"] },
   { id: "media", label: "Media", permissions: ["cms.content.manage"] },
   { id: "members", label: "Members", permissions: ["users.manage"] },
+  { id: "member-scanner", label: "Scan member", permissions: ["members.lookup"] },
   { id: "activity", label: "Audit history", permissions: ["audit.read"] },
   {
     id: "revisions",

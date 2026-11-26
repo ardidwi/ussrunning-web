@@ -54,6 +54,14 @@ export function ServiceFeedback({
         </LinkButton>
       </section>
     );
+  if (code === "PROFILE_INCOMPLETE")
+    return (
+      <section className="uss-member-panel" role="status">
+        <h1>Complete your profile.</h1>
+        <p>Add your profile photo and contact details to continue.</p>
+        <LinkButton href="/dashboard/onboarding">Continue setup</LinkButton>
+      </section>
+    );
   const forbidden = code === "INSUFFICIENT_PERMISSION",
     missing = code === "HISTORY_NOT_FOUND" || code === "PROFILE_NOT_FOUND",
     validation = code === "HISTORY_VALIDATION_ERROR";

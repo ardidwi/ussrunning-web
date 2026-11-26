@@ -184,3 +184,9 @@ is backend-derived. Result focus and live status announce safe confirmation; ide
 fields, event and attendance time are text. Unknown outcomes do not imply no mutation.
 FE-01 Button/Field/Input, FE-02 ServiceFeedback and FE-05 PermissionGate own shared UI.
 No client account claims, event authorization, persistent tokens or member-ticket conflation.
+
+## Go-live member identity
+
+Member onboarding uses the server-owned completion state. An active, verified member starts with a square profile photo and then saves their name, mobile number and two emergency contact fields. Completion opens the permanent Member Card. The photo replaces the current image only after the authorized upload commits, so leaving onboarding between steps preserves progress. Rejected photos show the staff reason and return the member to the photo step. Members can replace their photo from Profile.
+
+The member scanner lives in the CMS with the shared camera controller and manual entry as fallback. Staff start the camera explicitly. Results and submission release the stream, clear the entered barcode and require an explicit reset before another lookup. The result shows the safe account status and identity projection. Event passes and attendance use the separate event scanner.

@@ -58,7 +58,7 @@ export function BrandedQrCode({
         ) : (
           <div role="status" aria-busy="true">
             <Skeleton width="100%" height="100%" />
-            <span className="uss-sr-only">Preparing Event Pass QR…</span>
+            <span className="uss-sr-only">Preparing QR…</span>
           </div>
         )
       ) : (
@@ -81,7 +81,7 @@ export function BrandedQrCode({
               <img
                 key={logo}
                 src={logo}
-                alt="USS Running / event branding"
+                alt=""
                 referrerPolicy="no-referrer"
                 onError={() => {
                   setFailedLogos((previous) => [...previous, logo]);

@@ -1,3 +1,4 @@
+import { redirectIncompleteMember } from "@/features/member-onboarding/server";
 import { readEventPass } from "@/features/event-pass/api/actions";
 import { EventPassScreen } from "@/features/event-pass/components/EventPassScreen";
 export const metadata = { title: "Event Pass — USS Running" };
@@ -8,6 +9,7 @@ export default async function Page({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ eventId?: string }>;
 }) {
+  await redirectIncompleteMember();
   const { id } = await params,
     { eventId = "" } = await searchParams;
   const reference = { eventId, registrationId: id };
