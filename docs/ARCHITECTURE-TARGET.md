@@ -195,22 +195,27 @@ Permission tetap didefinisikan di kode (`lib/authz/permissions.ts`), bukan di da
 
 ### 6.1 Lifecycle akun + gerbang profil lengkap
 
+Lifecycle akun (`accounts.status`):
+
 ```mermaid
 stateDiagram-v2
-  [*] --> pending_verification: signup + provisioning
-  pending_verification --> active: klik link verifikasi (Resend)
+  [*] --> pending_verification: signup dan provisioning
+  pending_verification --> active: klik link verifikasi
   active --> suspended: super admin
   suspended --> active: super admin
   active --> deactivated: super admin
   suspended --> deactivated: super admin
+```
 
-  state active {
-    [*] --> profile_incomplete
-    profile_incomplete --> avatar_pending: upload foto + data wajib
-    avatar_pending --> complete: foto disetujui / auto-approve
-    avatar_pending --> profile_incomplete: foto ditolak
-    complete --> avatar_pending: ganti foto
-  }
+Kelengkapan profil di dalam akun `active` (dihitung server, bukan status akun baru):
+
+```mermaid
+stateDiagram-v2
+  [*] --> profile_incomplete: akun aktif
+  profile_incomplete --> avatar_pending: upload foto dan data wajib
+  avatar_pending --> complete: foto disetujui atau auto-approve
+  avatar_pending --> profile_incomplete: foto ditolak
+  complete --> avatar_pending: ganti foto
 ```
 
 - `accounts.status` **tidak ditambah state baru**. "Profil lengkap" adalah kondisi turunan yang dihitung server dari profil + status foto.
