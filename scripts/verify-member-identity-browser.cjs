@@ -126,13 +126,18 @@ async function fakeCameraFromCard(filename) {
     const denied = await request.request.get(base + "/api/member/avatar?id=" + fixtureId);
     assert.equal(denied.status(), 404);
     assert.match(denied.headers()["cache-control"], /no-store/);
+    // Visitors without a session cookie are routed to sign-in by proxy.ts (UX only);
+    // server guards still deny any request that reaches the protected shells.
+    const signedOut = async (page, route) => {
+      await page.waitForURL(url => url.pathname === "/login" && url.searchParams.get("returnTo") === route);
+    };
     const anonymous = await open(browser, "/admin?module=member-scanner", 375);
-    await anonymous.getByRole("heading", { name: /SIGN IN TO CONTINUE|PLEASE TRY AGAIN/ }).waitFor();
+    await signedOut(anonymous, "/admin?module=member-scanner");
     assert.equal(await anonymous.getByRole("heading", { name: "Scan member." }).count(), 0);
     await record(anonymous, "scanner-denies-visitor");
     await anonymous.close();
     const onboarding = await open(browser, "/dashboard/onboarding", 375);
-    await onboarding.getByRole("heading", { name: /SIGN IN TO CONTINUE|PLEASE TRY AGAIN/ }).waitFor();
+    await signedOut(onboarding, "/dashboard/onboarding");
     assert.equal(await onboarding.getByLabel("Choose a profile photo").count(), 0);
     await record(onboarding, "onboarding-denies-visitor");
     await onboarding.close();
