@@ -1,3 +1,4 @@
+import {completeMemberFixture} from './member-identity-fixtures.mjs';
 import test,{before,after} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -21,7 +22,7 @@ const api=load('lib/passes/pass-actions.ts'),svc=load('lib/passes/pass-service.t
 const migrations=await loadMigrations(new URL('../database/migrations/',import.meta.url));
 const adapter={query,transaction:s=>pg.transaction(async tx=>{for(const q of s)await tx.query(q.text,q.params);})};
 before(async()=>migrate(adapter,migrations));after(async()=>pg.close());
-const member=async(status='active',role='member')=>{const a=(await query("INSERT INTO uss.accounts(auth_provider_user_id,email,status,email_verified_at) VALUES($1,$2,$3,CASE WHEN $3='active' THEN now() END) RETURNING *",[randomUUID(),randomUUID()+'@example.com',status]))[0];await query('INSERT INTO uss.account_roles(account_id,role_id) SELECT $1,id FROM uss.roles WHERE code=$2',[a.id,role]);return {id:a.id,status:a.status,emailVerifiedAt:a.email_verified_at,email:a.email};};
+const member=async(status='active',role='member')=>{const a=(await query("INSERT INTO uss.accounts(auth_provider_user_id,email,status,email_verified_at) VALUES($1,$2,$3,CASE WHEN $3='active' THEN now() END) RETURNING *",[randomUUID(),randomUUID()+'@example.com',status]))[0];await query('INSERT INTO uss.account_roles(account_id,role_id) SELECT $1,id FROM uss.roles WHERE code=$2',[a.id,role]);if(status==='active')await completeMemberFixture(query,a.id);return {id:a.id,status:a.status,emailVerifiedAt:a.email_verified_at,email:a.email};};
 async function fixture(status='confirmed') {const owner=await member();current=owner;const e=(await query("INSERT INTO uss.events(slug,title,starts_at,ends_at,status) VALUES($1,'Run',now()+interval '2 days',now()+interval '3 days','registration_open') RETURNING id",[randomUUID()]))[0];const r=(await query("INSERT INTO uss.event_registrations(event_id,account_id,status,cancelled_at) VALUES($1,$2,$3,CASE WHEN $3='cancelled' THEN now() END) RETURNING id",[e.id,owner.id,status]))[0];return{owner,e,r};}
 const ref=f=>({eventId:f.e.id,registrationId:f.r.id});
 const issue=f=>api.issueCurrentEventPass(ref(f));const read=f=>api.getCurrentEventPass(ref(f));

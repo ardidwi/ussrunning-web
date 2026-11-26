@@ -42,7 +42,7 @@ export function userFilters(value: unknown): UserFilters {
         return bad();
     const f: UserFilters = { limit: Number(limit), status: v.status as UserFilters['status'] ?? null, verified: v.verified as boolean ?? null, role: v.role as UserFilters['role'] ?? null,
         search: text(v.search, USER_POLICY.maxSearch), memberId: text(v.memberId, 40), createdFrom: date(v.createdFrom), createdTo: date(v.createdTo), cursor: null, fingerprint: '' };
-    if (f.memberId && !/^USS-[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$/i.test(f.memberId))
+    if (f.memberId && !/^USS-(?:[0-9]{6,19}|[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12})$/i.test(f.memberId))
         return bad();
     f.memberId = f.memberId?.toUpperCase() ?? null;
     if (f.search && f.search.length < 3)

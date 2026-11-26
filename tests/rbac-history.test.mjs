@@ -1,4 +1,5 @@
 import test,{before,after} from 'node:test';
+import {completeMemberFixture} from './member-identity-fixtures.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {resolve,dirname} from 'node:path';
@@ -50,11 +51,11 @@ const story=async()=>{await query("INSERT INTO uss.story_content_types(code,name
 const revision=async(parent,version=1,snapshot={title:'Draft Title',slug:'draft',status:'draft'})=>(await query("INSERT INTO uss.story_revisions(story_id,version,snapshot,created_by,action) VALUES($1,$2,$3,$4,'updated') RETURNING id",[parent,version,JSON.stringify(snapshot),current.id]))[0].id;
 
 test('member self permissions allowed; CMS/audit/reserved permissions rejected',async()=>{
- await principal();for(const p of ['profile.read.self','profile.update.self','member_card.read.self'])assert.equal((await guards.requirePermission(p)).account.id,current.id);
- for(const p of ['cms.content.manage','stories.manage','partners.manage','events.manage','audit.read','users.manage','roles.manage','settings.manage'])await denied(()=>guards.requirePermission(p));
+ await principal();for(const p of ['profile.read.self','profile.update.self','member_card.read.self','media.upload.self'])assert.equal((await guards.requirePermission(p)).account.id,current.id);
+ for(const p of ['cms.content.manage','stories.manage','partners.manage','events.manage','audit.read','users.manage','roles.manage','settings.manage','members.lookup','members.photo.review'])await denied(()=>guards.requirePermission(p));
 });
 test('admin operational permissions allowed but reserved super-admin capabilities denied',async()=>{
- await principal('admin');for(const p of ['cms.content.manage','stories.manage','partners.manage','events.manage','audit.read'])await guards.requirePermission(p);
+ await principal('admin');for(const p of ['cms.content.manage','stories.manage','partners.manage','events.manage','audit.read','members.lookup','members.photo.review'])await guards.requirePermission(p);
  for(const p of ['audit.read.all','roles.manage','users.manage','settings.manage'])await denied(()=>guards.requirePermission(p));await denied(()=>guards.requireRole('super_admin'));
 });
 test('super-admin has complete matrix; no role mutation/elevation endpoint exists',async()=>{
@@ -148,6 +149,8 @@ test('revision/audit immutable history and runtime least privileges preserved',a
  finally{await pg.exec('RESET ROLE');}assert.deepEqual((await query('SELECT snapshot FROM uss.story_revisions WHERE id=$1',[id]))[0],before);
 });
 test('DB failure sanitized at guard/service/action boundary and no profile/card regression',async()=>{
- await principal('admin');failDb=true;try{await denied(()=>guards.requirePermission('audit.read'),'AUTHORIZATION_UNAVAILABLE');assert.deepEqual(await auditActions.getAuditHistory(),{ok:false,code:'AUTHORIZATION_UNAVAILABLE'});}finally{failDb=false;}
+ const admin=await principal('admin');failDb=true;try{await denied(()=>guards.requirePermission('audit.read'),'AUTHORIZATION_UNAVAILABLE');assert.deepEqual(await auditActions.getAuditHistory(),{ok:false,code:'AUTHORIZATION_UNAVAILABLE'});}finally{failDb=false;}
+ assert.equal((await actions.getOwnMemberCard()).code,'PROFILE_INCOMPLETE');
+ await completeMemberFixture(query,admin.id);
  assert.equal((await update({city:'Own city'})).ok,true);assert.equal((await actions.getOwnMemberCard()).ok,true);assert.equal((await load('lib/member/member-card-actions.ts').getOwnMemberCardPresentation()).ok,true);
 });

@@ -29,3 +29,6 @@ GRANT EXECUTE ON FUNCTION uss.manage_account(uuid,uuid,text,integer,text) TO :"a
 
 -- BE-18 runtime role management is intentionally narrow. Bootstrap remains DB-owner-only.
 GRANT EXECUTE ON FUNCTION uss.manage_role(uuid,uuid,text,text,integer,text) TO :"app_role";
+
+-- Member Identity: issuance by account provisioning. The bootstrap function remains owner-only.
+GRANT USAGE ON SEQUENCE uss.member_number_sequence TO :"app_role";

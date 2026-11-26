@@ -29,6 +29,7 @@ export async function passTransaction<T = null>(v:Request,effect?:PassEffect<T>)
  decision AS MATERIALIZED(SELECT CASE
  WHEN NOT EXISTS(SELECT 1 FROM authority) THEN 'INSUFFICIENT_PERMISSION'
  WHEN NOT EXISTS(SELECT 1 FROM registration) THEN 'EVENT_PASS_NOT_FOUND'
+ WHEN $6 IN ('issue','read') AND cardinality(uss.member_profile_missing((SELECT account_id FROM registration)))>0 THEN 'PROFILE_INCOMPLETE'
  WHEN $6='revoke' AND (NOT EXISTS(SELECT 1 FROM current) OR (SELECT id FROM current)<>$10) THEN 'EVENT_PASS_NOT_FOUND'
  WHEN $6='revoke' AND (SELECT status FROM current)='expired' THEN 'EVENT_PASS_EXPIRED'
  WHEN $6='revoke' THEN 'OK'

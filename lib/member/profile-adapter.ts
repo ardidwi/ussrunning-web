@@ -32,7 +32,7 @@ export function projectProfile(result: ProfileResult<MemberProfileDTO>): MemberR
       emergencyContactPhone: profile.emergencyContactPhone ?? "" },
     completion: { percentage: completion.percentage, missingFields },
     details: { birthDate: profile.birthDate ?? "", gender: profile.gender ?? "", jerseySize: profile.jerseySize ?? "", runningPreferences: profile.runningPreferences ?? {}, marketingConsent: profile.marketingConsent === true, privacyAccepted: Boolean(profile.privacyConsentAt) },
-    policy: { required: ["fullName"], minimumPhoneDigits: 7, maximumPhoneDigits: 15, maximumBirthDate: new Date().toISOString().slice(0,10),
+    policy: { required: ["fullName", "phone", "emergencyContactName", "emergencyContactPhone"], minimumPhoneDigits: 7, maximumPhoneDigits: 15, maximumBirthDate: new Date().toISOString().slice(0,10),
       maxLengths: { fullName: PROFILE_POLICY.maxName, city: PROFILE_POLICY.maxCity, phone: 40,
         instagram: 31, emergencyContactName: PROFILE_POLICY.maxName, emergencyContactPhone: 40 } },
   } };

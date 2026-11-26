@@ -9,6 +9,7 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit --pretty false",
     "test:ci": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/*.test.mjs",
+    "admin:bootstrap": "node scripts/admin/bootstrap.mjs",
     "db:migrate": "node --env-file-if-exists=.env.local scripts/database/migrate.mjs",
     "prod:ready": "node --env-file-if-exists=.env.local scripts/production/readiness.mjs",
     "db:test": "node --liftoff-only --wasm-num-compilation-tasks=1 --test tests/database-foundation.test.mjs",

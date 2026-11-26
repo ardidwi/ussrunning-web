@@ -1,5 +1,7 @@
 # BE-05 Member Card service
 
+> Go-live completion rules, member numbers and private photos are documented in the [Member Identity handover](MEMBER-IDENTITY-HANDOVER.md). The sections below record the original service foundation.
+
 Builds on BE-04 without new identities, schema, routes, rendering or provider changes.
 
 FE-04 calls `getOwnMemberCardPresentation()` in lib/member/member-card-actions.ts. Result is `{ok:true,code:"MEMBER_CARD_AVAILABLE",data}` or the existing safe profile/auth failure code. Data contains displayName, memberId, barcode `{value,formatVersion:1}`, status and nullable existing safe AvatarDTO. No email/contact/provider/session/role data. Display name prefers profile name, then account display name, then Member ID. Render names as escaped text.

@@ -8,6 +8,7 @@ import type {MediaMime,MediaVisibility} from '../media-types';
 export interface StorageProvider {
  readonly id:string;
  put(key:string,bytes:Uint8Array,mime:MediaMime,visibility:MediaVisibility):Promise<void>;
+ getPrivate?(key:string):Promise<Uint8Array>;
  deliveryUrl(key:string,visibility:MediaVisibility):Promise<string|null>;
 }
 export const unconfiguredStorage:StorageProvider={id:'unconfigured',async put(){throw new MediaError('MEDIA_STORAGE_UNAVAILABLE');},async deliveryUrl(){return null;}};

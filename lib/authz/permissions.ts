@@ -1,10 +1,10 @@
 /** Security-owned policy, not editable/client-provided claims. */
-export const PERMISSIONS = ["profile.read.self", "profile.update.self", "member_card.read.self", "cms.content.manage", "stories.manage", "partners.manage", "events.manage", "audit.read", "audit.read.all", "users.manage", "roles.manage", "settings.manage"] as const;
+export const PERMISSIONS = ["profile.read.self", "profile.update.self", "member_card.read.self", "media.upload.self", "members.lookup", "members.photo.review", "cms.content.manage", "stories.manage", "partners.manage", "events.manage", "audit.read", "audit.read.all", "users.manage", "roles.manage", "settings.manage"] as const;
 export type Permission = typeof PERMISSIONS[number];
 export const SYSTEM_ROLES = ["member", "admin", "super_admin"] as const;
 export type SystemRole = typeof SYSTEM_ROLES[number];
-const self: readonly Permission[] = ["profile.read.self", "profile.update.self", "member_card.read.self"];
-const operational: readonly Permission[] = ["cms.content.manage", "stories.manage", "partners.manage", "events.manage", "audit.read"];
+const self: readonly Permission[] = ["profile.read.self", "profile.update.self", "member_card.read.self", "media.upload.self"];
+const operational: readonly Permission[] = ["cms.content.manage", "stories.manage", "partners.manage", "events.manage", "audit.read", "members.lookup", "members.photo.review"];
 export const ROLE_PERMISSIONS: Readonly<Record<SystemRole, readonly Permission[]>> = {
     member: self, admin: [...self, ...operational], super_admin: [...PERMISSIONS],
 };

@@ -30,6 +30,14 @@ export class NeonS3Storage implements StorageProvider{
   try{await this.client.send(new PutObjectCommand({Bucket,Key:k,Body:bytes,ContentType:mime,CacheControl:visibility==='public'?'public, max-age=31536000, immutable':'private, no-store',IfNoneMatch:'*'}));}
   catch(error){if(isConflict(error))throw new MediaError('MEDIA_CONFLICT');throw new MediaError('MEDIA_UPLOAD_FAILED');}
  }
+ async getPrivate(key:string) {
+  const object = await this.client.send(new GetObjectCommand({ Bucket: this.config.privateBucket, Key: objectKey(key) }));
+  if (!object.Body || !object.ContentLength || object.ContentLength > 900_000) {
+   await object.Body?.transformToWebStream().cancel();
+   throw new MediaError('MEDIA_INVALID_CONTENT');
+  }
+  return object.Body.transformToByteArray();
+ }
  async deliveryUrl(key:string,visibility:MediaVisibility){
   const k=objectKey(key);
   if(visibility==='public'){const endpoint=new URL(this.config.endpoint);endpoint.pathname=`/${encodeURIComponent(this.config.publicBucket)}/${encodeKey(k)}`;return endpoint.toString();}

@@ -1,5 +1,7 @@
 # BE-04 — Member profile service
 
+> Go-live completion rules, member numbers and private photos are documented in the [Member Identity handover](MEMBER-IDENTITY-HANDOVER.md). The sections below record the original service foundation.
+
 Based on [PRD](PRD-USS-RUNNING.md), [ERD](ERD-USS-RUNNING.md), [database foundation](DATABASE-FOUNDATION.md), [account lifecycle](AUTH-ACCOUNT-LIFECYCLE.md) and [email verification](EMAIL-VERIFICATION.md). Neon Auth, account provisioning/verification, immutable identity and legacy routes remain unchanged. No frontend/page/Member Card rendering, upload, administrative editing, CMS, event or email workflow is added.
 
 ## Schema audit and compatibility

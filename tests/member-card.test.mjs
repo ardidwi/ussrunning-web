@@ -1,3 +1,4 @@
+import {completeMemberFixture} from './member-identity-fixtures.mjs';
 import test,{before,after} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -35,7 +36,7 @@ function load(file){file=resolve(file);if(modules.has(file))return modules.get(f
 const actions=load('lib/member/profile-actions.ts');
 const validation=load('lib/member/profile-validation.ts');
 const use=async(a)=>{current={id:a.id,email:a.email,memberId:a.member_id,barcodeValue:a.barcode_value,status:a.status,emailVerifiedAt:a.email_verified_at,displayName:a.display_name};};
-const create=async(status='active',withProfile=true)=>{const a=(await query("INSERT INTO uss.accounts(auth_provider_user_id,email,status,email_verified_at) VALUES($1,$2,$3,CASE WHEN $3='active' THEN now() ELSE NULL END) RETURNING *",[crypto.randomUUID(),crypto.randomUUID()+'@example.com',status]))[0];if(withProfile)await query('INSERT INTO uss.member_profiles(account_id) VALUES($1)',[a.id]);await use(a);return a;};
+const create=async(status='active',withProfile=true)=>{const a=(await query("INSERT INTO uss.accounts(auth_provider_user_id,email,status,email_verified_at) VALUES($1,$2,$3,CASE WHEN $3='active' THEN now() ELSE NULL END) RETURNING *",[crypto.randomUUID(),crypto.randomUUID()+'@example.com',status]))[0];if(withProfile)await completeMemberFixture(query,a.id);await use(a);return a;};
 const read=async()=>{const result=await actions.getOwnMemberProfile();assert.equal(result.ok,true);return result.data;};
 const update=async(changes,version)=>actions.updateOwnMemberProfile({expectedVersion:version||(await read()).profile.version,changes});
 const stored=async(id)=>(await query('SELECT * FROM uss.member_profiles WHERE account_id=$1',[id]))[0];
@@ -46,7 +47,7 @@ const cards=load('lib/member/member-card-actions.ts');
 test('active owner card protocol is stable, opaque and excludes contact/session data',async()=>{
  const a=await create();await update({fullName:'Runner One',phone:'+12025550100'});
  const first=await cards.getOwnMemberCardPresentation(),second=await cards.getOwnMemberCardPresentation();
- assert.deepEqual(first,second);assert.equal(first.code,'MEMBER_CARD_AVAILABLE');assert.equal(first.data.memberId,a.member_id);
+ assert.deepEqual(first,second);assert.equal(first.code,'MEMBER_CARD_AVAILABLE');assert.equal(first.data.memberId,`USS-${String(a.member_number).padStart(6,"0")}`);
  assert.deepEqual(first.data.barcode,{value:a.barcode_value,formatVersion:1});
  assert.deepEqual(Object.keys(first.data).sort(),['displayName','memberId','barcode','status','avatar'].sort());
  for(const secret of [a.email,a.auth_provider_user_id,'12025550100'])assert.ok(!JSON.stringify(first).includes(secret));
@@ -58,7 +59,7 @@ test('anonymous and every non-active lifecycle state denied',async()=>{
 });
 test('supplied foreign identity ignored; profile edits cannot rotate either identity',async()=>{
  const a=await create(),b=await create();await use(a);
- const first=await cards.getOwnMemberCardPresentation({accountId:b.id,role:'super_admin'});assert.equal(first.data.memberId,a.member_id);
+ const first=await cards.getOwnMemberCardPresentation({accountId:b.id,role:'super_admin'});assert.equal(first.data.memberId,`USS-${String(a.member_number).padStart(6,"0")}`);
  assert.equal((await update({barcodeValue:b.barcode_value})).code,'PROFILE_VALIDATION_ERROR');await update({city:'Jakarta'});
  assert.deepEqual((await cards.getOwnMemberCardPresentation()).data.barcode,first.data.barcode);
  assert.equal((await cards.getOwnMemberCardPresentation()).data.memberId,first.data.memberId);
@@ -70,7 +71,7 @@ test('fresh status check blocks stale active context and missing profile is cont
 test('legacy action retains exact BE-04 shape and identity',async()=>{
  const a=await create();const old=await actions.getOwnMemberCard();const card=await cards.getOwnMemberCardPresentation();
  assert.deepEqual(Object.keys(old.data).sort(),['displayName','memberId','barcodeValue','status','avatar'].sort());
- assert.equal(old.data.barcodeValue,card.data.barcode.value);assert.equal(old.data.memberId,a.member_id);
+ assert.equal(old.data.barcodeValue,card.data.barcode.value);assert.equal(old.data.memberId,card.data.memberId);
 });
 test('invalid barcode protocol and DB errors are sanitized without logging',async()=>{
  const protocol=load('lib/member/barcode-contract.ts');for(const value of ['runner@example.com','+12025550100','USS:2:secret','Runner'])assert.throws(()=>protocol.memberBarcode(value));

@@ -1,3 +1,4 @@
+import {completeMemberFixture} from './member-identity-fixtures.mjs';
 import test,{before,after} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -43,9 +44,9 @@ const audit=async(id)=>query("SELECT action,change_summary FROM uss.audit_logs W
 before(async()=>{await migrate({query,transaction:statements=>pg.transaction(async tx=>{for(const s of statements)await tx.query(s.text,s.params);})},await loadMigrations(new URL('../database/migrations/',import.meta.url)));});
 after(async()=>pg.close());
 test('active owner reads minimal safe DTO and centrally defined completion',async()=>{
- const a=await create();const data=await read();assert.equal(data.account.id,a.id);assert.equal(data.account.emailVerified,true);assert.equal(data.profile.fullName,null);assert.equal(data.completion.percentage,0);assert.deepEqual(data.completion.missingFields,['fullName','phone','city','emergencyContact']);
+ const a=await create();const data=await read();assert.equal(data.account.id,a.id);assert.equal(data.account.emailVerified,true);assert.equal(data.profile.fullName,null);assert.equal(data.completion.percentage,0);assert.deepEqual(data.completion.missingFields,['fullName','phone','emergencyContact','avatar']);
  assert.match(data.profile.version,/^[0-9a-f]{64}$/);assert.equal(data.account.barcodeValue,undefined);assert.equal(data.account.auth_provider_user_id,undefined);assert.equal(data.profile.created_at,undefined);assert.deepEqual(data.profile.runningPreferences,{});
- await query("UPDATE uss.member_profiles SET full_name='Bootstrap Name' WHERE account_id=$1",[a.id]);assert.equal((await read()).completion.percentage,20);
+ await query("UPDATE uss.member_profiles SET full_name='Bootstrap Name' WHERE account_id=$1",[a.id]);assert.equal((await read()).completion.percentage,25);
 });
 test('unauthenticated/pending/suspended/deactivated cannot read, mutate or get barcode',async()=>{
  for(const [status,code] of [[null,'UNAUTHENTICATED'],['pending_verification','EMAIL_NOT_VERIFIED'],['suspended','ACCOUNT_SUSPENDED'],['deactivated','ACCOUNT_DEACTIVATED']]){
@@ -56,7 +57,7 @@ test('unauthenticated/pending/suspended/deactivated cannot read, mutate or get b
 test('allowed PATCH normalizes fields, completion and minimal atomic audit',async()=>{
  const a=await create();const beforeAccount=(await query('SELECT * FROM uss.accounts WHERE id=$1',[a.id]))[0];
  const result=await update({fullName:'  Runner   One  ',phone:'+44 (7700) 900-123',birthDate:'1990-05-21',gender:'prefer_not_to_say',city:' London ',emergencyContactName:'  Contact ',emergencyContactPhone:'+1 (202) 555-0100',instagramHandle:'@Runner.One',jerseySize:'xl',runningPreferences:{distancesKm:[5,10,5],days:['mon','wed'],goals:['Stay consistent']},marketingConsent:true,privacyConsent:true});
- assert.equal(result.ok,true);const p=result.data.profile;assert.equal(p.fullName,'Runner One');assert.equal(p.phone,'+447700900123');assert.equal(p.instagramHandle,'runner.one');assert.equal(p.jerseySize,'XL');assert.deepEqual(p.runningPreferences.distancesKm,[5,10]);assert.equal(result.data.completion.percentage,100);assert.ok(p.privacyConsentAt);assert.ok(p.marketingConsentAt);
+ assert.equal(result.ok,true);const p=result.data.profile;assert.equal(p.fullName,'Runner One');assert.equal(p.phone,'+447700900123');assert.equal(p.instagramHandle,'runner.one');assert.equal(p.jerseySize,'XL');assert.deepEqual(p.runningPreferences.distancesKm,[5,10]);assert.equal(result.data.completion.percentage,75);assert.ok(p.privacyConsentAt);assert.ok(p.marketingConsentAt);
  const logs=await audit(a.id);assert.deepEqual(logs.map(r=>r.action).sort(),['member.communication_preferences.updated','member.privacy_consent.accepted','member.profile.updated'].sort());
  const serialized=JSON.stringify(logs);for(const secret of ['Runner One','447700900123','2025550100',a.email,'Stay consistent'])assert.ok(!serialized.includes(secret));
  assert.deepEqual((await query('SELECT * FROM uss.accounts WHERE id=$1',[a.id]))[0],beforeAccount);
@@ -114,18 +115,19 @@ test('fresh read rechecks DB status instead of trusting memoized account',async(
 test('missing profile controlled, partial data retained and no fake PII generated',async()=>{
  const a=await create('active',false);assert.equal((await actions.getOwnMemberProfile()).code,'PROFILE_NOT_FOUND');assert.equal((await actions.getOwnMemberCard()).code,'PROFILE_NOT_FOUND');
  assert.equal((await actions.updateOwnMemberProfile({expectedVersion:'0'.repeat(64),changes:{city:'City'}})).code,'PROFILE_NOT_FOUND');
- await query("INSERT INTO uss.member_profiles(account_id,full_name,city) VALUES($1,'Existing','Existing city')",[a.id]);await update({phone:'+12025550100'});const p=(await read()).profile;assert.equal(p.fullName,'Existing');assert.equal(p.city,'Existing city');assert.equal(p.emergencyContactName,null);assert.equal((await read()).completion.percentage,60);
+ await query("INSERT INTO uss.member_profiles(account_id,full_name,city) VALUES($1,'Existing','Existing city')",[a.id]);await update({phone:'+12025550100'});const p=(await read()).profile;assert.equal(p.fullName,'Existing');assert.equal(p.city,'Existing city');assert.equal(p.emergencyContactName,null);assert.equal((await read()).completion.percentage,50);
 });
-test('owned active image FK accepted; foreign/archived/non-image/unknown references rejected',async()=>{
+test('legacy owned/public, foreign, archived, non-image, unknown references and clear operations are all rejected',async()=>{
  const a=await create();const b=await create();await use(a);
  const media=async(owner,status='active',mime='image/png',url='https://cdn.example.com/avatar.png')=>(await query('INSERT INTO uss.media_assets(storage_provider,storage_key,public_url,mime_type,byte_size,uploaded_by,status) VALUES($1,$2,$3,$4,100,$5,$6) RETURNING id',['test',crypto.randomUUID(),url,mime,owner,status]))[0].id;
- const own=await media(a.id);assert.equal((await update({avatarMediaId:own})).ok,true);assert.equal((await read()).profile.avatar.id,own);
- for(const id of [crypto.randomUUID(),await media(b.id),await media(a.id,'archived'),await media(a.id,'active','image/svg+xml'),await media(a.id,'active','text/html')])assert.equal((await update({avatarMediaId:id})).code,'MEDIA_NOT_FOUND');
+ const own=await media(a.id);assert.equal((await update({avatarMediaId:own})).code,'PROFILE_VALIDATION_ERROR');assert.equal((await read()).profile.avatar,null);
+ for(const id of [crypto.randomUUID(),await media(b.id),await media(a.id,'archived'),await media(a.id,'active','image/svg+xml'),await media(a.id,'active','text/html')])assert.equal((await update({avatarMediaId:id})).code,'PROFILE_VALIDATION_ERROR');
  await query("UPDATE uss.media_assets SET public_url='javascript:alert(1)' WHERE id=$1",[own]);assert.equal((await read()).profile.avatar,null);
- assert.equal((await update({avatarMediaId:null})).ok,true);assert.equal((await stored(a.id)).avatar_media_id,null);
+ await completeMemberFixture(query,a.id);const privateAvatar=(await stored(a.id)).avatar_media_id;
+ assert.equal((await update({avatarMediaId:null})).code,'PROFILE_VALIDATION_ERROR');assert.equal((await stored(a.id)).avatar_media_id,privateAvatar);
 });
 test('member card contains only display identity/status/avatar, not contact or session data',async()=>{
- const a=await create();await update({fullName:'Runner',phone:'+12025550100'});const result=await actions.getOwnMemberCard();assert.equal(result.ok,true);assert.deepEqual(Object.keys(result.data).sort(),['avatar','barcodeValue','displayName','memberId','status'].sort());assert.equal(result.data.barcodeValue,a.barcode_value);assert.equal(result.data.displayName,'Runner');assert.ok(!JSON.stringify(result).includes(a.email));assert.ok(!JSON.stringify(result).includes('12025550100'));
+ const a=await create();await completeMemberFixture(query,a.id);await update({fullName:'Runner',phone:'+12025550100'});const result=await actions.getOwnMemberCard();assert.equal(result.ok,true);assert.deepEqual(Object.keys(result.data).sort(),['avatar','barcodeValue','displayName','memberId','status'].sort());assert.equal(result.data.barcodeValue,a.barcode_value);assert.equal(result.data.displayName,'Runner');assert.ok(!JSON.stringify(result).includes(a.email));assert.ok(!JSON.stringify(result).includes('12025550100'));
 });
 test('mandatory audit failure rolls profile/consent changes back atomically',async()=>{
  const a=await create();const initial=await stored(a.id);
@@ -147,7 +149,7 @@ test('SQL-looking profile text is bound data; optional demographics/marketing do
  const a=await create();const text="A'); UPDATE uss.accounts SET status='active'; --";
  assert.equal((await update({city:text,birthDate:'2000-02-29'})).ok,true);assert.equal((await stored(a.id)).city,text);
  await update({fullName:'Runner',phone:'+12025550100',emergencyContactName:'Contact',emergencyContactPhone:'+44205550100'});
- const data=await read();assert.equal(data.completion.percentage,100);assert.equal(data.profile.marketingConsent,false);assert.equal(data.profile.privacyConsentAt,null);assert.equal(data.account.status,'active');
+ const data=await read();assert.equal(data.completion.percentage,75);assert.equal(data.profile.marketingConsent,false);assert.equal(data.profile.privacyConsentAt,null);assert.equal(data.account.status,'active');
 });
 test('unbounded/deep preferences and empty/oversized command payload are rejected safely',async()=>{
  await create();let nested={};for(let i=0;i<100;i++)nested={deeper:nested};

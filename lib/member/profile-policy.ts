@@ -6,4 +6,4 @@ export const PROFILE_POLICY = {
   days: ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
   avatarMimeTypes: ["image/jpeg", "image/png", "image/webp", "image/avif"],
 } as const;
-export const PROFILE_FIELDS = ["fullName", "phone", "birthDate", "gender", "city", "emergencyContactName", "emergencyContactPhone", "instagramHandle", "jerseySize", "runningPreferences", "avatarMediaId", "marketingConsent", "privacyConsent"] as const;
+export const PROFILE_FIELDS = ["fullName", "phone", "birthDate", "gender", "city", "emergencyContactName", "emergencyContactPhone", "instagramHandle", "jerseySize", "runningPreferences", "marketingConsent", "privacyConsent"] as const;

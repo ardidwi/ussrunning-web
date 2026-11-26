@@ -66,7 +66,6 @@ export function validateProfileUpdate(value: unknown): UpdateProfileInput {
         case "jerseySize": { const v = text(valueOfField, 1, 10)?.toUpperCase() || null; if (v && !(P.jerseySizes as readonly string[]).includes(v)) throw new Error(); changes.jerseySize = v; break; }
         case "instagramHandle": { const v = text(valueOfField, 1, 31)?.replace(/^@/, "") || null; if (v && !/^[A-Za-z0-9_.]{1,30}$/.test(v)) throw new Error(); changes.instagramHandle = v?.toLowerCase() || null; break; }
         case "runningPreferences": changes.runningPreferences = validatePreferences(valueOfField); break;
-        case "avatarMediaId": if (valueOfField !== null && (typeof valueOfField !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(valueOfField))) throw new Error(); changes.avatarMediaId = valueOfField as string | null; break;
         case "marketingConsent": if (typeof valueOfField !== "boolean") throw new Error(); changes.marketingConsent = valueOfField; break;
         case "privacyConsent": if (valueOfField !== true) throw new Error(); changes.privacyConsent = true; break;
       }

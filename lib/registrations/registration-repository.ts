@@ -16,6 +16,7 @@ export async function mutateRegistration(actorId: string, eventId: string, regis
  occupancy AS MATERIALIZED(SELECT count(*)::bigint n FROM uss.event_registrations r WHERE r.event_id=$4 AND (r.status='confirmed' OR EXISTS(SELECT 1 FROM uss.check_ins c WHERE c.registration_id=r.id))),
  decision AS MATERIALIZED(SELECT CASE
  WHEN NOT EXISTS(SELECT 1 FROM authority) THEN 'INSUFFICIENT_PERMISSION'
+ WHEN $6='register' AND NOT $2 AND cardinality(uss.member_profile_missing($1))>0 THEN 'PROFILE_INCOMPLETE'
  WHEN NOT EXISTS(SELECT 1 FROM event) THEN 'REGISTRATION_NOT_AVAILABLE'
  WHEN $6='cancel' AND (NOT EXISTS(SELECT 1 FROM current) OR (NOT $2 AND (SELECT account_id FROM current)<>$1)) THEN 'REGISTRATION_NOT_FOUND'
  WHEN $6='cancel' AND (SELECT status FROM current)='cancelled' THEN 'OK'
