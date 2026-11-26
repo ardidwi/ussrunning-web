@@ -89,6 +89,13 @@ Audit of `main` / production deployment at `9fe7ccb` found work that is implemen
 
 Live-environment facts at audit time: `RESEND_API_KEY`/`EMAIL_FROM_ADDRESS` absent, so USS verification email cannot be sent and new accounts remain `pending_verification`; documentation records only migrations 001–009 applied to Neon; public Stories/Partners/Gallery show the controlled unavailable state.
 
+### Lead integration log — go-live lanes
+
+| Date | Lane | Deliverables | Main commits | Status / evidence |
+| --- | --- | --- | --- | --- |
+| 2026-11-26 | Member identity (`local/member-identity` `eee0306`, not pushed) | D0.5, D1.1–D1.5, D1.7–D1.11 | `a6cab12` backend + migration 020, `1412da8` onboarding/card v2/scanner UI, `b6e81b6` public copy, `2b9247c` handover | INTEGRATED. Single agent commit split into 4 logical commits; final tree identical to `eee0306`. `npm ci`, typecheck (each intermediate commit too), `test:ci` 848/848, build, production smoke (core routes 200, dev fixture 404, anonymous avatar read 404 `no-store`) and `verify-member-identity-browser.cjs` 43 scenarios at 320–1440px with 0 runtime errors passed locally (Node 26.13.1; handover recommends 22). Lead review: avatar objects private (DB CHECK + private bucket + short-TTL signed URLs), K-01 auto-approve with reasoned rejection, K-02 `USS-000123` immutable sequence, `members.lookup`/`members.photo.review` admin + super admin only (TS policy and SQL authority), tests per backend deliverable. **Migration 020 not applied** to Neon (owner approval; D0.2 010–019 also still pending), so identity features show unavailable states on the deployed site until then. D1.10 copy awaits owner acceptance. `npm audit` findings (Next.js, Better Auth) from handover remain open. |
+| 2026-11-26 | Public & SEO (`local/public-seo`) | D0.6, D0.7, D3.6, D3.7 | — | IN_PROGRESS in its worktree: uncommitted, no handover yet; not integrated. |
+
 ## B. Status legend
 
 | Status | Meaning |
