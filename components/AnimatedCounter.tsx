@@ -1,17 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { formatMetric } from "@/features/public-site/format";
 
 type AnimatedCounterProps = {
   value: number;
   suffix?: string;
   duration?: number;
+  /** "year" renders without thousands separators (2024, not 2,024). */
+  kind?: "count" | "year";
 };
 
 export default function AnimatedCounter({
   value,
   suffix = "",
   duration = 1200,
+  kind = "count",
 }: AnimatedCounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const [display, setDisplay] = useState(0);
@@ -62,5 +66,5 @@ export default function AnimatedCounter({
     return () => observer.disconnect();
   }, [duration, played, value]);
 
-  return <span ref={ref}>{display.toLocaleString("en-US")}{suffix}</span>;
+  return <span ref={ref}>{formatMetric(display, kind)}{suffix}</span>;
 }
