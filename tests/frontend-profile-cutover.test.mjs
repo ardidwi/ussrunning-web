@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { existsSync, readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { loader } from './frontend-loader.mjs';
 const dto = { account: { id:'private-id',email:'private@example.test',memberId:'stable-member',status:'active',emailVerified:true }, profile: { fullName:'Member',phone:null,city:null,instagramHandle:'runner',emergencyContactName:null,emergencyContactPhone:null,version:'a'.repeat(64) }, completion:{percentage:20,missingFields:['phone','city','emergencyContact']} };
 test('projection retains stable member identity but excludes private identity and role fields',()=>{
@@ -21,10 +23,17 @@ test('profile mutation delegates whitelisted fields and revision to authorized b
  const result=await saveProfile({fullName:'Member',phone:'',city:'',instagram:'runner',emergencyContactName:'',emergencyContactPhone:'',accountId:'attacker',role:'super_admin'},'revision');
  assert.equal(result.code,'PROFILE_CONFLICT'); assert.equal(input.expectedVersion,'revision'); assert.equal(input.changes.instagramHandle,'runner'); assert.equal('role' in input.changes,false); assert.equal('accountId' in input.changes,false);
 });
-test('legacy authorization ignores provider/admin-email claims and reads current DB roles',async()=>{
- const mocks={'next/navigation':{redirect:()=>{throw Error('redirect')}},'@/lib/db':{},'@/lib/auth/session':{requireAuthenticatedUser:async()=>({providerUserId:'provider',email:'member@test.invalid',role:'super_admin'})},'@/lib/authz/guards':{getAuthorization:async()=>({account:{email:'member@test.invalid',displayName:'Member'},roles:['member']})}};
- const {getCurrentUser}=loader(mocks)('lib/session.ts');
- assert.equal((await getCurrentUser()).role,'member');
- mocks['@/lib/authz/guards'].getAuthorization=async()=>{throw Error('ACCOUNT_SUSPENDED')};
- assert.equal(await getCurrentUser(),null);
+test('legacy session and dashboard actions are retired; nothing imports them or the public.* profile tables',()=>{
+ for(const file of ['lib/session.ts','app/dashboard/actions.ts']) assert.equal(existsSync(file),false,file);
+ const sources=execFileSync('git',['ls-files','app','features','components','lib'],{encoding:'utf8'}).split('\n').filter(file=>/\.(ts|tsx)$/.test(file)&&file!=='lib/auth/legacy-cutover.ts'); // read-only identity cutover guard
+ for(const file of sources){const code=readFileSync(file,'utf8');assert.doesNotMatch(code,/@\/lib\/session["']|from ["']\.\/actions["'].*signOut|public\.user_profiles|public\.event_registrations/,file);}
+ assert.match(readFileSync('app/dashboard/layout.tsx','utf8'),/import \{ signOut \} from "@\/lib\/auth\/flow-actions"/);
+});
+test('signOut ends the provider session then redirects home, and surfaces provider failure',async()=>{
+ let redirected=null,ok=true;
+ const mocks={'next/cache':{revalidatePath:()=>{}},'next/navigation':{redirect:path=>{redirected=path;}},'./flow-service':{executeAuthFlow:async()=>({})},'./server':{isAuthConfigured:()=>true,getAuth:()=>({signOut:async()=>ok?{}:{error:'down'}})}};
+ const {signOut}=loader(mocks)('lib/auth/flow-actions.ts');
+ await signOut();assert.equal(redirected,'/');
+ redirected=null;ok=false;
+ await assert.rejects(signOut(),/Sign out is unavailable/);assert.equal(redirected,null);
 });

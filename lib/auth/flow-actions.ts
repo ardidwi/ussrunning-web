@@ -1,5 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { executeAuthFlow } from "./flow-service";
 import { getAuth, isAuthConfigured } from "./server";
 import type { AuthOperation, AuthResult } from "./contract";
@@ -12,4 +13,10 @@ export async function signOutAccount(): Promise<{ ok: boolean }> {
   if (!isAuthConfigured()) return { ok: false };
   try { const result = await getAuth().signOut(); if (result.error) return { ok: false }; revalidatePath("/dashboard", "layout"); return { ok: true }; }
   catch { return { ok: false }; }
+}
+/** Form action for the member shell: ends the provider session, then returns home. */
+export async function signOut(): Promise<void> {
+  const result = await signOutAccount();
+  if (!result.ok) throw new Error("Sign out is unavailable. Try again.");
+  redirect("/");
 }
