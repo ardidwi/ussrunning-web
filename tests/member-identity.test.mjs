@@ -209,3 +209,49 @@ test("scanner authorizes staff, isolates DTO, and audits hits and misses without
   assert.ok(audits.every(row => Object.keys(row.change_summary).join() === "outcome"));
   assert.ok(!JSON.stringify(audits).includes(member.barcode_value));
 });
+
+test("bootstrap refuses a new grant once any verified active super_admin exists", async () => {
+  const existing = await fixture("super_admin"), candidate = await fixture();
+  assert.ok(existing.id);
+  const before = (await query("SELECT count(*)::int total FROM uss.audit_logs WHERE action='role.bootstrap'"))[0].total;
+  assert.equal(await bootstrapSuperAdmin(query, candidate.email), "ROLE_BOOTSTRAP_CLOSED");
+  assert.equal((await query(`SELECT count(*)::int total FROM uss.account_roles ar JOIN uss.roles r ON r.id=ar.role_id
+    WHERE ar.account_id=$1 AND r.code='super_admin'`, [candidate.id]))[0].total, 0);
+  assert.equal((await query("SELECT count(*)::int total FROM uss.audit_logs WHERE action='role.bootstrap'"))[0].total, before);
+});
+
+test("normalization strips EXIF and XMP GPS location data from camera photos", async () => {
+  const gps = '<x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">' +
+    '<rdf:Description xmlns:exif="http://ns.adobe.com/exif/1.0/" exif:GPSLatitude="6,10.0S" exif:GPSLongitude="106,49.0E"/>' +
+    "</rdf:RDF></x:xmpmeta>";
+  const bytes = await sharp({ create: { width: 800, height: 900, channels: 3, background: "#345678" } })
+    .withExif({ IFD0: { Make: "SyntheticPhone", Model: "GPS Fixture" }, IFD3: { GPSLatitudeRef: "S", GPSLongitudeRef: "E" } })
+    .withXmp(gps).jpeg().toBuffer();
+  const input = await sharp(bytes).metadata();
+  assert.ok(input.exif?.length, "fixture must carry EXIF");
+  assert.ok(input.xmp?.toString().includes("GPSLatitude"), "fixture must carry XMP GPS");
+  const output = await normalizeAvatar(new File([bytes], "camera.jpg", { type: "image/jpeg" }));
+  const meta = await sharp(output).metadata();
+  assert.equal(meta.format, "webp");
+  assert.equal(meta.exif, undefined);
+  assert.equal(meta.xmp, undefined);
+  const raw = Buffer.from(output).toString("latin1");
+  for (const marker of ["GPS", "SyntheticPhone", "Exif", "xmpmeta"]) assert.ok(!raw.includes(marker), marker);
+});
+
+test("downloadable card data carries no email, phone or emergency contact", async () => {
+  const member = await fixture();
+  actAs(member);
+  const photo = await payload(await fixtureImage());
+  assert.equal((await identityResult(() => identity.uploadOwnAvatar(photo))).ok, true);
+  const card = await getOwnMemberCardPresentation();
+  assert.equal(card.ok, true);
+  assert.deepEqual(Object.keys(card.data).sort(), ["avatar", "barcode", "displayName", "memberId", "status"]);
+  assert.match(card.data.memberId, /^USS-\d{6,}$/);
+  const serialized = JSON.stringify(card);
+  for (const secret of [member.email, "+12025550100", "+12025550101", "Synthetic Contact"]) assert.ok(!serialized.includes(secret), secret);
+  const source = readFileSync("features/member-card/utils/download-card.ts", "utf8");
+  const fields = new Set([...source.matchAll(/(?<![-\w])card\.(\w+)/g)].map(match => match[1]));
+  assert.deepEqual([...fields].sort(), ["avatar", "barcode", "displayName", "memberId"]);
+  assert.ok(!/email|phone|emergency/i.test(source));
+});
