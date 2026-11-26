@@ -96,6 +96,7 @@ Live-environment facts at audit time: `RESEND_API_KEY`/`EMAIL_FROM_ADDRESS` abse
 | 2026-11-26 | Member identity (`local/member-identity` `eee0306`, not pushed) | D0.5, D1.1–D1.5, D1.7–D1.11 | `a6cab12` backend + migration 020, `1412da8` onboarding/card v2/scanner UI, `b6e81b6` public copy, `2b9247c` handover | INTEGRATED. Single agent commit split into 4 logical commits; final tree identical to `eee0306`. `npm ci`, typecheck (each intermediate commit too), `test:ci` 848/848, build, production smoke (core routes 200, dev fixture 404, anonymous avatar read 404 `no-store`) and `verify-member-identity-browser.cjs` 43 scenarios at 320–1440px with 0 runtime errors passed locally (Node 26.13.1; handover recommends 22). Lead review: avatar objects private (DB CHECK + private bucket + short-TTL signed URLs), K-01 auto-approve with reasoned rejection, K-02 `USS-000123` immutable sequence, `members.lookup`/`members.photo.review` admin + super admin only (TS policy and SQL authority), tests per backend deliverable. **Migration 020 not applied** to Neon (owner approval; D0.2 010–019 also still pending), so identity features show unavailable states on the deployed site until then. D1.10 copy awaits owner acceptance. `npm audit` findings (Next.js, Better Auth) from handover remain open. |
 | 2026-11-26 | Public & SEO (`local/public-seo` `1b16800`, not pushed) | D0.6, D0.7, D3.6, D3.7 | `8b1430c` D0.7, `35b4d02` D3.7, `1b16800` D0.6/D3.6, merge `18298d9` | INTEGRATED. No textual conflicts; reviewed `proxy.ts` (UX redirect only; cookie name matches Neon Auth `__Secure-` constant), `next.config.ts` (new, `/events` redirects), `app/admin/page.tsx`, layout metadata. Handover = commit messages; every listed legacy file is gone and nothing imports it. |
 | 2026-11-26 | Lead follow-ups on combined tree | D0.5, D0.6, D1.1, D1.9, D3.7 | `221d9f1` tests (bootstrap refused when super_admin exists, EXIF+XMP GPS stripped, card export carries no email/phone/emergency contact), `59f29a6` retire `lib/session.ts` + `app/dashboard/actions.ts` (`signOut` → `lib/auth/flow-actions.ts`), `92f9b85` metadata for `/join` `/membership` `/privacy`, `8186ab2` browser QA expects proxy sign-in redirect | VERIFIED locally on the combined tree: `npm ci`, `deps:check`, typecheck, `test:ci` 863/863 on Node 26.13.1 and 863/863 on Node 24.22.1 (Node 22 not installed; not run), build; production-build smoke of 14 routes × 320/375/768/1440 with 0 overflow/console errors (branded 404, `/events`→`/runs`, signed-out `/dashboard`, `/dashboard/onboarding`, `/admin` → `/login?returnTo=`); identity browser QA 43 scenarios, 0 runtime errors. Deliverable status: [GO-LIVE-DELIVERY-PLAN.md §10](GO-LIVE-DELIVERY-PLAN.md#10-status-deliverable). |
+| 2026-11-26 | Dependency advisories (lead, on main) | DEP security patch | `chore(deps): patch Next.js and Better Auth advisories` | **`npm audit` before: 7 (2 critical, 3 high, 0 moderate, 2 low) → after: 0.** next 16.3.8 → 16.4.5; @neondatabase/auth 0.5.0-beta → 0.6.0-beta (auth-ui 0.4.0-beta); overrides better-auth/core/passkey 1.7.7, @better-fetch/fetch 1.3.2, zod 4.6.6, Daveyplate UI 3.3.15 kept (rationale and removal criteria in [AUTH-DEPENDENCY-BASELINE.md](AUTH-DEPENDENCY-BASELINE.md)). Lockfile regenerated from the manifest without force/legacy-peer-deps. Passed locally (Node 26.13.1): `npm ci`, `deps:check`, `npm audit`, typecheck, `test:ci` 863/863, build, public smoke 14 routes × 4 widths with 0 problems, identity browser QA 43 scenarios with 0 runtime errors. Live Neon Auth sign-in not exercised (production auth configuration pending). |
 
 ## B. Status legend
 
@@ -147,14 +148,15 @@ BE-01 includes earlier RSVP history through merge `9662cea`; inherited legacy ev
 
 | Package | Approved resolution |
 | --- | --- |
-| next | 16.3.8 |
+| next | 16.4.5 |
 | react / react-dom | 19.2.6 |
-| @neondatabase/auth | 0.5.0-beta |
+| @neondatabase/auth | 0.6.0-beta |
 | @neondatabase/serverless | 1.2.0 |
-| @neondatabase/auth-ui | 0.3.0-beta |
-| better-auth / @better-auth/core / @better-auth/passkey | 1.6.23 |
-| better-call | 1.3.7 |
-| @better-fetch/fetch | 1.3.1 |
+| @neondatabase/auth-ui | 0.4.0-beta |
+| better-auth / @better-auth/core / @better-auth/passkey | 1.7.7 |
+| better-call | 1.4.0 |
+| @better-fetch/fetch | 1.3.2 |
+| zod | 4.6.6 |
 | @daveyplate/better-auth-ui | 3.3.15 |
 | @better-auth/api-key | absent |
 
