@@ -38,7 +38,7 @@ The current implementation includes:
 
 - Neon Auth backed accounts
 - USS member profiles and member codes
-- Mandatory member profile fields including Instagram and emergency contact
+- Member profile service with optional Instagram and emergency-contact fields (mandatory profile photo and required-field gate are planned in the go-live plan)
 - Published event management from CMS
 - Event RSVP with `registered`, `waitlist`, `cancelled`, and `checked_in` states
 - Capacity-aware RSVP processing
@@ -47,6 +47,12 @@ The current implementation includes:
 - Member dashboard and RSVP history
 - CMS-managed hero, media, event, story, partner, and site settings
 - Role hierarchy for member, admin, and super admin
+
+## Planning documents
+
+- [Go-live delivery plan](docs/GO-LIVE-DELIVERY-PLAN.md) — phased backend/frontend/ops deliverables with acceptance criteria up to public launch.
+- [Target architecture](docs/ARCHITECTURE-TARGET.md) — current-state audit (2026-11-26) and target architecture for identity, CMS media, events and administration.
+- [Engineering roadmap](docs/ENGINEERING-ROADMAP.md) — historical task status and evidence.
 
 ## RSVP integrity rules
 

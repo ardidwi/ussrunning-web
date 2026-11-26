@@ -74,6 +74,21 @@ Reconsider this mode immediately when any becomes true:
 
 Before later phases, explicitly revise rules toward `feature -> preview/staging -> review -> main -> production` with stricter release controls. Phase 1 authorization does not apply forever.
 
+### Go-live plan — 2026-11-26
+
+Forward planning from this date lives in [GO-LIVE-DELIVERY-PLAN.md](GO-LIVE-DELIVERY-PLAN.md) (phases 0–5, deliverables D0.1–D5.11, go/no-go checklist) and [ARCHITECTURE-TARGET.md](ARCHITECTURE-TARGET.md) (current-state audit and target architecture). Owner decision K-07: until public go-live, validated work is delivered directly to `main` without new task branches; AGENTS.md §26 alignment is deliverable D0.9.
+
+Audit of `main` / production deployment at `9fe7ccb` found work that is implemented in source but not yet recorded in the tables below. These are recorded here as source facts only; no new validation evidence is claimed:
+
+| Commit | Scope | Note |
+| --- | --- | --- |
+| `a55dcba` | BE-18 role & permission administration (migration 019, `lib/admin-roles/*`, tests) | Backend only; no UI caller. UI is D2.2. |
+| `b5fb90d` | Production readiness gate (`npm run prod:ready`) | Requires 16 env vars; 4 were present in Vercel at audit time. |
+| `057eb0d` | Neon Object Storage S3 provider | Storage env not yet configured in Vercel. |
+| `9fe7ccb` | Read-only members directory in `/admin?module=members` | Lifecycle/role actions not wired in UI. |
+
+Live-environment facts at audit time: `RESEND_API_KEY`/`EMAIL_FROM_ADDRESS` absent, so USS verification email cannot be sent and new accounts remain `pending_verification`; documentation records only migrations 001–009 applied to Neon; public Stories/Partners/Gallery show the controlled unavailable state.
+
 ## B. Status legend
 
 | Status | Meaning |
@@ -308,6 +323,7 @@ Agents still inspect Git state, dirty files, contracts and history. FE-04 and FE
 
 | Date | Change | Evidence |
 | --- | --- | --- |
+| 2026-11-26 | Added go-live delivery plan and target architecture; recorded unlisted source commits and live configuration gaps; owner decided direct-to-main delivery until go-live. | GO-LIVE-DELIVERY-PLAN.md, ARCHITECTURE-TARGET.md; read-only audit of source `9fe7ccb`, Vercel env names and public pages. Documentation only. |
 | 2026-10-09 | Added ownership audit and gated migration track; no infrastructure migration executed. | USS-OWNERSHIP-MIGRATION-PLAN.md; current metadata/browser/aggregate evidence, explicit target/Resend/DNS gaps. |
 | 2026-10-09 | Revalidated BE-05/06 and FE-04/05 on latest main, preserving concurrent delivery 6e3e8ca through fast-forward. | FINAL-MEMBER-FOUNDATION-INTEGRATION.md; fresh backend 106/106, FE 19/19, browser/contract audits, dependency graph/build/types and local smoke passed. Hydration/lint/provider/scan/writer/reissue/restore limits remain open. |
 | 2026-10-09 | Delivered FE-04 / FE-05 foundations into the current verified development main candidate, preserving dependency repairs and early-development policy. | Fresh validation and limits: FE-04-05-MAIN-INTEGRATION.md; permanent barcode remains identity-only, CMS writers/restore excluded. |
