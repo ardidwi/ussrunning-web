@@ -95,6 +95,7 @@ export default async function SiteFooter() {
             <Link href="/about">About</Link>
             <Link href="/membership">Membership</Link>
             <Link href="/stories">Stories</Link>
+            <Link href="/gallery">Gallery</Link>
             <Link href="/login">My USS</Link>
           </div>
 

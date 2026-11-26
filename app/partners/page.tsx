@@ -3,6 +3,20 @@ import { LinkButton } from "@/components/ui/Button";
 import { PageHero } from "@/components/layout/PageHero";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import type { Metadata } from "next";
+import { deliverableUrl } from "@/features/public-site/media";
+import { pageMetadata } from "@/features/seo/metadata";
+import { getPublicSiteContent } from "@/lib/site-content/site-service";
+import { SITE_DEFAULTS } from "@/lib/site-content/site-defaults";
+
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/partners",
+  title: "Partners",
+  description:
+    "Partner with USS Running: community-led brand experiences across community runs, race week, cheering and post-race moments in Jakarta.",
+});
 
 const journey = [
   [
@@ -53,7 +67,11 @@ function partnerMeta(type: string, tier: string | null) {
 }
 
 export default async function PartnersPage() {
-  const partnerResult = await listPublicPartners({ limit: 24 });
+  const [partnerResult, footer] = await Promise.all([
+    listPublicPartners({ limit: 48 }),
+    getPublicSiteContent("footer.global"),
+  ]);
+  const contactEmail = (footer.payload ?? SITE_DEFAULTS["footer.global"]).contactEmail;
   const partners = partnerResult.ok ? partnerResult.data.items : [];
   const unavailable = !partnerResult.ok;
 
@@ -103,26 +121,20 @@ export default async function PartnersPage() {
                 return (
                   <article className="journey-card" key={partner.slug}>
                     <span>{String(index + 1).padStart(2, "0")}</span>
-                    {partner.logo?.deliveryAvailable && partner.logo.url ? (
+                    {deliverableUrl(partner.logo) ? (
                       <img
-                        src={partner.logo.url}
-                        alt={partner.logo.altText || `${partner.name} logo`}
+                        src={deliverableUrl(partner.logo)!}
+                        alt={partner.logo?.altText || `${partner.name} logo`}
                         width={180}
                         height={90}
                         loading="lazy"
-                        style={{
-                          width: "min(180px, 100%)",
-                          height: "72px",
-                          objectFit: "contain",
-                          objectPosition: "left center",
-                          marginBottom: "1rem",
-                        }}
+                        className="uss-partner-logo"
                       />
                     ) : null}
                     <h3>{partner.name}</h3>
                     {summary ? <p>{summary}</p> : null}
                     {partner.websiteUrl ? (
-                      <a href={partner.websiteUrl} target="_blank" rel="noreferrer">
+                      <a href={partner.websiteUrl} target="_blank" rel="noopener noreferrer">
                         {meta || "VISIT PARTNER"} ↗
                       </a>
                     ) : null}
@@ -132,15 +144,19 @@ export default async function PartnersPage() {
             </div>
           </div>
         </section>
-      ) : unavailable ? (
+      ) : (
         <section className="partner-journey" aria-label="Partner availability">
           <div className="content-frame">
             <div className="cms-empty-state" role="status">
-              <p>Partner information is temporarily unavailable. Please try again soon.</p>
+              <p>
+                {unavailable
+                  ? "Partner information is temporarily unavailable. Please try again soon."
+                  : "Our current partners will be listed here once they are published. Interested in building with USS? Get in touch below."}
+              </p>
             </div>
           </div>
         </section>
-      ) : null}
+      )}
 
       <section className="partner-journey">
         <div className="content-frame">
@@ -206,7 +222,7 @@ export default async function PartnersPage() {
           <br />
           TOGETHER.
         </h2>
-        <LinkButton href="mailto:hello@ussrunning.com">
+        <LinkButton href={`mailto:${contactEmail}`}>
           START A CONVERSATION
         </LinkButton>
       </section>

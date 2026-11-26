@@ -1,6 +1,14 @@
 import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import type { Metadata } from "next";
+import { pageMetadata } from "@/features/seo/metadata";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/terms",
+  title: "Terms of Use",
+  description: "Terms of use for the USS Running website, membership and community events.",
+});
 
 export default function TermsPage() {
   return (

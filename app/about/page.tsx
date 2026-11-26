@@ -4,6 +4,15 @@ import { PageHero } from "@/components/layout/PageHero";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import CommunityStats from "@/components/CommunityStats";
+import type { Metadata } from "next";
+import { pageMetadata } from "@/features/seo/metadata";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/about",
+  title: "About",
+  description:
+    "USS Running started with 18 runners in Jakarta in July 2024. Learn how the community runs, cheers, eats, creates and shows up for each other.",
+});
 
 const mission = [
   [

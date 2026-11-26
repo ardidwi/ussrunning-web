@@ -1,29 +1,44 @@
-import { LinkButton } from "@/components/ui/Button";
+import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
+import { LinkButton } from "@/components/ui/Button";
 import SiteFooter from "@/components/SiteFooter";
 import EventCard from "@/components/EventCard";
 import CommunityStats from "@/components/CommunityStats";
 import HomeMotionExperience from "@/components/HomeMotionExperience";
-import { getHomeHero, getRuns } from "@/lib/content";
 import { getPublicSiteContent } from "@/lib/site-content/site-service";
+import { SITE_DEFAULTS } from "@/lib/site-content/site-defaults";
+import { SECTION_IDS, type SectionId } from "@/lib/site-content/site-types";
 import { listPublicStories } from "@/lib/stories/story-actions";
-import { STARTER_STORIES } from "@/lib/stories/story-starter";
 import { listPublicPartners } from "@/lib/partners/partner-actions";
 import { listPublicGalleryItems } from "@/lib/gallery/gallery-actions";
+import { loadUpcomingPublicEvents } from "@/features/public-events/server";
+import { deliverableUrl, firstDeliverable } from "@/features/public-site/media";
+import { pageMetadata } from "@/features/seo/metadata";
 
 export const dynamic = "force-dynamic";
 
-function publicMediaUrl(
-  media: Array<{ deliveryAvailable: boolean; url: string | null }>,
-) {
-  const asset = media.find((item) => item.deliveryAvailable && item.url);
-  return asset?.url ?? null;
+/** CMS gallery slug rendered on the homepage (application constant). */
+const HOME_GALLERY_SLUG = "home-gallery";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const hero = await getPublicSiteContent("homepage.hero");
+  const media = firstDeliverable(hero.media, hero.payload?.desktopMediaId);
+  return pageMetadata({
+    path: "/",
+    title: null,
+    description: hero.payload?.enabled ? hero.payload.description : undefined,
+    image: media ? { url: media.url!, alt: media.altText || "USS Running" } : undefined,
+  });
+}
+
+function kicker(index: number, label: string) {
+  return `${String(index + 1).padStart(2, "0")} / ${label}`;
 }
 
 export default async function HomePage() {
   const [
-    hero,
-    runs,
+    events,
     storiesResult,
     partnersResult,
     galleryResult,
@@ -31,89 +46,48 @@ export default async function HomePage() {
     marqueeSlot,
     manifestoSlot,
     membershipSlot,
+    sectionsSlot,
   ] = await Promise.all([
-    getHomeHero(),
-    getRuns(),
+    loadUpcomingPublicEvents(2),
     listPublicStories({ limit: 1 }),
     listPublicPartners({ limit: 20 }),
-    listPublicGalleryItems({ slug: "home-gallery", limit: 6 }),
+    listPublicGalleryItems({ slug: HOME_GALLERY_SLUG, limit: 6 }),
     getPublicSiteContent("homepage.hero"),
     getPublicSiteContent("homepage.marquee"),
     getPublicSiteContent("homepage.manifesto"),
     getPublicSiteContent("homepage.membership"),
+    getPublicSiteContent("homepage.sections"),
   ]);
 
-  const cmsFeaturedStory = storiesResult.ok ? storiesResult.data.items[0] : null;
-  const starterFeaturedStory =
-    storiesResult.ok && !cmsFeaturedStory ? STARTER_STORIES[0] : null;
-  const featuredStorySlug = cmsFeaturedStory?.slug ?? starterFeaturedStory?.slug ?? null;
-  const featuredStoryType =
-    cmsFeaturedStory?.contentType ?? starterFeaturedStory?.contentType ?? "USS JOURNAL";
-  const featuredStoryTitle =
-    cmsFeaturedStory?.title ?? starterFeaturedStory?.title ?? null;
+  // Site-content returns the approved typed default when a slot is missing;
+  // `null` only when even that failed, so fall back to the same typed default.
+  const hero = heroSlot.payload ?? SITE_DEFAULTS["homepage.hero"];
+  const marquee = marqueeSlot.payload ?? SITE_DEFAULTS["homepage.marquee"];
+  const manifesto = manifestoSlot.payload ?? SITE_DEFAULTS["homepage.manifesto"];
+  const membership = membershipSlot.payload ?? SITE_DEFAULTS["homepage.membership"];
+  const order = (sectionsSlot.payload ?? SITE_DEFAULTS["homepage.sections"]).order.filter(
+    (id): id is SectionId => (SECTION_IDS as readonly string[]).includes(id),
+  );
 
-  const collaborations = partnersResult.ok
-    ? partnersResult.data.items.map((partner) => partner.name)
-    : [];
-  const partnersUnavailable = !partnersResult.ok;
+  // The stats band carries no number; editorial kickers ("02 / OUR MOVEMENT",
+  // "04 / MEMBERSHIP") are numbered by position among the remaining sections.
+  const numberedSections: SectionId[] = order.filter((id) => id !== "stats");
 
+  const heroImage = deliverableUrl(firstDeliverable(heroSlot.media, hero.desktopMediaId));
+  const membershipImage = firstDeliverable(membershipSlot.media, membership.imageMediaId);
+  const featuredStory = storiesResult.ok ? storiesResult.data.items[0] ?? null : null;
+  const partners = partnersResult.ok ? partnersResult.data.items : [];
   const gallery = galleryResult.ok
-    ? galleryResult.data.items.filter(
-        (item) => item.media.deliveryAvailable && item.media.url,
-      )
+    ? galleryResult.data.items.filter((item) => deliverableUrl(item.media))
     : [];
-  const galleryUnavailable = !galleryResult.ok;
 
-  const heroContent = heroSlot.payload;
-  const marqueeContent = marqueeSlot.payload;
-  const manifestoContent = manifestoSlot.payload;
-  const membership = membershipSlot.payload;
-  const heroImage = publicMediaUrl(heroSlot.media) || hero.imageUrl;
-  const membershipImage = publicMediaUrl(membershipSlot.media);
-  const featuredStoryImage =
-    cmsFeaturedStory?.cover?.deliveryAvailable && cmsFeaturedStory.cover.url
-      ? cmsFeaturedStory.cover.url
-      : null;
-  const featuredStoryAlt = cmsFeaturedStory?.cover?.altText || "";
-
-  const tickerText = marqueeContent?.enabled
-    ? marqueeContent.text
-    : "RUNNING / COMMUNITY / CULTURE /";
-
-  return (
-    <main>
-      <HomeMotionExperience
-        imageUrl={heroImage}
-        established={heroContent?.enabled ? heroContent.established : hero.established}
-        eyebrow={heroContent?.enabled ? heroContent.eyebrow : hero.eyebrow}
-        headline={heroContent?.enabled ? heroContent.headline : hero.headline}
-        description={heroContent?.enabled ? heroContent.description : hero.description}
-        ctaHref={heroContent?.enabled ? heroContent.cta?.href || hero.ctaHref : hero.ctaHref}
-        ctaLabel={heroContent?.enabled ? heroContent.cta?.label || hero.ctaLabel : hero.ctaLabel}
-      />
-
-      {marqueeContent?.enabled !== false ? (
-        <section className="ticker" aria-label="Community message">
-          <div className="ticker-marquee">
-            <div className="ticker-group">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <span key={"a-" + index}>{tickerText}</span>
-              ))}
-            </div>
-            <div className="ticker-group" aria-hidden="true">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <span key={"b-" + index}>{tickerText}</span>
-              ))}
-            </div>
-          </div>
-        </section>
-      ) : null}
-
-      <section className="section next-section" id="uss-next-runs">
+  const sections: Record<SectionId, (index: number) => ReactNode> = {
+    next_runs: (index) => (
+      <section className="section next-section" id="uss-next-runs" key="next_runs">
         <div className="content-frame">
           <div className="section-heading">
             <div>
-              <span className="kicker">01 / NEXT UP</span>
+              <span className="kicker">{kicker(index, "NEXT UP")}</span>
               <h2>
                 MEET US
                 <br />
@@ -124,30 +98,31 @@ export default async function HomePage() {
               VIEW ALL RUNS ↗
             </Link>
           </div>
-
-          <div className="event-grid">
-            {runs.slice(0, 2).map((run) => (
-              <EventCard run={run} key={run.slug} />
-            ))}
-          </div>
+          {events.ok && events.items.length ? (
+            <div className="event-grid">
+              {events.items.map((event) => (
+                <EventCard event={event} key={event.id} />
+              ))}
+            </div>
+          ) : (
+            <div className="cms-empty-state" role="status">
+              <p>
+                {events.ok
+                  ? "No upcoming runs are published yet. New sessions appear here as soon as they are announced."
+                  : "Run listings are temporarily unavailable. Please check back soon."}
+              </p>
+            </div>
+          )}
         </div>
       </section>
-
-      {manifestoContent?.enabled !== false ? (
-        <section className="manifesto section-invert">
+    ),
+    manifesto: () =>
+      manifesto.enabled ? (
+        <section className="manifesto section-invert" key="manifesto">
           <div className="content-frame">
-            <div className="manifesto-label">
-              {manifestoContent?.label || "02 / OUR MOVEMENT"}
-            </div>
+            <div className="manifesto-label">{manifesto.label}</div>
             <p className="manifesto-copy">
-              {(manifestoContent?.paragraphs?.length
-                ? manifestoContent.paragraphs
-                : [
-                    "RUNNING BROUGHT US TOGETHER.",
-                    "18 RUNNERS ON DAY ONE. AROUND 500 ON DAY 365.",
-                    "WE RUN, CHEER, EAT, CREATE AND SHOW UP FOR EACH OTHER.",
-                  ]
-              ).map((paragraph, index, values) => (
+              {manifesto.paragraphs.map((paragraph, index, values) => (
                 <span key={`${index}-${paragraph}`}>
                   {paragraph}
                   {index < values.length - 1 ? <br /> : null}
@@ -155,23 +130,20 @@ export default async function HomePage() {
               ))}
             </p>
             <div className="manifesto-foot">
-              <span>
-                {manifestoContent?.footnote || "PEOPLE OVER PACE / JAKARTA SINCE 2024"}
-              </span>
-              <Link href={manifestoContent?.cta?.href || "/about"}>
-                {manifestoContent?.cta?.label || "OUR STORY"} ↗
-              </Link>
+              <span>{manifesto.footnote}</span>
+              {manifesto.cta ? (
+                <Link href={manifesto.cta.href}>{manifesto.cta.label} ↗</Link>
+              ) : null}
             </div>
           </div>
         </section>
-      ) : null}
-
-      <CommunityStats />
-
-      <section className="collaborations-section">
+      ) : null,
+    stats: () => <CommunityStats key="stats" />,
+    partners: (index) => (
+      <section className="collaborations-section" key="partners">
         <div className="content-frame">
           <div className="collaborations-head">
-            <span className="kicker">03 / SELECTED COLLABORATIONS</span>
+            <span className="kicker">{kicker(index, "SELECTED COLLABORATIONS")}</span>
             <h2>
               BRANDS WE&apos;VE
               <br />
@@ -182,68 +154,69 @@ export default async function HomePage() {
               USS Running across events, campaigns and race-week moments.
             </p>
           </div>
-
-          {collaborations.length ? (
-            <div
-              className="collaboration-grid"
-              aria-label="Selected collaborators"
-            >
-              {collaborations.map((brand) => (
-                <div className="collaboration-brand" key={brand}>
-                  <span>{brand}</span>
-                </div>
-              ))}
-            </div>
+          {partners.length ? (
+            <ul className="collaboration-grid" aria-label="Selected collaborators">
+              {partners.map((partner) => {
+                const logo = deliverableUrl(partner.logo);
+                return (
+                  <li className="collaboration-brand" key={partner.slug}>
+                    {logo ? (
+                      <img
+                        src={logo}
+                        alt={partner.logo?.altText || partner.name}
+                        loading="lazy"
+                        className="collaboration-logo"
+                      />
+                    ) : (
+                      <span>{partner.name}</span>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
           ) : (
             <div className="cms-empty-state" role="status">
               <p>
-                {partnersUnavailable
-                  ? "Partner highlights are temporarily unavailable."
-                  : "Partnership highlights are being prepared."}
+                {partnersResult.ok
+                  ? "Partner highlights will appear here once they are published."
+                  : "Partner highlights are temporarily unavailable."}
               </p>
             </div>
           )}
-
           <div className="collaborations-foot">
             <span>SELECTED WORK / MORE TO COME</span>
             <Link href="/partners">EXPLORE PARTNERSHIPS ↗</Link>
           </div>
         </div>
       </section>
-
-      {membership?.enabled !== false ? (
-        <section className="editorial-split section">
+    ),
+    membership: () =>
+      membership.enabled ? (
+        <section className="editorial-split section" key="membership">
           {membershipImage ? (
             <div className="editorial-photo">
-              <img src={membershipImage} alt="USS membership" />
+              <img
+                src={membershipImage.url!}
+                alt={membershipImage.altText || "USS Running membership"}
+                loading="lazy"
+              />
             </div>
           ) : null}
-
           <div className="editorial-copy">
-            <span className="kicker">
-              {membership?.kicker || "04 / MEMBERSHIP / FREE"}
-            </span>
-            <h2 style={{ whiteSpace: "pre-line" }}>
-              {membership?.headline || "ONE COMMUNITY.\nNO PAID TIER.\nONE ID."}
-            </h2>
-            <p>
-              {membership?.description ||
-                "USS membership is free. Create one community ID to RSVP to runs, keep your run pass and build your USS history as you keep showing up."}
-            </p>
-            <LinkButton
-              className=""
-              href={membership?.cta?.href || "/membership"}
-            >
-              {membership?.cta?.label || "JOIN USS — FREE"}
-            </LinkButton>
+            <span className="kicker">{membership.kicker}</span>
+            <h2 className="pre-line">{membership.headline}</h2>
+            <p>{membership.description}</p>
+            {membership.cta ? (
+              <LinkButton href={membership.cta.href}>{membership.cta.label}</LinkButton>
+            ) : null}
           </div>
         </section>
-      ) : null}
-
-      {featuredStorySlug && featuredStoryTitle ? (
-        <section className="story-band">
+      ) : null,
+    stories: (index) =>
+      featuredStory ? (
+        <section className="story-band" key="stories">
           <div className="story-band-title">
-            <span className="kicker">05 / STORIES</span>
+            <span className="kicker">{kicker(index, "STORIES")}</span>
             <h2>
               THE PEOPLE.
               <br />
@@ -251,26 +224,32 @@ export default async function HomePage() {
               <br />
               THE MILES.
             </h2>
+            <Link href="/stories" className="arrow-link">
+              ALL STORIES ↗
+            </Link>
           </div>
-
-          <Link className="story-feature" href={`/stories/${featuredStorySlug}`}>
-            {featuredStoryImage ? (
-              <img src={featuredStoryImage} alt={featuredStoryAlt} />
+          <Link className="story-feature" href={`/stories/${encodeURIComponent(featuredStory.slug)}`}>
+            {deliverableUrl(featuredStory.cover) ? (
+              <img
+                src={deliverableUrl(featuredStory.cover)!}
+                alt={featuredStory.cover?.altText || ""}
+                loading="lazy"
+              />
             ) : null}
             <div className="story-overlay">
-              <span>{featuredStoryType}</span>
-              <h3>{featuredStoryTitle}</h3>
+              <span>{featuredStory.contentType || "USS JOURNAL"}</span>
+              <h3>{featuredStory.title}</h3>
               <span>READ THE STORY ↗</span>
             </div>
           </Link>
         </section>
-      ) : null}
-
-      <section className="home-gallery-section">
+      ) : null,
+    gallery: (index) => (
+      <section className="home-gallery-section" key="gallery">
         <div className="content-frame">
           <div className="home-gallery-head">
             <div>
-              <span className="kicker">06 / COMMUNITY GALLERY</span>
+              <span className="kicker">{kicker(index, "COMMUNITY GALLERY")}</span>
               <h2>
                 SEEN ON
                 <br />
@@ -278,22 +257,21 @@ export default async function HomePage() {
               </h2>
             </div>
             <p>
-              Selected USS moments. The CMS controls which images appear here,
-              so official photography can replace presentation placeholders
-              without another code deploy.
+              Moments from the start line, the cheering zones and everything
+              after the finish.{" "}
+              <Link href="/gallery" className="arrow-link">
+                OPEN THE GALLERY ↗
+              </Link>
             </p>
           </div>
-
           {gallery.length ? (
             <div className="home-gallery-grid">
-              {gallery.map((item, index) => (
-                <figure
-                  key={item.id}
-                  className={index === 0 ? "is-featured" : ""}
-                >
+              {gallery.map((item, itemIndex) => (
+                <figure key={item.id} className={itemIndex === 0 ? "is-featured" : ""}>
                   <img
                     src={item.media.url!}
                     alt={item.altTextOverride || item.media.altText || ""}
+                    loading="lazy"
                   />
                   {item.caption ? <figcaption>{item.caption}</figcaption> : null}
                 </figure>
@@ -302,20 +280,51 @@ export default async function HomePage() {
           ) : (
             <div className="cms-empty-state" role="status">
               <p>
-                {galleryUnavailable
-                  ? "Community gallery is temporarily unavailable."
-                  : "Community photos are being prepared."}
+                {galleryResult.ok || galleryResult.code === "GALLERY_NOT_FOUND"
+                  ? "Community photos will appear here once they are published."
+                  : "Community gallery is temporarily unavailable."}
               </p>
             </div>
           )}
         </div>
       </section>
+    ),
+  };
+
+  return (
+    <main>
+      <HomeMotionExperience
+        imageUrl={heroImage}
+        established={hero.established}
+        eyebrow={hero.eyebrow}
+        headline={hero.headline}
+        description={hero.description}
+        ctaHref={hero.cta?.href}
+        ctaLabel={hero.cta?.label}
+      />
+
+      {marquee.enabled ? (
+        <section className="ticker" aria-label="Community message">
+          <div className="ticker-marquee">
+            <div className="ticker-group">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <span key={"a-" + index}>{marquee.text}</span>
+              ))}
+            </div>
+            <div className="ticker-group" aria-hidden="true">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <span key={"b-" + index}>{marquee.text}</span>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {order.map((id) => sections[id](numberedSections.indexOf(id)))}
 
       <section className="partner-strip">
         <div className="partner-strip-inner">
-          <span className="partner-strip-label">
-            RUNNING IS THE ENTRY POINT
-          </span>
+          <span className="partner-strip-label">RUNNING IS THE ENTRY POINT</span>
           <div className="partner-wordmarks" aria-label="USS community pillars">
             <b>RUN</b>
             <i>/</i>
