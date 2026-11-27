@@ -1,9 +1,9 @@
 import 'server-only';
-import {GetObjectCommand,PutObjectCommand,S3Client} from '@aws-sdk/client-s3';
+import {DeleteObjectCommand,GetObjectCommand,PutObjectCommand,S3Client} from '@aws-sdk/client-s3';
 import {getSignedUrl} from '@aws-sdk/s3-request-presigner';
 import {MediaError} from '../media-errors';
 import type {MediaMime,MediaVisibility} from '../media-types';
-import type {StorageProvider} from './storage-provider';
+import type {StorageProvider,StoredObject} from './storage-provider';
 
 type StorageConfig={endpoint:string;region:string;accessKeyId:string;secretAccessKey:string;publicBucket:string;privateBucket:string;privateUrlTtlSeconds:number};
 
@@ -18,6 +18,7 @@ export function storageConfigFromEnv():StorageConfig|null{
 }
 function objectKey(key:string){if(!/^[a-z0-9/-]+\.(jpg|png|webp)$/.test(key)||key.includes('..'))throw new MediaError('MEDIA_INVALID_CONTENT');return key;}
 function encodeKey(key:string){return key.split('/').map(encodeURIComponent).join('/');}
+function isMissing(error:unknown){if(!error||typeof error!=='object')return false;const e=error as {$metadata?:{httpStatusCode?:number};name?:string};return e.$metadata?.httpStatusCode===404||e.name==='NoSuchKey'||e.name==='NotFound';}
 function isConflict(error:unknown){if(!error||typeof error!=='object')return false;const e=error as {$metadata?:{httpStatusCode?:number};name?:string};return e.$metadata?.httpStatusCode===412||e.name==='PreconditionFailed';}
 
 export class NeonS3Storage implements StorageProvider{
@@ -37,6 +38,27 @@ export class NeonS3Storage implements StorageProvider{
    throw new MediaError('MEDIA_INVALID_CONTENT');
   }
   return object.Body.transformToByteArray();
+ }
+ private bucket(visibility:MediaVisibility){return visibility==='public'?this.config.publicBucket:this.config.privateBucket;}
+ /** Single-object PUT, bound to the server-chosen key, Content-Type and length; never overwrites (If-None-Match). */
+ async presignPut(key:string,mime:MediaMime,bytes:number,visibility:MediaVisibility,expiresSeconds:number){
+  const k=objectKey(key),cache=visibility==='public'?'public, max-age=31536000, immutable':'private, no-store';
+  try{const url=await getSignedUrl(this.client,new PutObjectCommand({Bucket:this.bucket(visibility),Key:k,ContentType:mime,ContentLength:bytes,CacheControl:cache,IfNoneMatch:'*'}),{expiresIn:Math.min(900,Math.max(60,expiresSeconds)),signableHeaders:new Set(['content-type','content-length','cache-control','if-none-match'])});
+   return{url,headers:{'Content-Type':mime,'Cache-Control':cache,'If-None-Match':'*'}};}
+  catch{throw new MediaError('MEDIA_STORAGE_UNAVAILABLE');}
+ }
+ async readObject(key:string,visibility:MediaVisibility,maxBytes:number):Promise<StoredObject|null>{
+  let object;
+  try{object=await this.client.send(new GetObjectCommand({Bucket:this.bucket(visibility),Key:objectKey(key)}));}
+  catch(error){if(isMissing(error))return null;throw new MediaError('MEDIA_STORAGE_UNAVAILABLE');}
+  const size=Number(object.ContentLength??-1);
+  if(!object.Body||size<0||size>maxBytes){await object.Body?.transformToWebStream().cancel();return{size:Math.max(size,maxBytes+1),bytes:null};}
+  const bytes=await object.Body.transformToByteArray();
+  return{size:bytes.byteLength,bytes:bytes.byteLength>maxBytes?null:bytes};
+ }
+ async deleteObject(key:string,visibility:MediaVisibility){
+  try{await this.client.send(new DeleteObjectCommand({Bucket:this.bucket(visibility),Key:objectKey(key)}));}
+  catch{throw new MediaError('MEDIA_STORAGE_UNAVAILABLE');}
  }
  async deliveryUrl(key:string,visibility:MediaVisibility){
   const k=objectKey(key);
