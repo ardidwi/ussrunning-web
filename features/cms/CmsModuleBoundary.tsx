@@ -1,82 +1,29 @@
 import { EmptyState, LinkButton } from "@/components/ui";
-import { PermissionGate } from "@/features/permissions/Permissions";
+import { ADMIN_SLOT_COPY, isAdminSlot } from "./admin-slots";
 import { CMS_MODULES, type CmsModule } from "./navigation";
+
+/** Neutral state for a permitted module whose workspace has not been wired into /admin yet. */
 export function CmsModuleBoundary({ module }: { module: CmsModule }) {
   const current = CMS_MODULES.find((item) => item.id === module)!;
-  if (module === "overview")
-    return (
-      <>
-        <header className="uss-member-intro">
-          <p className="uss-member-kicker">USS CMS / FOUNDATION</p>
-          <h1>
-            KEEP THE CREW
-            <br />
-            IN THE KNOW.
-          </h1>
-          <p>
-            Your workspace for community content. Available modules follow your
-            current account permissions.
-          </p>
-        </header>
-        <div className="uss-member-panel">
-          <EmptyState
-            title="Editorial work starts with Stories."
-            description="Managed Stories are available to permitted editors. Other content modules will appear as their protected services are connected."
-          />
-        </div>
-        <div className="uss-member-quick">
-          <PermissionGate permission="cms.content.manage">
-            <LinkButton href="/admin?module=stories" variant="secondary">
-              Open Stories ↗
-            </LinkButton>
-          </PermissionGate>
-          <PermissionGate permission="audit.read">
-            <LinkButton href="/admin?module=activity" variant="secondary">
-              View audit history ↗
-            </LinkButton>
-          </PermissionGate>
-          <PermissionGate
-            anyOf={[
-              "cms.content.manage",
-              "stories.manage",
-              "partners.manage",
-              "events.manage",
-            ]}
-          >
-            <LinkButton href="/admin?module=revisions" variant="secondary">
-              View revision previews ↗
-            </LinkButton>
-          </PermissionGate>
-        </div>
-      </>
-    );
+  const copy = isAdminSlot(module) ? ADMIN_SLOT_COPY[module] : null;
   return (
-    <>
+    <section aria-labelledby="cms-module-heading" data-admin-slot={module}>
       <header className="uss-member-intro">
-        <p className="uss-member-kicker">
-          USS CMS / {current.label.toUpperCase()}
-        </p>
-        <h1>{current.label.toUpperCase()}.</h1>
+        <p className="uss-member-kicker">USS CMS / {current.label.toUpperCase()}</p>
+        <h1 id="cms-module-heading">{current.label.toUpperCase()}.</h1>
+        {copy && <p>{copy.description}</p>}
       </header>
-      <div className="uss-member-panel">
+      <div className="uss-member-panel" role="status">
         <EmptyState
-          title={`${current.label} editing is not available yet.`}
-          description="This module is waiting for its protected content service. Your existing records haven't been changed."
+          title="Module not yet connected."
+          description="This workspace has no connected service in this environment. No records were read or changed."
           action={
             <LinkButton href="/admin" variant="secondary">
               Back to overview ↗
             </LinkButton>
           }
         />
-        {module === "members" && (
-          <PermissionGate permission="roles.manage">
-            <p>
-              Role changes require an approved account-administration service.
-              No role changes are available here.
-            </p>
-          </PermissionGate>
-        )}
       </div>
-    </>
+    </section>
   );
 }
