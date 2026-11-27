@@ -16,8 +16,9 @@ export const STORY_STATUSES = ["draft", "scheduled", "published", "archived"] as
 export type StoryStatusFilter = (typeof STORY_STATUSES)[number];
 export const STORY_PAGE_SIZE = 20;
 let sequence = 0;
-export function blockKey() { sequence += 1; return `b${sequence}`; }
-export function withKeys(blocks: readonly StoryBlock[]): EditorBlock[] { return blocks.map((b) => ({ ...b, key: blockKey() }) as EditorBlock); }
+export function blockKey() { sequence += 1; return `n${sequence}`; }
+/** Initial keys are index-based so server and client render identical markup (no hydration mismatch). */
+export function withKeys(blocks: readonly StoryBlock[]): EditorBlock[] { return blocks.map((b, i) => ({ ...b, key: `i${i}` }) as EditorBlock); }
 export function initialDraft(story: Omit<ManagedStory, "authorAccountId"> | null, references: StoryReferences): EditorDraft {
   return story ? {
     title: story.title, excerpt: story.excerpt, blocks: withKeys(story.body),
@@ -25,7 +26,7 @@ export function initialDraft(story: Omit<ManagedStory, "authorAccountId"> | null
     coverMediaId: story.coverMediaId, visibility: story.visibility, featured: story.featured,
     bylineId: story.bylineId ?? null, tagIds: story.tagIds ?? [],
   } : {
-    title: "", excerpt: null, blocks: [{ type: "paragraph", text: "", key: blockKey() }], contentType: references.contentTypes[0]?.code ?? "",
+    title: "", excerpt: null, blocks: [{ type: "paragraph", text: "", key: "i0" }], contentType: references.contentTypes[0]?.code ?? "",
     categoryId: null, coverMediaId: null, visibility: "private", featured: false, bylineId: null, tagIds: [],
   };
 }

@@ -39,7 +39,6 @@ export function BlockEditor({ blocks, onChange, media, onMedia, errors, disabled
     <ol className="uss-block-list" aria-label="Story content blocks">
       {blocks.map((block, index) => {
         const n = index + 1, error = errors[`block:${block.key}`];
-        const id = (field: string) => `${block.key}-${field}`;
         return <li key={block.key} className={`uss-block-card${error ? " uss-block-card-error" : ""}`} aria-label={`Block ${n}: ${LABELS[block.type]}`}>
           <div className="uss-block-card-head">
             <span className="uss-block-type">{n}. {LABELS[block.type]}</span>
@@ -50,7 +49,7 @@ export function BlockEditor({ blocks, onChange, media, onMedia, errors, disabled
               <Button variant="text" onClick={() => remove(block.key)} disabled={disabled} aria-label={`Remove block ${n}`}>Remove</Button>
             </div>
           </div>
-          {block.type === "paragraph" && <Field label={`Paragraph ${n}`} hint="Plain text. Line breaks are kept; markup is not interpreted."><Textarea id={id("text")} className="resize-none" rows={4} value={block.text} maxLength={BLOCK_LIMITS.paragraph + 1} onChange={(e) => update(block.key, { text: e.target.value })} disabled={disabled} /></Field>}
+          {block.type === "paragraph" && <Field label={`Paragraph ${n}`} hint="Plain text. Line breaks are kept; markup is not interpreted."><Textarea className="resize-none" rows={4} value={block.text} maxLength={BLOCK_LIMITS.paragraph + 1} onChange={(e) => update(block.key, { text: e.target.value })} disabled={disabled} /></Field>}
           {block.type === "heading" && <div className="uss-block-row"><Field label="Level"><Select value={String(block.level)} onChange={(e) => update(block.key, { level: Number(e.target.value) as 2 | 3 })} disabled={disabled}><option value="2">Section (H2)</option><option value="3">Sub-section (H3)</option></Select></Field><Field label={`Heading ${n}`}><Input value={block.text} maxLength={BLOCK_LIMITS.heading + 1} onChange={(e) => update(block.key, { text: e.target.value })} disabled={disabled} /></Field></div>}
           {block.type === "image" && <div className="uss-block-media">
             <Thumb asset={media.get(block.mediaId)} />

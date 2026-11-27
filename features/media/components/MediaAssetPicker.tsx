@@ -24,16 +24,18 @@ export function MediaAssetPicker({ open, onClose, onSelect, selectedId, loadMedi
       setState("idle");
     } catch { if (id === request.current) setState("error"); }
   }
+  function runSearch() { const q = search.trim(); setApplied(q); void load(undefined, q); }
   useEffect(() => {
     if (open) { setSearch(""); setApplied(""); void load(undefined, ""); }
     return () => { request.current++; };
   }, [open, loadMedia]);
   return <Modal open={open} onClose={onClose} title={title} description="Choose an image from the media library. Upload new images in the Media workspace." className="uss-media-picker" actions={<Button variant="secondary" onClick={onClose}>Close picker</Button>}>
-    <form className="uss-media-picker-search" role="search" onSubmit={(event) => { event.preventDefault(); const q = search.trim(); setApplied(q); void load(undefined, q); }}>
-      <Input aria-label="Search media by alt text, caption or file name" placeholder="Search alt text, caption, file name" value={search} maxLength={120} onChange={(event) => setSearch(event.target.value)} />
-      <Button type="submit" variant="secondary">Search</Button>
+    {/* Not a <form>: the picker is rendered inside editor forms, and nested forms are invalid HTML. */}
+    <div className="uss-media-picker-search" role="search">
+      <Input type="search" aria-label="Search media by alt text, caption or file name" placeholder="Search alt text, caption, file name" value={search} maxLength={120} onChange={(event) => setSearch(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); runSearch(); } }} />
+      <Button variant="secondary" onClick={runSearch}>Search</Button>
       <a className="uss-media-picker-link" href="/admin?module=media" target="_blank" rel="noopener">Open media library ↗</a>
-    </form>
+    </div>
     {state === "loading" && page.items.length === 0 && <p role="status">Loading media…</p>}
     {state === "error" && <div role="alert" className="uss-story-notice"><p>We couldn't load the media library.</p><Button variant="secondary" onClick={() => void load()}>Retry</Button></div>}
     {state !== "loading" && state !== "error" && page.items.length === 0 && <EmptyState title={applied ? "No media matches this search." : "No active media yet."} description={applied ? "Try another word, or clear the search." : "Upload images in the Media workspace, then choose them here."} />}

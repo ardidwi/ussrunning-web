@@ -35,4 +35,7 @@
 .uss-media-usage li span{color:var(--uss-muted)}
 @media(max-width:900px){.uss-media-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.uss-media-filters>:first-of-type{grid-column:1/-1}}
 @media(max-width:600px){.uss-media-filters{grid-template-columns:1fr}.uss-media-detail-grid{grid-template-columns:1fr}.uss-media-queue-item{grid-template-columns:4rem minmax(0,1fr)}.uss-media-queue-item>.uss-button{grid-column:1/-1;justify-self:start}.uss-media-drop{padding:var(--space-4)}}
-@media(max-width:360px){.uss-media-grid{grid-template-columns:1fr 1fr;gap:var(--space-2)}}
+
+/* Filter fields never show validation errors; drop the reserved error row so filters stay compact. */
+.uss-media-filters .uss-field-error:empty{display:none}
+@media(max-width:600px){.uss-media-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-2)}.uss-media-tile-copy{padding:var(--space-2)}}
