@@ -260,21 +260,24 @@ Kirim langsung ke main setelah gerbang §2 lulus; jangan push branch.
 
 ## 10. Status deliverable
 
-Diperbarui 2026-11-26 oleh agent lead setelah integrasi jalur Identitas member dan Public & SEO. "Kode di `main`" berarti lulus gerbang §2 secara lokal dan sudah ter-deploy; deliverable baru dianggap **selesai** bila kriteria selesai di §4 terpenuhi di lingkungan live. Bukti lengkap ada di [ENGINEERING-ROADMAP.md](ENGINEERING-ROADMAP.md#lead-integration-log--go-live-lanes).
+Diperbarui 2026-11-27 oleh agent lead setelah integrasi wave 2 (Admin UI, Event ops, CMS media, Data rights). "Kode di `main`" berarti lulus gerbang §2 secara lokal dan sudah ter-deploy; deliverable baru dianggap **selesai** bila kriteria selesai di §4 terpenuhi di lingkungan live. Bukti lengkap ada di [ENGINEERING-ROADMAP.md](ENGINEERING-ROADMAP.md#lead-integration-log--go-live-lanes).
 
 | ID | Status | Catatan |
 | --- | --- | --- |
-| D0.1–D0.4 | Menunggu Owner | Resend/DNS, migration 010–020 di Neon, bucket storage + env, kunci event pass. Tidak ada migration atau perubahan env yang dijalankan agent. |
+| D0.1–D0.4 | Menunggu Owner | Resend/DNS, migration 010–026 di Neon (urutan wajib; runner menolak riwayat bukan prefiks), `CRON_SECRET`, CORS bucket, bucket storage + env, kunci event pass. Tidak ada migration atau perubahan env yang dijalankan agent. |
 | D0.5 | Kode di `main` | `npm run admin:bootstrap`; test PGlite termasuk penolakan saat super_admin aktif sudah ada. Butuh migration 020 + operator untuk dijalankan. |
 | D0.6 | Kode di `main` | Kode lama dihapus termasuk `lib/session.ts` dan `app/dashboard/actions.ts`; `signOut` pindah ke `lib/auth/flow-actions.ts`. Sisa referensi `public.*` hanya guard baca di `lib/auth/legacy-cutover.ts`. Drop tabel `public.*` tetap migration terpisah dengan persetujuan. |
 | D0.7 | Kode di `main` | Redirect tanpa sesi via `proxy.ts`, shell `/admin` bermerek, format tahun. |
 | D0.8–D0.10 | Belum dimulai | |
 | D1.1–D1.5 | Kode di `main`, menunggu D0.2/D0.3 | Avatar private + URL bertanda tangan, K-01, K-02, guard `PROFILE_INCOMPLETE`, `members.lookup` admin/super admin. Fitur menampilkan state "unavailable" sampai migration 020 dan storage aktif. |
-| D1.6 | Belum dimulai | |
+| D1.6 | Kode di `main` (`767b661`), menunggu migration 026 | Export JSON milik sendiri, lifecycle permintaan hapus + antrian super admin, eksekusi teraudit. Periode retensi dan teks Privacy menunggu persetujuan Owner ([DATA-RETENTION.md](DATA-RETENTION.md)). Hapus user Neon Auth masih manual. |
 | D1.7–D1.9, D1.11 | Kode di `main`, QA HP fisik tertunda | QA browser Chromium 320–1440px lulus; uji kamera/unduh di iOS Safari & Android Chrome masih gerbang launch. |
 | D1.10 | Menunggu persetujuan Owner | Copy Join, Membership, Privacy. |
-| D2.x | Belum dimulai | D2.4 dapat memakai `moderateMemberAvatar`. |
-| D3.1–D3.5, D3.8 | Belum dimulai | |
+| D2.1–D2.5, D2.7, D2.8, D2.10 | Kode di `main` (wave 2, deploy `e388baa`), menunggu migration 020–026 | Members, Roles, `members.read` terbatas (email disamarkan untuk admin, juga di daftar/CSV peserta), antrian foto, overview, peserta + CSV, antrian notifikasi, scanner di `/admin` + lookup Member ID. QA browser dengan fixture; belum diuji dengan sesi nyata. |
+| D2.6 | Kode di `main`, menunggu Owner | Job `/api/jobs/notifications` tiap 5 menit (Vercel Cron diterima saat deploy). Butuh `CRON_SECRET` (≥ 32 karakter) di Vercel, migration 021 dan D0.1 Resend. Saat ini route mengembalikan 503 (fail closed). |
+| D2.9 | Belum dimulai | Wave 3. |
+| D3.1–D3.5, D3.8 | Kode di `main` (`6416748`), menunggu migration 023–024 + CORS bucket | Upload presigned + finalisasi server, media library, Story berbasis blok + editor, kategori/tag/byline, revalidasi tag, filter kategori `/stories`, guard DB 023 (referensi CMS tidak bisa ke avatar). Bucket butuh CORS PUT dari origin situs. |
+| D4.1 | Kode di `main`, menunggu migration 021 + kunci pass | Pass otomatis saat email konfirmasi diproses job. |
 | D3.6 | Kode di `main`, menunggu D0.2 | Halaman publik dari CMS tanpa data dummy; konten nyata tampil setelah migration diterapkan. |
 | D3.7 | Kode di `main` | Metadata per halaman (termasuk `/join`, `/membership`, `/privacy`), OG image, sitemap, robots, ikon, 404, redirect `/events`. Uji preview share WhatsApp/IG tertunda. |
-| D4.x, D5.x | Belum dimulai | |
+| D4.2–D4.5, D5.x | Belum dimulai | D4.2, D4.3, D5.1, D5.3, D5.4, D5.5 dijadwalkan di wave 3. |
