@@ -95,14 +95,14 @@
 }
 
 /* Public CMS event cover (purpose='cms' media only). */
-.uss-event-cover {
+.uss-event-detail-cover {
   margin: var(--space-8) 0 0;
   aspect-ratio: 16 / 9;
   overflow: hidden;
   background: #111;
   border: 1px solid var(--uss-border);
 }
-.uss-event-cover img {
+.uss-event-detail-cover img {
   display: block;
   width: 100%;
   height: 100%;
