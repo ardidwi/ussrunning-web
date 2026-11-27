@@ -1,6 +1,10 @@
 import type { ReactNode } from "react";
 import type { Query } from "@/features/history/query";
 import type { CmsModule } from "./navigation";
+import { MediaLibraryWorkspace } from "@/features/media/MediaLibraryWorkspace";
+import { ParticipantsWorkspace } from "@/features/events-cms/ParticipantsWorkspace";
+import { NotificationsWorkspace } from "@/features/notifications-cms/NotificationsWorkspace";
+import { DataRightsWorkspace } from "@/features/data-rights-cms/DataRightsWorkspace";
 
 /**
  * Admin workspace slots for modules owned by other lanes.
@@ -16,7 +20,12 @@ import type { CmsModule } from "./navigation";
  *
  * Wiring example:
  *   import { MediaLibraryWorkspace } from "@/features/media/MediaLibraryWorkspace";
- *   export const ADMIN_SLOTS: AdminSlotRegistry = { media: MediaLibraryWorkspace };
+ *   export const ADMIN_SLOTS: AdminSlotRegistry = {
+  media: MediaLibraryWorkspace, // cms.content.manage
+  participants: ParticipantsWorkspace, // events.manage
+  notifications: NotificationsWorkspace, // events.manage
+  "data-rights": DataRightsWorkspace, // users.manage (super_admin)
+};
  */
 export type AdminSlotProps = { query: Query };
 export type AdminSlotComponent = (props: AdminSlotProps) => ReactNode | Promise<ReactNode>;
