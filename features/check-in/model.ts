@@ -97,3 +97,7 @@ export function cameraFailure(error: unknown) {
     ? "denied"
     : "unavailable";
 }
+/** Canonical admin location of the crew scanner (D2.10); /dashboard/check-in redirects here. */
+export function checkInHref(eventId?: string) {
+  return eventId ? `/admin?module=check-in&event=${encodeURIComponent(eventId)}` : "/admin?module=check-in";
+}

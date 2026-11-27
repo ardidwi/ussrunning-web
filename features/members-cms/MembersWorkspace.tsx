@@ -1,76 +1,49 @@
 import { LinkButton } from "@/components/ui";
-import { listManagedUsers } from "@/lib/admin-users/user-actions";
+import { getMemberDirectoryEntry, listMemberDirectory } from "@/lib/admin-users/user-actions";
 import { text, type Query } from "@/features/history/query";
+import { ServiceFeedback } from "@/features/shared/ServiceFeedback";
+import { MemberDetailView, MemberDirectoryView } from "./MemberViews";
+import { MEMBER_PAGE_SIZE, memberQuery, membersHref } from "./model";
 
-const STATUSES = ["pending_verification", "active", "suspended", "deactivated"] as const;
-
-export async function MembersWorkspace({ query }: { query: Query }) {
-  const status = text(query, "status");
-  const cursor = text(query, "cursor");
-  const search = text(query, "search");
-
-  if (
-    (status && !STATUSES.some((value) => value === status)) ||
-    cursor.length > 512 ||
-    search.length > 100 ||
-    (search.length > 0 && search.trim().length < 3)
-  ) {
-    return <section className="uss-member-panel" role="alert"><h2>Invalid member filter.</h2><p>Use a supported status or a search with at least three characters.</p><LinkButton href="/admin?module=members" variant="secondary">Reset filters</LinkButton></section>;
-  }
-
-  const filters = {
-    limit: 20,
-    ...(status ? { status } : {}),
-    ...(search ? { search: search.trim() } : {}),
-    ...(cursor ? { cursor } : {}),
-  };
-  const result = await listManagedUsers(filters);
-
-  if (!result.ok) {
-    return <section className="uss-member-panel" role="alert"><h2>Members unavailable.</h2><p>The member directory could not be loaded. No account changes were made.</p><LinkButton href="/admin?module=members" variant="secondary">Try again</LinkButton></section>;
-  }
-
-  const base = new URLSearchParams({ module: "members" });
-  if (status) base.set("status", status);
-  if (search) base.set("search", search.trim());
-
+function Unavailable({ title, body }: { title: string; body: string }) {
   return (
-    <section className="uss-member-panel" aria-labelledby="members-heading">
-      <header className="uss-member-intro">
-        <p className="uss-member-kicker">USS CMS / MEMBERS</p>
-        <h1 id="members-heading">MEMBERS.</h1>
-        <p>Permission-controlled member directory. Account and role changes are deliberately unavailable in this first read-only release.</p>
-      </header>
-      <form action="/admin" method="get" style={{ display: "grid", gap: "0.75rem", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 13rem), 1fr))", alignItems: "end" }}>
-        <input type="hidden" name="module" value="members" />
-        <label style={{ display: "grid", gap: "0.35rem", minWidth: 0 }}>
-          <span>Find members</span>
-          <input name="search" type="search" defaultValue={search} minLength={3} maxLength={100} placeholder="Name, email, or member ID (3+ characters)" style={{ width: "100%", minWidth: 0, padding: "0.75rem" }} />
-        </label>
-        <label style={{ display: "grid", gap: "0.35rem", minWidth: 0 }}>
-          <span>Account status</span>
-          <select name="status" defaultValue={status} style={{ width: "100%", minWidth: 0, padding: "0.75rem" }}>
-            <option value="">All statuses</option>
-            {STATUSES.map((value) => <option key={value} value={value}>{value.replaceAll("_", " ")}</option>)}
-          </select>
-        </label>
-        <button type="submit" className="uss-button">Apply filters</button>
-        <LinkButton href="/admin?module=members" variant="text">Clear</LinkButton>
-      </form>
-      {!result.data.items.length ? <p role="status">No members match these filters.</p> : (
-        <ul style={{ listStyle: "none", padding: 0, margin: "1.5rem 0", display: "grid", gap: "0.75rem" }}>
-          {result.data.items.map((member) => (
-            <li key={member.id} className="uss-member-panel" style={{ minWidth: 0, overflowWrap: "anywhere" }}>
-              <strong>{member.displayName || member.profile.fullName || "USS Member"}</strong>
-              <p>{member.email} · {member.memberId}</p>
-              <p>Status: {member.status.replaceAll("_", " ")} · Email: {member.emailVerified ? "Verified" : "Unverified"}</p>
-              <p>Roles: {member.roles.join(", ") || "member"}</p>
-            </li>
-          ))}
-        </ul>
-      )}
-      {result.data.nextCursor && <LinkButton href={`/admin?${base.toString()}&cursor=${encodeURIComponent(result.data.nextCursor)}`} variant="secondary">Next page ↗</LinkButton>}
-      {cursor && <LinkButton href={`/admin?${base.toString()}`} variant="text">First page ↗</LinkButton>}
+    <section className="uss-member-panel" role="alert">
+      <h2>{title}</h2>
+      <p>{body}</p>
+      <LinkButton href={membersHref({})} variant="secondary">Back to members</LinkButton>
     </section>
   );
+}
+
+/** Server workspace: members.read (restricted) or users.manage (full); actions are permission-gated again on the server. */
+export async function MembersWorkspace({ query, canManageUsers = false, canManageRoles = false }: {
+  query: Query; canManageUsers?: boolean; canManageRoles?: boolean;
+}) {
+  const input = memberQuery(key => text(query, key));
+  if (!input.ok)
+    return <Unavailable title="Invalid member filter." body="Use a listed status and a search of 3–100 plain characters." />;
+  if (input.member) {
+    const result = await getMemberDirectoryEntry({ id: input.member });
+    if (!result.ok) {
+      if (result.code === "USER_NOT_FOUND") return <Unavailable title="Member not found." body="The account may have been removed, or the link is outdated." />;
+      if (result.code === "USER_UNAVAILABLE" || result.code === "USER_SEARCH_INVALID")
+        return <Unavailable title="Member unavailable." body="The account could not be loaded. No changes were made." />;
+      return <ServiceFeedback code={result.code === "USER_FORBIDDEN" ? "INSUFFICIENT_PERMISSION" : result.code} returnTo="/admin?module=members" />;
+    }
+    return <MemberDetailView detail={result.data} canManageUsers={canManageUsers} canManageRoles={canManageRoles} />;
+  }
+  const result = await listMemberDirectory({
+    limit: MEMBER_PAGE_SIZE,
+    ...(input.status ? { status: input.status } : {}),
+    ...(input.search ? { search: input.search } : {}),
+    ...(input.cursor ? { cursor: input.cursor } : {}),
+  });
+  if (!result.ok) {
+    if (result.code === "USER_SEARCH_INVALID")
+      return <Unavailable title="This page link expired." body="Filters changed since the page was opened. Start again from the first page." />;
+    if (result.code === "USER_UNAVAILABLE")
+      return <Unavailable title="Members unavailable." body="The member directory could not be loaded. No account changes were made." />;
+    return <ServiceFeedback code={result.code === "USER_FORBIDDEN" ? "INSUFFICIENT_PERMISSION" : result.code} returnTo="/admin?module=members" />;
+  }
+  return <MemberDirectoryView page={result.data} status={input.status} search={input.search} cursor={input.cursor} />;
 }

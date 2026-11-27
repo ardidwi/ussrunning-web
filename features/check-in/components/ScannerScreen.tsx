@@ -9,6 +9,7 @@ import { eventDate } from "@/features/event-registration/model";
 import { readScannerContext, submitCheckIn } from "../api/actions";
 import {
   blockedCode,
+  checkInHref,
   passShape,
   retrySeconds,
   scanLatch,
@@ -106,7 +107,7 @@ export default function ScannerScreen({
         title="Event unavailable."
         description="Choose an available event before scanning."
         action={
-          <LinkButton href="/dashboard/check-in">Choose event</LinkButton>
+          <LinkButton href={checkInHref()}>Choose event</LinkButton>
         }
       />
     );
@@ -115,7 +116,7 @@ export default function ScannerScreen({
       <ServiceFeedback
         code={context.code}
         retry={() => void refresh()}
-        returnTo={`/dashboard/check-in/${eventId}`}
+        returnTo={checkInHref(eventId)}
       />
     );
   const event = context.data,
@@ -130,7 +131,7 @@ export default function ScannerScreen({
           Event status: {event.status.replaceAll("_", " ")}. Check-in
           availability is confirmed by the server when you scan.
         </p>
-        <LinkButton variant="text" href="/dashboard/check-in">
+        <LinkButton variant="text" href={checkInHref()}>
           Change event ↗
         </LinkButton>
       </header>
@@ -174,7 +175,7 @@ export default function ScannerScreen({
                   ? "INSUFFICIENT_PERMISSION"
                   : result.code
               }
-              returnTo={`/dashboard/check-in/${eventId}`}
+              returnTo={checkInHref(eventId)}
             />
           ) : (
             <Button

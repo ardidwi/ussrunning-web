@@ -22,6 +22,11 @@ import { SiteContentWorkspace } from "@/features/site-content-cms/SiteContentWor
 import { PartnersWorkspace } from "@/features/partners-cms/PartnersWorkspace";
 import { MemberScanner } from "@/features/member-scanner/MemberScanner";
 import { MembersWorkspace } from "@/features/members-cms/MembersWorkspace";
+import { RolesWorkspace } from "@/features/members-cms/RolesWorkspace";
+import { ModerationWorkspace } from "@/features/members-cms/ModerationWorkspace";
+import { AdminOverview } from "@/features/cms/AdminOverview";
+import { CheckInWorkspace } from "@/features/cms/CheckInWorkspace";
+import { ADMIN_SLOTS, isAdminSlot } from "@/features/cms/admin-slots";
 import {
   getRevisionHistory,
   getHistorySnapshot,
@@ -54,7 +59,12 @@ export default async function AdminPage({
     content = (
       <ServiceFeedback code="INSUFFICIENT_PERMISSION" returnTo="/admin" />
     );
-  else if (module === "content") {
+  else if (module === "overview") {
+    content = <AdminOverview />;
+  } else if (isAdminSlot(module)) {
+    const Slot = ADMIN_SLOTS[module];
+    content = Slot ? <Slot query={query} /> : <CmsModuleBoundary module={module} />;
+  } else if (module === "content") {
     content = <SiteContentWorkspace />;
   } else if (module === "stories") {
     content = <StoriesWorkspace query={query} />;
@@ -65,7 +75,19 @@ export default async function AdminPage({
   } else if (module === "partners") {
     content = <PartnersWorkspace query={query} />;
   } else if (module === "members") {
-    content = <MembersWorkspace query={query} />;
+    content = (
+      <MembersWorkspace
+        query={query}
+        canManageUsers={access.can("users.manage")}
+        canManageRoles={access.can("roles.manage")}
+      />
+    );
+  } else if (module === "roles") {
+    content = <RolesWorkspace />;
+  } else if (module === "moderation") {
+    content = <ModerationWorkspace query={query} />;
+  } else if (module === "check-in") {
+    content = <CheckInWorkspace query={query} />;
   } else if (module === "member-scanner") {
     content = <MemberScanner />;
   } else if (module === "activity") {

@@ -7,7 +7,7 @@ export const AVATAR_MIMES = ["image/jpeg", "image/png", "image/webp"] as const;
 export type AvatarStatus = "pending_review" | "approved" | "rejected";
 export type MembershipLookup = { photo: string | null; name: string; memberId: string; status: AccountStatus };
 export type IdentityCode = AuthorizationCode | "AVATAR_INVALID" | "AVATAR_CONFLICT" |
-  "AVATAR_UNAVAILABLE" | "PROFILE_NOT_FOUND" | "MEMBER_NOT_FOUND" | "BARCODE_INVALID" |
+  "AVATAR_UNAVAILABLE" | "PROFILE_NOT_FOUND" | "MEMBER_NOT_FOUND" | "BARCODE_INVALID" | "MEMBER_ID_INVALID" |
   "IDENTITY_RATE_LIMITED" | "IDENTITY_UNAVAILABLE" | "PHOTO_REVIEW_INVALID";
 export type IdentityResult<T> = { ok: true; data: T } |
   { ok: false; code: IdentityCode; retryAfterSeconds?: number };

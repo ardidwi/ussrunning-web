@@ -22,6 +22,8 @@ export const CMS_ACCESS: readonly Permission[] = [
   "events.manage",
   "audit.read",
   "users.manage",
+  "members.read",
+  "members.photo.review",
   "members.lookup",
   "roles.manage",
   "settings.manage",

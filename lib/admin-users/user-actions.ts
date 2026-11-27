@@ -13,3 +13,5 @@ export async function getManagedUser(input: unknown) { return run(() => service.
 export async function activateUser(input: unknown) { return run(() => service.activateUser(input)); }
 export async function suspendUser(input: unknown) { return run(() => service.suspendUser(input)); }
 export async function deactivateUser(input: unknown) { return run(() => service.deactivateUser(input)); }
+export async function listMemberDirectory(input: unknown = {}) { return run(() => service.listMemberDirectory(input)); }
+export async function getMemberDirectoryEntry(input: unknown) { return run(() => service.getMemberDirectoryEntry(input)); }
