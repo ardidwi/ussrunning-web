@@ -1,7 +1,7 @@
 import 'server-only';
 import { AccountError } from '@/lib/auth/errors';
 import { AuthorizationError } from '@/lib/authz/errors';
-export type StoryCode = 'STORY_NOT_FOUND' | 'STORY_FORBIDDEN' | 'STORY_CONFLICT' | 'STORY_SLUG_TAKEN' | 'STORY_INVALID_STATE' | 'STORY_INVALID_CONTENT' | 'STORY_INVALID_INPUT' | 'STORY_MEDIA_INVALID' | 'STORY_INVALID_REFERENCE' | 'STORY_NOT_PUBLISHABLE' | 'STORY_UNAVAILABLE';
+export type StoryCode = 'STORY_NOT_FOUND' | 'STORY_FORBIDDEN' | 'STORY_CONFLICT' | 'STORY_SLUG_TAKEN' | 'STORY_INVALID_STATE' | 'STORY_INVALID_CONTENT' | 'STORY_INVALID_INPUT' | 'STORY_MEDIA_INVALID' | 'STORY_INVALID_REFERENCE' | 'STORY_NOT_PUBLISHABLE' | 'STORY_TAXONOMY_IN_USE' | 'STORY_UNAVAILABLE';
 export class StoryError extends Error {
     constructor(public readonly code: StoryCode) { super(code); }
 }

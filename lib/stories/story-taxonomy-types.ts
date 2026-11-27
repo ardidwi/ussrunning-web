@@ -1,0 +1,9 @@
+export type TaxonomyKind = 'category' | 'tag' | 'byline';
+export const TAXONOMY_KINDS = ['category', 'tag', 'byline'] as const satisfies readonly TaxonomyKind[];
+type Base = { id: string; name: string; slug: string; version: number; usageCount: number; updatedAt: string };
+export type StoryCategory = Base & { description: string | null; sortOrder: number; isActive: boolean };
+export type StoryTag = Base;
+export type StoryByline = Base & { roleTitle: string | null; isActive: boolean };
+export type TaxonomyLists = { categories: StoryCategory[]; tags: StoryTag[]; bylines: StoryByline[] };
+export type TaxonomyRecord = StoryCategory | StoryTag | StoryByline;
+export const TAXONOMY_LIMITS = { name: 80, bylineName: 120, slug: 80, description: 600, roleTitle: 120, sortOrder: 1000, list: 200 } as const;

@@ -1,5 +1,6 @@
 "use server";
 import * as service from './story-service';
+import * as taxonomy from './story-taxonomy';
 import { StoryError } from './story-errors';
 import { AccountError } from '@/lib/auth/errors';
 import type { StoryCode } from './story-errors';
@@ -28,3 +29,8 @@ export async function scheduleStory(input: unknown) { return run(() => service.s
 export async function unpublishStory(input: unknown) { return run(() => service.unpublishStory(input)); }
 export async function archiveStory(input: unknown) { return run(() => service.archiveStory(input)); }
 export async function getStoryReferenceData() { return run(() => service.getStoryReferenceData()); }
+export async function getStoryTaxonomy() { return run(() => taxonomy.getStoryTaxonomy()); }
+export async function createTaxonomyRecord(input: unknown) { return run(() => taxonomy.createTaxonomyRecord(input)); }
+export async function updateTaxonomyRecord(input: unknown) { return run(() => taxonomy.updateTaxonomyRecord(input)); }
+export async function deleteTaxonomyRecord(input: unknown) { return run(() => taxonomy.deleteTaxonomyRecord(input)); }
+export async function listPublicStoryCategories() { return run(() => service.listPublicStoryCategories()); }
