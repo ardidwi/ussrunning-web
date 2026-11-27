@@ -22,6 +22,7 @@ import { SiteContentWorkspace } from "@/features/site-content-cms/SiteContentWor
 import { PartnersWorkspace } from "@/features/partners-cms/PartnersWorkspace";
 import { MemberScanner } from "@/features/member-scanner/MemberScanner";
 import { MembersWorkspace } from "@/features/members-cms/MembersWorkspace";
+import { MediaLibraryWorkspace } from "@/features/media/MediaLibraryWorkspace";
 import {
   getRevisionHistory,
   getHistorySnapshot,
@@ -64,6 +65,8 @@ export default async function AdminPage({
     content = <EventWorkspace query={query} />;
   } else if (module === "partners") {
     content = <PartnersWorkspace query={query} />;
+  } else if (module === "media") {
+    content = <MediaLibraryWorkspace query={query} />;
   } else if (module === "members") {
     content = <MembersWorkspace query={query} />;
   } else if (module === "member-scanner") {
