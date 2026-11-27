@@ -37,6 +37,8 @@ export interface NotificationRecord {
     last_error_code: string | null;
     provider: string | null;
     provider_message_id: string | null;
+    envelope_hash?: string | null;
+    claimed_at?: string | null;
 }
 /** Delivery diagnostics, not an address book or email-body disclosure. */
 export interface NotificationDto {

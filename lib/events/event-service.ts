@@ -5,10 +5,17 @@ import { EventError, eventOperation } from "./event-errors";
 import { EVENT_STATUSES } from "./event-policy";
 import { CONTENT_KEYS, validateContent, filters, object, uuid, slug, version, invalid } from "./event-validation";
 import { readPublic, readAdmin, listEvents, writeEvent } from "./event-repository";
+import { resolveMediaAsset } from "@/lib/media/media-service";
 import type { EventDTO, PublicEventDTO, EventPage, EventContent } from "./event-types";
-function publicDTO(dto: EventDTO): PublicEventDTO {
+async function publicDTO(dto: EventDTO): Promise<PublicEventDTO> {
     const { visibility: _visibility, coverMediaId: _cover, ...content } = validateContent(contentFrom(dto));
-    return { ...content, id: dto.id, status: dto.status };
+    let cover: PublicEventDTO["cover"] = null;
+    // Defense in depth on top of the SQL filter: only public CMS media is ever serialized for public pages.
+    if (dto.cover && dto.cover.purpose === 'cms' && dto.cover.visibility === 'public' && dto.cover.status === 'active') {
+        const asset = await resolveMediaAsset(dto.cover);
+        cover = asset.url ? { url: asset.url, altText: asset.altText, width: asset.width, height: asset.height } : null;
+    }
+    return { ...content, id: dto.id, status: dto.status, cover };
 }
 function authorized(value: {
     authorized: boolean;
@@ -16,7 +23,7 @@ function authorized(value: {
     throw new AuthorizationError('INSUFFICIENT_PERMISSION'); }
 function contentFrom(dto: EventDTO): EventContent { return Object.fromEntries(CONTENT_KEYS.map(k => [k, dto[k]])) as unknown as EventContent; }
 export async function getPublicEvent(value: unknown): Promise<PublicEventDTO> { return eventOperation(async () => { const row = await readPublic(slug(value)); if (!row)
-    throw new EventError('EVENT_NOT_FOUND'); return publicDTO(row); }); }
+    throw new EventError('EVENT_NOT_FOUND'); return await publicDTO(row); }); }
 export async function getManagedEvent(value: unknown): Promise<EventDTO> { return eventOperation(async () => { const { account } = await requirePermission('events.manage'); const row = await readAdmin(account.id, uuid(value)); authorized(row); if (!row.data)
     throw new EventError('EVENT_NOT_FOUND'); return row.data; }); }
 async function list(value: unknown, managed: boolean): Promise<EventPage<EventDTO>> {
@@ -24,9 +31,9 @@ async function list(value: unknown, managed: boolean): Promise<EventPage<EventDT
     const f = filters(value, !managed), row = await listEvents(f, actor);
     authorized(row);
     const more = row.items.length > f.limit, items = row.items.slice(0, f.limit), last = items.at(-1);
-    return { items, nextCursor: more && last ? Buffer.from(JSON.stringify({ startsAt: last.startsAt, id: last.id, eventType: f.eventType, status: f.status })).toString('base64url') : null };
+    return { items, nextCursor: more && last ? Buffer.from(JSON.stringify({ startsAt: last.startsAt, id: last.id, eventType: f.eventType, status: f.status, upcoming: f.upcoming })).toString('base64url') : null };
 }
-export async function listPublicEvents(value: unknown = {}): Promise<EventPage<PublicEventDTO>> { return eventOperation(async () => { const page = await list(value, false); return { ...page, items: page.items.map(publicDTO) }; }); }
+export async function listPublicEvents(value: unknown = {}): Promise<EventPage<PublicEventDTO>> { return eventOperation(async () => { const page = await list(value, false); return { ...page, items: await Promise.all(page.items.map(publicDTO)) }; }); }
 export async function listManagedEvents(value: unknown = {}): Promise<EventPage<EventDTO>> { return eventOperation(() => list(value, true)); }
 function result(value: {
     code: string;

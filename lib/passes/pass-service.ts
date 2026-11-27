@@ -8,7 +8,7 @@ import type { EventPassDTO, PassResolution } from './pass-types';
 import { reference, revocation, resolution } from './pass-validation';
 import { candidate, present } from './pass-token';
 import type { PassEffect } from './pass-repository';
-import { passTransaction } from './pass-repository';
+import { passTransaction, issueJobPass } from './pass-repository';
 async function actor(managed:boolean) { return managed ? (await requirePermission('events.manage')).account : await requireActiveAccount(); }
 function check(code:string) {
  if(code==='INSUFFICIENT_PERMISSION') throw new AuthorizationError('INSUFFICIENT_PERMISSION');
@@ -43,4 +43,13 @@ export async function resolveManagedPass(value:unknown):Promise<PassResolution> 
 export async function resolveManagedPassWithEffect<T>(value:unknown,effect:()=>PassEffect<T>) {
  const a=await actor(true),v=resolution(value);
  return passTransaction({actorId:a.id,managed:true,eventId:v.eventId,lookupHash:v.hash,mode:'resolve'},effect());
+}
+
+/**
+ * D4.1 automatic issuance for a confirmed registration, called only by the authenticated notification job.
+ * Server-only and deliberately NOT exported through pass-actions ("use server"), so no browser can invoke it.
+ * Idempotent: an existing pass (active, revoked or expired) is returned as-is and never replaced.
+ */
+export async function issuePassForConfirmedRegistration(eventId:string,registrationId:string){
+ return passOperation(async()=>issueJobPass(registrationId,candidate(eventId,registrationId)));
 }

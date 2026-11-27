@@ -29,3 +29,7 @@ export async function cancelNotification(actorId: string, id: string, version: n
 }[])[0]; if (!row.authorized)
     throw new NotificationError('NOTIFICATION_FORBIDDEN'); if (!row.data)
     throw new NotificationError('NOTIFICATION_CONFLICT'); return row.data; }
+/** Pass state only (never the token/hash): decides whether the confirmed email links the Event Pass. */
+export async function hasActivePass(registrationId: string) { const rows = await query<{
+    active: boolean;
+}>("SELECT EXISTS(SELECT 1 FROM uss.event_passes p WHERE p.registration_id=$1 AND p.status='active' AND p.format_version=1 AND (p.expires_at IS NULL OR p.expires_at>clock_timestamp())) active", [registrationId]); return rows[0]?.active === true; }

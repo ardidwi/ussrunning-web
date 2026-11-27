@@ -24,6 +24,7 @@ export default function RegistrationReference({
   const event: PublicEventDTO = {
     id: "00000000-0000-4000-8000-000000000001",
     slug: "preview-run",
+    cover: null,
     title:
       scenario === "long"
         ? "Fictional community run with a deliberately long title that must wrap without hiding any registration actions"

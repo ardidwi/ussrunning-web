@@ -2,6 +2,7 @@ import ScannerReference from "@/features/check-in/components/ScannerReference";
 import StoryReference from "@/features/stories-cms/StoryReference";
 import GalleryReference from "@/features/gallery-cms/GalleryReference";
 import EventReference from "@/features/events-cms/EventReference";
+import EventOpsReference from "@/features/events-cms/EventOpsReference";
 import PartnerReference from "@/features/partners-cms/PartnerReference";
 import DashboardReference from "@/features/member-dashboard/components/DashboardReference";
 import RegistrationReference from "@/features/event-registration/components/RegistrationReference";
@@ -47,6 +48,7 @@ export default async function DesignSystemPage({
   if (surface === "scanner") return <ScannerReference scenario={scenario} />;
   if (surface === "stories") return <StoryReference scenario={scenario} view={requested} />;
   if (surface === "gallery") return <GalleryReference scenario={scenario} view={requested} />;
+  if (surface === "event-ops") return <EventOpsReference scenario={scenario} view={requested} />;
   if (surface === "events") return <EventReference scenario={scenario} view={requested} />;
   if (surface === "partners") return <PartnerReference scenario={scenario} view={requested} role={role === "member" || role === "super_admin" ? role : "admin"} />;
   if (surface === "pass") return <PassReference scenario={scenario} />;

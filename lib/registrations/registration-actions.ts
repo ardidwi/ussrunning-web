@@ -25,3 +25,6 @@ export async function getCurrentRegistration(value: unknown) { return run(() => 
 export async function getEventRegistration(value: unknown) { return run(() => service.getManagedRegistration(value)); }
 export async function getCurrentRegistrationHistory(value: unknown = {}) { return run(() => service.listOwnRegistrations(value)); }
 export async function getEventRegistrations(value: unknown) { return run(() => service.listManagedRegistrations(value)); }
+export async function getEventParticipants(value: unknown) { return run(() => service.listEventParticipants(value)); }
+export async function cancelEventParticipant(value: unknown) { return run(() => service.cancelParticipantRegistration(value)); }
+export async function exportEventParticipantsCsv(value: unknown) { return run(() => service.exportEventParticipants(value)); }

@@ -34,3 +34,24 @@
 @media(max-width:1000px) { .uss-event-editor-grid { grid-template-columns:1fr; } .uss-event-field-grid { grid-template-columns:1fr; } }
 @media(max-width:600px) { .uss-event-heading,.uss-event-list article { flex-direction:column; } .uss-event-list article,.uss-event-rail { padding:var(--space-4); } .uss-event-filters > div { min-width:100%; } .uss-event-actions .uss-button { flex:1; } }
 @media(prefers-reduced-motion:reduce) { .uss-event-editor *, .uss-event-preview * { scroll-behavior:auto; } }
+/* Event ops workspaces: participants (D2.5) and notification queue (D2.7). */
+.uss-ops { min-width:0; overflow-wrap:anywhere; }
+.uss-ops-muted { color:var(--uss-muted); }
+.uss-ops-email { word-break:break-all; }
+.uss-ops-alert { color:var(--uss-error,#ff6b6b); margin-top:var(--space-4); }
+.uss-ops-toolbar { display:flex; flex-wrap:wrap; gap:var(--space-4); align-items:flex-end; justify-content:space-between; margin-bottom:var(--space-6); }
+.uss-ops-toolbar .uss-event-filters { margin-bottom:0; flex:1 1 320px; min-width:0; }
+.uss-ops-export { display:grid; gap:var(--space-2); justify-items:start; max-width:100%; }
+.uss-ops-export p { margin:0; min-height:1.25rem; max-width:36rem; }
+.uss-ops-list { list-style:none; padding:0; margin:0; display:grid; gap:var(--space-4); }
+.uss-ops-list article { border:1px solid var(--uss-border); background:var(--uss-surface); padding:var(--space-6); display:flex; gap:var(--space-6); justify-content:space-between; align-items:flex-start; }
+.uss-ops-list article > div { min-width:0; flex:1 1 auto; }
+.uss-ops-list h2 { font-size:1.375rem; margin:var(--space-3) 0; overflow-wrap:anywhere; }
+.uss-ops-list p { margin:var(--space-2) 0; line-height:1.5; overflow-wrap:anywhere; }
+.uss-ops-actions { display:flex; flex-wrap:wrap; gap:var(--space-3); flex-shrink:0; }
+.uss-ops-facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,10rem),1fr)); gap:var(--space-2) var(--space-6); margin:var(--space-3) 0 0; }
+.uss-ops-facts dt { color:var(--uss-muted); font-size:.8125rem; }
+.uss-ops-facts dd { margin:0; overflow-wrap:anywhere; }
+@media(max-width:900px) { .uss-ops-list article { flex-direction:column; } }
+@media(max-width:600px) { .uss-ops-list article { padding:var(--space-4); } .uss-ops-actions, .uss-ops-actions .uss-button, .uss-ops-list article > .uss-button, .uss-ops-export, .uss-ops-export .uss-button { width:100%; } }
+.uss-ops .uss-event-heading > a { flex-shrink:0; white-space:nowrap; overflow-wrap:normal; }

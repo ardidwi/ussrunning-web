@@ -39,3 +39,20 @@ export interface RegistrationFilters {
         id: string;
     } | null;
 }
+/** Staff-only participant row (events.manage). Member barcode and event pass token are never included. */
+export interface ParticipantDTO extends ManagedRegistrationDTO {
+    participant: {
+        displayName: string | null;
+        memberId: string | null;
+        email: string | null;
+        checkedInAt: string | null;
+        passStatus: 'active' | 'revoked' | 'expired' | null;
+    };
+}
+export interface ParticipantExport {
+    filename: string;
+    csv: string;
+    rowCount: number;
+    truncated: boolean;
+    maxRows: number;
+}

@@ -70,3 +70,12 @@ export async function passTransaction<T = null>(v:Request,effect?:PassEffect<T>)
  ],{isolationLevel:'ReadCommitted'});
  return (results[4] as Result<T>[])[0];
 }
+export type JobPassCode = 'EVENT_PASS_ISSUED' | 'EVENT_PASS_EXISTS' | 'EVENT_PASS_NOT_ELIGIBLE' | 'PROFILE_INCOMPLETE' | 'EVENT_PASS_NOT_FOUND';
+/** System issuance (D4.1) through the locked SQL decision; no actor because no human initiated it. */
+export async function issueJobPass(registrationId:string,c:{id:string;hash:string;keyId:string}) {
+ const sql=getSql(),results=await sql.transaction([
+  sql.query("SELECT set_config('lock_timeout','15s',true)"),
+  sql.query('SELECT * FROM uss.issue_event_pass_for_job($1,$2,$3,$4)',[registrationId,c.id,c.hash,c.keyId]),
+ ],{isolationLevel:'ReadCommitted'});
+ return (results[1] as {code:JobPassCode;pass_id:string|null}[])[0];
+}
