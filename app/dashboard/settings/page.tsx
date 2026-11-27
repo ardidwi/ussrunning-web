@@ -1,28 +1,22 @@
-import { redirectIncompleteMember } from "@/features/member-onboarding/server";
-import { EmptyState, LinkButton } from "@/components/ui";
 import MemberFeedback from "@/components/dashboard/MemberFeedback";
 import { loadMember } from "@/lib/member/server";
+import { getOwnDeletionStatus } from "@/lib/data-rights/data-rights-actions";
+import { DataRightsSettings } from "@/features/member-dashboard/components/DataRightsSettings";
 export const metadata = { title: "Settings — USS Running" };
+/**
+ * Data-subject rights stay reachable for incomplete profiles: a member without a photo must still
+ * be able to export or delete their data, so this page does not redirect to onboarding.
+ */
 export default async function Page() {
-  await redirectIncompleteMember();
-  const result = await loadMember();
+  const [result, status] = await Promise.all([loadMember(), getOwnDeletionStatus()]);
   if (result.state === "error")
     return <MemberFeedback code={result.code} returnTo="/dashboard/settings" />;
   return (
     <>
       <p className="uss-member-kicker">MY USS / SETTINGS</p>
       <h1>SETTINGS.</h1>
-      <div className="uss-member-panel">
-        <EmptyState
-          title="Settings is coming next."
-          description="Account preferences will be available here. You can update your contact details in Profile."
-          action={
-            <LinkButton href="/dashboard" variant="secondary">
-              Back to overview ↗
-            </LinkButton>
-          }
-        />
-      </div>
+      <p className="uss-dashboard-note">Your contact details live in Profile. Here you can take a copy of your data or ask us to delete your account.</p>
+      <DataRightsSettings initial={status} />
     </>
   );
 }
