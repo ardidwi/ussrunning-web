@@ -2,6 +2,7 @@ import { Badge, Button, EmptyState, Field, LinkButton, Select } from "@/componen
 import { listManagedNotifications } from "@/lib/notifications/notification-actions";
 import { text, type Query } from "@/features/history/query";
 import { NotificationControls } from "./NotificationControls";
+import type { NotificationDto } from "@/lib/notifications/notification-types";
 import { NOTIFICATIONS_MODULE, NOTIFICATION_STATUSES, NOTIFICATION_TYPES, TYPE_LABELS, canCancel, canResend, errorLabel, notificationMessage, notificationsHref, queueTime, statusLabel, statusTone } from "./model";
 
 /**
@@ -13,6 +14,11 @@ export async function NotificationsWorkspace({ query, module = NOTIFICATIONS_MOD
   const status = text(query, "status"), type = text(query, "type"), cursor = text(query, "cursor");
   const invalid = (status && !NOTIFICATION_STATUSES.some(s => s === status)) || (type && !NOTIFICATION_TYPES.some(t => t === type)) || cursor.length > 512;
   const result = invalid ? { ok: false as const, code: "NOTIFICATION_INVALID_TEMPLATE" } : await listManagedNotifications({ limit: 20, ...(status ? { status } : {}), ...(type ? { type } : {}), ...(cursor ? { cursor } : {}) });
+  return <NotificationsView result={result} status={status} type={type} cursor={cursor} module={module} />;
+}
+
+/** Presentational queue (also used by the dev-only design-system reference with fictional data). */
+export function NotificationsView({ result, status, type, cursor, module = NOTIFICATIONS_MODULE }: { result: { ok: true; data: { items: NotificationDto[]; nextCursor: string | null } } | { ok: false; code: string }; status: string; type: string; cursor: string; module?: string }) {
   const base = { ...(status ? { status } : {}), ...(type ? { type } : {}) };
   return <section className="uss-ops" aria-labelledby="notifications-heading">
     <header className="uss-event-heading"><div>
