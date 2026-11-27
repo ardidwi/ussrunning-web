@@ -626,6 +626,20 @@ select.uss-control {
     overflow-y: auto !important;
     align-self: stretch !important;
   }
+  /* Auto margins center content only when the panel has room for it. */
+  .join-shell-v4 > .join-form-panel-v4,
+  .join-shell-v4 > .join-intro-v4 {
+    justify-content: flex-start !important;
+  }
+  .join-shell-v4 > .join-form-panel-v4 > .join-form-stage {
+    margin-block: auto !important;
+  }
+  .join-shell-v4 > .join-intro-v4 > :first-child {
+    margin-top: auto;
+  }
+  .join-shell-v4 > .join-intro-v4 > :last-child {
+    margin-bottom: auto;
+  }
 }
 @media (max-width: 760px) {
   .join-form-head-v4 {
