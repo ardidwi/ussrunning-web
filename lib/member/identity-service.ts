@@ -7,7 +7,8 @@ import { requirePermission } from "@/lib/authz/guards";
 import type { StorageProvider } from "@/lib/media/storage/storage-provider";
 import { avatarStorage, signedAvatar } from "./avatar-storage";
 import { memberBarcode } from "./barcode-contract";
-import { attachAvatar, findMemberByBarcode, reserveAvatarUpload, reviewAvatar as saveReview } from "./identity-repository";
+import { parseMemberIdInput } from "./member-id-contract";
+import { attachAvatar, findMemberByBarcode, findMemberByNumber, reserveAvatarUpload, reviewAvatar as saveReview } from "./identity-repository";
 import { AVATAR_EDGE, AVATAR_MAX_BYTES, AVATAR_MIMES, type IdentityCode, type IdentityResult, type MembershipLookup } from "./identity-types";
 
 class IdentityError extends Error {
@@ -83,6 +84,15 @@ export function createMemberIdentityService(storage: StorageProvider) {
       if (!row.data) throw new IdentityError("MEMBER_NOT_FOUND");
       return { ...row.data, photo: (await signedAvatar(row.data.photo, storage))?.url ?? null };
     },
+
+    /** Manual Member ID entry: same permission, DTO, 30/minute quota and audit trail as barcode scans. */
+    async lookupMemberById(value: unknown): Promise<MembershipLookup> {
+      const { account } = await requirePermission("members.lookup");
+      const row = await findMemberByNumber(account.id, parseMemberIdInput(value));
+      check(row?.code, 60);
+      if (!row.data) throw new IdentityError("MEMBER_NOT_FOUND");
+      return { ...row.data, photo: (await signedAvatar(row.data.photo, storage))?.url ?? null };
+    },
   };
 }
 
@@ -102,4 +112,4 @@ export async function reviewMemberAvatar(value: unknown) {
   return { status: decision };
 }
 
-export const { uploadOwnAvatar, lookupMember } = createMemberIdentityService(avatarStorage);
+export const { uploadOwnAvatar, lookupMember, lookupMemberById } = createMemberIdentityService(avatarStorage);

@@ -91,14 +91,19 @@ export function reviewAvatar(actor: string, target: string, avatarId: string, st
     ) SELECT code FROM decision`, [target, avatarId, status, reason], target);
 }
 
-export function findMemberByBarcode(actor: string, barcode: string | null) {
-  return transaction<{code: string; data: {
+// One 30/minute staff quota covers barcode scans and manual Member ID entry.
+const lookupQuotaUsed = `(SELECT count(*) FROM uss.audit_logs WHERE actor_account_id=$1
+          AND action IN ('member.barcode.looked_up','member.id.looked_up')
+          AND created_at>clock_timestamp()-interval '1 minute')>=30`;
+type LookupRow = {code: string; data: {
     photo: PrivateAvatarRecord | null; name: string; memberId: string; status: AccountStatus;
-  } | null}>(actor, "members.lookup", `
+  } | null};
+
+export function findMemberByBarcode(actor: string, barcode: string | null) {
+  return transaction<LookupRow>(actor, "members.lookup", `
     WITH authority AS (${authority}), quota AS MATERIALIZED (
       SELECT CASE WHEN NOT EXISTS (SELECT 1 FROM authority) THEN 'INSUFFICIENT_PERMISSION'
-        WHEN (SELECT count(*) FROM uss.audit_logs WHERE actor_account_id=$1
-          AND action='member.barcode.looked_up' AND created_at>clock_timestamp()-interval '1 minute')>=30
+        WHEN ${lookupQuotaUsed}
           THEN 'IDENTITY_RATE_LIMITED'
         ELSE 'OK' END AS code
     ), found AS MATERIALIZED (
@@ -118,4 +123,31 @@ export function findMemberByBarcode(actor: string, barcode: string | null) {
     ) SELECT CASE WHEN quota.code<>'OK' THEN quota.code WHEN $3 IS NULL THEN 'BARCODE_INVALID'
       WHEN found.id IS NULL THEN 'MEMBER_NOT_FOUND' ELSE 'OK' END AS code,found.data
     FROM quota LEFT JOIN found ON true`, [barcode]);
+}
+
+/** memberNumber: validated decimal string, or null for an invalid entry (still audited and counted). */
+export function findMemberByNumber(actor: string, memberNumber: string | null) {
+  return transaction<LookupRow>(actor, "members.lookup", `
+    WITH authority AS (${authority}), quota AS MATERIALIZED (
+      SELECT CASE WHEN NOT EXISTS (SELECT 1 FROM authority) THEN 'INSUFFICIENT_PERMISSION'
+        WHEN ${lookupQuotaUsed}
+          THEN 'IDENTITY_RATE_LIMITED'
+        ELSE 'OK' END AS code
+    ), found AS MATERIALIZED (
+      SELECT a.id, jsonb_build_object('name',COALESCE(NULLIF(btrim(p.full_name),''),a.display_name,'USS member'),
+        'memberId',uss.format_member_number(a.member_number),'status',a.status,
+        'photo',CASE WHEN m.id IS NOT NULL THEN ${avatarSql} END) AS data
+      FROM uss.accounts a LEFT JOIN uss.member_profiles p ON p.account_id=a.id
+      LEFT JOIN uss.media_assets m ON m.id=p.avatar_media_id AND p.avatar_status='approved'
+        AND m.uploaded_by=a.id AND m.purpose='member_avatar' AND m.status='active'
+      WHERE a.member_number=$3::bigint AND (SELECT code FROM quota)='OK'
+    ), audit AS (
+      INSERT INTO uss.audit_logs(actor_account_id,action,entity_type,entity_id,change_summary)
+      SELECT $1,'member.id.looked_up','member_profile',found.id,
+        jsonb_build_object('outcome',CASE WHEN found.id IS NOT NULL THEN 'found'
+          WHEN $3 IS NULL THEN 'invalid' ELSE 'not_found' END)
+      FROM quota LEFT JOIN found ON true WHERE quota.code='OK'
+    ) SELECT CASE WHEN quota.code<>'OK' THEN quota.code WHEN $3 IS NULL THEN 'MEMBER_ID_INVALID'
+      WHEN found.id IS NULL THEN 'MEMBER_NOT_FOUND' ELSE 'OK' END AS code,found.data
+    FROM quota LEFT JOIN found ON true`, [memberNumber]);
 }
