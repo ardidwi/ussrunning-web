@@ -32,3 +32,10 @@ GRANT EXECUTE ON FUNCTION uss.manage_role(uuid,uuid,text,text,integer,text) TO :
 
 -- Member Identity: issuance by account provisioning. The bootstrap function remains owner-only.
 GRANT USAGE ON SEQUENCE uss.member_number_sequence TO :"app_role";
+
+-- D1.6 data rights (026). Member/queue functions are invoker; execute_account_deletion is SECURITY
+-- DEFINER (erasure needs DELETE, which the runtime role never receives) and re-checks super_admin itself.
+GRANT EXECUTE ON FUNCTION uss.data_rights_utc(timestamptz),uss.data_rights_has_role(uuid,text),uss.data_rights_authorized(uuid,text[]),uss.data_rights_usable_super_admins(),uss.data_deletion_request_json(uss.data_deletion_requests),uss.format_member_number(bigint) TO :"app_role";
+GRANT EXECUTE ON FUNCTION uss.request_account_deletion(uuid,text[],text,text),uss.cancel_account_deletion(uuid,text[],uuid,integer),uss.decide_account_deletion(uuid,text[],uuid,text,integer,text),uss.execute_account_deletion(uuid,uuid,integer),uss.record_erasure_followup(uuid,uuid,text,uuid,text,text) TO :"app_role";
+REVOKE UPDATE ON uss.data_erasure_objects FROM :"app_role";
+GRANT UPDATE (status,attempts,last_error_code,last_attempt_at,deleted_at) ON uss.data_erasure_objects TO :"app_role";
