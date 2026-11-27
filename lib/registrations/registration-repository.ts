@@ -10,7 +10,7 @@ const versionSql = "encode(sha256(convert_to((to_jsonb(r)||jsonb_build_object('r
 const utc = (column: string) => `to_char(${column} AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"')`;
 const dto = `jsonb_build_object('id',r.id,'accountId',r.account_id,'status',r.status,'registeredAt',${utc('r.registered_at')},'cancelledAt',${utc('r.cancelled_at')},'updatedAt',${utc('r.updated_at')},'version',${versionSql},
  'event',jsonb_build_object('id',e.id,'slug',e.slug,'title',e.title,'startsAt',${utc('e.starts_at')},'timezone',e.timezone,'status',e.status))`;
-export async function mutateRegistration(actorId: string, eventId: string, registrationId: string | null, managed: boolean, mode: 'register' | 'cancel', expectedVersion: string | null = null) {
+export async function mutateRegistration(actorId: string, eventId: string, registrationId: string | null, managed: boolean, mode: 'register' | 'cancel', expectedVersion: string | null = null, reason: string | null = null) {
     const statement = `WITH authority AS MATERIALIZED (${authority}), event AS MATERIALIZED(SELECT * FROM uss.events WHERE id=$4),
  current AS MATERIALIZED(SELECT r.*,${versionSql} AS token FROM uss.event_registrations r WHERE r.event_id=$4 AND CASE WHEN $6='register' THEN r.account_id=$1 ELSE r.id=$5 END FOR UPDATE),
  occupancy AS MATERIALIZED(SELECT count(*)::bigint n FROM uss.event_registrations r WHERE r.event_id=$4 AND (r.status='confirmed' OR EXISTS(SELECT 1 FROM uss.check_ins c WHERE c.registration_id=r.id))),
@@ -39,7 +39,7 @@ export async function mutateRegistration(actorId: string, eventId: string, regis
  changes AS MATERIALIZED(SELECT * FROM inserted UNION ALL SELECT * FROM updated),
  audit AS (INSERT INTO uss.audit_logs(actor_account_id,action,entity_type,entity_id,change_summary)
  SELECT $1,CASE WHEN $6='cancel' THEN 'registration.cancelled' WHEN EXISTS(SELECT 1 FROM current) THEN 'registration.updated' ELSE 'registration.created' END,
- 'registration',r.id,jsonb_build_object('changedFields',ARRAY['status'],'eventId',$4,'fromStatus',(SELECT status FROM current),'toStatus',r.status,'initiator',CASE WHEN $2 THEN 'admin' ELSE 'owner' END)
+ 'registration',r.id,jsonb_build_object('changedFields',ARRAY['status'],'eventId',$4,'fromStatus',(SELECT status FROM current),'toStatus',r.status,'initiator',CASE WHEN $2 THEN 'admin' ELSE 'owner' END)||CASE WHEN $10::text IS NULL THEN '{}'::jsonb ELSE jsonb_build_object('reason',$10::text) END
  FROM changes r RETURNING id),
  resolved AS (SELECT * FROM changes UNION ALL SELECT id,event_id,account_id,status,registered_at,cancelled_at,source,admin_note,created_at,updated_at FROM current WHERE NOT EXISTS(SELECT 1 FROM changes))
  SELECT decision.code,(SELECT ${dto} FROM resolved r JOIN event e ON e.id=r.event_id WHERE decision.code='OK') AS data FROM decision`;
@@ -49,7 +49,7 @@ export async function mutateRegistration(actorId: string, eventId: string, regis
         sql.query('SELECT ar.account_id FROM uss.account_roles ar JOIN uss.roles role ON role.id=ar.role_id WHERE ar.account_id=$1 FOR SHARE OF ar,role', [actorId]),
         // Separate statement: READ COMMITTED mutation/COUNT gets a fresh snapshot AFTER event lock wait.
         sql.query('SELECT id FROM uss.events WHERE id=$1 FOR UPDATE', [eventId]),
-        sql.query(statement, [actorId, managed, roles, eventId, registrationId, mode, CANCELLABLE_STATES, CANCELLABLE_EVENT_STATES, expectedVersion]),
+        sql.query(statement, [actorId, managed, roles, eventId, registrationId, mode, CANCELLABLE_STATES, CANCELLABLE_EVENT_STATES, expectedVersion, managed && mode === 'cancel' ? reason : null]),
     ], { isolationLevel: 'ReadCommitted' });
     return (results[4] as {
         code: string;
@@ -74,5 +74,42 @@ export async function listRegistrations(actorId: string, managed: boolean, f: Re
  AND ($6::timestamptz IS NULL OR r.registered_at<$6 OR (r.registered_at=$6 AND r.id>$7::uuid))
  ORDER BY r.registered_at DESC,r.id ASC LIMIT $8)
  SELECT EXISTS(SELECT 1 FROM authority) authorized,COALESCE((SELECT jsonb_agg(data ORDER BY at DESC,id ASC) FROM page),'[]') items`, [actorId, managed, roles, f.eventId, f.status, f.cursor?.at ?? null, f.cursor?.id ?? null, f.limit + 1]);
+    return rows[0];
+}
+
+export interface ParticipantIdentityRow { registration_id: string; display_name: string | null; member_id: string; email: string; checked_in_at: string | null; pass_status: string | null }
+const participantColumns = `r.id registration_id,COALESCE(NULLIF(btrim(p.full_name),''),a.display_name) display_name,uss.format_member_number(a.member_number) member_id,a.email::text email,
+ ${utc('c.checked_in_at')} checked_in_at,ep.status pass_status`;
+const participantJoins = `JOIN uss.accounts a ON a.id=r.account_id LEFT JOIN uss.member_profiles p ON p.account_id=a.id
+ LEFT JOIN uss.check_ins c ON c.registration_id=r.id LEFT JOIN uss.event_passes ep ON ep.registration_id=r.id`;
+/** Staff-only identity for one bounded page of registrations already returned by listRegistrations. */
+export async function readParticipantIdentities(actorId: string, eventId: string, registrationIds: readonly string[]) {
+    const rows = await query<{
+        authorized: boolean;
+        items: ParticipantIdentityRow[];
+    }>(`WITH authority AS (${authority}) SELECT EXISTS(SELECT 1 FROM authority) authorized,
+ COALESCE((SELECT jsonb_agg(x) FROM (SELECT ${participantColumns} FROM uss.event_registrations r ${participantJoins}
+ WHERE EXISTS(SELECT 1 FROM authority) AND r.event_id=$4 AND r.id=ANY($5::uuid[]) LIMIT ${REGISTRATION_POLICY.maxLimit}) x),'[]') items`, [actorId, true, roles, eventId, registrationIds]);
+    return rows[0];
+}
+export interface ParticipantExportRow extends ParticipantIdentityRow { status: string; registered_at: string; cancelled_at: string | null }
+/**
+ * Bounded export (limit+1 rows read to detect truncation). Authorization and the audit record are part of the same
+ * statement: no authority, no rows and no audit; an audit failure aborts the export.
+ */
+export async function exportParticipants(actorId: string, eventId: string, status: string | null, limit: number) {
+    const rows = await query<{
+        authorized: boolean;
+        found: boolean;
+        items: ParticipantExportRow[];
+    }>(`WITH authority AS MATERIALIZED (${authority}), event AS MATERIALIZED(SELECT id FROM uss.events WHERE id=$4 AND EXISTS(SELECT 1 FROM authority)),
+ picked AS MATERIALIZED(SELECT ${participantColumns},r.status,${utc('r.registered_at')} registered_at,${utc('r.cancelled_at')} cancelled_at,r.registered_at sort_at
+  FROM uss.event_registrations r ${participantJoins} WHERE EXISTS(SELECT 1 FROM event) AND r.event_id=$4 AND ($5::text IS NULL OR r.status=$5)
+  ORDER BY r.registered_at,r.id LIMIT $6),
+ audit AS (INSERT INTO uss.audit_logs(actor_account_id,action,entity_type,entity_id,change_summary)
+  SELECT $1,'event.participants_exported','event',$4,jsonb_build_object('format','csv','statusFilter',$5::text,'rowCount',LEAST((SELECT count(*) FROM picked),$6-1),'truncated',(SELECT count(*) FROM picked)>=$6)
+  FROM event RETURNING id)
+ SELECT EXISTS(SELECT 1 FROM authority) authorized,EXISTS(SELECT 1 FROM event) found,
+ COALESCE((SELECT jsonb_agg(to_jsonb(picked)-'sort_at' ORDER BY sort_at,registration_id) FROM picked),'[]') items`, [actorId, true, roles, eventId, status, limit + 1]);
     return rows[0];
 }

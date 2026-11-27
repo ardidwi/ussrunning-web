@@ -11,3 +11,4 @@ OPERATIONAL_AUDIT_ACTIONS.push('partner.activated','partner.deactivated',...['at
 OPERATIONAL_AUDIT_ACTIONS.push('site_content.unpublished');
 
 OPERATIONAL_AUDIT_ACTIONS.push('notification.cancelled','notification.retry_requested');
+OPERATIONAL_AUDIT_ACTIONS.push('notification.failed');

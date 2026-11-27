@@ -22,6 +22,23 @@ export function uuid(value: unknown): string { if (typeof value !== 'string' || 
 export function booking(value: unknown) { const v = input(value, ['eventId']); return { eventId: uuid(v.eventId) }; }
 export function cancellation(value: unknown) { const v = input(value, ['eventId', 'registrationId', 'expectedVersion']); if (typeof v.expectedVersion !== 'string' || !/^[0-9a-f]{64}$/.test(v.expectedVersion))
     bad(); return { eventId: uuid(v.eventId), registrationId: uuid(v.registrationId), expectedVersion: v.expectedVersion }; }
+/** Optional for the generic managed action (backward compatible); the participants workspace requires it. */
+export function reason(value: unknown, required: boolean): string | null {
+    if (value === undefined || value === null || value === '') {
+        if (required)
+            bad();
+        return null;
+    }
+    if (typeof value !== 'string')
+        bad();
+    const v = value.trim().replace(/\s+/g, ' ');
+    if (v.length < 5 || v.length > REGISTRATION_POLICY.maxReasonLength || /[<>\x00-\x1f]/.test(v))
+        bad();
+    return v;
+}
+export function managedCancellation(value: unknown, requireReason: boolean) { const v = input(value, ['eventId', 'registrationId', 'expectedVersion', 'reason']); return { ...cancellation({ eventId: v.eventId, registrationId: v.registrationId, expectedVersion: v.expectedVersion }), reason: reason(v.reason, requireReason) }; }
+export function participantExport(value: unknown) { const v = input(value, ['eventId', 'status']); if (v.status != null && !REGISTRATION_STATES.some(s => s === v.status))
+    bad(); return { eventId: uuid(v.eventId), status: (v.status ?? null) as string | null }; }
 export function detail(value: unknown) { const v = input(value, ['eventId', 'registrationId']); return { eventId: uuid(v.eventId), registrationId: uuid(v.registrationId) }; }
 export function filters(value: unknown, scope: string, managed: boolean): RegistrationFilters {
     const v = input(value, ['eventId', 'limit', 'cursor', 'status']), limit = v.limit ?? REGISTRATION_POLICY.defaultLimit;
