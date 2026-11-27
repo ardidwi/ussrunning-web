@@ -32,3 +32,8 @@ GRANT EXECUTE ON FUNCTION uss.manage_role(uuid,uuid,text,text,integer,text) TO :
 
 -- Member Identity: issuance by account provisioning. The bootstrap function remains owner-only.
 GRANT USAGE ON SEQUENCE uss.member_number_sequence TO :"app_role";
+
+-- D3 CMS media: taxonomy records may be deleted only when unreferenced (FK RESTRICT + service check).
+-- Upload intents and media rows stay append-only (no DELETE grant); the CMS purpose guard is an invoker trigger.
+GRANT DELETE ON uss.categories,uss.tags,uss.story_bylines,uss.story_tags TO :"app_role";
+GRANT EXECUTE ON FUNCTION uss.jsonb_media_ids(jsonb) TO :"app_role";
