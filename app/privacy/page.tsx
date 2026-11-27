@@ -245,6 +245,34 @@ export default function PrivacyPage() {
                   ask us to delete it, subject to limited information we may need to
                   retain to record your opt-out or comply with law.
                 </p>
+                <aside className="privacy-pending" aria-labelledby="retention-draft-heading" data-status="pending-owner-approval">
+                  <p className="kicker" id="retention-draft-heading">DRAFT — PENDING OWNER APPROVAL</p>
+                  <p>
+                    The following describes how account export and deletion currently work.
+                    It is a working draft that has not yet been approved and is not final
+                    legal text.
+                  </p>
+                  <ul>
+                    <li>
+                      Signed-in members can download a copy of their own account data from
+                      Settings, and can ask for their account to be deleted there.
+                    </li>
+                    <li>
+                      Deletion requests are reviewed by a USS super admin. Members can cancel a
+                      request until it is carried out.
+                    </li>
+                    <li>
+                      When a request is carried out, your profile, profile photo, contact and
+                      emergency details, registration answers and the addresses on messages we
+                      sent you are erased, and your account is closed.
+                    </li>
+                    <li>
+                      We keep a limited record without your contact details: security and audit
+                      logs, anonymised event attendance, and a note that the request was
+                      completed. How long these are kept is still to be decided.
+                    </li>
+                  </ul>
+                </aside>
               </div>
             </section>
 

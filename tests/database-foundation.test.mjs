@@ -33,8 +33,8 @@ before(async () => {
 after(async () => { await pg.close(); });
 test('fresh migrations create all foundation tables and only three role seeds', async () => {
   const rows = await query("SELECT tablename FROM pg_tables WHERE schemaname='uss'");
-  assert.equal(rows.length,35); // 32 base +newsletter_subscriptions (022) +media_upload_intents, +story_bylines (024)
-  for (const table of ['galleries','gallery_revisions','newsletter_subscriptions','media_upload_intents','story_bylines']) assert.ok(rows.some(r=>r.tablename===table));
+  assert.equal(rows.length,37); // 32 base +newsletter_subscriptions (022) +media_upload_intents, +story_bylines (024) +data_deletion_requests, +data_erasure_objects (026)
+  for (const table of ['galleries','gallery_revisions','newsletter_subscriptions','media_upload_intents','story_bylines','data_deletion_requests','data_erasure_objects']) assert.ok(rows.some(r=>r.tablename===table));
   assert.deepEqual((await query('SELECT code FROM uss.roles ORDER BY code')).map(r=>r.code),['admin','member','super_admin']);
   assert.equal((await query('SELECT * FROM public.legacy_sentinel'))[0].id,1);
   assert.equal((await query('SELECT count(*)::int AS n FROM uss_migrations.schema_migrations'))[0].n,migrations.length);

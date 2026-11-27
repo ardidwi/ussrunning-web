@@ -36,3 +36,122 @@
     flex-direction: column;
   }
 }
+/* Data rights (D1.6): member settings and the super-admin queue share these blocks. */
+.uss-data-rights {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+.uss-data-rights-panel > h2 {
+  font-size: var(--uss-type-section);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 0;
+}
+.uss-data-rights-panel > p,
+.uss-data-rights-effects p,
+.uss-data-rights-request > p {
+  color: var(--uss-muted);
+  line-height: 1.55;
+  max-width: 62ch;
+}
+.uss-data-rights-notice {
+  margin: var(--space-4) 0 0;
+  font-size: var(--uss-type-small);
+  line-height: 1.5;
+}
+.uss-data-rights-notice:empty {
+  display: none;
+}
+.uss-data-rights-request {
+  border: 1px solid var(--uss-border);
+  padding: var(--space-4);
+  margin: var(--space-4) 0;
+  min-width: 0;
+}
+.uss-data-rights-request-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: space-between;
+}
+.uss-data-rights-facts {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 0;
+}
+.uss-data-rights-facts div {
+  display: grid;
+  grid-template-columns: minmax(7rem, max-content) minmax(0, 1fr);
+  gap: var(--space-2);
+}
+.uss-data-rights-facts dt {
+  color: var(--uss-muted);
+  font-size: var(--uss-type-small);
+}
+.uss-data-rights-facts dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.uss-data-rights-form {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  max-width: 40rem;
+}
+.uss-data-rights-effects {
+  border-left: 3px solid var(--uss-danger);
+  padding-left: var(--space-4);
+}
+.uss-data-rights-effects ul {
+  margin: var(--space-2) 0;
+  padding-left: 1.1rem;
+  line-height: 1.55;
+}
+.uss-data-rights-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+.uss-data-rights-actions .uss-button,
+.uss-data-rights-panel .uss-button {
+  margin-top: 0;
+}
+.uss-data-rights-queue {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-4) 0;
+  display: grid;
+  gap: var(--space-4);
+}
+.uss-data-rights-filter {
+  display: grid;
+  margin-top: var(--space-4);
+  gap: var(--space-2);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  align-items: end;
+}
+@media (max-width: 430px) {
+  .uss-data-rights-facts div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .uss-data-rights-actions .uss-button {
+    width: 100%;
+  }
+}
+/* Privacy page retention draft (D1.6): visibly marked as not final legal text. */
+.privacy-pending {
+  margin-top: 20px;
+  padding: 18px 20px;
+  border: 1px dashed #8a7a3a;
+  background: rgba(255, 214, 102, 0.06);
+  max-width: 830px;
+}
+.privacy-pending .kicker {
+  color: #ffd666;
+  margin-bottom: 8px;
+}
