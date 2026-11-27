@@ -115,3 +115,6 @@
 .uss-story-category-filter a[aria-current="page"]{background:var(--uss-red,#ed2024);border-color:var(--uss-red,#ed2024);color:#fff}
 .uss-story-filter-note{margin-bottom:1rem;opacity:.8}
 .uss-article-tags{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem;padding:0;margin:2rem 0;font-size:.85rem;opacity:.8}
+.uss-media-picker-search{display:flex;flex-wrap:wrap;gap:var(--space-2);align-items:center;margin-top:var(--space-4)}
+.uss-media-picker-search .uss-input,.uss-media-picker-search input{flex:1 1 12rem;min-width:0}
+.uss-media-picker-link{font-size:var(--uss-type-small);min-height:44px;display:inline-flex;align-items:center}

@@ -7,7 +7,7 @@ import type { MediaCode } from "@/lib/media/media-errors";
 import type { AccountErrorCode } from "@/lib/auth/errors";
 export type MediaListResult = { ok: true; data: MediaPage } | { ok: false; code: MediaCode | AccountErrorCode };
 /** Read-only BE-11 adapter. Storage/upload semantics remain in the backend service. */
-export async function listPickerMedia(cursor?: string): Promise<MediaListResult> {
-  try { return { ok: true, data: await listMediaAssets({ limit: 20, status: "active", ...(cursor ? { cursor } : {}) }) }; }
+export async function listPickerMedia(cursor?: string, q?: string): Promise<MediaListResult> {
+  try { return { ok: true, data: await listMediaAssets({ limit: 20, status: "active", ...(cursor ? { cursor } : {}), ...(q ? { q } : {}) }) }; }
   catch (error) { return { ok: false, code: error instanceof MediaError || error instanceof AccountError ? error.code : "MEDIA_UNAVAILABLE" }; }
 }
