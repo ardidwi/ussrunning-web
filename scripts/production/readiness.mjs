@@ -18,7 +18,8 @@ const REQUIRED = [
   'AWS_SECRET_ACCESS_KEY',
   'MEDIA_PUBLIC_BUCKET_NAME',
   'MEDIA_PRIVATE_BUCKET_NAME',
-  'MEDIA_PRIVATE_URL_TTL_SECONDS'
+  'MEDIA_PRIVATE_URL_TTL_SECONDS',
+  'CRON_SECRET'
 ];
 
 function required(env, name, errors) {
@@ -58,6 +59,8 @@ export function validateProductionEnv(env = process.env) {
   if (env.MEDIA_PUBLIC_BUCKET_NAME.trim() === env.MEDIA_PRIVATE_BUCKET_NAME.trim()) errors.push('Public and private media buckets must differ.');
   const mediaTtl = Number(env.MEDIA_PRIVATE_URL_TTL_SECONDS);
   if (!Number.isInteger(mediaTtl) || mediaTtl < 60 || mediaTtl > 900) errors.push('MEDIA_PRIVATE_URL_TTL_SECONDS must be an integer from 60 to 900.');
+
+  if (env.CRON_SECRET.trim().length < 32) errors.push('CRON_SECRET must be at least 32 characters.');
 
   let keys;
   try { keys = JSON.parse(env.EVENT_PASS_TOKEN_KEYS); }

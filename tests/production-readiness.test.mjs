@@ -21,6 +21,7 @@ function env(overrides = {}) {
     MEDIA_PUBLIC_BUCKET_NAME: 'uss-media',
     MEDIA_PRIVATE_BUCKET_NAME: 'uss-media-private',
     MEDIA_PRIVATE_URL_TTL_SECONDS: '300',
+    CRON_SECRET: 'cron_secret_fixture_only_0123456789abcdef',
     ...overrides
   };
 }
@@ -66,7 +67,9 @@ test('rejects invalid or insecure media storage configuration', () => {
     [{ MEDIA_PRIVATE_BUCKET_NAME: 'uss-media' }, 'must differ'],
     [{ MEDIA_PRIVATE_URL_TTL_SECONDS: '59' }, 'MEDIA_PRIVATE_URL_TTL_SECONDS'],
     [{ MEDIA_PRIVATE_URL_TTL_SECONDS: '901' }, 'MEDIA_PRIVATE_URL_TTL_SECONDS'],
-    [{ MEDIA_PRIVATE_URL_TTL_SECONDS: 'not-a-number' }, 'MEDIA_PRIVATE_URL_TTL_SECONDS']
+    [{ MEDIA_PRIVATE_URL_TTL_SECONDS: 'not-a-number' }, 'MEDIA_PRIVATE_URL_TTL_SECONDS'],
+    [{ CRON_SECRET: 'too-short' }, 'CRON_SECRET'],
+    [{ CRON_SECRET: '' }, 'CRON_SECRET']
   ];
   for (const [overrides, expected] of cases) {
     assert.ok(validateProductionEnv(env(overrides)).some(message => message.includes(expected)), expected);
