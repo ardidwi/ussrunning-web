@@ -110,13 +110,13 @@ async function fakeCameraFromCard(filename) {
 
       const scanner = await open(browser, fixture + "?surface=scanner", width);
       await scanner.getByRole("textbox", { name: "Member barcode", exact: true }).fill(barcode);
-      await scanner.getByRole("button", { name: "Look up member" }).click();
+      await scanner.getByRole("button", { name: "Look up barcode", exact: true }).click();
       await scanner.getByRole("heading", { name: "Synthetic Runner" }).waitFor();
       assert.equal(await scanner.getByRole("region", { name: "Scan result" }).evaluate(node => node === document.activeElement), true);
       await record(scanner, "scanner-result-" + width, width === 320 || width === 1440);
       await scanner.getByRole("button", { name: "Scan another member" }).click();
       await scanner.getByRole("textbox", { name: "Member barcode", exact: true }).fill("USS-000123");
-      await scanner.getByRole("button", { name: "Look up member" }).click();
+      await scanner.getByRole("button", { name: "Look up barcode", exact: true }).click();
       await scanner.getByRole("alert").filter({ hasText: "No member matched" }).waitFor();
       await record(scanner, "scanner-no-match-" + width);
       await scanner.close();
