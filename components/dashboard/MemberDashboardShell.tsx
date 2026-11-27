@@ -116,7 +116,7 @@ export default function MemberDashboardShell({
               <PermissionGate permission="events.manage">
                 <Link
                   className="uss-member-back uss-scanner-nav"
-                  href="/dashboard/check-in"
+                  href="/admin?module=check-in"
                   aria-current={
                     currentPath.startsWith("/dashboard/check-in")
                       ? "page"
@@ -160,7 +160,7 @@ export default function MemberDashboardShell({
             <PermissionGate permission="events.manage">
               <Link
                 className="uss-member-back uss-scanner-nav"
-                href="/dashboard/check-in"
+                href="/admin?module=check-in"
                 aria-current={
                   currentPath.startsWith("/dashboard/check-in")
                     ? "page"

@@ -1,16 +1,8 @@
-import ScannerScreen from "@/features/check-in/components/ScannerScreen";
-import { readScannerContext } from "@/features/check-in/api/actions";
-export default async function ScannerPage({
-  params,
-}: {
-  params: Promise<{ eventId: string }>;
-}) {
+import { redirect } from "next/navigation";
+import { checkInHref } from "@/features/check-in/model";
+
+/** D2.10: legacy per-event scanner URL; the admin workspace re-validates the event and permission. */
+export default async function LegacyScannerPage({ params }: { params: Promise<{ eventId: string }> }) {
   const { eventId } = await params;
-  return (
-    <ScannerScreen
-      key={eventId}
-      eventId={eventId}
-      initial={await readScannerContext(eventId)}
-    />
-  );
+  redirect(checkInHref(eventId));
 }
