@@ -53,8 +53,8 @@ test('public cover resolves only active public CMS media',async()=>{const t=type
  const none=await insert({type:t+'-none'});assert.equal(good(await events.getPublicEventDetail(none.slug)).cover,null);});
 
 test('legacy event row pointing at a member avatar never exposes or signs it publicly',async()=>{const av=await avatar(),e=await insert({type:type+'-legacy'});
- // Bypass application validation to simulate pre-hotfix data.
- await query('UPDATE uss.events SET cover_media_id=$2 WHERE id=$1',[e.id,av]);signed.length=0;
+ // Bypass application validation and the migration-023 DB purpose guard (disabled only for this fixture write) to simulate pre-hotfix data.
+ await query('ALTER TABLE uss.events DISABLE TRIGGER event_cms_media_guard');try{await query('UPDATE uss.events SET cover_media_id=$2 WHERE id=$1',[e.id,av]);}finally{await query('ALTER TABLE uss.events ENABLE TRIGGER event_cms_media_guard');}signed.length=0;
  const detail=good(await events.getPublicEventDetail(e.slug)),list=good(await events.getPublicEventList({eventType:type+'-legacy'}));
  assert.equal(detail.cover,null);assert.equal(list.items[0].cover,null);assert.equal(signed.some(k=>k.startsWith('member-avatars/')),false);assert.ok(!JSON.stringify([detail,list]).includes(av));});
 
