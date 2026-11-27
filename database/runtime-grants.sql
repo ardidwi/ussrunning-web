@@ -36,3 +36,7 @@ GRANT USAGE ON SEQUENCE uss.member_number_sequence TO :"app_role";
 -- D2.6/D4.1 (021): scheduled delivery claim and automatic pass issuance are invoker functions over existing table grants.
 GRANT EXECUTE ON FUNCTION uss.claim_notification_for_job(uuid,text,text,integer,integer),uss.issue_event_pass_for_job(uuid,uuid,text,text) TO :"app_role";
 -- 022: uss.newsletter_subscriptions is covered by the table grant above (SELECT/INSERT/UPDATE, no DELETE). Backfill stays owner-only.
+-- D3 CMS media: taxonomy records may be deleted only when unreferenced (FK RESTRICT + service check).
+-- Upload intents and media rows stay append-only (no DELETE grant); the CMS purpose guard is an invoker trigger.
+GRANT DELETE ON uss.categories,uss.tags,uss.story_bylines,uss.story_tags TO :"app_role";
+GRANT EXECUTE ON FUNCTION uss.jsonb_media_ids(jsonb) TO :"app_role";

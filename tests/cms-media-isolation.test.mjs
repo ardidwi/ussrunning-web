@@ -82,9 +82,13 @@ test('site content media: avatar rejected exactly like an unknown media id', asy
 test('legacy rows pointing at an avatar never yield a signed avatar URL', async()=>{await admin();const a=await avatar();
  const s=good(await stories.createStory({title:'Legacy '+randomUUID(),body:['Body'],contentType:'editorial',visibility:'private',coverMediaId:await cms()}));
  const g=good(await galleries.createGallery({title:'Legacy '+randomUUID(),visibility:'private',coverMediaId:await cms()}));
- // Simulate data written before the hotfix (bypasses application validation).
- await query('UPDATE uss.stories SET cover_media_id=$2 WHERE id=$1',[s.id,a.id]);await query('UPDATE uss.galleries SET cover_media_id=$2 WHERE id=$1',[g.id,a.id]);
- await query('INSERT INTO uss.gallery_items(gallery_id,media_asset_id,sort_order) VALUES($1,$2,1)',[g.id,a.id]);
+ // Simulate data written before the hotfix (bypasses application validation and, for rows that predate
+ // migration 023, the DB purpose guard — which is disabled only for this fixture write).
+ const guards=[['stories','story_cms_media_guard'],['galleries','gallery_cms_media_guard'],['gallery_items','gallery_item_cms_media_guard']];
+ for(const [t,trig]of guards)await pg.exec(`ALTER TABLE uss.${t} DISABLE TRIGGER ${trig}`);
+ try{await query('UPDATE uss.stories SET cover_media_id=$2 WHERE id=$1',[s.id,a.id]);await query('UPDATE uss.galleries SET cover_media_id=$2 WHERE id=$1',[g.id,a.id]);
+ await query('INSERT INTO uss.gallery_items(gallery_id,media_asset_id,sort_order) VALUES($1,$2,1)',[g.id,a.id]);}
+ finally{for(const [t,trig]of guards)await pg.exec(`ALTER TABLE uss.${t} ENABLE TRIGGER ${trig}`);}
  signed.length=0;
  const managed=[good(await stories.getManagedStory({id:s.id})),good(await galleries.getManagedGallery({id:g.id})),good(await galleries.listManagedGalleryItems({id:g.id}))];
  for(const value of managed){assert.equal(JSON.stringify(value).includes(a.key),false);assert.equal(JSON.stringify(value).includes(a.id)&&urls(value).length>0&&urls(value).some(u=>u.includes('member-avatars/')),false);}
