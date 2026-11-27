@@ -22,6 +22,11 @@ export function PublicEventDetail({
         <p>Public event</p>
         {event.summary && <p>{event.summary}</p>}
       </header>
+      {event.cover?.url ? (
+        <figure className="uss-event-cover">
+          <img src={event.cover.url} alt={event.cover.altText || ""} width={event.cover.width ?? undefined} height={event.cover.height ?? undefined} decoding="async" fetchPriority="high" />
+        </figure>
+      ) : null}
       <div className="uss-event-detail-grid">
         <section aria-label="Event information">
           <h2>The run</h2>

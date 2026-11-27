@@ -94,8 +94,11 @@ export function version(value: unknown): string { if (typeof value !== "string" 
     invalid(); return value; }
 export function filters(value: unknown, publicOnly: boolean): EventFilters {
     const v = object(value);
-    if (Object.keys(v).some(k => !["limit", "cursor", "eventType", ...(publicOnly ? [] : ["status"])].includes(k)))
+    if (Object.keys(v).some(k => !["limit", "cursor", "eventType", "upcoming", ...(publicOnly ? [] : ["status"])].includes(k)))
         invalid();
+    if (v.upcoming !== undefined && typeof v.upcoming !== "boolean")
+        invalid();
+    const upcoming = v.upcoming === true;
     const limit = v.limit ?? EVENT_POLICY.defaultLimit;
     if (!Number.isInteger(limit) || Number(limit) < 1 || Number(limit) > EVENT_POLICY.maxLimit)
         invalid();
@@ -110,9 +113,9 @@ export function filters(value: unknown, publicOnly: boolean): EventFilters {
             invalid();
         try {
             const c = object(JSON.parse(Buffer.from(v.cursor, "base64url").toString()));
-            if (Object.keys(c).sort().join(',') !== "eventType,id,startsAt,status")
+            if (Object.keys(c).sort().join(',') !== "eventType,id,startsAt,status,upcoming")
                 invalid();
-            if (c.eventType !== eventType || c.status !== (v.status ?? null))
+            if (c.eventType !== eventType || c.status !== (v.status ?? null) || c.upcoming !== upcoming)
                 invalid();
             instant(c.startsAt);
             cursor = { startsAt: c.startsAt as string, id: uuid(c.id) };
@@ -121,5 +124,5 @@ export function filters(value: unknown, publicOnly: boolean): EventFilters {
             invalid();
         }
     }
-    return { limit: Number(limit), cursor, eventType, status: (v.status ?? null) as EventFilters["status"] };
+    return { limit: Number(limit), cursor, eventType, status: (v.status ?? null) as EventFilters["status"], upcoming };
 }

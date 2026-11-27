@@ -66,7 +66,8 @@ test("home and login share one bounded BE-07 read and never invent events", asyn
     })("features/public-events/server.ts").loadUpcomingPublicEvents;
   const ok = await load({ ok: true, data: { items, nextCursor: null } })(1, new Date("2026-12-01T00:00:00Z"));
   assert.deepEqual(ok, { ok: true, items: [items[1]] });
-  assert.deepEqual(calls[0], { limit: 50 });
+  // Contract change (event-ops lane): the "starts after now" filter now runs server-side with the exact page size.
+  assert.deepEqual(calls[0], { limit: 1, upcoming: true });
   const failed = await load({ ok: false, code: "EVENT_UNAVAILABLE" })(2);
   assert.deepEqual(failed, { ok: false, code: "EVENT_UNAVAILABLE" });
 });

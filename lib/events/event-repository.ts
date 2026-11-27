@@ -1,7 +1,7 @@
 import "server-only";
 import { getSql, query } from "@/lib/db";
 import { rolesForPermission } from "@/lib/authz/permissions";
-import { PUBLIC_EVENT_STATES, EVENT_TRANSITIONS } from "./event-policy";
+import { PUBLIC_EVENT_STATES, EVENT_TRANSITIONS, UPCOMING_EVENT_STATES } from "./event-policy";
 import type { EventContent, EventDTO, EventFilters } from "./event-types";
 import type { EventStatus } from "@/lib/db/types";
 const roleCodes = rolesForPermission("events.manage");
@@ -13,9 +13,17 @@ const columns = [['slug', 'slug', 'text'], ['eventType', 'event_type', 'text'], 
     ['waitlistEnabled', 'waitlist_enabled', 'boolean'], ['visibility', 'visibility', 'text'], ['coverMediaId', 'cover_media_id', 'uuid']] as const;
 const hash = `encode(sha256(convert_to((to_jsonb(e)||jsonb_build_object('created_at',extract(epoch FROM e.created_at),'updated_at',extract(epoch FROM e.updated_at),'starts_at',extract(epoch FROM e.starts_at),'ends_at',extract(epoch FROM e.ends_at),'registration_opens_at',extract(epoch FROM e.registration_opens_at),'registration_closes_at',extract(epoch FROM e.registration_closes_at),'checkin_opens_at',extract(epoch FROM e.checkin_opens_at),'checkin_closes_at',extract(epoch FROM e.checkin_closes_at),'archived_at',extract(epoch FROM e.archived_at)))::text,'UTF8')),'hex')`;
 const projection = `jsonb_build_object(${columns.map(([key, col]) => `'${key}',e.${col}`).join(',')},'id',e.id,'status',e.status,'version',${hash}) AS data`;
+const utc = (c: string) => `to_char(${c} AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS.US"Z"')`;
+/**
+ * Public cover: only active, public, purpose='cms' media. Member avatars (purpose='member_avatar') and private or archived
+ * assets never resolve here, even if a legacy row references one (see tests/cms-media-isolation.test.mjs).
+ */
+const publicCover = `(SELECT jsonb_build_object('id',m.id,'storageKey',m.storage_key,'storageProvider',m.storage_provider,'publicUrl',m.public_url,'mimeType',m.mime_type,'sizeBytes',m.byte_size,'width',m.width,'height',m.height,'altText',m.alt_text,'caption',m.caption,'status',m.status,'visibility',m.visibility,'purpose',m.purpose,'version',m.version,'createdAt',${utc('m.created_at')},'updatedAt',${utc('m.updated_at')})
+ FROM uss.media_assets m WHERE m.id=e.cover_media_id AND m.purpose='cms' AND m.status='active' AND m.visibility='public' AND m.storage_key NOT LIKE 'member-avatars/%')`;
+const publicProjection = projection.replace(/ AS data$/, `||jsonb_build_object('cover',${publicCover}) AS data`);
 export async function readPublic(slug: string) { return (await query<{
     data: EventDTO;
-}>(`SELECT ${projection} FROM uss.events e WHERE e.slug=$1 AND e.visibility='public' AND e.status=ANY($2::text[]) AND e.archived_at IS NULL`, [slug, PUBLIC_EVENT_STATES]))[0]?.data; }
+}>(`SELECT ${publicProjection} FROM uss.events e WHERE e.slug=$1 AND e.visibility='public' AND e.status=ANY($2::text[]) AND e.archived_at IS NULL`, [slug, PUBLIC_EVENT_STATES]))[0]?.data; }
 export async function readAdmin(actorId: string, id: string) {
     const rows = await query<{
         authorized: boolean;
@@ -25,12 +33,13 @@ export async function readAdmin(actorId: string, id: string) {
     return rows[0];
 }
 export async function listEvents(input: EventFilters, actorId?: string) {
-    const params = [actorId ?? null, roleCodes, input.eventType, input.status, input.cursor?.startsAt ?? null, input.cursor?.id ?? null, input.limit + 1, PUBLIC_EVENT_STATES];
+    const params = [actorId ?? null, roleCodes, input.eventType, input.status, input.cursor?.startsAt ?? null, input.cursor?.id ?? null, input.limit + 1, PUBLIC_EVENT_STATES, input.upcoming, UPCOMING_EVENT_STATES];
     const rows = await query<{
         authorized: boolean;
         items: EventDTO[];
-    }>(`WITH authority AS (${authority}), page AS (SELECT ${projection} FROM uss.events e
+    }>(`WITH authority AS (${authority}), page AS (SELECT ${actorId ? projection : publicProjection} FROM uss.events e
  WHERE ($3::text IS NULL OR e.event_type=$3) AND ($4::text IS NULL OR e.status=$4)
+ AND (NOT $9::boolean OR (e.starts_at>clock_timestamp() AND e.status=ANY($10::text[])))
  AND ($5::timestamptz IS NULL OR (e.starts_at,e.id)>($5::timestamptz,$6::uuid))
  AND ${actorId ? '$8::text[] IS NOT NULL AND EXISTS(SELECT 1 FROM authority)' : "e.visibility='public' AND e.status=ANY($8::text[]) AND e.archived_at IS NULL"}
  ORDER BY e.starts_at,e.id LIMIT $7)

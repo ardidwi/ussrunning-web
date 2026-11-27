@@ -21,21 +21,22 @@ export function isUpcomingEvent(event: PublicEventDTO, now: Date) {
 }
 
 /**
- * Single public read path for "next events" teasers (home, login). It reads the
- * same BE-07 public listing as /runs, so every surface shows the same records.
- * BE-07 has no "starts after" filter yet, so this reads one bounded page
- * (EVENT_POLICY.maxLimit) ordered by start time and keeps upcoming entries.
+ * Single public read path for "next events" teasers (home, login). It reads the same BE-07 public listing as /runs,
+ * filtered server-side (`upcoming: true`) to attendable events that start after the database clock. The comparison
+ * runs on timestamptz, so it is independent of the event display timezone and of server/browser timezones, and the
+ * page is exactly `limit` long instead of a client-side trim of one large page. The local check is defense in depth.
  */
 export async function loadUpcomingPublicEvents(
   limit: number,
   now: Date = new Date(),
 ): Promise<UpcomingEventsResult> {
-  const result = await getPublicEventList({ limit: EVENT_POLICY.maxLimit });
+  const bounded = Math.max(1, Math.min(EVENT_POLICY.maxLimit, Math.trunc(limit) || 1));
+  const result = await getPublicEventList({ limit: bounded, upcoming: true });
   if (!result.ok) return { ok: false, code: result.code };
   return {
     ok: true,
     items: result.data.items
       .filter((event) => isUpcomingEvent(event, now))
-      .slice(0, limit),
+      .slice(0, bounded),
   };
 }

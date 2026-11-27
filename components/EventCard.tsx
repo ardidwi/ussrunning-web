@@ -11,6 +11,12 @@ export default function EventCard({ event }: { event: PublicEventDTO }) {
       href={`/runs/${encodeURIComponent(event.slug)}`}
       className="event-card event-card-typographic"
     >
+      {event.cover?.url ? (
+        <div className="event-image-wrap">
+          {/* Public CMS cover only (purpose='cms', active, public); member avatars never reach this DTO. */}
+          <img className="event-image" src={event.cover.url} alt={event.cover.altText || ""} width={event.cover.width ?? undefined} height={event.cover.height ?? undefined} loading="lazy" decoding="async" />
+        </div>
+      ) : null}
       <div className="event-date-block">
         <span className="event-date-day">{date.day}</span>
         <span className="event-date-month">{date.month}</span>
