@@ -22,7 +22,7 @@ export function CancelParticipantButton({ eventId, registrationId, expectedVersi
   return <>
     <Button variant="danger" onClick={() => { setOpen(true); setFailure(""); setError(""); }} aria-label={`Cancel registration for ${name}`}>Cancel registration</Button>
     <Modal open={open} onClose={() => !pending && setOpen(false)} title="Cancel this registration?"
-      description={<>The runner&apos;s place is released and they receive a cancellation email. Any event pass is revoked. This cannot be undone from here.</>}
+      description={<>The runner&apos;s place is released and a cancellation email is queued for them. Any event pass is revoked. This cannot be undone from here.</>}
       actions={<><Button variant="secondary" onClick={() => setOpen(false)} disabled={pending}>Keep registration</Button><Button variant="danger" onClick={submit} loading={pending} loadingLabel="Cancelling…">Confirm cancellation</Button></>}>
       <Field label="Reason" required hint="5–240 characters, plain text. Stored in the audit history, not shown to the runner." error={error}>
         <Textarea value={reason} maxLength={240} rows={3} onChange={event => { setReason(event.target.value); if (error) setError(reasonError(event.target.value)); }} disabled={pending} />

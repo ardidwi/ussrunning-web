@@ -45,11 +45,13 @@
 .uss-ops-export p { margin:0; min-height:1.25rem; max-width:36rem; }
 .uss-ops-list { list-style:none; padding:0; margin:0; display:grid; gap:var(--space-4); }
 .uss-ops-list article { border:1px solid var(--uss-border); background:var(--uss-surface); padding:var(--space-6); display:flex; gap:var(--space-6); justify-content:space-between; align-items:flex-start; }
-.uss-ops-list article > div { min-width:0; }
+.uss-ops-list article > div { min-width:0; flex:1 1 auto; }
 .uss-ops-list h2 { font-size:1.375rem; margin:var(--space-3) 0; overflow-wrap:anywhere; }
 .uss-ops-list p { margin:var(--space-2) 0; line-height:1.5; overflow-wrap:anywhere; }
 .uss-ops-actions { display:flex; flex-wrap:wrap; gap:var(--space-3); flex-shrink:0; }
 .uss-ops-facts { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,10rem),1fr)); gap:var(--space-2) var(--space-6); margin:var(--space-3) 0 0; }
 .uss-ops-facts dt { color:var(--uss-muted); font-size:.8125rem; }
 .uss-ops-facts dd { margin:0; overflow-wrap:anywhere; }
-@media(max-width:600px) { .uss-ops-list article { flex-direction:column; padding:var(--space-4); } .uss-ops-actions, .uss-ops-actions .uss-button, .uss-ops-list article > .uss-button, .uss-ops-export, .uss-ops-export .uss-button { width:100%; } }
+@media(max-width:900px) { .uss-ops-list article { flex-direction:column; } }
+@media(max-width:600px) { .uss-ops-list article { padding:var(--space-4); } .uss-ops-actions, .uss-ops-actions .uss-button, .uss-ops-list article > .uss-button, .uss-ops-export, .uss-ops-export .uss-button { width:100%; } }
+.uss-ops .uss-event-heading > a { flex-shrink:0; white-space:nowrap; overflow-wrap:normal; }

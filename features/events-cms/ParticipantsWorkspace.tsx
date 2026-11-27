@@ -74,7 +74,7 @@ export function ParticipantsView({ event: e, page, status, cursor, module = PART
       })}
     </ul> : <EmptyState title="No participants in this view." description={status ? "No registrations have this status. Clear the filter to see everyone." : "Nobody has registered for this event yet."} />}
     <nav className="uss-event-pagination" aria-label="Participant pages">
-      <span>Up to 20 participants per page, oldest first within the newest registrations.</span>
+      <span>Newest registrations first, 20 per page.</span>
       {cursor && <LinkButton variant="text" href={participantsHref(base, module)}>First page</LinkButton>}
       {page.nextCursor && <LinkButton variant="secondary" href={participantsHref({ ...base, cursor: page.nextCursor }, module)}>Next page ↗</LinkButton>}
     </nav>

@@ -12,7 +12,7 @@ test("queue actions follow the delivery state machine", () => {
   assert.equal(nmodel.canResend(dto()), true); assert.equal(nmodel.canCancel(dto()), true);
   assert.equal(nmodel.canResend(dto({ status: "failed", retryable: true })), true);
   const final = dto({ status: "failed", retryable: false, attemptCount: 3 });
-  assert.equal(nmodel.isFinalFailure(final), true); assert.equal(nmodel.canResend(final), false); assert.equal(nmodel.statusLabel(final), "failed — final"); assert.equal(nmodel.statusTone(final), "error");
+  assert.equal(nmodel.isFinalFailure(final), true); assert.equal(nmodel.canResend(final), false); assert.equal(nmodel.canCancel(final), false, "a final failure is already terminal"); assert.equal(nmodel.statusLabel(final), "failed — final"); assert.equal(nmodel.statusTone(final), "error");
   for (const status of ["sent", "sending", "cancelled"]) { assert.equal(nmodel.canResend(dto({ status })), false); assert.equal(nmodel.canCancel(dto({ status })), false); }
 });
 test("queue links stay on the notifications slot and error codes are humanized", () => {

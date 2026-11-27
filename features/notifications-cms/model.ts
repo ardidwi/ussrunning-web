@@ -17,7 +17,7 @@ export function notificationsHref(values: Record<string, string> = {}, module: s
 /** A failure the scheduler will not retry (attempt cap, permanent rejection or changed envelope). */
 export function isFinalFailure(n: NotificationDto) { return n.status === "failed" && !n.retryable; }
 export function canResend(n: NotificationDto) { return n.status === "pending" || (n.status === "failed" && n.retryable); }
-export function canCancel(n: NotificationDto) { return n.status === "pending" || n.status === "failed"; }
+export function canCancel(n: NotificationDto) { return n.status === "pending" || (n.status === "failed" && n.retryable); }
 
 export function statusLabel(n: NotificationDto) {
   if (isFinalFailure(n)) return "failed — final";
