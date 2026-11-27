@@ -32,3 +32,6 @@ GRANT EXECUTE ON FUNCTION uss.manage_role(uuid,uuid,text,text,integer,text) TO :
 
 -- Member Identity: issuance by account provisioning. The bootstrap function remains owner-only.
 GRANT USAGE ON SEQUENCE uss.member_number_sequence TO :"app_role";
+
+-- D2.6/D4.1 (021): scheduled delivery claim and automatic pass issuance are invoker functions over existing table grants.
+GRANT EXECUTE ON FUNCTION uss.claim_notification_for_job(uuid,text,text,integer,integer),uss.issue_event_pass_for_job(uuid,uuid,text,text) TO :"app_role";
