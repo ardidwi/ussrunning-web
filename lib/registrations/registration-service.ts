@@ -9,6 +9,10 @@ import { mutateRegistration, readRegistration, listRegistrations, readParticipan
 import type { RegistrationDTO, ManagedRegistrationDTO, RegistrationPage, ParticipantDTO, ParticipantExport } from './registration-types';
 import { REGISTRATION_POLICY } from './registration-policy';
 import { csvDocument } from './participant-csv';
+import { hasPermission } from '@/lib/authz/permissions';
+import { maskEmail } from '@/lib/admin-users/email-mask';
+/** K-03/D2.3: participant emails are full only for users.manage (super_admin); other events.manage staff see a mask. */
+async function emailView() { const context = await requirePermission('events.manage'); const full = hasPermission(context.roles, 'users.manage'); return (email: string | null) => email == null ? null : full ? email : maskEmail(email); }
 function own({ accountId: _owner, ...dto }: ManagedRegistrationDTO): RegistrationDTO { return dto; }
 async function actor(managed: boolean) { return managed ? (await requirePermission('events.manage')).account : await requireActiveAccount(); }
 function permission(value: {
@@ -47,8 +51,9 @@ export async function listEventParticipants(value: unknown): Promise<Registratio
         if (!page.items.length) return { items: [], nextCursor: page.nextCursor };
         const a = await actor(true), eventId = page.items[0].event.id, identities = await readParticipantIdentities(a.id, eventId, page.items.map(r => r.id));
         permission(identities);
+        const email = await emailView();
         const byId = new Map(identities.items.map(i => [i.registration_id, i]));
-        return { nextCursor: page.nextCursor, items: page.items.map(r => { const i = byId.get(r.id); return { ...r, participant: { displayName: i?.display_name ?? null, memberId: i?.member_id ?? null, email: i?.email ?? null, checkedInAt: i?.checked_in_at ?? null, passStatus: (i?.pass_status ?? null) as ParticipantDTO['participant']['passStatus'] } }; }) };
+        return { nextCursor: page.nextCursor, items: page.items.map(r => { const i = byId.get(r.id); return { ...r, participant: { displayName: i?.display_name ?? null, memberId: i?.member_id ?? null, email: email(i?.email ?? null), checkedInAt: i?.checked_in_at ?? null, passStatus: (i?.pass_status ?? null) as ParticipantDTO['participant']['passStatus'] } }; }) };
     });
 }
 export const PARTICIPANT_CSV_HEADER = ['member_id', 'name', 'email', 'registration_status', 'registered_at_utc', 'cancelled_at_utc', 'checked_in_at_utc', 'event_pass_status'] as const;
@@ -58,8 +63,8 @@ export async function exportEventParticipants(value: unknown): Promise<Participa
         const a = await actor(true), v = participantExport(value), max = REGISTRATION_POLICY.maxExportRows, row = await exportParticipants(a.id, v.eventId, v.status, max);
         permission(row);
         if (!row.found) throw new RegistrationError('REGISTRATION_NOT_AVAILABLE');
-        const items = row.items.slice(0, max);
-        const csv = csvDocument(PARTICIPANT_CSV_HEADER, items.map(i => [i.member_id, i.display_name, i.email, i.status, i.registered_at, i.cancelled_at, i.checked_in_at, i.pass_status]));
+        const items = row.items.slice(0, max), email = await emailView();
+        const csv = csvDocument(PARTICIPANT_CSV_HEADER, items.map(i => [i.member_id, i.display_name, email(i.email), i.status, i.registered_at, i.cancelled_at, i.checked_in_at, i.pass_status]));
         return { filename: `participants-${v.eventId.slice(0, 8)}${v.status ? '-' + v.status : ''}.csv`, csv, rowCount: items.length, truncated: row.items.length > max, maxRows: max };
     });
 }

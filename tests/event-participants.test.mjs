@@ -26,7 +26,7 @@ let admin;
 
 test('participants list is permission-checked, status-filtered and exposes staff identity only',async()=>{current=admin;const e=await event();const c=await register(e,'confirmed','Ada Runner'),w=await register(e,'waitlisted');
  const page=good(await api.getEventParticipants({eventId:e.id}));assert.equal(page.items.length,2);const row=page.items.find(i=>i.id===c.r.id);
- assert.equal(row.participant.displayName,'Ada Runner');assert.match(row.participant.memberId,/^USS-\d{6,}$/);assert.equal(row.participant.email,c.a.email);
+ assert.equal(row.participant.displayName,'Ada Runner');assert.match(row.participant.memberId,/^USS-\d{6,}$/);assert.notEqual(row.participant.email,c.a.email);assert.match(row.participant.email,/^.•••@.•••\.test$/);
  const json=JSON.stringify(page);for(const secret of ['barcode','token_hash','phone','emergency'])assert.ok(!json.includes(secret),secret);
  assert.deepEqual(good(await api.getEventParticipants({eventId:e.id,status:'waitlisted'})).items.map(i=>i.id),[w.r.id]);
  for(const bad of [{},{eventId:'x'},{eventId:e.id,status:'gone'},{eventId:e.id,limit:999},{eventId:e.id,accountId:c.a.id}])assert.equal((await api.getEventParticipants(bad)).code,'REGISTRATION_VALIDATION_ERROR');
@@ -67,3 +67,8 @@ test('CSV export is bounded and reports truncation',async()=>{current=admin;cons
  // Exercise truncation with a small slice of accounts: the repository reads limit+1 to detect overflow.
  const repo=load('lib/registrations/registration-repository.ts');for(let i=0;i<3;i++)await register(e);const row=await repo.exportParticipants(admin.id,e.id,null,2+1);assert.equal(row.items.length,3);
  const svcRows=await repo.exportParticipants(admin.id,e.id,null,2);assert.equal(svcRows.items.length,3,'limit+1 read');const audit=(await query("SELECT change_summary FROM uss.audit_logs WHERE entity_id=$1 AND action='event.participants_exported' ORDER BY created_at DESC LIMIT 1",[e.id]))[0];assert.equal(audit.change_summary.truncated,true);assert.equal(audit.change_summary.rowCount,2);});
+
+test('K-03: participant emails are masked for admin and full only for super_admin, in list and CSV',async()=>{const e=await event();const {a}=await register(e,'confirmed','Grace Runner');const sa=await account('super_admin');
+ current=admin;const masked=good(await api.getEventParticipants({eventId:e.id})).items[0].participant.email;assert.ok(!masked.includes(a.email.split('@')[0]));assert.match(masked,/•••/);
+ const adminCsv=good(await api.exportEventParticipantsCsv({eventId:e.id})).csv;assert.ok(!adminCsv.includes(a.email));
+ current=sa;assert.equal(good(await api.getEventParticipants({eventId:e.id})).items[0].participant.email,a.email);assert.ok(good(await api.exportEventParticipantsCsv({eventId:e.id})).csv.includes(a.email));current=null;});
